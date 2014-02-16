@@ -1,7 +1,4 @@
-[**SOURCE OF BOOK FILES**](#ZENTOC)
-===================================
-
-\
+# Source of Book Files
 
 **\*\*\*In 2011 we obtained a CD image dated 1997 that was the companion
 disk for Michael Abrash's****Graphics Programming Black Book with
@@ -15,8 +12,6 @@ URL**[http://www.gamedev.net/page/resources/\_/technical/graphics-programming-an
 
 **For download in epub and mobi formats at
 [https://github.com/jagregory/abrash-black-book/releases](https://github.com/jagregory/abrash-black-book/releases)**
-
-\
 
 In 1989, Michael Abrash completed \*the\* classic work on 8088-oriented
 code optimization. ZEN OF ASSEMBLY LANGUAGE was published by Scott,
@@ -69,8 +64,6 @@ The code listings for the book are contained in a self-extracting
 archive file ZEN\_LIST.EXE. Copy this file to a subdirectory and execute
 it. The listing files will be extracted into the subdirectory.
 
-\
-
 **\*\*\*****This electronic version was created to provide an digital
 version for reading on computers or portable book readers. This is a
 restoration of the book issued on CD containing the original copyrighted
@@ -120,8 +113,4 @@ document may soon be available on the internet in the most common book
 reader formats.**
 
 **Ron Welch**
-
-\
-
-\
 
