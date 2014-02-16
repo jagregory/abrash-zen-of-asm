@@ -1,7 +1,4 @@
-[**Introduction: Pushing the Envelope**](#ZENTOC)
-=================================================
-
-\
+# Introduction: Pushing the Envelope
 
 This is the book I wished for with all my heart seven years ago, when I
 started programming the IBM PC: the book that unlocks the secrets of
@@ -30,10 +27,7 @@ ever-more-sophisticated programming tasks.
 In short, *The Zen of Assembler* is about nothing less than how to
 become the best assembly-language programmer you can be.
 
-\
-
-[WHY ASSEMBLY LANGUAGE?](#ZENTOC)
----------------------------------
+## Why Assembly Language?
 
 For years, people have been predicting — hoping for — the demise of
 assembly language, claiming that the world is ready to move on to less
@@ -141,10 +135,7 @@ We'll return to this topic in Chapter 15, when we will in fact discuss
 other 808X-family processors, but for now, take my word for it: when it
 comes to optimization, the 8088 is the processor of choice.
 
-\
-
-[WHAT YOU'LL NEED](#ZENTOC)
----------------------------
+## What You'll Need
 
 The tools you'll need to follow this book are simple: a text editor to
 create ASCII program files, the Microsoft Macro Assembler version 5.0 or
@@ -184,10 +175,7 @@ assembly-language code, "assembler" is a widely-used shorthand that I'll
 use throughout this book. Similarly, I'll use "the Zen of assembler" as
 shorthand for "the Zen of assembly language."
 
-\
-
-[ODDS AND ENDS](#ZENTOC)
-------------------------
+## Odds and Ends
 
 I'd like to identify the manufacturers of the products I'll refer to in
 this volume. Microsoft makes the Microsoft Macro Assembler (MASM), the
@@ -208,10 +196,7 @@ one-way street. You can write me at:
 
 Sunnyvale, CA 94087
 
-\
-
-[THE PATH TO THE ZEN OF ASSEMBLER](#ZENTOC)
--------------------------------------------
+## The Path to the Zen of Assembler
 
 *The Zen of Assembly Language* consists of four major parts, contained
 in two volumes. Parts I and II are in this volume, Volume I, while Parts
@@ -250,5 +235,3 @@ Michael Abrash
 Sunnyvale, CA
 
 May 29, 1989
-
-* * * * *
