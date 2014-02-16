@@ -1,0 +1,835 @@
+<h1 class="western" style="page-break-before: always;"><a name="CH06"></a><a class="western" href="#TC06"><font size="5"><b>Chapter
+6: The 8088</b></font></a></h1>
+<p class="western" style="margin-bottom: 0in;"><br>
+</p>
+<table style="width: 385px; height: 375px;" border="1" bordercolor="#bfbfbf" cellpadding="4" cellspacing="0" frame="void" rules="none">
+<col width="305"> <tbody>
+<tr>
+<td bgcolor="#bfbfbf" height="4" width="305">
+<p class="western"><a class="western" href="#_AN_OVERVIEW_OF">6.1 AN OVERVIEW OF THE 8088</a></p>
+</td>
+</tr>
+<tr>
+<td bgcolor="#bfbfbf" height="4" width="305">
+<p class="western"><a class="western" href="#_RESOURCES_OF_THE">6.2 RESOURCES OF THE 8088</a></p>
+</td>
+</tr>
+<tr>
+<td bgcolor="#bfbfbf" height="4" width="305">
+<p class="western"><b>6.3 </b><a class="western" href="#_REGISTERS">REGISTERS</a></p>
+</td>
+</tr>
+<tr>
+<td bgcolor="#bfbfbf" height="4" width="305">
+<p class="western"><a class="western" href="#_THE_8088%27S_REGISTER">6.4 THE 8088'S REGISTER SET</a></p>
+</td>
+</tr>
+<tr>
+<td bgcolor="#bfbfbf" height="4" width="305">
+<p class="western"><a class="western" href="#_THE_GENERAL-PURPOSE_REGISTERS">6.5 THE
+GENERAL-PURPOSE REGISTERS</a></p>
+</td>
+</tr>
+<tr>
+<td bgcolor="#bfbfbf" height="4" width="305">
+<p class="western"><a class="western" href="#_THE_SEGMENT_REGISTERS">6.6 THE SEGMENT REGISTERS</a></p>
+</td>
+</tr>
+<tr>
+<td bgcolor="#bfbfbf" height="4" width="305">
+<p class="western"><a class="western" href="#_THE_INSTRUCTION_POINTER">6.7 THE INSTRUCTION POINTER</a></p>
+</td>
+</tr>
+<tr>
+<td bgcolor="#bfbfbf" height="4" width="305">
+<p class="western"><a class="western" href="#_THE_FLAGS_REGISTER">6.8 THE FLAGS REGISTER</a></p>
+</td>
+</tr>
+<tr>
+<td bgcolor="#bfbfbf" height="3" width="305">
+<p class="western"><a class="western" href="#_THERE%27S_MORE_TO">6.9 THERE'S MORE TO LIFE THAN
+REGISTERS</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<h2 class="western"><br></h2><h2 class="western"><a name="_AN_OVERVIEW_OF"></a><a class="western" href="#T0601"><font style="font-size: 16pt;" size="4"><b>6.1
+AN OVERVIEW OF THE 8088</b></font></a></h2>
+<p class="western" style="margin-bottom: 0in;"> In
+a nutshell, the
+8088 is a 16-bit processor with an 8-bit data bus capable of
+addressing 1 Mb of memory in total but no more than four 64Kb byte
+blocks at a time and that via a remarkably awkward segmented memory
+scheme. The register space is limited, but the instruction set is
+powerful and flexible, albeit highly irregular. The 4.77-MHz clock
+speed of the 8088 as implemented in the IBM PC is slow by today&#8217;s
+standards, and both instruction execution and memory access are
+relatively slow as well. What the whole 8088 package as used in the
+PC amounts to is a fairly low-performance processor that is hard to
+program.</p>
+<p class="western" style="margin-bottom: 0in;"> Why
+am I saying such
+unflattering things about the 8088? Because I want you to understand
+how hard it is to write good 8088 code. As you may have guessed,
+there is a saving grace to the 8088; as implemented in the PC the
+8088 can support just enough performance and memory to run some
+splendid software &#8212; software carefully crafted to work around
+the 8088&#8217;s weaknesses and take maximum advantage of its
+strengths. Those strengths and weaknesses lie hidden in the 8088&#8217;s
+instruction set, and we will spend the rest of this book ferreting
+them out.</p>
+<p class="western" style="margin-bottom: 0in;">
+Before we begin, you
+must understand one thing; the 8088 is a hodgepodge of a processor. Not
+a <i>random</i> hodgepodge, mind you &#8212; there are good
+reasons why the 8088 is what it is &#8212; but a hodgepodge
+nonetheless. Internally, the 8088 is a 16-bit processor, thanks to
+its derivation from the 8086, as discussed in Chapter 3. Externally,
+the 8088 is an 8-bit processor, owing to its genesis in the 1970s,
+when the cost difference between 8- and 16-bit buses was significant.
+The design of the 8086, including the register set and several
+instructions, was heavily influenced by the 8-bit 8080 processor, as
+we&#8217;ll see in Chapter 8. Finally, the memory architecture of
+the 8088 is a remnant of an era when both chip space and the number
+of pins per chip were severely limited and memory was extremely
+expensive. The 8088 is an excellent representative of the
+transitional state of the microcomputer industry a decade ago;
+striving for state-of-the-art while maintaining a link with the past,
+all in too little silicon. From a programmer&#8217;s perspective,
+though, the 8088 is simply a bit of a mess.</p>
+<p class="western" style="margin-bottom: 0in;">
+That certainly doesn&#8217;t
+mean the 8088 isn&#8217;t worth bothering with nowadays, as attested
+by 10 million or so 8088-based computers. It does, however, mean
+that programming the 8088 properly in assembler is not simple, since
+code that takes maximum advantage of the unique nature of the 8088 is
+generally much faster than code that uses the processor in a
+straightforward manner. We must take the time to understand the
+strengths and weaknesses of the 8088 intimately, then learn how to
+best structure our code in light of that knowledge.</p>
+<h2 class="western"><a name="_RESOURCES_OF_THE"></a><a class="western" href="#T0602"><font style="font-size: 16pt;" size="4"><b>6.2
+RESOURCES OF THE 8088</b></font></a></h2>
+<p class="western" style="margin-bottom: 0in;">
+Over the next nine
+chapters, we&#8217;ll look at the capabilities and resources of the
+8088. We&#8217;ll learn a great deal about high-performance
+assembler programming, and we&#8217;ll also lay the groundwork for
+the higher level assembler programming techniques of Volume II.</p>
+<p class="western" style="margin-bottom: 0in;">
+We&#8217;ll spend the
+remainder of this chapter looking at the registers and flags of the
+8088. In Chapter 7 we&#8217;ll cover the 8088&#8217;s
+memory-addressing capabilities, and in Chapter 8 we&#8217;ll start to
+cover the 8088&#8217;s large and varied instruction set. The
+resources of the 8088 are both fascinating and essential, for in
+their infinite permutations and combinations &#8212; they are your
+set of tools for creating the best possible code for the IBM PC.</p>
+<h2 class="western"><a name="_REGISTERS"></a><a class="western" href="#T0603"><font style="font-size: 16pt;" size="4"><b>6.3
+REGISTERS</b></font></a></h2>
+<p class="western" style="margin-bottom: 0in;"> The
+register set of a
+processor is a key to understanding the processor&#8217;s
+personality, since registers are typically where most of the action
+in a processor takes place. The 8088&#8217;s register set is
+something of a mixed bag. Since the 8088 is a 16-bit processor
+internally, register-only instructions (instructions without memory
+operands) tend to be fast and compact, so the 8088&#8217;s registers
+are no more regular than anything else about the processor. Each
+register offers unique, specialized (and hard to remember) functions;
+together, these oddball register functions make up what my friend and
+editor Jeff Duntemann calls &#8220;the register hidden agenda,&#8221;
+the not obvious but powerful register capabilities that considerably
+increase both the difficulty and the potential power of 8088
+assembler programming.</p>
+<p class="western" style="margin-bottom: 0in;"> Let
+me give you an
+example. Many years ago, a friend who had just made the transition
+from programming the Apple II to programming the IBM PC, had a
+program that crashed every so often for no apparent reason. We spent
+a good deal of time examining his program before we could isolate the
+cause of his problems. As it turned out, he was using SP as a
+working register for short stretches, storing values in it,
+performing arithmetic with it, and all-in-all using SP as if it were
+just another general-purpose register.</p>
+<p class="western" style="margin-bottom: 0in;">
+While SP can
+theoretically be used as a general-purpose register, in fact it is
+almost always dedicated to maintaining the stack. My friend&#8217;s
+problem was that keyboard and timer interrupts, which use the stack,
+were occurring while he had SP loaded with values that didn&#8217;t
+point to a valid stack, so interrupts were pushing return addresses
+and flags into random areas of memory. When I asked him how he could
+possibly have made such an obvious mistake, he explained that his
+approach would have worked perfectly well on the Apple II, where
+there are no interrupts.</p>
+<p class="western" style="margin-bottom: 0in;">
+There are two
+important points here. One is by not understanding SP&#8217;s
+portion of the register hidden agenda &#8212; the role of SP as a
+stack pointer in an interrupt-driven system &#8212; my friend had
+wasted considerable development time. The second point is that, had
+he understood the register hidden agenda better, he could have
+extended his odd approach to generate some genuinely innovative code.</p>
+<p class="western" style="margin-bottom: 0in;">
+How? Well, SP really
+is a general purpose register when it&#8217;s not being used to
+maintain a stack. My friend&#8217;s mistake had been his assumption
+that the stack is inactive when no calls, returns, pushes, or pops
+are occurring; this assumption is incorrect because interrupts may
+take place at any time. Suppose, though, that he had simply disabled
+interrupts for those brief periods when he needed an eighth
+general-purpose register for speed. Why, then his use of SP would
+have been not only acceptable but nearly brilliant!</p>
+<p class="western" style="margin-bottom: 0in;">
+Alas, disabling
+interrupts and using SP would not have been truly brilliant, for
+nonmaskable interrupts, used to signal parity errors and used by some
+display adapters as well, can occur and use the stack even when
+interrupts are disabled. In general, I recommend that you not use SP
+as a general-purpose register, even with interrupts disabled. Although
+the chances of a nonmaskable interrupt occurring are slim,
+they are nonetheless real.</p>
+<p class="western" style="margin-bottom: 0in;"> All
+of which simply
+serves to reinforce the notion that the more we know about the 8088,
+the better our code will be. That&#8217;s why we&#8217;ll cover the
+8088&#8217;s other resources for most of the rest of this volume. The more
+thorough your understanding of the 8088, the greater the
+potential of your assembler code.</p>
+<h2 class="western"><a name="_THE_8088'S_REGISTER"></a><a class="western" href="#T0604"><font style="font-size: 16pt;" size="4"><b>6.4
+THE 8088'S REGISTER SET</b></font></a></h2>
+<p class="western" style="margin-bottom: 0in;">
+Figure 6.1 shows the
+8088&#8217;s register set to be a mix of general and special-purpose
+registers. The 8088 offers only seven truly general-purpose </p>
+<p class="western" style="margin-bottom: 0in;"><img src="ZOA_html_64025bbe.jpg" align="bottom" border="0" height="740" width="619"></p>
+<p class="western" style="margin-bottom: 0in;"><br>
+</p>
+<p class="western" style="margin-bottom: 0in;">registers
+&#8212; AX,
+BX, CX, DX, SI, DI, and BP &#8212; a small set that seems even
+smaller because four of these registers double as memory-addressing
+registers and because the slow speed of memory assess dictates use of
+registers whenever possible. Only certain registers can be used for
+many functions; for example, only BX, BP, SI, and DI can be used to
+generate memory-addressing offsets, and then only in certain
+combinations. Likewise, only AX, BX, CX, and DX can be accessed as
+either as single 16-bit registers or paired 8-bit registers.</p>
+<p class="western" style="margin-bottom: 0in;">
+Let&#8217;s take a
+quick tour of the registers, looking at the unique capabilities of
+each.</p>
+<h2 class="western"><a name="_THE_GENERAL-PURPOSE_REGISTERS"></a><a class="western" href="#T0605"><font style="font-size: 16pt;" size="4"><b>6.5
+THE GENERAL-PURPOSE REGISTERS</b></font></a></h2>
+<p class="western" style="margin-bottom: 0in;"> Any
+of the eight
+general-purpose registers &#8212; AX, BX, CX, DX, SI, DI, BP, or SP &#8212;
+may serve as an operand to virtually any instruction that accepts
+operands, such as <b>add, push, shl,</b> or <b>call</b>.
+Put another
+way, any general-purpose register may be used as an operand by any
+instruction that uses mod-reg-rm addressing, the most commonly-used
+addressing mode of the 8088, which we&#8217;ll discuss in the next
+chapter. Most of the logical, arithmetic, and data movement
+operations of the 8088 can use any of the general-purpose registers,
+and it is the general-purpose registers that are most often used as
+instruction operands.</p>
+<p class="western" style="margin-bottom: 0in;">
+Four of the eight
+general-purpose registers &#8212; AX, BX, CX, DX &#8212; can be
+accessed either as paired 8-bit registers or as single 16-bit
+registers. For example, the upper byte of BX can be accessed as BH
+for 8-bit operations, and the lower byte can be accessed as BL. The
+eight 8-bit general-purpose registers &#8212; AH, AL, BH, BL, CH, CL,
+DH, and DL &#8212; can be used as 8-bit operands with any
+instructions that use <i>mod-reg-rm</i> addressing, just
+as the eight
+16-bit general-purpose registers can be used as 16-bit operands with
+those instructions.</p>
+<h3 class="western"><a name="_The_AX_register"></a><a class="western" href="#T0605"><font size="4"><b>The
+AX register</b></font></a></h3>
+<p class="western" style="margin-bottom: 0in;"> The
+AX register is the
+l6-bit accumulator. The lower byte of AX can be accessed as the AL
+register, which is the 8-bit accumulator; the upper byte of AX can be
+accessed as the AH register, which is not an accumulator of any sort.
+The accumulator is always both one of the source operands and the
+destination for multiply and divide instructions. The accumulator
+must also be the source for <b>out</b> instructions and
+the
+destination for <b>in</b> instructions, and is the source
+or
+destination register for the string instructions <b>lods</b>,
+<b>stos</b>,
+and <b>scas</b>, as we'll see in Chapter 10. There are
+special
+instructions for sign-extending the accumulator to larger data types;
+<b>cbw</b> for converting a signed byte in AL to a signed
+word in AX,
+and <b>cwd</b> for converting a signed word in AX to a
+signed
+doubleword in DX:AX. Finally, there are a number of
+accumulator-specific instructions that are particularly efficient;
+we'll discuss those instructions in Chapters 8 and 9.</p>
+<p class="western" style="margin-bottom: 0in;">
+There are several
+instructions that use part or all of the AX register in odd ways. In
+Chapter 7 we'll discuss <b>xlat</b>, the only instruction
+that can
+use AL for memory addressing. In Chapter 8 we'll discuss <b>lahf</b>
+and <b>sahf</b>, which transfer the lower byte of the
+flags register
+to and from AH. In Chapter 8 we'll also discuss a special form of
+<b>xchg</b> that requires that AX be one operand. Finally,
+the
+decimal- and ASCII-adjust instructions &#8212; <b>aaa</b>, <b>aad</b>,
+<b>aam</b>, <b>aas</b>, <b>daa</b>,
+and <b>das</b> &#8212; alter AL
+or AX in specific ways to compensate for the effects of ASCII or BCD
+arithmetic. These instructions are so different from the other
+members of the 8088 instruction set that we'll defer further
+discussion of them until Chapter 9.</p>
+<h3 class="western"><a name="_The_BX_register"></a><a class="western" href="#T0605"><font size="4"><b>The
+BX register</b></font></a></h3>
+<p class="western" style="margin-bottom: 0in;"> The
+BX register is the
+only register among the dual 8/16-bit registers that can be used for
+memory addressing (with the sole exception of AL in the case of
+<b>xlat</b>). The lower byte of BX is accessible as BL and
+the upper
+byte is accessible as BH; neither BH nor BL alone can be used for
+memory addressing.</p>
+<p class="western" style="margin-bottom: 0in;">
+Like the other
+general-purpose registers, BX (or BH or BL) may serve as an operand
+to any instruction that uses <i>mod-reg-rm</i> addressing.
+In
+addition, BX (but not BH or BL) can be used as a base register for
+memory addressing. That is, the contents of BX can be used to
+generate the address of a memory operand, as discussed in the next
+chapter, by any instruction that uses <i>mod-reg-rm</i>
+addressing,
+and by <b>xlat</b> as well.</p>
+<h3 class="western"><a name="_The_CX_register"></a><a class="western" href="#T0605"><font size="4"><b>The
+CX register</b></font></a></h3>
+<p class="western" style="margin-bottom: 0in;"> The
+CX register is
+designed for specialized counting purposes. The lower byte of CX is
+accessible as CL and the upper byte as CH; CL can be used for certain
+specialized 8-bit counting purposes, but CH cannot. CX is used as a
+counter by the <b>loop</b>, <b>loopz</b>, <b>loopnz</b>,
+and <b>jcxz</b>
+instructions, which we'll look at in Chapter 14, and is also used as
+a counter by the string instructions when they're used with the <b>rep</b>
+prefix, as we'll see in Chapter 10, CL can be used to specify a
+rotation or shift count for any of the rotate or shift instructions,
+such as<b> ror</b>, <b>shl</b>, and <b>rcl</b>,
+as described in
+Chapter 9.</p>
+<h3 class="western"><a name="_The_DX_register"></a><a class="western" href="#T0605"><font size="4"><b>The
+DX register</b></font></a></h3>
+<p class="western" style="margin-bottom: 0in;"> The
+DX register is the
+least specialized of the general-purpose registers; the only unique
+functions of DX are serving as the upper word of the destination on
+l6-bit by l6-bit multiplies, serving as the upper word of the source
+and the destination for the remainder on 32-bit by l6-bit divides,
+addressing I/O ports when used with <b>in</b> and <b>out</b>,
+and
+serving as the upper word of the destination for <b>cbw</b>.
+The
+lower byte of DX is accessible as DL, and the upper byte is
+accessible as DH.</p>
+<h3 class="western"><a name="_The_SI_register"></a><a class="western" href="#T0605"><font size="4"><b>The
+SI register</b></font></a></h3>
+<p class="western" style="margin-bottom: 0in;"> The
+SI register
+specializes as the source memory-addressing register for the string
+instructions <b>lods</b> and <b>mob</b> and
+as the destination
+memory-addressing register for the string instruction <b>cmps</b>,
+as
+we'll see in Chapter 10.</p>
+<p class="western" style="margin-bottom: 0in;">
+Like the other
+general-purpose registers, SI may serve as an operand to any
+instruction that uses <i>mod-reg-rm</i> addressing. In
+addition, SI
+can be used as an index register for memory addressing by any
+instruction that uses <i>mod-reg-rm</i> addressing, as
+we'll see in
+the next chapter, and, of course, by the above-mentioned string
+instructions as well.</p>
+<h3 class="western"><a name="_The_DI_register"></a><a class="western" href="#T0605"><font size="4"><b>The
+DI register</b></font></a></h3>
+<p class="western" style="margin-bottom: 0in;"> The
+DI register
+Specializes as the destination memory-addressing register for the
+string instructions <b>stos</b> and <b>movs</b>,
+and as the source
+memory-addressing register for the string instructions <b>scas</b>
+and <b>cmps</b>, as we'll see in Chapter 10.</p>
+<p class="western" style="margin-bottom: 0in;">
+Like the other
+general-purpose registers, DI may serve as an operand to any
+instruction that uses <i>mod-reg-rm</i> addressing. In
+addition, DI
+can be used as an index register for memory addressing by any
+instruction that uses <i>mod-reg-rm</i> addressing, as
+we'll see in
+the next chapter, and by the above-mentioned string instructions as
+well.</p>
+<h3 class="western"><a name="_The_BP_register"></a><a class="western" href="#T0605"><font size="4"><b>The
+BP register</b></font></a></h3>
+<p class="western" style="margin-bottom: 0in;"> The
+BP register
+specializes as the stack frame-addressing register. Like the other
+general-purpose registers, BP may serve as an operand to any
+instruction that uses <i>mod-reg-rm</i> addressing. Like
+BX, BP can
+also be used as a base register for memory addressing by any
+instruction that uses <i>mod-reg-rm</i> addressing, as
+discussed in
+the next chapter. However, while<font color="#030000"> BX
+normally
+addresses the data segment, BP normally addresses the stack segment.
+This makes BP ideal for addressing parameters and temporary variables
+stored in stack frames, a topic to which we&#8217;ll return in the
+next chapter.</font></p>
+<h3 class="western"><a name="_The_SP_register"></a><a class="western" href="#T0605"><font size="4"><b>The
+SP register</b></font></a></h3>
+<p style="margin-right: 0.02in; margin-bottom: 0in; line-height: 0.18in;">
+<font color="#110d06">The SP register is technically a general-purpose
+register, but in actual practice it almost always serves as the highly
+specialized stack pointer, and is rarely used as a general-purpose
+register. SP points to the offset of the top of the stack in the stack
+segment, and is automatically incremented and decremented as the stack
+is accessed via <b>push,
+pop, call, ret, int,</b> and <b>iret </b>instructions.</font></p>
+<p style="margin: 0.01in 0.07in 0in 0.02in; line-height: 0in;">
+<font color="#110d06"><br>
+</font></p>
+<p style="margin-right: 0.07in; margin-bottom: 0in; line-height: 0.18in;">
+<font color="#110d06">Like the other general-purpose registers, SP may serve as an operand to any instruction that uses <i>mod-reg-rm
+</i> addressing. In general, SP is modified through the above-mentioned
+stack-oriented instructions, but SP also may be subtracted from, added
+to, or loaded directly in order to allocate or deallocate a temporary
+storage block on the stack or switch to a new stack.</font></p>
+<p style="margin-bottom: 0in; line-height: 0.18in;"><font color="#110d06"> One note: never push SP directly, as in
+</font></p>
+<p style="margin-left: 40px; margin-bottom: 0in; line-height: 0.16in;">
+<font color="#110d06"><font color="#890000"><b>push sp</b></font></font></p>
+
+<p style="margin-right: 0.07in; margin-bottom: 0in; line-height: 0.17in;">
+<font color="#110d06">The reason is that the 80286 doesn't handle the
+pushing of SP in quite the same way as the 8088 does; the 80286 pushes
+SP before decrementing it by 2, whereas the 8088 pushes SP <i>after
+</i> decrementing it. As a result, code that uses <b>push sp </b>may
+not work in the same way on all computers. In normal code you'll rarely
+need to push SP, but if you do, you can simply pass the value through
+another register, as in </font></p>
+
+<p style="margin-bottom: 0in; line-height: 0.17in; page-break-after: avoid; margin-left: 40px;">
+<font color="#110d06"><font color="#890000"> </font><font color="#890000"><b>mov ax,sp</b></font></font></p>
+<p style="margin-bottom: 0in; line-height: 0.16in; margin-top: 0em; margin-left: 40px;">
+<font color="#110d06"><font color="#890000"><b>push ax</b></font></font></p>
+
+<p style="margin-right: 0.02in; margin-bottom: 0in; line-height: 0.18in;">
+<font color="#110d06"> The above sequence will work exactly the same way on any 8086-family processor.<font color="#000000">.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><br>
+</font></p>
+<h2 class="western"><font color="#110d06"><a name="_THE_SEGMENT_REGISTERS"></a>
+<a href="#T0606">6.6 THE SEGMENT REGISTERS</a></font></h2>
+<p style="margin-right: 0.03in; margin-bottom: 0in; line-height: 0.18in;">
+<font color="#110d06">Each of the four segment registers &#8212; CS, DS, ES,
+and SS
+&#8212; points to the start of a 64-Kb block, or segment, within which
+certain types of memory accesses may be performed. For instance, the
+stack must always reside in the segment pointed to by SS. Except as
+noted, segment registers can only be copied to or loaded from a memory
+operand, the stack, or a general-purpose register. Segment registers
+cannot be used as operands to instructions such as <b>add, dec</b>or <b>and</b> a property that complicates considerably the handling of blocks of memory larger than 64 Kb.</font></p>
+<p style="margin-right: 0.12in; margin-bottom: 0in; line-height: 0.18in;">
+<font color="#110d06">Since a segment register stores a 16-bit value
+just as a general-purpose register does, it sometimes becomes tempting
+to use one of the segment registers (almost always ES or DS, although
+SS could conceivably be used under certain circumstances) for temporary
+storage. Be aware, however, that because segment registers take on more
+specialized meanings in the protected modes of the 80286 and 80386
+processors, you should avoid using this technique in code that may at
+sometime need to be ported to protected mode. That doesn't mean you
+shouldn't use segment registers for temporary storage, as we'll see in
+the next chapter, just that you should be aware of the possible
+complications.</font></p>
+<p style="margin-left: 0.03in; margin-right: 0.12in; margin-bottom: 0in; line-height: 0.18in;">
+<font color="#110d06"> We'll discuss segments and segment registers at
+length in the next chapter; what's coming up next is just a quick
+glance at the segment registers and their uses.</font></p>
+<h3 class="western"><font color="#110d06"><a name="_The_CS_register"></a><a href="#T0606">The
+CS register</a></font></h3>
+<p style="margin-right: 0.05in; margin-bottom: 0in; line-height: 0.18in;">
+<font color="#110d06">The CS register points to the code segment, the
+64-Kb block within which IP points to the offset of the next
+instruction byte to be executed. The CS:IP pair cannot ever point to
+the wrong place for even one instruction; if it did, an incorrect
+instruction byte would be fetched and executed next. Consequently, both
+CS and IP must be set whenever CS is changed, and the setting of both
+registers must be accomplished by a single instruction. Although CS can
+be pushed, copied to memory, or copied to a general-purpose register,
+it can't be loaded directly from any of those sources. The only
+instructions that can load CS are the far versions of <b>jmp, call</b> and <b>ret</b> as well as <b>int</b> and <b>iret</b>, 
+what all those instructions have in common is that they load both CS and IP at the same time. Both <b>int</b> and the far version of <b>call</b> push both CS and IP on the stack so that <b>iret</b> or <b>
+ret</b> can return to the instruction following the <b>int</b> or <b>call.</b></font></p>
+<p style="margin: 0.01in 0.05in 0in 0.09in; line-height: 0in;">
+<font color="#110d06"><br>
+</font></p>
+<p style="margin-right: 0.05in; margin-bottom: 0in; line-height: 0.18in;">
+<font color="#110d06">In addition, segment override prefixes can be
+used to select CS as the segment accessed by many memory operands that
+normally access DS.</font></p>
+<h3 class="western"><font color="#110d06"><a name="_The_DS_register"></a><a href="#T0606">The
+DS register</a></font></h3>
+<p style="margin-right: 0.05in; margin-bottom: 0in; line-height: 0.18in;">
+<font color="#110d06">The DS register points to the data segment, the
+segment within which most memory operands reside by default. (Note,
+however, that many memory-addressing instructions can access any of the
+four segments with the help of a segment override prefix.)
+</font></p>
+<p style="margin-right: 0in; margin-bottom: 0in; line-height: 0.18in;">
+<font color="#110d06">DS can be copied to or loaded from a memory
+operand, the stack, or a general-purpose register. It can also be
+loaded, along with any general- purpose register, from a doubleword
+operand with the <b>lds</b> instruction.</font></p>
+<h3 class="western"><font color="#110d06"><a name="_The_ES_register"></a><a class="western" href="#T0606"><font size="4"><b>The
+ES register</b></font></a></font></h3>
+<p style="margin-right: 0.02in; margin-bottom: 0in; line-height: 0.18in;">
+<font color="#110d06"> The ES register points to the extra segment, the
+segment within which certain string instruction operands must reside.
+In addition, segment override prefixes can be used to select ES as the
+segment accessed by many memory operands that normally access DS.</font></p>
+<p style="margin: 0.01in 0.05in 0in 0.01in; line-height: 0in;">
+<font color="#110d06"><br>
+</font></p>
+<p style="margin-right: 0.05in; margin-bottom: 0in; line-height: 0.18in;">
+<font color="#110d06"> ES can be copied to or loaded from a memory
+operand, the stack, or a general-purpose register. ES can also be
+loaded, along with any general-purpose register, from a doubleword
+operand with the <b>les</b> instruction.</font></p>
+<h3 class="western"><font color="#110d06"><a name="_The_SS_register"></a><a class="western" href="#T0606"><font size="4"><b>The
+SS register</b></font></a></font></h3>
+<p style="margin-right: 0.02in; margin-bottom: 0in; line-height: 0.18in;">
+<font color="#110d06">The SS register points to the stack segment, the segment within which SP points to the top of the stack. The instruction <b>push</b> stores its operand in the stack segment, and <b>pop</b> retrieves its operand from the stack segment. In addition, <b>call, ret, int,</b> and <b>iret</b>
+all access the stack Memory accesses performed with BP as a base
+register also default to accessing the stack segment. Finally, segment
+override prefixes can be used to select SS as the segment accessed by
+many memory operands that normally access DS.</font></p>
+<p style="margin-bottom: 0in; line-height: 0.18in;">
+<font color="#110d06">Although SS can be loaded directly, like DS and
+ES, you must always remember that SS and SP operate as a pair and
+together must point to a valid stack whenever stack operations might
+occur. As discussed above, interrupts can occur at any time, so when
+you load SS, interrupts must be off until both SS and SP have been
+loaded to point to the new stack. Intel thoughtfully provided a feature
+designed to take care of such problems. Whenever you load a segment
+register via <b>mov</b> or <b>pop</b>, interrupts are automatically disabled until the following instruction has finished. For example, in the following code 
+</font></p>
+<p style="margin-left: 0.05in; text-indent: 0.24in; margin-bottom: 0in; line-height: 0.18in;">
+
+</p>
+<p style="margin: 0em 3.91in 0in 40px; line-height: 0.18in;">
+<font color="#110d06"><font color="#890000"><b>mov ss,dx </b></font>
+</font></p>
+<p style="margin: 0em 3.91in 0in 40px; line-height: 0.18in;">
+<font color="#110d06"><font color="#890000"><b>mov sp,ax </b></font>
+</font></p>
+
+<p style="margin-right: 0.02in; margin-bottom: 0in; line-height: 0.18in;">
+<font color="#110d06"> interrupts are disabled from the start of the first <b>mov</b> until the end of the second. After the second <b>mov</b>, interrupts are again enabled or disabled as they were before the first <b>mov</b>, depending on the state of the interrupt flag.</font></p>
+<p style="margin: 0in 0.1in 0in 0.39in; line-height: 0in;">
+<font color="#110d06"><br>
+</font></p>
+<p style="margin-right: 0.1in; margin-bottom: 0in; line-height: 0.18in;">
+<font color="#110d06">Unfortunately, there was a bug in early 8088
+chips that caused the automatic interrupt disabling described above to
+malfunction. Consequently, it's safest to explicitly disable interrupts
+when loading SS:SP, as follows:
+</font></p>
+<p style="margin: 0.15in 0.03in 0in 0.27in; line-height: 0in;">
+<font color="#110d06"><br>
+</font></p>
+<p style="margin: 0em 3.98in 0in 40px; line-height: 0.18in;">
+<font color="#110d06"><font color="#890000"><b>cli</b></font></font></p>
+<p style="margin: 0em 3.98in 0in 40px; line-height: 0.18in;">
+<font color="#110d06"><font color="#890000"><b>mov ss,dx </b></font>
+</font></p>
+<p style="margin: 0em 3.98in 0in 40px; line-height: 0.18in;">
+<font color="#110d06"><font color="#890000"><b>mov sp,ax </b></font>
+</font></p>
+<p style="margin: 0em 3.98in 0in 40px; line-height: 0.18in;">
+<font color="#110d06"><font color="#890000"><b>sti</b></font></font></p>
+<h2 class="western"><font color="#110d06"><a name="_THE_INSTRUCTION_POINTER"></a><a class="western" href="#T0607"><font style="font-size: 16pt;" size="4"><b>6.7
+THE INSTRUCTION POINTER</b></font></a></font></h2>
+<p style="margin-right: 0.06in; margin-bottom: 0in; line-height: 0.17in;">
+<font color="#110d06">IF, the instruction pointer, is an internal 8088
+register that is not directly accessible as an instruction operand. IF
+contains the offset in the code segment at which the next instruction
+to be executed resides. After one instruction is started, IP is
+normally advanced to point to the next instruction; however, branching
+instructions, such as <b>jmp</b> and <b>call</b>, load IF with the offset of the instruction being branched to. The instructions <b>call</b> and <b>int</b> automatically push IP, allowing <b>ret</b> or <b>iret</b> to continue execution at the instruction following the <b>call</b> or <b>int</b>.
+</font></p>
+<p style="margin: 0.01in 0.03in 0in 0.08in; line-height: 0in;">
+<font color="#110d06"><br>
+</font></p>
+<p style="margin-right: 0.03in; margin-bottom: 0in; line-height: 0.18in;">
+<font color="#110d06">As we've discussed, in one sense the instruction pointer points to the next instruction to be<i>fetched</i>
+from memory rather than the next instruction to be executed. This
+distinction arises because the bus interface unit (BID) of the 8088 can
+prefetch several instructions ahead of the instruction being carried
+out by the execution unit (EU). From the programmer's perspective,
+though, the instruction pointer always simply points to the next
+instruction byte to be executed; the 8088 handles all the complications
+of prefetching internally in order to present us with this consistent
+programming interface.</font></p>
+<h2 class="western"><font color="#110d06"><a name="_THE_FLAGS_REGISTER"></a><a class="western" href="#T0608"><font style="font-size: 16pt;" size="4"><b>6.8
+THE FLAGS REGISTER</b></font></a></font></h2>
+<p style="margin-right: 0.01in; margin-bottom: 0in; line-height: 0.17in;">
+<font color="#110d06">The flags register contains the nine bit-sized status flags of the 8088, as shown in Figure 6.2. Six of these flags &#8212;
+ CF, PF, AF, ZF, SF, and OF, collectively known as the status flags &#8212;
+ reflect the status of logical and arithmetic operations; two &#8212;
+ IF and DF &#8212; control aspects of the 8088's operation; and one &#8212;
+ TF &#8212; is used only by debugging software.</font></p>
+<p class="western" style="margin-bottom: 0.14in; line-height: 115%; widows: 2; orphans: 2;">
+<font color="#110d06"><br>
+<br>
+</font></p>
+<p class="western" style="margin-bottom: 0.14in; line-height: 115%; widows: 2; orphans: 2;">
+<font color="#110d06"><img src="ZOA_html_m42cd487a.jpg" align="bottom" border="0" height="318" width="631"></font></p>
+<p style="margin-left: 0.46in; margin-top: 0.01in; margin-bottom: 0in; line-height: 0in;">
+<font color="#110d06"><br>
+</font></p>
+<p style="margin-right: 0.02in; margin-bottom: 0in; line-height: 0.18in;">
+<font color="#110d06">The flags are generally tested singly (or
+occasionally in pairs or even three at a time, as when testing signed
+operands); however, many arithmetic and logical instructions set all
+six status flags to indicate result statuses, and a few instructions
+work directly with all or half of the flags register at once. For
+example, <b>pushf</b> pushes the flags register onto the stack, and <b>popf</b> pops the word on top of the stack into the flags register. (We'll encounter an interesting complication with <b>popf</b> on the 80286 in Chapter 15.) In Chapter 8 we'll discuss <b>lahf</b> and <b>sahf</b>, which copy the lower byte of the flags register to and from the AH register. Interrupts, both software (via <b>int</b>) and hardware (via the INTR pin), push the flags register on the stack, followed by CS and IP; <b>iret</b> reverses the action of an interrupt, popping the three words on top of the stack into IP, CS, and the flags register.</font></p>
+<p style="margin-right: 0.01in; margin-bottom: 0in; line-height: 0.18in;">
+<font color="#110d06">One more note: bear in mind that the six status
+flags are not set by every instruction. On some processors the status
+flags always reflect the contents of the accumulator, but not so with
+the 8088, where only specific instructions affect specific flags. For
+example, <b>inc</b> affects all the status flags <i>except</i> the
+carry flag; although that can be a nuisance, it can also be used to
+good advantage in summing multi-word memory operands, as we'll see in
+Chapter 9.</font></p>
+<p style="margin-right: 0.01in; margin-bottom: 0in; line-height: 0.18in;">
+<font color="#110d06">Along the same line, some instructions, such as
+division, leave some or all of the status flags in undefined states;
+that is, the flags are changed, but there is no guarantee as to what
+values they are changed to. Because <b>mov</b> and most branching
+instructions don't affect the status flags at all, you can, if you're
+clever, carry the result of an operation along for several
+instructions, a technique we'll look at in Chapter 9.</font></p>
+<p style="margin-bottom: 0in; line-height: 0.18in;"><font color="#110d06">Let's
+briefly examine each flag.</font></p>
+<h3 class="western"><font color="#110d06"><a name="_The_Carry_flag"></a><a class="western" href="#T0608"><font size="4"><b>The
+Carry flag (CF)</b></font></a></font></h3>
+<p style="margin-right: 0.06in; margin-bottom: 0in; line-height: 0.17in;">
+<font color="#110d06">The carry flag (CF for short) is set to 1 by
+additions that result in sums too large to fit in the destination and
+by subtractions that result in differences less than 0, and is set to 0
+by arithmetic and logical operations that produce results small enough
+to fit in the destination when viewed as unsigned integers. (The
+logical operations <b>and, or,</b> and <b>xor</b> always set CF to 0,
+since they always produce results that fit in the destination.) Also,
+when a shift or rotate instruction shifts a bit out of an operand's
+most significant bit (msb) or least significant bit (lsb), that bit is
+transferred to CF. As a special case, both the carry and overflow flags
+are set to 1 by multiplication, except when the result is small enough
+to fit in the lower half of the destination (considered as a signed
+number for <b>imul</b> and as an unsigned number for <b>mul</b>).</font></p>
+<p style="margin: 0.01in 0.05in 0in; line-height: 0in;">
+<font color="#110d06"><br>
+</font></p>
+<p style="margin-right: 0.05in; margin-bottom: 0in; line-height: 0.18in;">
+<font color="#110d06">The primary purpose of CF is to support addition,
+subtraction, rotation, and shifting of multi-byte or multi-word
+operands. In these applications, CF conveys the msb or lsb of one 8- or
+16-bit operation to the next operation, as for example in the 32-bit
+right shift
+</font></p>
+<p style="margin-left: 0.5in; margin-bottom: 0in; line-height: 0.18in;">
+</p>
+<p style="margin-left: 40px; margin-top: 0em; margin-bottom: 0in; line-height: 0.18in; page-break-after: avoid;">
+<font color="#110d06"><font color="#890000"><b>shr dx,1 ;shift upper 16
+bits</b></font></font></p>
+<p style="margin-left: 40px; margin-top: 0em; margin-bottom: 0in; line-height: 0.18in;">
+<font color="#110d06"><font color="#890000"><b>rcr ax,1 ;shift lower 16
+bits, including the
+bit</b></font></font></p>
+<p style="text-indent: 0.5in; margin-top: 0em; margin-bottom: 0in; line-height: 0.18in; margin-left: 0.5in;">
+<font color="#110d06"><font color="#890000"><b>; shifted down from the
+upper 16 bits</b></font></font></p>
+<p style="margin-left: 0.5in; margin-bottom: 0in; line-height: 0.18in;">
+<font color="#110d06"><br>
+</font></p>
+<p style="margin-bottom: 0in; line-height: 0.18in;"><font color="#110d06">Note that this makes CF the only flag that can participate directly in arithmetic operations.</font></p>
+<p style="margin-bottom: 0in; line-height: 0.18in;"><font color="#110d06"> CF
+can also be
+tested with the <b>jc</b> (which can be thought of as
+standing for
+&#8220;jump carry&#8221;) and the <b>jnc</b> (&#8220;jump no carry&#8221;)
+conditional jump instructions. The instruction <b>jc</b>
+is also
+known as both <b>jb</b> (&#8220;jump below&#8221;) and <b>jnae</b>
+(&#8220;jump not above or equal&#8221;). All three instructions
+assemble to the same machine code. Likewise, <b>jnc</b> is
+also
+known as both <b>jae</b> (&#8220;jump above or equal&#8221;) and <b>jnb</b>
+(&#8220;jump not below&#8221;). The carry and zero flags together
+can be tested with <b>ja</b> and <b>jbe</b>. <b>ja</b>
+is also known
+as <b>jnbe</b> (&#8220;jump not below or equal&#8221;), and <b>jbe</b>
+is also known as <b>jna</b> (&#8220;jump not above&#8221;). These
+conditional jumps are often used to determine unsigned greater
+than/less than/equal relationships between operands.</font></p>
+<p style="margin-bottom: 0in; line-height: 0.18in;"><font color="#110d06"> Alone
+among the
+six status flags , CF can be set, reset, and toggled directly with
+the <b>clc</b> (&#8220;clear carry&#8221;), <b>stc</b>
+(&#8220;set
+carry&#8221;), and <b>cmc</b> (&#8220;complement <font color="#030000">carry")
+instructions</font><font color="#33322d">. </font><font color="#030000">This
+can be useful for returning a status from a subroutine, or for
+modifying the action of </font><font color="#030000"><b>ade,
+sbb</b></font><font color="#1d1913"><b>,
+</b></font><font color="#030000"><b>rei</b></font><font color="#1d1913">,
+</font><font color="#030000">or any other in</font><font color="#1d1913">s</font><font color="#030000">tru</font><font color="#1d1913">c</font><font color="#030000">tion
+that includes CF in its calculations.</font></font></p>
+<p style="margin: 0.01in 0.03in 0in 0.01in; line-height: 0in;">
+<font color="#110d06"><br>
+</font></p>
+<p style="margin-right: 0.03in; margin-bottom: 0in; line-height: 0.18in;">
+<font color="#110d06">Note that CF is <i>not</i> affected by <b>inc</b> or <b>dec</b>, although it is affected by add and sub. (We'll see one use for this trait of <b>inc</b> and <b>dec</b> in Chapter 9.) Also, be aware that since <b>neg</b> is logically equivalent to subtracting an operand from 0, CF is always set by <b>neg</b>, except when the operand is 0. (Zero minus anything other than zero always causes borrow).</font></p>
+<h3 class="western"><font color="#110d06"><a name="_The_Parity_flag"></a><a class="western" href="#T0608"><font size="4"><b>The
+Parity flag (PF)</b></font></a></font></h3>
+<p style="margin-right: 0.01in; margin-bottom: 0in; line-height: 0.18in;">
+<font color="#110d06">The parity flag (PF for short) is set to 1
+whenever the least significant byte of the result of an arithmetic or
+logical operation contains an even number of bits that are set to 1,
+and it is set to 0 whenever the least significant byte contains an odd
+number of bits that are 1.</font></p>
+<p style="margin: 0.01in 0.03in 0in 0.01in; line-height: 0in;">
+<font color="#110d06"><br>
+</font></p>
+<p style="margin-right: 0.03in; margin-bottom: 0in; line-height: 0.18in;">
+<font color="#110d06">PF can be tested only with the <b>jp</b> (&#8220;jump parity") and <b>jnp</b> (&#8220;jump no parity") conditional jump instructions. The instruction <b>jp</b> is also known as <b>jpe</b> (&#8220;jump parity even"), and <b>jnp</b> is also known as <b>jpo</b>
+(&#8220;jump parity odd"). Generally, PF is useful for generating and testing
+parity bits for data storage and transmission. Apart from that, I know
+of no good uses for PF, although such uses may well exist.</font></p>
+<h3 class="western"><font color="#110d06"><a name="_The_Auxiliary_Carry"></a><a class="western" href="#T0608"><font size="4"><b>The
+Auxiliary Carry flag (AF)</b></font></a></font></h3>
+<p style="margin-right: 0.01in; margin-bottom: 0in; line-height: 0.18in;">
+<font color="#110d06">The auxiliary carry flag (AF for short) is set to
+1 if arithmetic or logical operation results in carry out of bit 3 of
+the destination and is set to 0 otherwise. Alone among the six status
+flags, AF cannot be tested by any conditional jump instruction. In
+fact, the only instructions that pay any attention at all to AF are <b>aaa, aas, daa,</b> and <b>das</b>,
+which use AF to help sort out the results of ASCII or BCD arithmetic.
+Apart from ASCII and BCD arithmetic, which we'll discuss in Chapter 9,
+I've never found a use for AF.</font></p>
+<h3 class="western"><font color="#110d06"><a name="_The_Zero_flag"></a><a class="western" href="#T0608"><font size="4"><b>The
+Zero flag (ZF)</b></font></a></font></h3>
+<p style="margin-right: 0.03in; margin-bottom: 0in; line-height: 0.18in;">
+<font color="#110d06">The zero flag (ZF for short) is set to 1 if an
+arithmetic or logical operation produces a 0 result or to 0 otherwise.
+ZF is generally used to test for equality of two operands or for zero
+results via the <b>jz</b> ("jump zero") and <b>jnz</b> ("jump not zero") conditional jumps, also known as <b>je</b> ("jump equal") and <b>jne</b>
+("jump not equal"), respectively. As discussed above, ZF and CF can be
+tested together with a variety of conditional jumps. The zero, sign,
+and overflow flags together can be tested with <b>jg</b> ("jump greater"), also known as <b>jnle</b> ("jump not less or equal") and with <b>jle</b>, also known as <b>jng</b>
+("jump not greater"). These conditional jumps are often used to
+determine signed greater than/less than/equal relationships between
+operands.</font></p>
+<h3 class="western"><font color="#110d06"><a name="_The_Sign_flag"></a><a class="western" href="#T0608"><font size="4"><b>The
+Sign flag (SF)</b></font></a></font></h3>
+<p style="margin-right: 0.03in; margin-bottom: 0in; line-height: 0.18in;">
+<font color="#110d06">The sign flag (SF for short) is set to the state
+of the most significant bit of the result of an arithmetic or logical
+operation. For signed arithmetic, the most Significant bit is the sign
+of the operand, so an SF setting of 1 indicates a negative result.</font></p>
+<p style="margin-right: 0.01in; margin-bottom: 0in; line-height: 0.18in;">
+<font color="#110d06">SF is generally used to test for negative results via the <b>js</b> ("jump sign") and <b>jns</b> ("jump no sign") conditional jumps. As discussed above, the sign zero, and overflow flags together can be tested with <b>jg</b> and <b>jle</b>. The sign and overflow flags together can be tested with <b>jl</b> ("jump less") and <b>jge</b> ("jump greater or equal"). The instruction <b>jl</b> is also known as <b>jnge</b> ("jump not greater or equal") and <b>jge</b> is also known as <b>jnl</b> ("jump not less").</font></p>
+<h3 class="western"><font color="#110d06"><a name="_The_Overflow_flag"></a><a class="western" href="#T0608"><font size="4"><b>The
+Overflow flag (OF)</b></font></a></font></h3>
+<p style="margin-right: 0.03in; margin-bottom: 0in; line-height: 0.18in;">
+<font color="#110d06">The overflow flag (OF for short) is set to 1 if
+the carry into the most significant bit of the result of an operation
+and the carry out of that bit don't match. Overflow indicates that the
+result, interpreted as a signed result, is too large to fit in the
+destination and is therefore not a valid signed result of the
+operation. (It may still be a valid unsigned result, however; CF is
+used to detect too large and too small unsigned results.) In short, OF
+is set to 1 if the result has overflowed (grown too large for) the
+destination in terms of signed arithmetic. I know of no use for OF
+other than in signed arithmetic. The logical operations <b>and, or</b>, and <b>xor</b> always set OF to 0.</font></p>
+<p style="margin-right: 0.01in; margin-bottom: 0in; line-height: 0.18in;">
+<font color="#110d06">OF can be tested in any of several ways. The <b>jo</b> ("jump overflow") and <b>jno</b> ("jump no overflow") instructions branch or don't branch depending on the state of OF. As described above, the <b>jl, jnl, jle, jnle, jg, jng, jge,</b> and <b>jnge</b> instructions branch or don't branch depending on the states of OF, SF, and sometimes ZF. Finally, the <b>int</b> instruction executes an int 4 if and only if OF is set.</font></p>
+<h3 class="western"><font color="#110d06"><a name="_The_Interrupt_flag"></a><a class="western" href="#T0608"><font size="4"><b>The
+Interrupt flag (IF)</b></font></a></font></h3>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06">The
+interrupt flag (IF for short) enables and disables maskable hardware
+interrupts. When IF is 1, all hardware interrupts are recognized by the
+8088. When IF is 0, maskable interrupts (that is, those interrupts
+signaled on the INTR pin) are not recognized until such time as IF is
+set to 1. (Nonmaskable interrupts &#8212; interrupts signaled on the NMI pin
+&#8212; are recognized by the 8088 regardless of the setting of IF, as are
+software interrupts, which are invoked with the <b>int</b> instruction.) IF is set to 1 (enabling interrupts) with <b>sti</b> and is set to 0 (disabling interrupts) with <b>cli</b>. IF is also automatically set to 0 when a hardware interrupt occurs or an <b>int</b>
+instruction is executed. In addition, as described in the discussion of
+the SS register above, interrupts are automatically disabled until the
+end of the following instruction whenever a segment register is loaded.</font></p>
+<p style="margin: 0.01in 0.01in 0in; line-height: 0in;">
+<font color="#110d06"><br>
+</font></p>
+<p style="margin-right: 0.01in; margin-bottom: 0in; line-height: 0.18in;">
+<font color="#110d06"><font color="#0b0703"> The PC is an
+interrupt-based computer, so interrupts should in general be disabled
+as infrequently and for as short a time as possible. System resources
+such as the keyboard and time-of-day clock are interrupt based and
+won't function properly if interrupts are off for too long. You really
+only need to disable interrupts in code that could malfunction if it is
+interrupted, such as code that services time-sensitive hardware or code
+that uses multiple prefix bytes per instruction. (The latter, as
+discussed in Chapter 10, should be avoided whenever possible.)</font></font></p>
+<p style="margin-bottom: 0in; line-height: 0.17in;"><font color="#110d06"><font color="#0b0703"> Leave interrupts enabled at all other times.</font></font></p>
+<h3 class="western"><font color="#110d06"><font color="#0b0703"><a name="_The_Direction_flag"></a><a class="western" href="#T0608"><font size="4"><b>The
+Direction flag (DF)</b></font></a></font></font></h3>
+<p style="margin-left: 0.01in; margin-right: 0in; margin-bottom: 0in; line-height: 0.18in;">
+<font color="#110d06"><font color="#0b0703"> The direction flag (DF for
+short) controls the direction in which the pointer registers used by
+the string instructions (SI and DI) count. When DF is 1 (as set with <b>std</b>), string instruction pointer registers decrement after each memory access; when DF is 0 (as set with <b>cld</b>),
+string instruction pointer registers increment. We'll discuss the
+direction flag in detail when we cover the string instructions in
+Chapter 10.</font></font></p>
+<h3 class="western"><font color="#110d06"><font color="#0b0703"><a name="_The_Trap_flag"></a><a class="western" href="#T0608"><font size="4"><b>The
+Trap flag (TF)</b></font></a></font></font></h3>
+<p style="margin-right: 0in; margin-bottom: 0in; line-height: 0.18in;">
+<font color="#110d06"><font color="#0b0703">The trap flag (TF for
+short) instructs the 8088 to execute a software interrupt 1 after the
+next instruction. This is specifically intended to allow debugging
+software to single-step through code; it has no other known use.</font></font></p>
+<h2 class="western"><font color="#110d06"><font color="#0b0703"><a name="_THERE'S_MORE_TO"></a><a class="western" href="#T0609"><font style="font-size: 16pt;" size="4"><b>6.9
+THERE'S MORE TO LIFE THAN REGISTERS</b></font></a></font></font></h2>
+<p style="margin-right: 0in; margin-bottom: 0in; line-height: 0.18in;">
+<font color="#110d06"><font color="#0b0703"> The register set is just
+one aspect of the 8088, albeit an important aspect indeed. The other
+key features of the 8088 are memory addressing, which expands the
+8088's working data set from the few bytes that can be stored in the
+registers to the million bytes that can be stored in memory, and the
+instruction set, which allows manipulation of registers and memory
+locations and provides program flow control (branching and decision
+making) as well. We'll look at memory addressing next, then move on to
+the limitless possibilities of the instruct instruction set.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>

@@ -1,0 +1,2453 @@
+<h1 class="western" style="page-break-before: always;"><font color="#110d06"><font color="#0b0703"><a name="_Chapter_9:_"></a><a class="western" href="#TC09"><font size="5"><b>Chapter
+9: Around and About the Instruction Set</b></font></a></font></font></h1>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<table style="width: 557px; height: 384px;" border="1" bordercolor="#bfbfbf" cellpadding="4" cellspacing="0" frame="void" rules="groups">
+<col width="611"> <tbody>
+<tr>
+<td bgcolor="#bfbfbf" width="611">
+<p class="western"><b>9.1 </b><a class="western" href="#_SHORTCUTS_FOR_HANDLING">SHORTCUTS
+FOR HANDLING ZERO AND CONSTANTS</a></p>
+</td>
+</tr>
+</tbody> <tbody>
+<tr>
+<td bgcolor="#bfbfbf" width="611">
+<p class="western"><b>9.2 </b><a class="western" href="#_inc_AND_dec">inc AND dec</a></p>
+</td>
+</tr>
+</tbody> <tbody>
+<tr>
+<td bgcolor="#bfbfbf" width="611">
+<p class="western"><b>9.3 </b><a class="western" href="#_CARRYING_RESULTS_ALONG">CARRYING
+RESULTS ALONG IN A FLAG</a></p>
+</td>
+</tr>
+</tbody> <tbody>
+<tr>
+<td bgcolor="#bfbfbf" width="611">
+<p class="western"><b>9.4 </b><a class="western" href="#_BYTE-TO-WORD_AND_WORD-TO-DOUBLEWORD">BYTE-TO-WORD
+AND WORD-TO-DOUBLEWORD CONVERSION</a></p>
+</td>
+</tr>
+<tr>
+<td bgcolor="#bfbfbf" width="611">
+<p class="western"><b>9.5 </b><a class="western" href="#_xchg_IS_HANDY">xchg IS HANDY
+WHEN REGISTERS ARE TIGHT</a></p>
+</td>
+</tr>
+<tr>
+<td bgcolor="#bfbfbf" width="611">
+<p class="western"><b>9.6 </b><a class="western" href="#_DESTINATION:__REGISTER">DESTINATION:
+REGISTER</a></p>
+</td>
+</tr>
+<tr>
+<td bgcolor="#bfbfbf" width="611">
+<p class="western"><b>9.7 </b><a class="western" href="#_neg_AND_not">neg AND not</a></p>
+</td>
+</tr>
+<tr>
+<td bgcolor="#bfbfbf" width="611">
+<p class="western"><b>9.8 </b><a class="western" href="#C98">ROTATES AND SHIFTS</a></p>
+</td>
+</tr>
+<tr>
+<td bgcolor="#bfbfbf" width="611">
+<p class="western"><b>9.9 </b><a class="western" href="#_ASCII_AND_DECIMAL">ASCII AND
+DECIMAL ADJUST</a></p>
+</td>
+</tr>
+<tr>
+<td bgcolor="#bfbfbf" width="611">
+<p class="western"><b>9.10 </b><a class="western" href="#_MNEMONICS_THAT_COVER">MNEMONICS
+THAT COVER MULTIPLE INSTRUCTIONS</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> So
+far, we've covered
+assembler programming in a fairly linear fashion, with one topic
+leading neatly to the next and with related topics grouped by
+chapter. Alas, assembler programming isn't so easily pigeonholed. For
+one thing, the relationships between the many facets of assembler
+programming are complex; consider how often I've already mentioned
+the string instructions, which we have yet to discuss formally. For
+another, certain aspects of assembler stand alone, and are simply not
+particularly closely related to any other assembler topic.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Some interesting
+members of the 8088's instruction set fall into the category of
+stand-alone topics, as do unusual applications of a number of
+instructions. For example, while the knowledge that <b>inc ax</b>
+is
+a byte shorter than <b>inc al</b> doesn't have any
+far-reaching
+implications, that knowledge can save a byte and a few cycles when
+applied properly. Likewise, the use of <b>cbw</b> to
+convert certain
+unsigned byte values to word values is a self-contained programming
+technique.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Over the last few
+chapters, we've covered the 8088's registers, memory addressing, and
+8080-influenced instructions. In this chapter, we'll touch on more
+8088 instructions. Not all the instructions, by any means (remember,
+I'm assuming you already know 8088 assembler) but rather those
+instructions with subtle, useful idiosyncracies. These instructions
+fall into the class described above &#8212; well worth knowing but
+unrelated to one another &#8212; so this chapter will be a potpourri
+of assembler topics, leaping from one instruction to another.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> In
+the next chapter
+we'll return to a more linear format as we discuss the string
+instructions. After that we'll get into branching, look-up tables,
+and more. For now, though, hold on to your hat as we bound through
+the instruction set.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<h2 class="western"><font color="#110d06"><font color="#0b0703"><a name="_SHORTCUTS_FOR_HANDLING"></a><a class="western" href="#T0901"><font style="font-size: 16pt;" size="4"><b>9.1
+SHORTCUTS FOR HANDLING ZERO AND CONSTANTS</b></font></a></font></font></h2>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> The
+instruction set of
+the 8088 can perform any of a number of logical and arithmetic
+operations on byte-and word-sized, signed and unsigned integer
+values. What's more, those values may be stored either in registers
+or in memory. Much of the complexity of the 8088's instruction set
+results from this flexibility &#8212; and so does the slow
+performance of many of the 8088's instructions. However, some of the
+8088's instructions can be used in a less flexible &#8212; but far
+speedier &#8212; fashion. Nowhere is this more apparent than in
+handling zero.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Zero pops up
+everywhere in assembler programs. Up counters are initialized to
+zero. Down counters are counted down to zero. Flag bytes are
+compared to zero. Parameters of value zero are passed to
+subroutines. Zero is surely the most commonly-used value in
+assembler programming &#8212; and the easiest value to handle, as
+well.</font></font></p>
+<h3 class="western"><font color="#110d06"><font color="#0b0703"><a name="_MAKING_ZERO"></a><a class="western" href="#T0901"><font size="4"><b>MAKING
+ZERO</b></font></a></font></font></h3>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> For
+starters, there is
+almost never any reason to assign the immediate value zero to a
+register. Why assign zero to a register when <b>sub </b><i><b>reg</b></i><b>,</b><i><b>reg</b></i>
+or <b>xor </b><i><b>reg</b></i><b>,</b><i><b>reg</b></i>
+always zeros
+the register in fewer cycles (and also in fewer bytes for 16-bit
+registers)? The only time you should assign the value zero to a
+register rather than clearing the register with <b>sub</b>
+or <b>xor</b>
+is when you need to preserve the flags, since <b>mov</b>
+doesn't
+affect the flags but <b>sub</b> and <b>xor</b>
+do.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<h3 class="western"><font color="#110d06"><font color="#0b0703"><a name="_INITIALIZING_CONSTANTS_FROM"></a> <a class="western" href="#T0901"><font size="4"><b>INITIALIZING
+CONSTANTS FROM THE REGISTERS</b></font></a></font></font></h3>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> As
+we discussed in the
+last chapter, it pays to clear a direct-addressed memory variable by
+zeroing AL or AX and storing that register to the memory variable. If
+you're setting two or more direct-addressed variables to any
+specific value (and here we're talking about <i>any</i>
+value, not
+just zero), it's worth storing that value in the accumulator and then
+storing the accumulator to the memory variables. (When initializing
+large blocks of memory, <b>rep stos</b> works better
+still, as we'll
+see in Chapter 10.) The basic principle is this: <i>avoid extra
+immediate-operand bytes by storing frequently-used constants in
+registers and using the registers as operands</i>.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> <a name="L901R"></a><a class="western" href="#L901">Listing
+9-1</a><font color="#000099"> </font>provides
+an example of
+initializing multiple memory variables to the same value. This
+listing, which stores 0FFFFh in AX and then stores AX to three memory
+variables, executes in 17.60 us per three-word initialization. That's
+more than 28% faster than the 22.63 us per initialization of
+<a name="L902R"></a><a class="western" href="#L902">Listing 9-2</a><font color="#000099">,</font>
+which stores the immediate value 0FFFFh to each of the three words. <a class="western" href="#L901">Listing 9-1</a><font color="#000099">
+</font>is that much faster than <a class="western" href="#L902">Listing
+9-2</a><font color="#000099"> </font><i>even
+though </i><a class="western" href="#L901">Listing
+9-1</a><font color="#000099"><i> </i></font><i>is
+one instruction
+longer per initialization.</i> The difference? Each of the three <b>mov</b>
+instructions in <a class="western" href="#L902">Listing
+9-2</a> is 3
+bytes longer than the corresponding <b>mov</b> in <a class="western" href="#L901">Listing
+9-1</a><font color="#000099">:</font> two
+bytes are taken up by the
+immediate value 0FFFFh, and one extra byte is required because the
+accumulator-specific direct-addressing form of <b>mov</b>
+isn't used. That's a total of 9 extra bytes for the three <b>mov</b>
+instructions of <a class="western" href="#L902">Listing
+9-2</a><font color="#000099">,</font>
+more than offsetting the 3 bytes required by the extra instruction
+<b>mov ax,0ffffh</b> of <a class="western" href="#L901">Listing 9-1</a><font color="#000099">.</font>
+(Remember, the 8088 doesn't sign-extend immediate operands to <b>mov</b>.)
+As always, those extra bytes take 4 cycles each to fetch.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> <i>Shorter
+is better.</i></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> If
+you're initializing
+more than one register to zero, you can save 1 cycle per additional
+register by initializing just one of the registers, then copying it
+to the other registers, as follows:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> sub si,si ;point
+to offset 0 in DS</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov di,si ;point
+to offset 0 in ES</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov dx,si ;initialize
+counter to 0</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">While <b>mov </b><i><b>reg</b></i><b>,</b><i><b>reg</b></i>
+is 2 bytes long, the same as <b>sub </b><i><b>reg</b></i><b>,</b><i><b>reg</b></i>,
+according to the official specs <b>mov</b> is the faster
+of the two
+by 1 cycle. Whether this translates into any performance advantage
+depends on the code mix &#8212; if the prefetch queue is empty, code
+fetching time will dominate and <b>mov</b> will have no
+advantage &#8212;
+but it can't hurt and <i>might</i> help.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Similarly, if you're
+initializing multiple 8-bit registers to the same <i>non-zero</i>
+value, you can save up to 2 cycles per additional register by
+initializing one of the registers and copying it to the other(s). While
+<b>mov </b><i><b>reg</b></i><b>,</b><i><b>immed8</b></i>
+is 2
+cycles slower than <b>mov </b><i><b>reg</b></i><b>,</b><i><b>reg</b></i>,
+both instructions are the same size.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Finally, if you're
+initializing multiple 16-bit registers to the same non-zero value, it
+<i>always</i> pays to initialize one register and copy it
+to the
+other(s). The reason: <b>mov </b><i><b>reg</b></i><b>,</b><i><b>immed16</b></i>,
+at 3 bytes in length, is a byte longer (and 2 cycles slower) than <b>mov
+</b><i><b>reg</b></i><b>,</b><i><b>reg</b></i>.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<h3 class="western"><font color="#110d06"><font color="#0b0703"><a name="_INITIALIZING_TWO_BYTES"></a><a class="western" href="#T0901"><font size="4"><b>INITIALIZING
+TWO BYTES WITH A SINGLE mov</b></font></a></font></font></h3>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">While we're on the
+topic of initializing registers and variables, let's take a quick
+look at initializing paired bytes. Suppose we want to initialize AH
+to 16h and AL to 1. The obvious solution is to set each register to
+the desired value:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov ah,16h</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov al,1</b></font></font></font></p>
+
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703">However,
+a better
+solution is to set the pair of registers with a single <b>mov</b>:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov ax,1601h</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> The
+paired-register
+initialization is a byte shorter and 4 cycles faster...<i>and
+does
+exactly the same thing as the separate initializations</i>!</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> A
+trick that makes it
+easier to initialize paired 8-bit registers is to shift the value for
+the upper register by 8 bits. For example, the last initialization
+could be performed as:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov ax,(16h
+shl 8) + 1</b></font></font></font></p>
+
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">This method has two
+benefits. First, it's easy to distinguish between the values for the
+upper and lower registers; 16 and 1 are easy to pick out in the above
+example. Second, it's much simpler to handle non-hexadecimal values
+by shifting and adding. You must admit that:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov dx,(201
+shl 8) + 'A'</b></font></font></font></p>
+
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703">is
+easier to write and
+understand than:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov dx,0c941h ;DH=201,
+DL='A'</b></font></font></font></p>
+
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> You
+need not limit
+paired-byte initializations to registers. Adjacent byte-sized memory
+variables can be initialized with a single word access as well. If
+you do use paired-byte initializations of memory variables, though,
+be sure to place prominent comments around the memory variables;
+otherwise, you or someone else might accidentally separate the pair
+at a later date, ruining the initialization.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<h3 class="western"><font color="#110d06"><font color="#0b0703"><a name="_MORE_FUN_WITH"></a><a class="western" href="#T0901"><font size="4"><b>MORE
+FUN WITH ZERO</b></font></a></font></font></h3>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">What else can we do
+with zero? Well, we can test the zero/non-zero status of a register
+with either <b>and </b><i><b>reg</b></i><b>,</b><i><b>reg</b></i>
+or
+<b>or </b><i><b>reg</b></i><b>,</b><i><b>reg</b></i>.
+Both of these
+instructions set the Zero flag just as <b>cmp </b><i><b>reg</b></i><b>,0</b>
+would...and they execute faster and are anywhere from 0 to 2 bytes
+shorter than <b>cmp</b>. (Both <b>and </b><i><b>reg</b></i><b>,</b><i><b>reg</b></i>
+and <b>or </b><i><b>reg</b></i><b>,</b><i><b>reg</b></i>
+are
+guaranteed to be at least 1 byte shorter than <b>cmp </b><i><b>reg</b></i><b>,0</b>
+except when <i><b>reg</b></i> is AL, in which
+case all three
+instructions are the same length.) <a name="L903R"></a><a class="western" href="#L903">Listing
+9-3</a>, which uses <b>and dx,dx</b> to test for the
+zero status of
+DX, clocks in at 3.62 us per test. That's 25% faster than the 4.53
+us per test of <a name="L904R"></a><a class="western" href="#L904">Listing
+9-4</a>, which
+uses <b>cmp dx,0</b>.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> As
+described in the
+last chapter, it is (surprisingly) faster to load the accumulator
+from a direct-addressed memory variable and <b>and</b> or <b>or</b>
+the accumulator with itself in order to test whether that memory
+variable is zero than it is to simply compare the memory variable
+with an immediate operand. For instance:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov al,[ByteFlag]</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> and al,al</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> jnz FlagNotZero</b></font></font></font></p>
+
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703">is
+equivalent to and
+faster than:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> cmp [ByteFlag],0</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> jnz FlagNotZero</b></font></font></font></p>
+
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Finally, there are
+some cases in which tests that are really not zero/non-zero tests can
+be converted to tests for zero. For example, consider a test to
+check whether or not DX is 0FFFFh. We could use <b>cmp dx,0ffffh</b>,
+which is three bytes long and takes 4 cycles to execute. On the
+other hand, if we don't need to preserve DX (that is, if we're
+performing a one-time-only test) we could simply use <b>inc dx</b>,
+which is only one byte long and takes just 2 cycles to execute, and
+then test for a zero/non-zero status. So, if we don't mind altering
+DX in the course of the test:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> cmp dx,0ffffh</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> jnz NotFFFF</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-left: 40px;"><font color="#110d06"><font color="#0b0703">and:</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> inc dx</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> jnz NotFFFF</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703">are
+functionally the
+same...save that the latter version is much smaller and faster.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> A
+similar case of
+turning a test into a zero/non-zero test occurs when testing a value
+for membership in a short sequence of consecutive numbers &#8212; the
+equivalent of a C switch construct with just a few cases consisting
+of consecutive values. (Longer and/or non-consecutive sequences
+should be handled with look-up tables.) For example, suppose that
+you want to perform one action if CX is 4, another if CX is 3, a
+third action if CX is 2, and yet another if CX is 1. <a name="L905R"></a><a class="western" href="#L905">Listing
+9-5</a>, which uses four <b>cmp</b> instructions to
+test for the four
+cases of interest, runs in 17.01 us per switch handled. That's a
+good 4.94 us slower per switch than the 12.07 us of <a name="L906R"></a><a class="western" href="#L906">Listing
+9-6</a>, so <a class="western" href="#L905">Listing
+9-5</a> runs at
+less than 75% of the speed of <a class="western" href="#L906">Listing
+9-6</a>. <a class="western" href="#L906">Listing
+9-6</a> gets its
+speed boost by using the 1-byte <b>dec cx</b> instruction
+rather than
+the 3-byte <b>cmp cx,</b><i><b>immed8</b></i>
+instruction to test for
+each of the four cases, thereby turning all the tests into
+zero/non-zero tests.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Unorthodox, yes &#8212;
+but very effective. The moral is clear: <i>even when the 8088
+has an
+instruction that's clearly intended to perform a given task (such as
+</i><i><b>cmp</b></i><i> for
+comparing), don't assume that
+instruction is the best way to perform that task under all
+conditions</i>.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<h2 class="western"><font color="#110d06"><font color="#0b0703"><a name="_inc_AND_dec"></a>
+<a class="western" href="#T0902"><font style="font-size: 16pt;" size="4"><b>9.2
+inc AND dec</b></font></a></font></font></h2>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> <b>inc</b>
+and <b>dec</b>
+are simple, unpretentious instructions &#8212; and more powerful than
+you might imagine. Since <b>inc</b> and <b>dec</b>
+require only one
+operand (the immediate value 1 that's added or subtracted is implied
+by the instruction), they are among the shortest (1 to 4 bytes) and
+fastest (2 to 3 cycles for a register operand, but up to 35 for a
+word-sized memory operand &#8212; keep your operands in registers!)
+instructions of the 8088. In particular, when working with 16-bit
+register operands, <b>inc</b> and <b>dec</b>
+are the fastest
+arithmetic instructions of the 8088, with an execution time of 2
+cycles paired with a length of just 1 byte.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> How
+much difference
+does it make to use <b>inc</b> or <b>dec</b>
+rather than <b>add</b>
+or <b>sub</b>? When you're manipulating a register, the
+answer is: a <i>lot</i>. In fact, it's actually better to
+use <i>two</i> <b>inc</b>
+instructions to add 2 to a 16-bit register than to add 2 with a
+single <b>add</b>, because a single <b>add</b>
+with an immediate
+operand of 2 is 3 bytes long, three times the length of a 16-bit
+register <b>inc</b>. (Remember, shorter is better, thanks
+to the
+prefetch queue cycle-eater.)</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> The
+same is true of
+<b>dec</b> versus <b>sub</b> as of <b>inc</b>
+versus <b>add</b>. For
+example, the code in <a name="L907R"></a><a class="western" href="#L907">Listing
+9-7</a>,
+which uses a 16-bit register <b>dec</b> instruction,
+clocks in at
+5.03 us per loop, 33% faster than the 6.70 us of the code in <a name="L908R"></a><a class="western" href="#L908">Listing
+9-8</a>, which uses a <b>sub</b> instruction to
+decrement DX.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> The
+difference between
+the times of <a class="western" href="#L907">Listings
+9-7</a> and <a class="western" href="#L908">9-8</a>
+is primarily attributable to the 8 cycles required to fetch the two
+extra bytes of the <b>sub</b> instruction. To illustrate
+that point,
+consider <a name="L909R"></a><a class="western" href="#L909">Listing
+9-9</a>, which
+decrements DX twice per loop. <a class="western" href="#L909">Listing
+9-9</a> executes in 5.80 us per loop, approximately halfway
+between
+the times of <a class="western" href="#L907">Listings
+9-7</a> and
+<a class="western" href="#L908">9-8</a>.
+That's just what we'd
+expect, since the loop in <a class="western" href="#L909">Listing
+9-9</a>
+is 1 byte longer than the loop in <a class="western" href="#L907">Listing
+9-7</a> and 1 byte shorter than the loop in <a class="western" href="#L908">Listing
+9-8</a>.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> <i>Use
+</i><i><b>inc</b></i><i>
+or </i><i><b>dec</b></i><i> in
+preference to </i><i><b>add</b></i><i>
+or </i><i><b>sub</b></i><i>
+whenever possible</i>.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">(Actually, when SP is
+involved there's an exception to the above rule for code that will
+run on 80286 &#8212; or 80386 &#8212; based computers. Such code
+should use <b>add</b>, <b>sub</b>, <b>push</b>,
+and <b>pop</b> to
+alter SP in preference to <b>inc</b> and <b>dec</b>,
+because an odd
+stack pointer is highly undesirable on 16-and 32-bit processors. I'll
+cover this topic in detail in Chapter 15.)</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> I'd
+like to pause at
+this point to emphasize that the 16-bit register versions of <b>inc</b>
+and <b>dec</b> are different beasts from the
+run-of-the-mill <b>inc</b>
+and <b>dec</b> instructions. As with the 16-bit register
+<b>xchg</b>-with-AX instructions we discussed in the last
+chapter,
+there are actually two separate <b>inc</b> instructions on
+the 8088,
+one of which is a superset of the other. (The same is true of <b>dec</b>,
+but we'll just discuss <b>inc</b> for now.)</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Figure 9.1 illustrates
+the two forms of <b>inc</b>. While the special form is
+limited to
+16-bit register operands, it has the advantage of being a byte
+shorter and a cycle faster than the <i>mod-reg-rm</i>
+register form,
+even when both instructions operate on the same register. As you'd
+expect, 8088 assemblers automatically use the more efficient special
+version whenever possible, so you don't need to select between the
+two forms explicitly. However, it's up to you to use 16-bit register
+<b>inc</b> (and <b>dec</b>) instructions
+whenever you possibly can,
+since only then can the assembler assemble the more efficient form of
+those instructions.</font></font></p>
+<p class="western" style="margin-bottom: 0in;" align="center"><font color="#110d06"><font color="#0b0703"><img src="ZOA_html_m42cca5d4.jpg" align="bottom" border="0" height="228" width="657"></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> For
+example, <a class="western" href="#L907">Listing
+9-7</a>, which uses the 1-byte-long 16-bit register form of <b>dec</b>
+to decrement the 16-bit DX register, executes in 5.03 us per loop,
+15% faster than <a name="L910R"></a><a class="western" href="#L910">Listing
+9-10</a>,
+which uses the 2-byte-long <i>mod-reg-rm</i> form of <b>dec</b>
+to
+decrement the 8-bit DL register and executes in 5.79 us per loop.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<h3 class="western"><font color="#110d06"><font color="#0b0703"><a name="_USING_16-BIT_inc"></a><a class="western" href="#T0902"><font size="4"><b>USING
+16-BIT inc AND dec INSTRUCTIONS FOR 8-BIT OPERATIONS</b></font></a></font></font></h3>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> If
+you're clever, you
+can sometimes use the 16-bit form of <b>inc</b> or <b>dec</b>
+even
+when you only want to affect an 8-bit register. Consider <a name="L911R"></a><a class="western" href="#L911">Listing
+9-11</a>, which uses AL to count from 0 to 8. Since AL will never
+pass 0FFh and turn over (the only circumstance in which <b>inc ax</b>
+modifies AH), it's perfectly safe to use <b>inc ax</b>
+rather than
+<b>inc al</b>. In this case, both instructions always
+produce the
+same result; however, <b>inc ax</b> produces that result
+considerably
+more rapidly than <b>inc al</b>. If you do use such a
+technique,
+however, remember that the flags are set on the basis of the <i>whole
+operand</i>. For example, <b>dec ax</b> will set the
+Zero flag only
+when both AH and AL &#8212; not AL alone &#8212; go to zero. This
+seems obvious, but if you're thinking of AL as the working register,
+as in <a class="western" href="#L911">Listing 9-11</a>,
+it's easy to
+forget that <b>dec ax</b> sets the flags to reflect the
+status of AX,
+not AL.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> To
+carry the quest for
+<b>inc</b> and <b>dec</b> efficiency to the
+limit, suppose we're
+constructing code which contains nested countdown loops. Suppose
+further that all registers but CX are in use, so all we've got
+available for counters are CH and CL. Normally, we would expect to
+use two 8-bit <b>dec</b> instructions here. However, we
+know that
+the counter for the inner loop is 0 after the loop is completed, so
+we've got an opportunity to perform a 16-bit <b>dec</b>
+for the outer
+loop if we play our cards right.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> <a name="L912R"></a><a class="western" href="#L912">Listing
+9-12</a> shows how this trick works. CH is the counter for the
+inner
+loop, and we are indeed stuck with an 8-bit <b>dec</b> for
+this loop. However, by the time we get around to using CL as a counter,
+CH is
+guaranteed to be 0, so we can use a 16-bit <b>dec cx</b>
+for the
+outer loop. Granted, it would be preferable to place the 16-bit <b>dec</b>
+in the time-critical inner loop, and if that loop were long enough,
+we might well do that by pushing CX for the duration of the inner
+loop; nonetheless, a 16-bit <b>dec</b> is preferable in
+any loop, and
+in <a class="western" href="#L912">Listing 9-12</a>
+we get the
+benefits of a 16-bit <b>dec</b> at no cost other than a
+bit of
+careful register usage.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> By
+the way, you've
+likely noticed that <a class="western" href="#L912">Listing
+9-12</a>
+fairly begs for a <b>loop</b> instruction at the bottom of
+the outer
+loop. That's certainly the most efficient code in this case; I've
+broken the <b>loop</b> into a <b>dec</b> and
+a <b>jnz</b> only for
+illustrative purposes.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<h3 class="western"><font color="#110d06"><font color="#0b0703"><a name="_HOW_inc_AND"></a><a class="western" href="#T0902"><font size="4"><b>HOW
+inc AND add (AND dec AND sub) DIFFER -AND WHY</b></font></a></font></font></h3>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> <b>inc</b>
+and <b>dec</b>
+are not <i>exactly</i> the same as <b>add 1</b>
+and <b>sub 1</b>.
+Unlike addition and subtraction, <b>inc</b> and <b>dec</b>
+don't
+affect the Carry flag. This can often be a nuisance, but there is a
+good use for this quirk of <b>inc</b> and <b>dec</b>,
+and that's in
+adding or subtracting multi-word memory values.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Multi-word memory
+values are values longer than 16 bits that are stored in memory. On
+the 8088 such values can only be added together by a series of
+16-and/or 8-bit additions. The first addition &#8212; of the
+least-significant words &#8212; must be performed with <b>add</b>,
+or
+with <b>adc</b> with the Carry flag set to 0. Subsequent
+additions
+of successively more-significant words must be performed with <b>adc</b>,
+so that the carry-out can be passed from one addition to the next via
+the Carry flag. The same is true of <b>sub</b>, <b>sbb</b>,
+and
+borrow for subtraction of multi-word memory variables.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Some way is needed to
+address each of the words in a multi-word memory value in turn, so
+that each part of the value may be used as an operand. Consequently,
+multi-word memory values are often pointed to by registers (BP or BX
+and/or SI or DI), which can be advanced to point to successively
+more-significant portions of the values as addition or subtraction
+proceeds. If, however, there were no way to advance a
+memory-addressing register without modifying the Carry flag, then <b>adc</b>
+and <b>sbb</b> would only work properly if we preserved
+the Carry
+flag around the <b>inc</b> instructions, with <b>pushf</b>
+and <b>popf</b>
+or <b>lahf</b> and <b>sahf</b>.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> <b>inc</b>
+and <b>dec</b>
+don't affect the Carry flag, however, and that greatly simplifies the
+process of adding multi-word memory variables. The code in <a name="L913R"></a><a class="western" href="#L913">Listing
+9-13</a>, which adds together two 64bit memory variables &#8212; one
+pointed to by SI and the other pointed to by DI &#8212; only works
+because the <b>inc</b> instructions that advance the
+pointers don't
+affect the Carry flag values that join the additions of the various
+parts of the variables. (It's equally important that <b>loop</b>
+doesn't affect any flags, as we'll see in Chapter 14.)</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<h2 class="western"><font color="#110d06"><font color="#0b0703"><a name="_CARRYING_RESULTS_ALONG"></a><a class="western" href="#T0903"><font style="font-size: 16pt;" size="4"><b>9.3
+CARRYING RESULTS ALONG IN A FLAG</b></font></a></font></font></h2>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> As
+mentioned in
+Chapter 6 and illustrated in the last section, many instructions
+don't affect all the flags, and some don't affect any flags at all. You
+can take advantage of this by carrying a status along in the
+FLAGS register for several instructions before testing that status. Of
+course, if you do choose to carry a status along, all of the
+instructions executed between setting the status and testing it must
+leave the status alone.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> For
+example, the
+following code tests AL for a specific value, then sets AL to 0 even
+before branching according to the results of the test:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> cmp al,RESET_FLAG ;sets
+Z to reflect test result</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov al,0 ;set
+AL for the code following the</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> ;
+branch</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> ;***
+NOTE: THIS INSTRUCTION MUST ***</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> ;***
+NOT ALTER THE Z FLAG! ***</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> jz IsReset ;branch
+according the to Z flag set</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> ;
+by CMP</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> In
+this example, AL
+must be set to 0 no matter which way the branch goes. If we were to
+set AL after the branch rather than before, two <b>mov al,0</b>
+instructions &#8212; one for each code sequence that might follow <b>jz
+IsReset</b> &#8212; would be needed. If we set AL before the <b>cmp</b>
+instruction, the test couldn't even be performed because the value
+under test in AL would be lost. In very specific cases such as this,
+clear advantages result from carrying a status flag along for a few
+instructions.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> One
+caution when using
+the above approach: <i>never set a register to zero via </i><i><b>sub
+</b></i><b>reg</b><i><b>,</b></i><b>reg</b><i>
+or </i><i><b>xor
+</b></i><b>reg</b><i><b>,</b></i><b>reg</b><i>
+</i>while carrying a
+status along. With time, you'll get in the habit of setting
+registers to zero with <b>sub </b><i><b>reg</b></i><b>,</b><i><b>reg</b></i>
+or <b>xor </b><i><b>reg</b></i><b>,</b><i><b>reg</b></i>,
+either of
+which is faster (and often smaller) than <b>mov </b><i><b>reg</b></i><b>,0</b>.
+Unfortunately, <b>sub</b> and <b>xor </b>affect
+the flags, while <b>mov</b>
+doesn't. For example:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> cmp al,RESET_FLAG ;sets
+Z to reflect status under test</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> sub al,al ;alters
+Z, causing the code to</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> ;
+malfunction</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> jz IsReset ;won't
+jump properly</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703">fails
+to preserve the
+Zero flag between the <b>cmp</b> and the <b>jz</b>,
+and wouldn't work
+properly. In cases such as this, always be sure to use <b>mov</b>.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> The
+bugs that can
+arise from the use of a carried-along status that is accidentally
+wiped out are often hard to reproduce and difficult to track down, so
+all possible precautions should be taken whenever this technique is
+used. No more than a few instructions &#8212; and no branches &#8212;
+should occur between the setting and the testing of the status. The
+use of a carried-along status should always be clearly commented, as
+in the first example in this section. Careful commenting is
+particularly important in order to forestall trouble should you (or
+worse, someone else) alter the code at a later date without noticing
+that a status is being carried along.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> If
+you do need to
+carry a status along for more than a few instructions, store the
+status with either <b>pushf</b> or <b>lahf</b>,
+then restore it later
+with <b>popf</b> or <b>sahf</b>, so there's
+no chance of the
+intervening code accidentally wiping the status out.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<h2 class="western"><font color="#110d06"><font color="#0b0703"><a name="_BYTE-TO-WORD_AND_WORD-TO-DOUBLEWORD"></a><a class="western" href="#T0904"><font style="font-size: 16pt;" size="4"><b>9.4
+BYTE-TO-WORD AND WORD-TO-DOUBLEWORD CONVERSION</b></font></a></font></font></h2>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> On
+the 8088 the need
+frequently arises to convert byte values to word values. A byte
+value might be converted to a word in order to add it to a 16-bit
+value, or in order to use it as a pointer into a table (remember that
+only 16-bit registers can be used as pointers, with the lone
+exception of AL in the case of <b>xlat</b>). Occasionally
+it's also
+necessary to convert word values to doubleword values. One
+application for word-to-doubleword conversion is the preparation of a
+16-bit dividend for 32-bit by 16-bit division.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Unsigned values are
+converted to a larger data type by simply zeroing the upper portion
+of the desired data type. For example, an unsigned byte value in DL
+is converted to an unsigned word value in DX with: </font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> sub dh,dh</b></font></font></font></p>
+
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703">Likewise,
+an unsigned
+byte value in AL can be converted to a doubleword value in DX:AX
+with:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> sub dx,dx</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov ah,dh</b></font></font></font></p>
+
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> In
+principle,
+conversion of a signed value to a larger data type is more complex,
+since it requires replication of the high (or sign) bit of the
+original value throughout the upper portion of the desired data type.
+Fortunately, the 8088 provides two instructions that handle the
+complications of signed conversion for us: <b>cbw</b> and <b>cwd</b>.
+<b>cbw</b> sets all the bits of AH to the value of bit 7 of
+AL,
+performing signed byte-to-word conversion. <b>cwd</b> sets
+all the
+bits of DX to the value of bit 15 of AX, performing signed
+word-to-doubleword conversion.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">There's nothing tricky
+about <b>cbw</b> and <b>cwd</b>, and you're
+doubtless familiar with
+them already. What's particularly interesting about these
+instructions is that they're each only 1 byte long, 1 byte <i>shorter</i>
+than <b>sub </b><i><b>reg</b></i><b>,</b><i><b>reg</b></i>.
+What's
+more, the official execution time of <b>cbw</b> is only 2
+cycles, so
+it's 1 cycle faster than <b>sub</b> as well. <b>cwd</b>'s
+official
+execution time is 5 cycles, but since it's shorter than <b>sub</b>,
+it will actually often execute more rapidly than <b>sub</b>,
+thanks
+to the prefetch queue cycle-eater.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">What all this means is
+that <b>cbw</b> and <b>cwd</b> are the
+preferred means of converting
+values to larger data types, and should be used whenever possible. In
+particular, you should use <b>cbw</b> to convert unsigned
+bytes in
+the range 0-7Fh to unsigned words. While it may seem strange to use a
+signed type-conversion instruction to convert unsigned values,
+there's no distinction between unsigned bytes in the range 0 to 7Fh
+and signed bytes in the range 0 to +127, since they have the same
+values and have bit 7 set to 0.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> <a name="L914R"></a><a class="western" href="#L914">Listing
+9-14</a> illustrates the use of <b>cbw</b> to
+convert an array of
+unsigned byte values between 0 and 7Fh to an array of word values. Note
+that values are read from memory and written back to memory and
+the loop counter is decremented, so this is a realistic usage of <b>cbw</b>
+rather than an artificial situation designed to show the instruction
+in the best possible light. Despite all the other activity occurring
+in the loop, <a class="western" href="#L914">Listing
+9-14</a>
+executes in 10.06 us per loop, 12% faster than <a name="L915R"></a><a class="western" href="#L915">Listing
+9-15</a>, which executes in 11.31 us per loop while using <b>sub
+ah,ah</b> to perform unsigned byte-to-word conversion.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> <b>cwd</b>
+can be used
+in a similar manner to speed up the conversion of unsigned word
+values in the range 0-7FFFh to doubleword values. Another clever use
+of <b>cwd</b> is as a more efficient way than <b>sub
+</b><i><b>reg</b></i><b>,</b><i><b>reg</b></i>
+to set DX to 0 when you're certain that bit 15 of AX is 0 or as a
+better way than <b>mov </b><i><b>reg</b></i><b>,0FFFFh</b>
+to set DX
+to 0FFFFh when you're sure that bit 15 of AX is 1. Similarly, <b>cbw</b>
+can be used as a faster way to set AH to 0 whenever bit 7 of AL is 0
+or to 0FFh when bit 7 of AL is 1.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Viewed objectively,
+there's no distinction between using <b>cbw</b> to convert
+AL to a
+signed word, to zero AH when bit 7 of AL is 0, and to set AH to 0FFh
+when bit 7 of AL is 1. In all three cases each bit of AH is set to
+the value of bit 7 of AL. Viewed <i>conceptually</i>,
+however, it
+can be useful to think of <b>cbw</b> as capable of
+performing three
+distinct functions: converting a signed value in AL to a signed
+value in AX, setting AH to 0 when bit 7 of AL is 0, and setting AH to
+0FFh when bit 7 of AL is 1. After all, an important aspect of the Zen
+of assembler is the ability to view your resources (such as the
+instruction set) from the perspective most suited to your current
+needs. Rather than getting locked in to the limited functionality of
+the instruction set as it was intended to be used, you must tap into
+the functionality of the instruction set as it is <i>capable</i>
+of
+being used.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> <a class="western" href="#L914">Listing
+9-14</a> is an excellent example of how focusing too closely on a
+particular sort of optimization or getting too locked into a
+particular meaning for an instruction can obscure a better approach. In
+<a class="western" href="#L914">Listing 9-14</a>,
+aware that the
+values in the array are less than 80h, we cleverly use <b>cbw</b>
+to
+set AH to 0. This means that AH is set to zero every time through the
+loop &#8212; even though AH never changes from one pass through the
+loop to the next! This makes sense only if you view each
+byte-to-word conversion in isolation. <a name="L916R"></a><a class="western" href="#L916">Listing
+9-16</a> shows a more sensible approach, in which AH is set to 0
+just
+once, outside the loop. In <a class="western" href="#L916">Listing
+9-16</a>, each byte value is automatically converted to a word
+value
+in AX simply by being loaded into AL.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> In
+the particular case
+of <a class="western" href="#L916">Listing 9-16</a>,
+it happens that
+moving the setting of AH to 0 outside the loop doesn't improve
+performance; <a class="western" href="#L916">Listing
+9-16</a> runs at
+exactly the same speed as <a class="western" href="#L914">Listing
+9-14</a>, no doubt thanks to the prefetch queue and DRAM refresh
+cycle-eaters. That's just a fluke, though &#8212; on average, an
+optimization such as the one in <a class="western" href="#L916">Listing
+9-16</a> will save about 4 cycles. Don't let the quirks of the
+8088
+deter you from the pursuit of saving bytes and cycles &#8212; but do
+remember to always time your code to make sure you've improved it!</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> If
+for any reason AH
+<i>did</i> change each time through the loop, we could no
+longer use
+the method of <a class="western" href="#L916">Listing
+9-16</a>, and
+<a class="western" href="#L914">Listing 9-14</a>
+would be a good
+alternative. That's why there are no hard-and-fast rules that
+produce the best assembler code. Instead, you must respond flexibly
+to the virtually infinite variety of assembler coding situations that
+arise. The bigger your bag of tricks, the better off you'll be.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<h2 class="western"><font color="#110d06"><font color="#0b0703"><a name="_xchg_IS_HANDY"></a><a class="western" href="#T0905"><font style="font-size: 16pt;" size="4"><b>9.5
+xchg IS HANDY WHEN REGISTERS ARE TIGHT</b></font></a></font></font></h2>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> One
+key to good
+assembler code is avoiding memory and using the registers as much as
+possible. When you start juggling registers in order to get the
+maximum mileage from them, you'll find that <b>xchg</b> is
+a good
+friend.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Why? Because the
+8088's general-purpose registers are actually fairly special-purpose.
+BX is used to point to memory, CX is used to count, SI is used with
+<b>lods</b>, and so on. As a result, you may want to use a
+specific
+register for two different purposes in a tight loop. <b>xchg</b>
+makes that possible.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Consider the case
+where you need to handle both a loop count and a shift count. Ideally,
+you would want to use CX to store the loop count and CL to
+store the shift count. <a name="L917R"></a><a class="western" href="#L917">Listing
+9-17</a>
+uses CX for both purposes by pushing and popping the loop count
+around the use of the shift count. However, this solution is less
+than ideal because <b>push</b> and <b>pop</b>
+are relatively slow
+instructions. Instead, we can use <b>xchg</b> to swap the
+lower byte
+of the loop count with the shift count, giving each a turn in CL, as
+shown in <a name="L918R"></a><a class="western" href="#L918">Listing
+9-18</a>. <a class="western" href="#L918">Listing
+9-18</a> runs in 15.08 us per byte processed, versus the 20.11 us
+time of <a class="western" href="#L917">Listing
+9-17</a>. <i>That's
+a 33% improvement from a seemingly minor change!</i> The secret
+is
+that <b>push</b> and <b>pop</b> together take
+27 cycles, while a
+register-register <b>xchg</b> takes no more than 4 cycles
+to execute
+once fetched and only 8 cycles even when the prefetch queue is empty.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Neither <a class="western" href="#L917">Listing
+9-17</a> or <a class="western" href="#L918">Listing
+9-18</a> is the
+most practical solution to this particular problem. A better
+solution would be to simply store the loop count in a register other
+than CX and use <b>dec</b>/<b>jnz</b> rather
+than <b>loop</b>. The
+object of this exercise wasn't to produce ideal code, but rather to
+illustrate that <b>xchg</b> gives you both speed and
+flexibility when
+you need to use a single register for more than one purpose.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> <b>xchg</b>
+is also
+useful when you need more memory pointers in a loop than there are
+registers that can point to memory. See Chapter 8 for an example of
+the use of <b>xchg</b> to allow BX to point to two arrays.
+As the
+example in Chapter 8 also points out, the form of <b>xchg</b>
+used to
+swap AX with another general-purpose register is 1 byte shorter than
+the standard form of <b>xchg</b>.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Finally, <b>xchg</b>
+is useful for getting and setting a memory variable at the same time.
+For example, suppose that we're maintaining a flag that's used by an
+interrupt handler. One way to get the current flag setting and force
+the flag to zero is:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> cli ;turn
+interrupts off</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov al,[Flag] ;get
+the current flag value</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov [Flag],0 ;set
+the flag to 0</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> sti ;turn
+interrupts on</b></font></font></font></p>
+
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703">(It's
+necessary to
+disable interrupts to ensure that the interrupt handler doesn't
+change <b>Flag</b> between the instruction that reads the
+flag and
+the instruction that resets it.)</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">With <b>xchg</b>,
+however, we can do the same thing with just two instructions:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> sub al,al ;set
+AL to 0</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> xchg [Flag],al ;get
+the current flag value and</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> ;
+set the flag to 0</b></font></font></font></p>
+
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Best of all, we don't
+need to disable interrupts in the <b>xchg</b>-based code,
+since
+interrupts can only occur between instructions, not during them!
+(Interrupts <i>can</i> occur between repetitions of a
+repeated string
+instruction, but that's because a single string instruction is
+actually executed multiple times when it's repeated. We'll discuss
+repeated string instructions at length in Chapters 10 and 11.)</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<h2 class="western"><font color="#110d06"><font color="#0b0703"><a name="_DESTINATION:__REGISTER"></a><a class="western" href="#T0906"><font style="font-size: 16pt;" size="4"><b>9.6
+DESTINATION: REGISTER</b></font></a></font></font></h2>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Many arithmetic and
+logical operations can be performed with a register as one operand
+and a memory location as the other, with either one being the source
+and the other serving as the destination. For example, both of the
+following forms of <b>sub</b> are valid:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> sub [bx],al</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> sub al,[bx]</b></font></font></font></p>
+
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703">The
+two instructions
+are not the same, of course. Memory is the destination in the first
+case, while AL is the destination in the second case. That's not the
+only distinction between the two instructions, however. There's also
+a major difference in the area of performance.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Consider this. Any
+instruction, such as <b>sub</b>, that has a register
+source operand
+and a memory destination operand must access memory twice: once to
+fetch the destination operand prior to performing an operation, and
+once to store the result of the operation to the destination operand.
+By contrast, the same instruction with a memory source operand and a
+register destination operand must access memory just once, in order
+to fetch the source value from memory. Consequently, having a memory
+operand as the destination imposes an immediate penalty of at least 4
+cycles per instruction, since each memory access takes a minimum of 4
+cycles.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> As
+it turns out,
+however, the extra time required to access destination memory
+operands with such instructions &#8212; which include <b>adc</b>,
+<b>add</b>, <b>and</b>, <b>or</b>,
+<b>sbb</b>, <b>sub</b>, and <b>xor</b>
+&#8212; is not 4 but 7 cycles, according to the official specs in
+Appendix A. We can measure the actual difference by timing the code
+in <a name="L919R"></a><a class="western" href="#L919">Listings 9-19</a>
+and <a name="L920R"></a><a class="western" href="#L920">9-20</a>.
+As it turns out, the code with AL as the destination takes just 5.03
+us per instruction. That's 1.00 us (4.77 cycles) or nearly 20%
+faster than the code with memory as the destination operand, which
+takes 6.03 us per instruction.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> The
+moral of the
+story? Simply to keep those operands which tend to be destination
+operands most frequently &#8212; counters, pointers, and the like &#8212;
+in registers whenever possible. The ideal situation is one in which
+both destination and source operands are in registers.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> By
+the way, remember
+that an instruction with a word-sized memory operand requires an
+additional 4 cycles per memory access to access the second byte of
+the word. Consequently:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> add [si],dx ;performs
+2 word-sized accesses</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> ;
+(= 4 byte-sized accesses)</b></font></font></font></p>
+
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703">takes
+8 cycles longer
+than:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> add [si],dl ;performs
+2 byte-sized accesses</b></font></font></font></p>
+
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703">However:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> add dx,[si] ;performs
+1 word-sized access</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> ;
+(= 2 byte-sized accesses)</b></font></font></font></p>
+
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703">takes
+only 4 cycles
+longer than:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> add dl,[si] ;performs
+1 byte-sized access</b></font></font></font></p>
+
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703">since
+only one memory
+access is performed by each.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> A
+final note: at
+least one 8088 reference lists <b>cmp</b> as requiring the
+same 7
+additional cycles as <b>sub</b> when used with a memory
+operand that
+is the destination rather than the source. Not so &#8212; <b>cmp</b>
+requires the same time no matter which operand is a memory operand.
+That makes sense, since <b>cmp</b> doesn't actually modify
+the
+destination operand and so has no reason to perform a second memory
+access. The same is true for <b>test</b>, which doesn't
+modify the
+destination operand.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<h2 class="western"><font color="#110d06"><font color="#0b0703"><a name="_neg_AND_not"></a><a class="western" href="#T0907"><font style="font-size: 16pt;" size="4"><b>9.7
+neg AND not</b></font></a></font></font></h2>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> <b>neg</b>
+and <b>not</b>
+are short, fast instructions that are sometimes undeservedly
+overlooked. Each instruction is 2 bytes long and executes in just 3
+cycles when used with a register operand, and each instruction can
+often replace a longer instruction or several instructions.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> <b>not
+</b><i><b>mem/reg</b></i>
+is similar to <b>xor </b><i><b>mem/reg</b></i><b>,0ffffh</b>
+(or <b>xor
+</b><i><b>mem/reg</b></i><b>,0ffh</b>
+for 8-bit operands), but is
+usually 1 byte shorter and 1 cycle faster. (If <i>mem/reg</i>
+is AL,
+<b>not</b> and <b>xor</b> are the same length,
+but <b>not</b> is
+still 1 cycle faster.) Another difference between the two
+instructions is that unlike <b>xor</b>, <b>not</b>
+doesn't affect any
+of the status flags. This can be useful for, say, toggling the state
+of a flag byte without disturbing the statuses that an earlier
+operation left in the FLAGS register.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> <b>neg</b>
+negates a
+signed value in a register or memory variable. You can think of <b>neg</b>
+as subtracting the operand from 0 and storing the result back in the
+operand. The flags are set to reflect this subtraction from 0, so
+<b>neg ax</b> sets the flags as if:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov dx,ax</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov ax,0</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> sub ax,dx</b></font></font></font></p>
+
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703">had
+been performed.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> One
+interesting
+consequence of the way in which <b>neg</b> sets the flags
+is that the
+Carry flag is set in every case except when the operand was
+originally 0. (That's because in every other case a value larger
+than 0 is being subtracted from 0, resulting in a borrow.) This is
+very handy for negating 32-bit operands quickly. In the following
+example, DX:AX contains a 32-bit operand to be negated:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> neg dx</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> neg ax</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> sbb dx,0</b></font></font></font></p>
+
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703">Although
+it's not
+obvious, the above code does indeed negate DX:AX, and does so very
+quickly indeed. (You might well think that there couldn't possibly
+be a faster way to negate a 32-bit value, but in Chapter 13 we'll see
+a decidedly unusual approach that's faster still. Be wary of
+thinking you've found the fastest possible code for any task!)</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> How
+does the above
+negation code work? Well, normally we would want to perform a two's
+complement negation by flipping all bits of the operand and then
+adding 1 to it, as follows:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> not dx ;flip
+all bits...</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> not ax ;...of
+the operand</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> add ax,1 ;remember,
+INC doesn't set the Carry flag!</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> adc dx,0 ;then
+add 1 to finish the two's complement</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703">However,
+this code is
+10 bytes long, a full 3 bytes longer than our optimized negation
+code. In the optimized code, the first negation word flips all bits
+of DX and adds 1 to that result, and the second negation flips all
+bits of AX and adds 1 to that result. At this point, we've got a
+perfect two's complement result, except that 1 has been added to DX.
+That's incorrect &#8212; unless AX was originally 0. </font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Aha! Thanks to the
+way <b>neg</b> sets the flags, the Carry flag is always
+set <i>except
+when the operand was originally 0</i>. Consequently, we need only
+to
+subtract from DX the carry-out from <b>neg ax</b> and
+we've got a
+32-bit two's-complement negation &#8212; in just 7 bytes!</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> By
+the way, 32-bit
+negation can also be performed with the three instruction, 7-cycle
+sequence:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> not dx</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> neg ax</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> sbb dx,-1</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703">If
+you can understand
+why this sequence works, you've got a good handle on <b>neg</b>,
+<b>not</b>,
+and two's complement arithmetic. (Hint: the underlying principle in
+the last sequence is exactly the same as with the <b>neg</b>/<b>neg</b>/<b>sbb</b>
+approach we just discussed.) If not, wait until Chapter 13, in which
+we'll explore the workings of 32-bit negation in considerable detail.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> <b>neg</b>
+is also
+handy for generating differences without using <b>sub</b>
+and without
+using other registers. For example, suppose that we're scanning a
+list for a match with AL. <b>repnz scasb</b> (which we'll
+discuss
+further in Chapter 10) is ideal for such an application. However,
+after <b>repnz scasb</b> has found a match, CX contains
+the number of
+entries in the list that weren't scanned, not the number that <i>were</i>
+scanned, and it's the latter number that we want in CX. Fortunately,
+we can use <b>neg</b> to convert the entries-remaining
+count in CX
+into an entries-scanned count, as follows:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>;
+The value to search for is already in AL, and ES:DI</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>;
+already points to the list to scan.</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov cx,[NumberOfEntries] ;#
+of entries to scan</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> cld ;make
+SCASB count up</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> repnz
+scasb ;look for the value</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> jnz ValueNotFound ;the
+value is not in the list</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> neg cx ;the
+# of entries not scanned</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> ;
+times -1</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> add cx,[NumberOfEntries] ;total
+# of entries -# of</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> ;
+entries not scanned = # of</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> ;
+entries scanned</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703">Thanks
+to <b>neg</b>,
+this replaces the longer code sequence:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>;
+The value to search for is already in AL, and ES:DI</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>;
+already points to the list to scan.</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov cx,[NumberOfEntries]
+;# of entries to scan</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> cld ;make
+SCASB count up</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> repnz
+scasb ;look for the value</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> jnz ValueNotFound ;the
+value is not in the list</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov ax,[NumberOfEntries]
+;total # of entries</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> sub ax,cx ;total
+# of entries -# of</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> ;
+entries not scanned = # of</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> ;
+entries scanned</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov cx,ax ;put
+the result back in CX</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Another advantage of
+<b>neg</b> in the above example is that it lets us generate
+the
+entries-remaining count without using another register. By contrast,
+the alternative approach requires the use of a 16-bit register for
+temporary storage. When registers are in short supply &#8212; as is
+usually the case &#8212; the register-conserving nature of <b>neg</b>
+can be most useful.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<h2 class="western"><font color="#110d06"><font color="#0b0703"><a name="C98"></a><a class="western" href="#T0908"><font style="font-size: 16pt;" size="4"><b>9.8
+ROTATES AND SHIFTS</b></font></a></font></font></h2>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Next, we're going to
+spend some time going over interesting aspects of the various shift
+and rotate instructions. To my mind, the single most fascinating
+thing about these instructions concerns their ability to shift or
+rotate by either 1 bit or the number of bits specified by CL; in
+particular, it's most informative to examine the relative performance
+of the two approaches for multi-bit operations.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">It's much more
+desirable than you might think to perform multi-bit shifts and
+rotates by repeating the shift or rotate CL times, as opposed to
+using multiple 1-bit shift or rotate instructions. As is so often
+the case, the cycle counts in Appendix A are misleading in this
+regard. As it turns out, shifting or rotating multiple bits by
+repeating an instruction CL times, as in:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov cl,4</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> shr ax,cl</b></font></font></font></p>
+
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703">is
+almost always faster
+than shifting by 1 bit repeatedly, as in:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> shr ax,1</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> shr ax,1</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> shr ax,1</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> shr ax,1</b></font></font></font></p>
+
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><i>This
+is true even
+though the official specs in Appendix A indicate that the latter
+approach is more than twice as fast.</i></font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Shifting or rotating
+by CL also requires fewer instruction bytes for shifts of more than 2
+bits. In fact, that reduced instruction byte count is precisely the
+reason the shift/rotate by CL approach is faster. As we saw in
+Chapter 4, fetching the instruction bytes of <b>shr ax,1</b>
+takes up
+to four cycles per byte; each shift or rotate instruction is 2 bytes
+long, so <b>shr ax,1</b> can take as much as 8 cycles per
+bit
+shifted. By contrast, only 4 instruction bytes in total need to be
+fetched in order to load CL and execute <b>shr ax,cl</b>.
+Once those
+bytes are fetched, <b>shr ax,cl</b> runs at its Execution
+Unit speed
+of 4 cycles per bit shifted, since no additional instruction fetching
+is needed. Better yet, the <i>next</i> instruction's bytes
+can be
+prefetched while a shift or rotate by CL executes.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> The
+point is not that
+shifts and rotates by CL are faster than you'd expect, but rather
+that 1-bit shifts and rotates are <i>slower</i> than you'd
+expect,
+courtesy of the prefetch queue cycle-eater. The question is, of
+course, at what point does it become faster to shift or rotate by CL
+instead of using multiple 1-bit shift or rotate instructions?</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> To
+answer that, I've
+timed the two approaches, shown in <a name="L921R"></a><a class="western" href="#L921">Listings
+9-21</a> and <a name="L922R"></a><a class="western" href="#L922">9-22</a>,
+for shifts
+ranging from 1 to 7 bits, by altering the equated value of
+BITS_TO_SHIFT accordingly. The results are as follows:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<center>
+<table border="0" cellpadding="7" cellspacing="0" width="414">
+<col width="135"> <col width="98"> <col width="139"> <thead> <tr valign="top">
+<td width="135">
+<p class="western"><b>Bits shifted</b></p>
+</td>
+<td width="98">
+<p class="western"><b>Time taken to</b></p>
+</td>
+<td width="139">
+<p class="western"><b>Time taken to shift</b></p>
+</td>
+</tr>
+<tr valign="top">
+<td width="135">
+<p class="western" align="justify"><br>
+</p>
+</td>
+<td width="98">
+<p class="western"><b>shift by CL</b></p>
+</td>
+<td width="139">
+<p class="western"><b>1 bit at a time</b></p>
+</td>
+</tr>
+<tr valign="top">
+<td width="135">
+<p class="western"><b>(BITS_TO_SHIFT)</b></p>
+</td>
+<td width="98">
+<p class="western"><b>(</b><a class="western" href="#L921">Listing 9-21</a><b>)</b></p>
+</td>
+<td width="139">
+<p class="western"><b>(</b><a class="western" href="#L922">Listing 9-22</a><b>)</b></p>
+</td>
+</tr>
+</thead> <tbody>
+<tr valign="top">
+<td width="135">
+<p class="western">1</p>
+</td>
+<td width="98">
+<p class="western">3.6 us</p>
+</td>
+<td width="139">
+<p class="western">1.8 us</p>
+</td>
+</tr>
+<tr valign="top">
+<td width="135">
+<p class="western">2</p>
+</td>
+<td width="98">
+<p class="western">4.2 us</p>
+</td>
+<td width="139">
+<p class="western">3.6 us</p>
+</td>
+</tr>
+<tr valign="top">
+<td width="135">
+<p class="western">3</p>
+</td>
+<td width="98">
+<p class="western">5.0 us</p>
+</td>
+<td width="139">
+<p class="western">5.4 us</p>
+</td>
+</tr>
+<tr valign="top">
+<td width="135">
+<p class="western">4</p>
+</td>
+<td width="98">
+<p class="western">5.9 us</p>
+</td>
+<td width="139">
+<p class="western">7.2 us</p>
+</td>
+</tr>
+<tr valign="top">
+<td width="135">
+<p class="western">5</p>
+</td>
+<td width="98">
+<p class="western">6.7 us</p>
+</td>
+<td width="139">
+<p class="western">9.1 us</p>
+</td>
+</tr>
+<tr valign="top">
+<td width="135">
+<p class="western">6</p>
+</td>
+<td width="98">
+<p class="western">7.5 us</p>
+</td>
+<td width="139">
+<p class="western">10.9 us</p>
+</td>
+</tr>
+<tr valign="top">
+<td width="135">
+<p class="western">7</p>
+</td>
+<td width="98">
+<p class="western">8.4 us</p>
+</td>
+<td width="139">
+<p class="western">12.7 us</p>
+</td>
+</tr>
+</tbody>
+</table>
+</center>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Astonishingly, it
+hardly <i>ever</i> pays to shift or rotate by multiple bit
+places
+with separate 1-bit instructions. The prefetch queue cycle-eater
+exacts such a price on 1-bit shifts and rotates that it pays to shift
+or rotate by CL for shifts of 3 or more bits. Actually, the choice
+is not entirely clear-cut for 3-to 5-bit shifts/rotates, since the
+1-bit-at-a-time approach can become relatively somewhat faster if the
+prefetch queue is full when the shift/rotate sequence begins. Still,
+there's no question but what shifting or rotating by CL is as good as
+or superior to using multiple 1-bit shifts for most multi-bit shifts.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> By
+the way, you should
+be aware that the contents of CL are not changed when CL is used to
+supply the count for a shift or rotate instruction. This allows you
+to load CL once and then use it to control multiple shift and/or
+rotate instructions.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<h3 class="western"><font color="#110d06"><font color="#0b0703"><a name="_SHIFTING_AND_ROTATING"></a><a class="western" href="#T0908"><font size="4"><b>SHIFTING
+AND ROTATING MEMORY</b></font></a></font></font></h3>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> One
+feature of the
+8088 that for some reason is often overlooked is the ability to shift
+or rotate a memory variable. True, the 8088 doesn't shift or rotate
+memory variables very <i>rapidly</i>, but the capability
+is there
+should you need it. If you should find the need to perform a
+multi-bit shift or rotate on a memory variable, for goodness sakes
+use a CL shift! Every 1-bit memory shift/rotate takes a <i>minimum</i>
+of 20 cycles. By contrast, a shift-by-CL memory shift/rotate takes a
+minimum of 25 cycles, but only 4 additional cycles per bit shifted. It
+doesn't take a genius to see that for, say, a 4-bit rotate, the 41
+cycles taken by the CL shift would beat the stuffing out of the 80
+cycles taken by the four 1-bit shifts.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<h3 class="western"><font color="#110d06"><font color="#0b0703"><a name="_ROTATES"></a><a class="western" href="#T0908"><font size="4"><b>ROTATES</b></font></a></font></font></h3>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> You
+should be well
+aware that there are two sorts of rotates. One category, made up of
+<b>rol</b> and <b>ror</b>, consists of rotates
+that simply rotate the
+bits in the operand, as shown in Figure 9.2. </font></font></p>
+<p class="western" style="margin-bottom: 0in;" align="center"><font color="#110d06"><font color="#0b0703"><img src="ZOA_html_m21e9c5e7.jpg" align="bottom" border="0" height="427" width="618"></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703">These
+instructions are
+useful for adjusting masks, swapping nibbles, and the like. For
+example:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov cl,4</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> ror al,cl</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703">swaps
+the high and low
+nibbles of AL. Note that these instructions don't rotate through the
+Carry flag. However, they <i>do</i> copy the bit wrapped
+around to
+the other end of the operand to the Carry flag as well. </font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> The
+other rotate
+category, made up of <b>rcl</b> and <b>rcr</b>,
+consists of rotates
+that rotate the operand <i>through</i> the Carry flag, as
+shown in
+Figure 9.3. These instructions are useful for multi-word shifts and
+rotates. </font></font></p>
+<p class="western" style="margin-bottom: 0in;" align="center"><font color="#110d06"><font color="#0b0703"><img src="ZOA_html_5aad8edc.jpg" align="bottom" border="0" height="454" width="612"></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703">For
+example:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> shr dx,1</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> rcr cx,1</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> rcr bx,1</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> rcr ax,1</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703">shifts
+the 64-bit value
+in DX:CX:BX:AX right one bit.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> The
+rotate
+instructions affect fewer flags than you might think, befitting their
+role as bit-manipulation rather than arithmetic instructions. None
+of the rotate instructions affect the Sign, Zero, Auxiliary Carry, or
+Parity flags. On 1-bit left rotates the Overflow flag is set to the
+exclusive-or of the value of the resulting Carry flag and the
+most-significant bit of the result. On 1-bit right rotates the
+Overflow flag is set to the exclusive-or of the two most-significant
+bits of the result. (These Overflow flag settings indicate whether
+the rotate has changed the sign of the operand.) On rotates by CL
+the setting of the Overflow flag is undefined. </font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<h3 class="western"><font color="#110d06"><font color="#0b0703"><a name="_SHIFTS"></a><a class="western" href="#T0908"><font size="4"><b>SHIFTS</b></font></a></font></font></h3>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Similarly, there are
+two sorts of shift instructions. One category, made up of <b>shl</b>
+(also known as <b>sal</b>) and <b>shr</b>,
+consists of shifts that
+shift out to the Carry flag, shifting a 0 into the vacated bit of the
+operand, as shown in Figure 9.4. </font></font></p>
+<p class="western" style="margin-bottom: 0in;" align="center"><font color="#110d06"><font color="#0b0703"><img src="ZOA_html_m6b54297.jpg" align="bottom" border="0" height="409" width="618"></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703">These
+instructions are
+used for moving masks and bits about and for performing fast unsigned
+division and multiplication by powers of 2. For example:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> shl ax,1</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703">multiplies
+AX, viewed
+as an unsigned value, by 2.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> The
+other shift
+category contains only <b>sar</b>. <b>sar</b>
+performs the same
+shift right as does <b>shr</b>, save that the most
+significant bit of
+the operand is preserved rather than zeroed after the shift, as shown
+in Figure 9.5. </font></font></p>
+<p class="western" style="margin-bottom: 0in;" align="center"><font color="#110d06"><font color="#0b0703"><img src="ZOA_html_m398bd862.jpg" align="bottom" border="0" height="251" width="597"></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703">This
+preserves the sign
+of the operand, and is useful for performing fast signed division by
+powers of 2. For example:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> sar ax,1</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703">divides
+AX, viewed as a
+signed value, by 2.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> The
+shift instructions
+affect the arithmetic-oriented flags that the rotate instructions
+leave alone, which makes sense since the shift instructions can
+perform certain types of multiplication and division. Unlike the
+rotate instructions, the shift instructions modify the Sign, Zero,
+and Parity flags in the expected ways. The setting of the Auxiliary
+Carry flag is undefined. The setting of the Overflow flag by the
+shift instructions is identical to the Overflow settings of the
+rotate instructions. On 1-bit left shifts the Overflow flag is set
+to the exclusive-or of the resulting Carry flag and the
+most-significant bit of the result. On 1-bit right shifts the
+Overflow flag is set to the exclusive-or of the two most-significant
+bits of the result.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Basically, any given
+shift will set the Overflow flag to 1 if the sign of the result
+differs from the sign of the original operand, thereby signalling
+that the shift has not produced a valid signed multiplication or
+division result. <b>sar</b> always sets the Overflow flag
+to 0,
+since <b>sar</b> can never change the sign of an operand. <b>shr</b>
+always sets the Overflow flag to the high-order bit of the original
+value, since the sign of the result is always positive. On shifts by
+CL the setting of the Overflow flag is undefined. </font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<h3 class="western"><font color="#110d06"><font color="#0b0703"><a name="_SIGNED_DIVISION_WITH"></a><a class="western" href="#T0908"><font size="4"><b>SIGNED
+DIVISION WITH sar</b></font></a></font></font></h3>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> One
+tip if you do use
+<b>sar</b> to divide signed values: for negative dividends,
+<b>sar</b>
+rounds to the integer result of the next <i>largest</i>
+absolute
+value. This can be confusing, since for positive values <b>sar</b>
+rounds to the integer result of the next <i>smallest</i>
+absolute
+value, just as <b>shr</b> does. That is:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov ax,1</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> sar ax,1</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703">returns
+1/2=0, while: </font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov ax,-1</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> sar ax,1</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703">doesn't
+return -1/2=0,
+but rather -1/2=-1. Similarly, <b>sar</b> insists that
+-5/4=-2, not
+-1. This is actually a tendency to round to the next integer value
+less than the actual result in all cases, which is exactly what <b>shr</b>
+also does. While that may be consistent, it's nonetheless generally
+a nuisance, since we tend to expect that, say, -1/2*-1 should equal
+1/2*1, but with <b>sar</b> we actually get 1 for the
+former and 0 for
+the latter.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> The
+solution? For a
+signed division by <i>n</i> of a negative number with <b>sar</b>,
+simply add <i>n</i>-1 to the dividend before shifting.
+This
+compensates exactly for the rounding <b>sar</b> performs.
+For
+example:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov ax,-1 ;sample
+dividend</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> and ax,ax ;is
+the dividend negative?</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> jns DoDiv ;it's
+positive, so we're ready to divide</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> add ax,2-1 ;it's
+negative, so we need to compensate.</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> ;
+This is division by 2, so we'll</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> ;
+add n-1 = 2-1</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>DoDiv:</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> sar ax,1 ;signed
+divide by 2</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703">returns
+0, just what
+we'd expect from -1/2.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">That's a quick look at
+what the shift and rotate instructions were designed to do. Now
+let's bring a little Zen of assembler to bear in cooking up a use for
+<b>sar</b> that you can be fairly sure was never planned by
+the
+architects of the 8088. </font></font></p>
+<h3 class="western"><font color="#110d06"><font color="#0b0703"><a name="_BIT-DOUBLING_MADE_EASY"></a><a class="western" href="#T0908"><font size="4"><b>BIT-DOUBLING
+MADE EASY</b></font></a></font></font></h3>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Think back to the
+bit-doubling example of Chapter 7, where we found that a bit-doubling
+routine based on register-register instructions didn't run nearly as
+fast as it should have, thanks to the prefetch queue. We boosted the
+performance of the routine by performing a table look-up, and that's
+the best solution that I know of. There is, however, yet <i>another</i>
+bit-doubling technique (conceived by my friend Dan Illowsky) that's
+faster than the original shift-based approach. Interestingly enough,
+this new technique uses <b>sar</b>.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Let's consider <b>sar</b>
+as a bit-manipulation instruction rather than as a signed arithmetic
+instruction. What does <b>sar</b> really do? Well, it
+shifts all
+the bits of the operand 1 bit to the right, and it shifts bit 0 of
+the operand into the Carry flag. The most significant bit of the
+operand is left unchanged &#8212; <i>and it is also shifted 1 bit to
+the right</i>.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> In
+other words, the
+most significant bit is doubled!</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Once we've made the
+conceptual leap from <b>sar</b> as arithmetic instruction
+to <b>sar</b>
+as "bit-twiddler," we've got an excellent tool for
+bit-doubling. The code in <a class="western" href="#L714">Listing
+7-14</a> placed the byte containing the bits to be doubled in two
+registers (BL and BH) and then doubled the bits with 4 instructions:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> shr bl,1</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> rcr ax,1</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> shr bh,1</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> rcr ax,1</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> By
+contrast, the <b>sar</b>
+approach, illustrated in <a name="L923R"></a><a class="western" href="#L923">Listing
+9-23</a>, requires only one source register and doubles the bits
+with
+just 3 instructions:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> shr bl,1</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> rcr ax,1</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> sar ax,1</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> The
+<b>sar</b>
+approach requires only 75% as many code bytes as the approach in
+<a class="western" href="#L714">Listing 7-14</a>.
+Since instruction
+fetching dominates the execution time of <a class="western" href="#L714">Listing
+7-14</a>, the shorter <b>sar</b>-based code should
+be considerably
+faster, and indeed it is. <a class="western" href="#L923">Listing
+9-23</a> doubles bits in 47.07 us per byte doubled, more than 34%
+faster than the 63.36 us of <a class="western" href="#L714">Listing
+7-14</a>. (Note that the ratio of the execution times is almost
+exactly 3-to-4...which is the ratio of the code sizes of the two
+approaches. <i>Keep your code short!</i>)</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Mind you, the <b>sar</b>
+approach of <a class="western" href="#L923">Listing
+9-23</a> is still
+<i>much</i> slower than the look-up approach of <a class="western" href="#L715">Listing
+7-15</a>. What's more, the code in <a class="western" href="#L923">Listing
+9-23</a> is both slower and larger than the <b>xlat</b>-based
+nibble
+look-up approach shown in <a class="western" href="#L718">Listing
+7-18</a>, so <b>sar</b> really isn't a preferred
+technique for
+doubling bits. The point to our discussion of bit-doubling with <b>sar</b>
+is actually this: <i>all sorts of interesting possibilities open
+up
+once you start to view instructions in terms of what they do, rather
+than what they were designed to do.</i></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<h2 class="western"><font color="#110d06"><font color="#0b0703"><a name="_ASCII_AND_DECIMAL"></a><a class="western" href="#T0909"><font style="font-size: 16pt;" size="4"><b>9.9
+ASCII AND DECIMAL ADJUST</b></font></a></font></font></h2>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> Now
+we come to the
+ASCII and decimal-adjust instructions: <b>daa</b>, <b>das</b>,
+<b>aaa</b>,
+<b>aas</b>, <b>aam</b>, and <b>aad</b>.
+To be honest, I'm covering
+these instructions only because many people have asked me what they
+are used for. In truth, they aren't useful very often, and there
+aren't any particularly nifty or non-obvious uses for them that I'm
+aware of, so I'm not going to cover them at great length, and you
+shouldn't spend too much time trying to understand them unless they
+fill a specific need of yours. Still, the ASCII and decimal-adjust
+instructions do have their purposes, so here goes.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<h3 class="western"><font color="#110d06"><font color="#0b0703"><a name="_daa,_das,_AND"></a><a class="western" href="#T0909"><font size="4"><b>daa,
+das, AND PACKED BCD ARITHMETIC</b></font></a></font></font></h3>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> <b>daa</b>
+("decimal
+adjust AL after addition") and <b>das</b> ("decimal adjust
+AL after subtraction") adjust AL to the correct value after
+addition of two packed BCD (binary coded decimal) operands. Packed
+BCD is a number-storage format whereby a digit between 0 and 9 is
+stored in each nibble, so the hex value 1000h interpreted in BCD is
+1000 decimal, not 4096 decimal. (Unpacked BCD is similar to packed
+BCD, save that only one digit rather than two is stored in each
+byte.)</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Naturally, the
+addition of two BCD values with the <b>add</b> instruction
+doesn't
+produce the right result. The contents of AL after <b>add al,bl</b>
+is performed with 09h (9 decimal in BCD) in AL and 01h (1 decimal in
+BCD) in BL is 0Ah, which isn't even a BCD digit. What <b>daa</b>
+does is take the binary result of the addition of a packed BCD byte
+(two digits) in AL and adjust it to the correct sum. If, in the last
+example, <b>daa</b> had been performed after <b>add
+al,bl</b>, AL
+would have contained 10h, which is 10 in packed BCD &#8212; the
+correct answer.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> <b>das</b>
+performs a
+similar adjustment after subtraction of packed BCD numbers. The
+mechanics of <b>daa</b> and <b>das</b> are a
+bit complex, and I won't
+go into them here, since I know of no use for the instructions save
+to adjust packed BCD results. Yes, I <i>do</i> remember
+that I told
+you to look at instructions for what they can do, not what they were
+designed to do. As far as I know, though, the two are one and the
+same for <b>daa</b> and <b>das</b>. I'll tell
+you what: look up the
+detailed operation of these instructions, find an unintended use for
+them, and let me know what it is. I'll be delighted to hear! One
+possible hint: these instructions are among the very few that pay
+attention to the Auxiliary Carry flag.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> I'm
+not going to spend
+any more time on <b>daa</b> and <b>das</b>,
+because they're just not
+used that often. BCD arithmetic is used primarily for working with
+on values to an exact number of decimal digits. (By contrast, normal
+binary arithmetic stores values to an exact number of <i>binary</i>
+digits, which can cause rounding problems with decimal calculations.)
+Consequently, BCD arithmetic is useful for accounting purposes, but
+not much else. Moreover, BCD arithmetic is decidedly slow. If you're
+one of the few who need BCD arithmetic, the BCD-oriented instructions
+are there, and BCD arithmetic is well-discussed in the literature &#8212;
+it's been around for decades, and many IBM mainframes use it &#8212;
+so go to it. For the rest of you, don't worry that you're missing
+out on powerful and mysterious instructions &#8212; the BCD
+instructions are deservedly obscure.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<h3 class="western"><font color="#110d06"><font color="#0b0703"><a name="_aam,_aad,_AND"></a><a class="western" href="#T0909"><font size="4"><b>aam,
+aad, AND UNPACKED BCD ARITHMETIC</b></font></a></font></font></h3>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> <b>aam</b>
+and <b>aad</b>
+are BCD instructions of a slightly different flavor and a bit more
+utility. <b>aam</b> ("ASCII adjust AX after multiply")
+adjusts the result in AL of the multiplication of two single-digit
+unpacked BCD values to a valid two-digit unpacked BCD value in AX. This
+is accomplished by dividing AL by 10 and storing the quotient in
+AH and the remainder in AL. (By contrast, <b>div</b>
+stores the
+quotient in AL and the remainder in AH.)</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> <b>aad</b>
+("ASCII
+adjust AL <i>before</i> division") converts a two-digit
+unpacked
+BCD value in AX into the binary equivalent in AX. This is performed
+by multiplying AH by 10, adding it to AL, and zeroing AH. The binary
+result of <b>aad</b> can then be divided by a single-digit
+BCD value
+to generate a single-digit BCD result.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> By
+the way, "ASCII
+adjust" really means unpacked BCD for these instructions, since
+ASCII digits with the upper nibble zeroed are unpacked BCD digits. <b>aaa</b>
+and <b>aas</b>, which we'll discuss shortly, explicitly
+convert ASCII digits into unpacked BCD, but <b>aam</b> and
+<b>aad</b>
+require that you use <b>and</b> to zero the upper nibble
+of ASCII
+digits before performing multiplication and division.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> <b>aam</b>
+can be used
+to implement multiplication of arbitrarily long unpacked BCD operands
+<i>one digit at a time</i>. That is, with <b>aam</b>
+you can
+multiply decimal numbers just the way we do it with a pencil and
+paper, multiplying one digit of each product together at a time and
+carrying the results along. Presumably, <b>aad</b> can be
+used
+similarly in the division of two BCD operands, although I've never
+found an example of the use of <b>aad</b>.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> At
+any rate, the two
+instructions do have some small use apart from unpacked BCD
+arithmetic. They can save a bit of code space if you need to perform
+exactly the specified division by 10 of <b>aam</b> or
+multiplication
+by 10 and addition of <b>aad</b>, although you must be
+sure that the
+result can fit in a single byte. In particular, <b>aam</b>
+has an
+advantage over <b>div</b> in that a <b>div</b>
+by an 8-bit divisor
+requires a 16-bit dividend in AX, while <b>aam</b> uses
+only an 8-bit
+dividend in AL. <b>aam</b> has another advantage in that
+unlike <b>div</b>,
+it doesn't require a register to store the divisor.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> For
+example, <a name="L924R"></a><a class="western" href="#L924">Listing
+9-24</a> shows code that converts a byte value to a three-digit
+ASCII
+string by way of <b>aam</b>. <a name="L925R"></a><a class="western" href="#L925">Listing
+9-25</a>, by contrast, converts a byte value to an ASCII string
+by
+using explicit division by 10 via <b>div</b>. <a class="western" href="#L924">Listing
+9-24</a> is only 28 bytes long per byte converted, 2 bytes
+shorter
+than <a class="western" href="#L925">Listing 9-25</a>.
+<a class="western" href="#L924">Listing
+9-24</a> also executes in 54.97 us per conversion, 2.65 us faster
+than the 57.62 us of <a class="western" href="#L925">Listing
+9-25</a>. Normally, an improvement of 2.65 us would have us
+jumping up and
+down, but the lengthy execution times of both conversion routines
+mean that the speed advantage of <a class="western" href="#L924">Listing
+9-24</a> is only about 5%. That's certainly an improvement &#8212;
+but painfully slow nonetheless.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> <b>aam</b>
+and <b>aad</b>
+would be more interesting if they provided significantly faster ways
+than <b>div</b> and <b>mul</b> to divide and
+multiply by 10. Unfortunately, that's not the case, as the above
+results illustrate. <b>aad</b> and <b>aam</b>
+must use the 8088's general-purpose
+multiplication and division capabilities, for they are just about as
+slow as <b>mul</b> and <b>div</b>. <b>aad</b>
+is the speedster of
+the two at 60 cycles per execution, while <b>aam</b>
+executes in 83
+cycles.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<h3 class="western"><font color="#110d06"><font color="#0b0703"><a name="_NOTES_ON_mul"></a><a class="western" href="#T0909"><font size="4"><b>NOTES
+ON mul AND div</b></font></a></font></font></h3>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> I'd
+like to take a
+moment to note some occasionally annoying characteristics of <b>mul</b>
+and <b>div</b>. <b>mul</b> (and <b>imul</b>,
+but I'll refer only to
+<b>mul</b> from now on for brevity) has a tendency to
+surprise you by
+wiping out a register that you'd intuitively think it wouldn't,
+because the product is stored in twice as many bits as either factor.
+For example, <b>mul bl</b> stores the result in AX, not
+AL, and <b>mul
+cx</b> stores the result in DX:AX, not AX. While this sounds
+simple
+enough, it's easy to forget in the heat of coding.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Similarly, it's easy
+to forget that <b>div</b> requires that the dividend be
+twice as
+large as the divisor and quotient. (The following discussion applies
+to <b>idiv</b> as well; again, I'll refer only to <b>div</b>
+for
+brevity.) In order to divide one 16-bit value by another, it's
+essential that the 16-bit dividend be extended to a 32-bit value, as
+in:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov bx,[Divisor]</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov ax,[Dividend]</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> sub dx,dx ;extend
+Dividend to an unsigned 32-bit value</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> div bx</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703">(<b>cwd</b>
+can be used
+for sign-extension to a 32-bit value.) What's particularly tricky
+about 32-bit-by-16-bit division is that it leaves the remainder in
+DX. That means that if you perform multiple 16-bit-by-16-bit
+divisions in a loop, <i>you must zero DX every time through the
+loop</i>. For example, the following code to convert a binary
+number to five
+ASCII digits wouldn't work properly, because the dividend wouldn't be
+properly extended to 32 bits after the first division, which would
+leave the remainder in DL:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov ax,[Count] ;value
+to convert to ASCII</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> sub dx,dx ;extend
+Count to an unsigned 32-bit value</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov bx,10 ;divide
+by 10 to convert to decimal</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov si,offset
+CountEnd-1 ;ASCII count goes here</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov cx,5 ;we
+want 5 ASCII digits</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>DivLoop:</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> div bx ;divide
+by 10</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> add dl,'0' ;convert
+this digit to ASCII</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov [si],dl ;store
+the ASCII digit</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> dec si ;point
+to the next most significant digit</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> loop DivLoop</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703">On
+the other hand, the
+following code would work perfectly well, because it extends the
+dividend to 32 bits every time through the loop:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov ax,[Count] ;value
+to convert to ASCII</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov bx,10 ;extend
+Count to an unsigned 32-bit value</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov si,offset
+CountEnd-1 ;ASCII count goes here</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov cx,5 ;we
+want 5 ASCII digits</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>DivLoop:</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> sub dx,dx ;extend
+the dividend to an unsigned 32-bit value</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> div bx ;divide
+by 10</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> add dl,'0' ;convert
+this digit to ASCII</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov [si],dl ;store
+the ASCII digit</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> dec si ;point
+to the next most significant digit</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> loop DivLoop</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703">All
+of the above goes
+for 8-bit-by-8-bit division as well, except that in that case it's
+the 8-bit dividend in AL that you must extend to a word in AX before
+each division.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">There's another tricky
+point to <b>div</b>: <b>div</b> can crash a
+program by generating a
+divide-by-zero interrupt (interrupt 0) under certain circumstances.
+Obviously, this can happen if you divide by zero, but that's not the
+only way <b>div</b> can generate a divide-by-zero
+interrupt. If a
+division is attempted for which the quotient doesn't fit into the
+destination register (AX for 32-bit-by-16-bit divides, AL for
+16-bit-by-8-bit divides), a divide-by-zero interrupt occurs. So, for
+example:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov ax,0ffffh</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov dl,1</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> div dl</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703">results
+in a
+divide-by-zero interrupt.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Often, you know
+exactly what the dividend and divisor will be for a particular
+division, or at least what range they'll be in, and in those cases
+you don't have to worry about <b>div</b> causing a
+divide-by-zero
+interrupt. If you're not sure that the dividend and divisor are
+safe, however, you <i>must</i> guard against potential
+problems. One
+way to do this is by intercepting interrupt 0 and handling
+divide-by-zero interrupts. The alternative is to check the dividend
+and divisor before each division to make sure both that the divisor
+is non-zero and that the dividend isn't so much larger than the
+divisor that the result won't fit in 8 or 16 bits, whichever size the
+division happens to be.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">This division-by-zero
+business is undeniably a nuisance to have to deal with &#8212; but
+it's absolutely necessary if you're going to perform division without
+knowing that the inputs can safely be used.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<h3 class="western"><font color="#110d06"><font color="#0b0703"><a name="_aaa,_aas,_AND"></a><a class="western" href="#T0909"><font size="4"><b>aaa,
+aas, AND DECIMAL ASCII ARITHMETIC</b></font></a></font></font></h3>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Finally, we come to
+<b>aaa</b> and <b>aas</b>, which support
+addition and subtraction of
+decimal ASCII digits. Actually, <b>aaa</b> and <b>aas</b>
+support
+addition and subtraction of any two unpacked BCD digits, or indeed of
+any two bytes at all the lower nibbles of which contain digits in the
+range 0-9.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> <b>aaa</b>
+("ASCII
+adjust after addition") adjusts AL to the correct decimal
+(unpacked BCD) result of the addition of two nibbles. Consider this: if
+you add two digits in the range 0-9, one of three things can
+happen. The result can be in the range 0-9, in which case no
+adjustment is needed and no decimal carry has occurred. Alternatively,
+the result can be in the range 0Ah-0Fh, in which case
+the result can be corrected by adding 6 to the result, taking the
+result modulo 16 (decimal), and setting carry-out. Finally, the
+result can be in the range 10h-12h, in which case the result can be
+corrected in exactly the same way as for results in the range
+0Ah-0Fh.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> <b>aaa</b>
+handles all
+three cases with a single 1-byte instruction. <b>aaa</b>
+assumes
+that an <b>add</b> or <b>adc</b> instruction
+has just executed, with
+the Auxiliary Carry flag set appropriately. If the Auxiliary Carry
+flag is set (indicating a result in the range 10h-12h) or if the
+lower nibble of AL is in the range 0Ah-0Fh, then 6 is added to AL,
+the Auxiliary Carry and Carry flags are set to 1, and AH is
+incremented. Finally, the upper nibble of AL is set to 0 in all
+cases.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">What does all this
+mean? Obviously, it means that it's easy to add together unpacked
+BCD numbers. More important, though, is that <b>aaa</b>
+makes it
+fast (4 cycles per <b>aaa</b>) and easy to add together
+ASCII
+representations of decimal numbers. That's genuinely useful because
+it takes a slew of cycles to convert a binary number to an ASCII
+representation; after all, a division by 10 is required for each
+digit to be converted. ASCII numbers are necessary for all sorts of
+data displays for which speed is important, ranging from game scores
+to instrumentation readouts. <b>aaa</b> makes possible the
+attractive
+alternative of keeping the numbers in displayable ASCII forms at all
+times, thereby avoiding the need for any sort of conversion at all.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> <a name="L926R"></a><a class="western" href="#L926">Listing
+9-26</a> shows the use of <b>aaa</b> in adding the
+value 1 - stored
+as the ASCII decimal string "00001" &#8212; to an ASCII
+decimal count. Granted, it takes much longer to perform the ASCII
+decimal increment shown in <a class="western" href="#L926">Listing
+9-26</a> than it does to execute an <b>inc</b>
+instruction &#8212;
+more than 100 times as long, in fact, at 93.00 us per ASCII decimal
+increment versus a maximum of 0.809 us per <b>inc</b>.
+However,
+<a class="western" href="#L926">Listing 9-26</a>
+maintains the count
+in instantly-displayable ASCII form, and for frequently-displayed but
+rarely-changed numbers, a ready-to-display format can more than
+compensate for lengthier calculations.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> If
+you do use <b>aaa</b>,
+remember that you have not one but two ways to use the carry-out that
+indicates that a decimal digit has counted from 9 back around to 0. The
+Carry flag is set on carry-out; that's what we use as the
+carry-out status in <a class="western" href="#L926">Listing
+9-26</a>.
+In addition, though, AH is incremented by <b>aaa</b>
+whenever decimal
+carry-out occurs. It's certainly possible to get some extra mileage
+by putting the next-most-significant digit in AH before performing
+<b>aaa</b> so that the carry-out is automatically carried.
+It's also
+conceivable that you could use <b>aaa</b> specifically to
+increment
+AH depending on either the value in AL or on the setting of the
+Auxiliary Carry flag, although I've never seen such an application.
+Since the Auxiliary Carry flag isn't testable by any conditional jump
+(or indeed by any instructions other than <b>daa</b>, <b>das</b>,
+<b>aaa</b>, and <b>aas</b>), <b>aaa</b>
+is perhaps the best hope for
+getting extra utility from that obscure flag.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> <b>aas</b>
+("ASCII
+adjust after subtraction") is well and truly the mirror image of
+<b>aaa</b>. <b>aas</b> is designed to be used
+after a <b>sub</b> or
+<b>sbb</b>, subtracting 6 from the result, decrementing AH,
+and
+setting the Carry flag if the result in AL is not in the range 0-9,
+and zeroing the high nibble of AL in any case. You'll find that
+wherever <b>aaa</b> is useful, so too will be <b>aas</b>.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<h2 class="western"><font color="#110d06"><font color="#0b0703"><a name="_MNEMONICS_THAT_COVER"></a><a class="western" href="#T0910"><font style="font-size: 16pt;" size="4"><b>9.10
+MNEMONICS THAT COVER MULTIPLE INSTRUCTIONS</b></font></a></font></font></h2>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> As
+we've seen several
+times in this chapter and the last, 8088 assembler often uses a
+single mnemonic, such as <b>mov</b>, to name two or more
+instructions
+that perform the same operations but are quite different in size and
+execution speed. When the assembler encounters such a mnemonic in
+assembler source code, it automatically chooses the most efficient
+instruction that fills the bill.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> For
+example, earlier
+in this chapter we learned that there's a special 16-bit
+register-only version of <b>inc</b> that's shorter and
+faster than
+the standard <i>mod-reg-rm</i> version of <b>inc</b>.
+Whenever you
+use a 16-bit register <b>inc</b> in source code &#8212; for
+example,
+<b>inc ax</b> &#8212; the assembler uses the more efficient
+16-bit
+register-only <b>inc</b>; otherwise, the assembler uses
+the standard
+version.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Naturally, you'd
+prefer to use the most efficient version of a given mnemonic whenever
+possible. The only way to do that is to know the various
+instructions described by each mnemonic and to strive to use the
+forms of the mnemonic that assemble to the most efficient
+instruction. For instance, consider the choice between <b>inc ax</b>
+and <b>inc al</b>. Without inside knowledge, there's
+nothing to
+choose from between these two assembler lines. In fact, there might
+be a temptation to choose the 8-bit form on the premise that an 8-bit
+operation can't <i>possibly</i> be slower than a 16-bit
+one. Actually, of course, it <i>can</i>...but you'll only
+know that the
+16-bit <b>inc</b> is the one to pick if you're aware of
+the two
+instructions <b>inc</b> describes.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">This section is a
+summary of mnemonics that cover multiple instructions, many of which
+we've covered in detail elsewhere in this book. The mnemonics that
+describe multiple instructions are:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> _ <b>inc</b>,
+which
+has a <i>mod-reg-rm</i> version and a 16-bit register-only
+version,
+as described earlier in this chapter (the same applies to <b>dec</b>).</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> _ <b>xchg</b>,
+which
+has a <i>mod-reg-rm</i> version and a 16-bit
+exchange-with-AX-only
+version, as described in Chapter 8.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> _ <b>add</b>,
+which
+has two <i>mod-reg-rm</i> versions (one for adding a
+register and a
+memory variable or a second register together, and another for adding
+immediate data to a register or memory variable) and an
+accumulator-specific immediate-addressing version, as described in
+Chapter 8 (the same applies to <b>adc</b>, <b>and</b>,
+<b>cmp</b>,
+<b>or</b>, <b>sbb</b>, <b>sub</b>,
+<b>test</b> and <b>xor</b>, also
+as described in Chapter 8).</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> _ <b>mov</b>,
+which
+requires further explanation.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> <b>mov</b>
+covers
+several instructions, and it's worth understanding each one. The
+basic form of <b>mov</b> is a <i>mod-reg-rm</i>
+form that copies one
+register or memory variable to another register or memory variable.
+(Memory-to-memory moves are not permitted, however.) There's also a
+<i>mod-reg-rm</i> form of <b>mov</b> that
+allows the copying of a
+segment register to a general-purpose register or a memory variable,
+and vice-versa. Last among the <i>mod-reg-rm</i> versions
+of <b>mov</b>,
+there's a form of <b>mov</b> that supports the setting of
+a register
+or a memory variable to an immediate value.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">There are two more
+versions of <b>mov</b>, both of which are non-<i>mod-reg-rm</i>
+forms
+of the instruction. There's an accumulator-specific version that
+allows the transfer of values between direct-addressed memory
+variables and the accumulator (AL or AX) faster and in fewer bytes
+than the <i>mod-reg-rm</i> instruction, as discussed in
+Chapter 8. There's also a register-specific form of <b>mov</b>,
+as we discussed
+in Chapter 7; I'd like to discuss that version of <b>mov</b>
+further,
+for it's an important instruction indeed.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Every <i>mod-reg-rm</i>
+instruction requires at least 2 bytes, one for the instruction opcode
+and one for the <i>mod-reg-rm</i> byte. Consequently, the <i>mod-reg-rm</i>
+version of <b>mov </b><i><b>mem/reg</b></i><b>,</b><i><b>immed8</b></i>
+is 3 bytes long, since the immediate value takes another byte.
+However, there's a register-specific immediate-addressing form of <b>mov</b>
+that doesn't have a <i>mod-reg-rm</i> byte. Instead, the
+register
+selection is built right into the opcode, so only 1 byte is needed to
+both describe the instruction and select the destination. The
+result: the register-specific immediate-addressing form of <b>mov</b>
+allows <b>mov </b><i><b>reg</b></i><b>,</b><i><b>immed8</b></i>
+to
+assemble to just 2 bytes, and <b>mov </b><i><b>reg</b></i><b>,</b><i><b>immed16</b></i>
+to assemble to just 3 bytes. </font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> The
+presence of the
+register-specific immediate-addressing version of <b>mov</b>
+makes
+loading immediate values into registers quite reasonable in terms of
+code size and performance. For example, <b>mov al,0</b>
+assembles to
+a 2-byte instruction, exactly the same length as <b>sub al,al</b>.
+Granted, <b>sub al,al</b> is 1 cycle faster than <b>mov
+al,0</b>, and
+<b>sub ax,ax</b> is both 1 cycle faster and 1 byte shorter
+than <b>mov
+ax,0</b>, but nonetheless the upshot is that registers can be
+loaded
+with immediate values fairly efficiently.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> Be
+aware, however,
+that the same is <i>not</i> generally true of <b>add</b>,
+<b>sub</b>,
+or any of the logical or arithmetic instructions &#8212; the
+<i>mod-reg-rm</i> immediate-addressing forms of these
+instructions
+take a minimum of 3 bytes. As mentioned above, though, the
+accumulator-specific immediate-addressing forms of these instructions
+<i>are</i> fast and compact at 2 or 3 bytes in length.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">While there is a
+special form of <b>mov</b> for loading registers with
+immediate data,
+there is no such form for loading memory variables. The shortest
+possible instruction for loading memory with an immediate value is 3
+bytes long, and such instructions can range all the way up to 6 bytes
+in length. In fact, thanks to the 8088's accumulator &#8212; and
+register-specific <b>mov</b> instructions:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov al,0</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov [MemVar],al</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703">is
+not only the same
+length as: </font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov [MemVar],0</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><i>but
+is also 2 cycles
+faster</i>!</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Learn well those
+special cases where a single mnemonic covers multiple instructions &#8212;
+and <i>use</i> them! They're one of the secrets of good
+8088
+assembler code.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<h3 class="western"><font color="#110d06"><font color="#0b0703"><a name="_ON_TO_THE"></a><a class="western" href="#T0910"><font size="4"><b>ON
+TO THE STRING INSTRUCTIONS</b></font></a></font></font></h3>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">We've cut a wide swath
+through the 8088's instruction set in this chapter, but we have yet
+to touch on one important set of instructions &#8212; the string
+instructions. These instructions, which are perhaps the most
+important instructions the 8088 has to offer when it comes to
+high-performance programming, are coming up next. Stay tuned.</font></font></p>

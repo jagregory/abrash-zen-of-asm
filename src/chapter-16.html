@@ -1,0 +1,673 @@
+<h1 class="western" style="page-break-before: always;"><font color="#110d06"><font color="#0b0703"><a name="_Chapter_16:_"></a><a class="western" href="#TC16"><font size="5"><b>Chapter
+16: Onward to the Flexible Mind</b></font></a></font></font></h1>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<table style="width: 355px; height: 133px;" border="1" bordercolor="#bfbfbf" cellpadding="4" cellspacing="0" frame="void" rules="groups">
+<col width="293"> <tbody>
+<tr>
+<td bgcolor="#bfbfbf" width="293">
+<p class="western"><b>16.1 </b><a class="western" href="#_A_TASTE_OF">A TASTE OF WHAT
+YOU'VE LEARNED</a></p>
+</td>
+</tr>
+</tbody> <tbody>
+<tr>
+<td bgcolor="#bfbfbf" width="293">
+<p class="western"><b>16.2 </b><a class="western" href="#_ZENNING">ZENNING</a></p>
+</td>
+</tr>
+</tbody> <tbody>
+<tr>
+<td bgcolor="#bfbfbf" width="293">
+<p class="western"><b>16.3 </b><a class="western" href="#_KNOWLEDGE_AND_BEYOND">KNOWLEDGE
+AND BEYOND</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> And
+so we come to the
+end of our journey through knowledge. More precisely, we've come to
+the end of that part of <i>The Zen of Assembly Language</i>
+that's
+dedicated to knowledge, for no matter how long you or I continue to
+program the 8088, there will always be more to learn about this
+surprising processor.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> If
+The Zen of
+assembler were merely a matter of instructions and cycle times, I
+would spend a few pages marvelling at the wonders we've seen, then
+congratulate you on arriving at a mastery of assembler and bid you
+farewell. I won't do that, though, for in truth we've merely arrived
+at a resting place from whence our journey will continue anew in
+Volume II of <i>The Zen of Assembly Language</i>. There
+are marvels
+aplenty to come, so we'll just catch our breath, take a brief look
+back to see how far we've come...and then it's on to the flexible
+mind.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> The
+flexible mind
+notwithstanding, congratulations are clearly in order <i>right
+now</i>. You've mastered a great deal &#8212; in fact, you've absorbed
+just
+about as much knowledge about assembler as any mortal could in so
+short a time. You've undoubtedly learned much more than you realize
+just yet; only with experience will everything you've seen in this
+volume sink in fully.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> As
+important as the
+amount you've learned is the nature of your knowledge. We haven't
+just thrown together a collection of unrelated facts in this volume;
+we've divined the fundamental nature and basic optimization rules of
+the PC. We've explored the architectures of the PC and the 8088, and
+we've seen how those underlying factors greatly influence the
+performance of all assembler code &#8212; and, by extension, the
+performance of all code that runs on the PC. We've learned which
+members of the instruction set are best suited to various tasks,
+we've come across unexpected talents in many instructions, and we've
+learned to view instructions in light of what they <i>can</i>
+do, not
+what they were designed to do. Best of all, we've learned to use the
+Zen timer to check our assumptions and to help us continue to learn
+and hone our skills.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">What all this amounts
+to is a truly excellent understanding of instruction performance on
+the PC. That's important &#8212; critically important &#8212; but
+it's not the whole picture. The knowledge we've acquired is merely
+the foundation for the flexible mind, which enables us to transform
+task specifications into superior assembler code. In turn,
+application implementations &#8212; whole programs &#8212; are built
+upon the flexible mind. So, while we've built a strong foundation,
+we've a ways yet to go in completing our mastery of the Zen of
+assembler.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> The
+flexible mind and
+implementation are what Volume II of <i>The Zen of Assembly
+Language</i>
+is all about. Volume II develops the concept of the flexible mind
+from the bottom up, starting at the level of implementing the most
+efficient code for a small, well-defined task, continuing on through
+algorithm implementation, and extending to designing custom
+assembler-based mini-languages tailored to various applications. We'll
+learn how to search and sort data quickly, how to squeeze every
+cycle out of a line-drawing routine, how to let data replace code
+(with tremendous program-size benefits), and how to do animation. The
+emphasis every step of the way will be on outperforming standard
+techniques by using our new knowledge in innovative ways to create
+the best possible 8088 code for each task.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Finally, we'll put
+everything we've learned together by designing and implementing an
+animation application. The PC isn't renowned as a game machine (to
+put it mildly!), but by the time we're through, I promise you won't
+be able to tell the difference between the graphics on your PC and
+those in an arcade. The key, of course, is the flexible mind, the
+ability to bring together the needs of the application and the
+capabilities of the PC -with often-spectacular results.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> So,
+while we've gone a
+mighty long way toward mastering the Zen of assembler, we haven't
+arrived yet. That's all to the good, though. Until now, interesting
+as our explorations have been, we've basically been doing grunt work
+&#8212; learning cycle times and the like. What's coming up next is
+the <i>really</i> fun stuff &#8212; taking what we've learned
+and
+using that knowledge to create the wondrous tasks and applications
+that are possible only with the very best assembler code.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> In
+short, in Volume II
+we'll experience the full spectrum of the Zen of assembler, from the
+details that we now know so well to the magnificent applications that
+make it all worthwhile.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<h2 class="western"><font color="#110d06"><font color="#0b0703"><a name="_A_TASTE_OF"></a><a class="western" href="#T1601"><font style="font-size: 16pt;" size="4"><b>16.1
+A TASTE OF WHAT YOU'VE LEARNED</b></font></a></font></font></h2>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Before we leave Volume
+I, I'd like to give you a taste of both what's to come and what you
+already know. Why do you need to see what you already know? The
+answer is that you've surely learned much more than you realize right
+now. The example we'll look at involves strong elements of the
+flexible mind, and what we'll find is that there's no neat dividing
+line between knowledge and the flexible mind...and that we have
+already ventured much farther across the fuzzy boundary between the
+two than you'd ever imagine.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">We'll also see that
+the flexible mind involves knowledge and intuition &#8212; but no
+deep dark mysteries. Knowledge you have in profusion, and, as you'll
+see, your intuition is growing by leaps and bounds. (Try to stay one
+step ahead of me as we optimize the following routine. I suspect
+you'll be surprised at how easy it is.) I'm presenting this last
+example precisely because I'd like you to see how well you already
+understand the flexible mind.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> On
+to our final
+example...</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<h2 class="western"><font color="#110d06"><font color="#0b0703"><a name="_ZENNING"></a><a class="western" href="#T1602"><font style="font-size: 16pt;" size="4"><b>16.2
+ZENNING</b></font></a></font></font></h2>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> In
+Jeff Duntemann's
+excellent book <i>Complete Turbo Pascal, Third Edition</i>
+(published
+by Scott, Foresman and Company), there's a small assembler subroutine
+that's designed to be called from a Turbo Pascal program in order to
+fill the screen or a system-memory screen buffer with a specified
+character/attribute pair in text mode. This subroutine involves only
+21 instructions and works perfectly well; nonetheless, with what we
+know we can compact the subroutine tremendously, and speed it up a
+bit as well. To coin a verb, we can "Zen" this
+already-tight assembler code to an astonishing degree. In the
+process, I hope you'll get a feel for how advanced your assembler
+skills have become.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> The
+code is as follows
+(the code is Jeff's, with many letters converted to lowercase in
+order to match the style of <i>Zen of Assembly Language</i>,
+but the
+comments are mine):</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>OnStack struc ;data
+that's stored on the stack after PUSH BP</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>OldBP dw ? ;caller's
+BP</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>RetAddr dw ? ;return
+address</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>Filler dw ? ;character
+to fill the buffer with</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>Attrib dw ? ;attribute
+to fill the buffer with</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>BufSize dw ? ;number
+of character/attribute pairs to fill</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>BufOfs dw ? ;buffer
+offset</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>BufSeg dw ? ;buffer
+segment</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>EndMrk db ? ;marker
+for the end of the stack frame</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>OnStack ends</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>;</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>ClearS proc near</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> push bp ;save
+caller's BP</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov bp,sp ;point
+to stack frame</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> cmp word
+ptr [bp].BufSeg,0 ;skip the fill if a null</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> jne Start ;
+pointer is passed</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> cmp word
+ptr [bp].BufOfs,0</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> je Bye</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>Start:
+cld ;make STOSW count up</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov ax,[bp].Attrib ;load
+AX with attribute parameter</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> and ax,0ff00h ;prepare
+for merging with fill char</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov bx,[bp].Filler ;load
+BX with fill char</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> and bx,0ffh ;prepare
+for merging with attribute</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> or ax,bx ;combine
+attribute and fill char</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov bx,[bp].BufOfs ;load
+DI with target buffer offset</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov di,bx</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov bx,[bp].BufSeg ;load
+ES with target buffer segment</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov es,bx</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov cx,[bp].BufSize ;load
+CX with buffer size</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> rep stosw ;fill
+the buffer</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>Bye: mov sp,bp ;restore
+original stack pointer</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> pop bp ;
+and caller's BP</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> ret EndMrk-RetAddr-2 ;return,
+clearing the parms from the stack</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>ClearS endp</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> The
+first thing you'll
+notice about the above code is that <b>ClearS</b> uses a <b>rep
+stosw</b>
+instruction. That means that we're not going to improve performance
+by any great amount, no matter how clever we are. While we can
+eliminate some cycles, the bulk of the work in <b>ClearS</b>
+is done
+by that one repeated string instruction, and there's no way to
+improve on that.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Does that mean that
+the above code is as good as it can be? Hardly. While the speed of
+<b>ClearS</b> is very good, there's another side to the
+optimization
+equation: size. The whole of <b>ClearS</b> is 52 bytes
+long as it
+stands &#8212; but, as we'll see, that size is hardly graven in
+stone.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Where do we begin with
+<b>ClearS</b>? For starters, there's an instruction in
+there that
+serves no earthly purpose &#8212; <b>mov sp,bp</b>. SP is
+guaranteed
+to be equal to BP at that point anyway, so why reload it with the
+same value? Removing that instruction saves us 2 bytes.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Well, that was
+certainly easy enough! We're not going to find any more totally
+non-functional instructions in <b>ClearS</b>, however, so
+let's get
+on to some serious optimizing. We'll look first for cases where we
+know of better instructions for particular tasks than those that were
+chosen. For example, there's no need to load any register, whether
+segment or general-purpose, through BX; we can eliminate two
+instructions by simply loading ES and DI directly:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>ClearS proc near</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> push bp ;save
+caller's BP</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov bp,sp ;point
+to stack frame</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> cmp word
+ptr [bp].BufSeg,0 ;skip the fill if a null</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> jne Start ;
+pointer is passed</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> cmp word
+ptr [bp].BufOfs,0 </b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> je Bye</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>Start:
+cld ;make STOSW count up</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov ax,[bp].Attrib ;load
+AX with attribute parameter</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> and ax,0ff00h ;prepare
+for merging with fill char</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov bx,[bp].Filler ;load
+BX with fill char</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> and bx,0ffh ;prepare
+for merging with attribute</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> or ax,bx ;combine
+attribute and fill char</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov di,[bp].BufOfs ;load
+DI with target buffer offset</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov es,[bp].BufSeg ;load
+ES with target buffer segment</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov cx,[bp].BufSize ;load
+CX with buffer size</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> rep stosw ;fill
+the buffer</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>Bye:</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> pop bp ;restore
+caller's BP</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> ret EndMrk-RetAddr-2 ;return,
+clearing the parms from the stack</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>ClearS endp</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703">(The
+<b>OnStack</b>
+structure definition doesn't change in any of our examples, so I'm
+not going clutter up this chapter by reproducing it for each new
+version of <b>ClearS</b>.)</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Okay, loading ES and
+DI directly saves another 4 bytes. We've squeezed a total of 6 bytes
+&#8212; about 11% &#8212; out of <b>ClearS</b>. What next?</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Well, <b>les</b> would
+serve better than two <b>mov</b> instructions for loading
+ES and DI:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>ClearS proc near</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> push bp ;save
+caller's BP</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov bp,sp ;point
+to stack frame</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> cmp word
+ptr [bp].BufSeg,0 ;skip the fill if a null</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> jne Start ;
+pointer is passed</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> cmp word
+ptr [bp].BufOfs,0 </b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> je Bye</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>Start:
+cld ;make STOSW count up</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov ax,[bp].Attrib ;load
+AX with attribute parameter</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> and ax,0ff00h ;prepare
+for merging with fill char</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov bx,[bp].Filler ;load
+BX with fill char</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> and bx,0ffh ;prepare
+for merging with attribute</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> or ax,bx ;combine
+attribute and fill char</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> les di,dword
+ptr [bp].BufOfs ;load ES:DI with target buffer segment:offset</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov cx,[bp].BufSize ;load
+CX with buffer size</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> rep stosw ;fill
+the buffer</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>Bye:</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> pop bp ;restore
+caller's BP</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> ret EndMrk-RetAddr-2 ;return,
+clearing the parms from the stack</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>ClearS endp</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">That's good for
+another 3 bytes. We're down to 43 bytes, and counting.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> We
+can save 3 more
+bytes by clearing the low and high bytes of AX and BX, respectively,
+by using <b>sub </b><i><b>reg8</b></i><b>,</b><i><b>reg8</b></i>
+rather than anding 16-bit values:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>ClearS proc near</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> push bp ;save
+caller's BP</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov bp,sp ;point
+to stack frame</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> cmp word
+ptr [bp].BufSeg,0 ;skip the fill if a null</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> jne Start ;
+pointer is passed</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> cmp word
+ptr [bp].BufOfs,0 </b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> je Bye</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>Start:
+cld ;make STOSW count up</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov ax,[bp].Attrib ;load
+AX with attribute parameter</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> sub al,al ;prepare
+for merging with fill char</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov bx,[bp].Filler ;load
+BX with fill char</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> sub bh,bh ;prepare
+for merging with attribute</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> or ax,bx ;combine
+attribute and fill char</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> les di,dword
+ptr [bp].BufOfs ;load ES:DI with target buffer segment:offset</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov cx,[bp].BufSize ;load
+CX with buffer size</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> rep stosw ;fill
+the buffer</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>Bye:</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> pop bp ;restore
+caller's BP</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> ret EndMrk-RetAddr-2 ;return,
+clearing the parms from the stack</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>ClearS endp</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> Now
+we're down to 40
+bytes &#8212; more than 20% smaller than the original code. That's
+pretty much it for simple instruction-substitution optimizations. Now
+let's look for instruction-rearrangement optimizations.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> It
+seems strange to
+load a word value into AX and then throw away AL. Likewise, it seems
+strange to load a word value into BX and then throw away BH. However,
+those steps are necessary because the two modified word
+values are ored into a single character/attribute word value that is
+then used to fill the target buffer.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Let's step back and
+see what this code really <i>does</i>, though. All it does
+in the end
+is load 1 byte addressed relative to BP into AH and another byte
+addressed relative to BP into AL. Heck, we can just do that
+directly! Presto &#8212; we've saved another 6 bytes, and turned two
+word-sized memory accesses into byte-sized memory accesses as well:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>ClearS proc near</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> push bp ;save
+caller's BP</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov bp,sp ;point
+to stack frame</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> cmp word
+ptr [bp].BufSeg,0 ;skip the fill if a null</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> jne Start ;
+pointer is passed</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> cmp word
+ptr [bp].BufOfs,0 </b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> je Bye</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>Start:
+cld ;make STOSW count up</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov ah,byte
+ptr [bp].Attrib[1] ;load AH with attribute</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov al,byte
+ptr [bp].Filler ;load AL with fill char</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> les di,dword
+ptr [bp].BufOfs ;load ES:DI with target buffer segment:offset</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov cx,[bp].BufSize ;load
+CX with buffer size</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> rep stosw ;fill
+the buffer</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>Bye:</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> pop bp ;restore
+caller's BP</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> ret EndMrk-RetAddr-2 ;return,
+clearing the parms from the stack</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>ClearS endp</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703">(We
+could get rid of
+yet another instruction by having the calling code pack both the
+attribute and the fill value into the same word, but that's not part
+of the specification for this particular routine.)</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Another nifty
+instruction-rearrangement trick saves 6 more bytes. <b>ClearS</b>
+checks to see whether the far pointer is null (zero) at the start of
+the routine...then loads and uses that same far pointer later on. Let's
+get that pointer into memory and keep it there; that way we can
+check to see whether it's null with a single comparison, and can use
+it later without having to reload it from memory:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>ClearS proc near</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> push bp ;save
+caller's BP</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov bp,sp ;point
+to stack frame</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> les di,dword
+ptr [bp].BufOfs ;load ES:DI with target buffer segment:offset</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov ax,es ;put
+segment where we can test it</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> or ax,di ;is
+it a null pointer?</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> je Bye ;yes,
+so we're done</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>Start:
+cld ;make STOSW count up</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov ah,byte
+ptr [bp].Attrib[1] ;load AH with attribute</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov al,byte
+ptr [bp].Filler ;load AL with fill char</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov cx,[bp].BufSize ;load
+CX with buffer size</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> rep stosw ;fill
+the buffer</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>Bye:</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> pop bp ;restore
+caller's BP</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> ret EndMrk-RetAddr-2 ;return,
+clearing the parms from the stack</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>ClearS endp</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Well. Now we're down
+to 28 bytes, having reduced the size of this subroutine by nearly
+50%. Only 13 instructions remain. Realistically, how much smaller
+can we make this code?</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">About one-third
+smaller yet, as it turns out &#8212; but in order to do that, we must
+stretch our minds and use the 8088's instructions in unusual ways. Let
+me ask you this: what do most of the instructions in the current
+version of <b>ClearS</b> do?</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Answer: they either
+load parameters from the stack frame or set up the registers so that
+the parameters can be accessed. Mind you, there's nothing wrong with
+the stack-frame-oriented instructions used in <b>ClearS</b>;
+those
+instructions access the stack frame in a highly efficient way,
+exactly as the designers of the 8088 intended, and just as the code
+generated by a high-level language would. That means that we aren't
+going to be able to improve the code if we don't bend the rules a
+bit.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Let's think...the
+parameters are sitting on the stack, and most of our instruction
+bytes are being used to read bytes off the stack with BP-based
+addressing...we need a more efficient way to address the stack...<i>the
+stack</i>...THE STACK!</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> Ye
+gods! That's easy
+&#8212; we can use the <i>stack pointer</i> to address the
+stack. While it's true that the stack pointer can't be used for <i>mod-reg-rm</i>
+addressing, as BP can, it <i>can</i> be used to pop data
+off the
+stack &#8212; and <b>pop</b> is a 1-byte instruction.
+Instructions
+don't get any shorter than that.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">There is one detail to
+be taken care of before we can put our plan into action: the return
+address &#8212; the address of the calling code &#8212; is on top of
+the stack, so the parameters we want can't be reached with <b>pop</b>.
+That's easily solved, however &#8212; we'll just pop the return
+address into an unused register, then branch through that register
+when we're done, as we learned to do in Chapter 14. As we pop the
+parameters, we'll also be removing them from the stack, thereby
+neatly avoiding the need to discard them when it's time to return.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">With that problem
+dealt with, here's the Zenned version of <b>ClearS</b>:</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>ClearS proc near</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> pop dx ;get
+the return address</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> pop ax ;put
+fill char into AL</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> pop bx ;get
+the attribute</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov ah,bh ;put
+attribute into AH</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> pop cx ;get
+the buffer size</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> pop di ;get
+the offset of the buffer origin</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> pop es ;get
+the segment of the buffer origin</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> mov bx,es ;put
+the segment where we can test it</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> or bx,di ;null
+pointer?</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> je Bye ;yes,
+so we're done</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> cld ;make
+STOSW count up</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> rep stosw ;do
+the string store</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>Bye:</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b> jmp dx ;return
+to the calling code</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in; margin-top: 0em; margin-left: 40px;"><font color="#110d06"><font color="#0b0703"><font color="#890000"><b>ClearS endp</b></font></font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> At
+long last, we're
+down to the bare metal. This version of <b>ClearS</b> is
+just 19
+bytes long. That's just 37% as long as the original version, <i>without
+any change whatsoever in the functionality </i><i><b>ClearS</b></i><i>
+makes available to the calling code</i>. The code is bound to run
+a
+bit faster too, given that there are far fewer instruction bytes and
+fewer memory accesses.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> All
+in all, the Zenned
+version of <b>ClearS</b> is a vast improvement over the
+original. Probably not the best possible implementation &#8212; <i>never
+say
+never!</i> &#8212; but an awfully good one.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"><br>
+</font></font></p>
+<h2 class="western"><font color="#110d06"><font color="#0b0703"><a name="_KNOWLEDGE_AND_BEYOND"></a><a class="western" href="#T1603"><font style="font-size: 16pt;" size="4"><b>16.3
+KNOWLEDGE AND BEYOND</b></font></a></font></font></h2>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">There is a point to
+all this Zenning above and beyond showing off some neat tricks we've
+learned (and a trick or two we'll learn more about in Volume II). The
+real point is to illustrate the breadth of knowledge you now
+possess, and the tremendous power that knowledge has when guided by
+the flexible mind.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Consider the
+optimizations we made to <b>ClearS</b> above. Our initial
+optimizations resulted purely from knowing particular facts about the
+8088, and nothing more. We knew, for example, that segment registers
+do not have to be loaded from memory by way of general-purpose
+registers but can instead be loaded directly, so we made that change.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> As
+optimizations
+became harder to come by, however, we shifted from applying pure
+knowledge to coming up with creative solutions that involved
+understanding and reworking the code as a whole. We started out by
+compacting individual instructions and bits of code, but in the end
+we came up with a solution that applied our knowledge of the PC to
+implementing the functionality of the entire subroutine as
+efficiently as possible.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> And
+that, simply put,
+is the flexible mind.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">Think back. Did you
+have any trouble following the optimizations to <b>ClearS</b>?
+I
+very much doubt it; in fact, I would guess that you were ahead of me
+much of the way. So, you see, you already have a good feel for the
+flexible mind.</font></font></p>
+<p class="western" style="margin-bottom: 0in;">
+<font color="#110d06"><font color="#0b0703">There will be much
+more of the flexible mind in Volume II of <i>The Zen of Assembly
+Language</i>, but it won't be an abrupt change from what we've
+been
+doing; rather, it will be a gradual raising of our focus from
+learning the nuts and bolts of the PC to building applications with
+those nuts and bolts. We've trekked through knowledge and beyond;
+now it's time to seek out ways to bring the magic of the Zen of
+assembler to the real world of applications.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"><font color="#110d06"><font color="#0b0703"> I
+hope you'll join me
+for the journey.</font></font></p>
+<p class="western" style="margin-bottom: 0in;"></p>
+<hr style="width: 100%; height: 2px;">
+<p class="western" style="margin-bottom: 0in;"></p>
