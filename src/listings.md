@@ -1,8 +1,6 @@
-# Listings Index
+# Expanded Listings
 
-## Chapter 2
-
-### Listing 2-1
+## Listing 2-1
 
 ;
 
@@ -870,7 +868,7 @@ when**
 
 **end**
 
-### Listing 2-2
+## Listing 2-2
 
 **;**
 
@@ -953,7 +951,7 @@ when**
 **end Start**
 
 
-### Listing 2-3
+## Listing 2-3
 
 
 **; \*\*\* Listing 2-3 \*\*\***
@@ -1008,7 +1006,7 @@ when**
 
 
 
-### Listing 2-4
+## Listing 2-4
 
 
 **echo off**
@@ -1144,7 +1142,7 @@ when**
 **:end**
 
 
-### Listing 2-5
+## Listing 2-5
 
 
 **;**
@@ -2397,7 +2395,7 @@ allow**
 
 
 
-### Listing 2-6
+## Listing 2-6
 
 
 **;**
@@ -2524,7 +2522,7 @@ allow**
 
 
 
-### Listing 2-7
+## Listing 2-7
 
 
 **echo off**
@@ -2661,7 +2659,7 @@ allow**
 **:end**
 
 
-### Listing 2-8
+## Listing 2-8
 
 
 **;**
@@ -2723,9 +2721,7 @@ allow**
 **call ZTimerOff**
 
 
-## Chapter 3
-
-### Listing 3-1
+## Listing 3-1
 
 
 **;**
@@ -2794,7 +2790,7 @@ allow**
 
 
 
-### Listing 3-2
+## Listing 3-2
 
 
 **; \*\*\* Listing 3-2 \*\*\***
@@ -2839,9 +2835,7 @@ allow**
 
 
 
-## Chapter 4
-
-### Listing 4-1
+## Listing 4-1
 
 
 **;**
@@ -2878,7 +2872,7 @@ allow**
 
 
 
-### Listing 4-2
+## Listing 4-2
 
 
 **;**
@@ -2915,7 +2909,7 @@ allow**
 
 
 
-### Listing 4-3
+## Listing 4-3
 
 
 **;**
@@ -2942,7 +2936,7 @@ allow**
 
 
 
-### Listing 4-4
+## Listing 4-4
 
 
 **;**
@@ -2969,7 +2963,7 @@ allow**
 
 
 
-### Listing 4-5
+## Listing 4-5
 
 
 **;**
@@ -3002,7 +2996,7 @@ allow**
 
 
 
-### Listing 4-6
+## Listing 4-6
 
 
 **;**
@@ -3037,7 +3031,7 @@ allow**
 
 
 
-### Listing 4-7
+## Listing 4-7
 
 
 **;**
@@ -3068,7 +3062,7 @@ allow**
 
 
 
-### Listing 4-8
+## Listing 4-8
 
 
 **;**
@@ -3100,7 +3094,7 @@ allow**
 
 
 
-### Listing 4-9
+## Listing 4-9
 
 
 **;**
@@ -3133,7 +3127,7 @@ allow**
 
 
 
-### Listing 4-10
+## Listing 4-10
 
 
 **;**
@@ -3162,7 +3156,7 @@ allow**
 
 
 
-### Listing 4-11
+## Listing 4-11
 
 
 **;**
@@ -3229,7 +3223,7 @@ allow**
 
 
 
-### Listing 4-12
+## Listing 4-12
 
 
 **;**
@@ -3275,9 +3269,7 @@ allow**
 **call ZTimerOff**
 
 
-## Chapter 5
-
-### Listing 5-1
+## Listing 5-1
 
 
 **;**
@@ -3352,9 +3344,7 @@ allow**
 
 
 
-## Chapter 7
-
-### Listing 7-1
+## Listing 7-1
 
 
 **;**
@@ -3397,7 +3387,7 @@ allow**
 
 
 
-### Listing 7-2
+## Listing 7-2
 
 
 **;**
@@ -3460,7 +3450,7 @@ allow**
 
 
 
-### Listing 7-3
+## Listing 7-3
 
 
 **;**
@@ -3519,7 +3509,7 @@ allow**
 
 
 
-### Listing 7-4
+## Listing 7-4
 
 
 **;**
@@ -3660,7 +3650,7 @@ allow**
 
 
 
-### Listing 7-5
+## Listing 7-5
 
 
 **;**
@@ -3825,7 +3815,7 @@ allow**
 
 
 
-### Listing 7-6
+## Listing 7-6
 
 
 **;**
@@ -3986,7 +3976,7 @@ allow**
 
 
 
-### Listing 7-7
+## Listing 7-7
 
 
 **;**
@@ -4079,7 +4069,7 @@ allow**
 
 
 
-### Listing 7-8
+## Listing 7-8
 
 
 **;**
@@ -4180,7 +4170,7 @@ allow**
 
 
 
-### Listing 7-9
+## Listing 7-9
 
 
 **;**
@@ -4243,7 +4233,7 @@ allow**
 
 
 
-### Listing 7-10
+## Listing 7-10
 
 
 **;**
@@ -4312,7 +4302,7 @@ allow**
 
 
 
-### Listing 7-11
+## Listing 7-11
 
 
 **;**
@@ -4381,7 +4371,7 @@ allow**
 
 
 
-### Listing 7-12
+## Listing 7-12
 
 
 **;**
@@ -4446,7 +4436,7 @@ allow**
 
 
 
-### Listing 7-13
+## Listing 7-13
 
 
 **;**
@@ -4513,7 +4503,7 @@ allow**
 
 
 
-### Listing 7-14
+## Listing 7-14
 
 
 **;**
@@ -4602,7 +4592,7 @@ allow**
 
 
 
-### Listing 7-15
+## Listing 7-15
 
 
 **;**
@@ -4761,7 +4751,7 @@ allow**
 
 
 
-### Listing 7-16
+## Listing 7-16
 
 
 **;**
@@ -4862,7 +4852,7 @@ allow**
 
 
 
-### Listing 7-17
+## Listing 7-17
 
 
 **;**
@@ -4977,7 +4967,7 @@ allow**
 
 
 
-### Listing 7-18
+## Listing 7-18
 
 
 **;**
@@ -5086,7 +5076,7 @@ allow**
 
 
 
-### Listing 7-19
+## Listing 7-19
 
 
 **;**
@@ -5121,7 +5111,7 @@ allow**
 
 
 
-### Listing 7-20
+## Listing 7-20
 
 
 **;**
@@ -5164,7 +5154,7 @@ allow**
 
 
 
-### Listing 7-21
+## Listing 7-21
 
 
 **;**
@@ -5233,9 +5223,7 @@ allow**
 
 
 
-## Chapter 8
-
-### Listing 8-1
+## Listing 8-1
 
 
 **;**
@@ -5276,7 +5264,7 @@ allow**
 
 
 
-### Listing 8-2
+## Listing 8-2
 
 
 **;**
@@ -5317,7 +5305,7 @@ allow**
 
 
 
-### Listing 8-3
+## Listing 8-3
 
 
 **;**
@@ -5354,7 +5342,7 @@ allow**
 
 
 
-### Listing 8-4
+## Listing 8-4
 
 
 **;**
@@ -5395,7 +5383,7 @@ allow**
 
 
 
-### Listing 8-5
+## Listing 8-5
 
 
 **;**
@@ -5436,7 +5424,7 @@ allow**
 
 
 
-### Listing 8-6
+## Listing 8-6
 
 
 **;**
@@ -5473,7 +5461,7 @@ allow**
 
 
 
-### Listing 8-7
+## Listing 8-7
 
 
 **;**
@@ -5514,7 +5502,7 @@ allow**
 
 
 
-### Listing 8-8
+## Listing 8-8
 
 
 **;**
@@ -5539,7 +5527,7 @@ allow**
 
 
 
-### Listing 8-9
+## Listing 8-9
 
 
 **;**
@@ -5566,7 +5554,7 @@ allow**
 
 
 
-### Listing 8-10
+## Listing 8-10
 
 
 **;**
@@ -5607,7 +5595,7 @@ allow**
 
 
 
-### Listing 8-11
+## Listing 8-11
 
 
 **;**
@@ -5648,7 +5636,7 @@ allow**
 
 
 
-### Listing 8-12
+## Listing 8-12
 
 
 **;**
@@ -5729,7 +5717,7 @@ allow**
 
 
 
-### Listing 8-13
+## Listing 8-13
 
 
 **;**
@@ -5810,7 +5798,7 @@ allow**
 
 
 
-### Listing 8-14
+## Listing 8-14
 
 
 **;**
@@ -5859,7 +5847,7 @@ allow**
 
 
 
-### Listing 8-15
+## Listing 8-15
 
 
 **;**
@@ -5908,7 +5896,7 @@ allow**
 
 
 
-### Listing 8-16
+## Listing 8-16
 
 
 **;**
@@ -5961,7 +5949,7 @@ allow**
 
 
 
-### Listing 8-17
+## Listing 8-17
 
 
 **;**
@@ -6016,10 +6004,7 @@ allow**
 
 
 
-## Chapter 9
-
-
-### Listing 9-1
+## Listing 9-1
 
 
 **;**
@@ -6074,7 +6059,7 @@ allow**
 
 
 
-### Listing 9-2
+## Listing 9-2
 
 
 **;**
@@ -6127,7 +6112,7 @@ allow**
 
 
 
-### Listing 9-3
+## Listing 9-3
 
 
 **;**
@@ -6162,7 +6147,7 @@ allow**
 
 
 
-### Listing 9-4
+## Listing 9-4
 
 
 **;**
@@ -6195,7 +6180,7 @@ allow**
 
 
 
-### Listing 9-5
+## Listing 9-5
 
 
 **;**
@@ -6276,7 +6261,7 @@ allow**
 
 
 
-### Listing 9-6
+## Listing 9-6
 
 
 **;**
@@ -6357,7 +6342,7 @@ allow**
 
 
 
-### Listing 9-7
+## Listing 9-7
 
 
 **;**
@@ -6388,7 +6373,7 @@ allow**
 
 
 
-### Listing 9-8
+## Listing 9-8
 
 
 **;**
@@ -6421,7 +6406,7 @@ allow**
 
 
 
-### Listing 9-9
+## Listing 9-9
 
 
 **;**
@@ -6454,7 +6439,7 @@ allow**
 
 
 
-### Listing 9-10
+## Listing 9-10
 
 
 **;**
@@ -6485,7 +6470,7 @@ allow**
 
 
 
-### Listing 9-11
+## Listing 9-11
 
 
 **;**
@@ -6526,7 +6511,7 @@ allow**
 
 
 
-### Listing 9-12
+## Listing 9-12
 
 
 **;**
@@ -6587,7 +6572,7 @@ allow**
 
 
 
-### Listing 9-13
+## Listing 9-13
 
 
 **;**
@@ -6664,7 +6649,7 @@ allow**
 
 
 
-### Listing 9-14
+## Listing 9-14
 
 
 **;**
@@ -6745,7 +6730,7 @@ allow**
 
 
 
-### Listing 9-15
+## Listing 9-15
 
 
 **;**
@@ -6826,7 +6811,7 @@ allow**
 
 
 
-### Listing 9-16
+## Listing 9-16
 
 
 **;**
@@ -6916,7 +6901,7 @@ allow**
 
 
 
-### Listing 9-17
+## Listing 9-17
 
 
 **;**
@@ -6981,7 +6966,7 @@ allow**
 
 
 
-### Listing 9-18
+## Listing 9-18
 
 
 **;**
@@ -7054,7 +7039,7 @@ allow**
 
 
 
-### Listing 9-19
+## Listing 9-19
 
 
 **;**
@@ -7095,7 +7080,7 @@ allow**
 
 
 
-### Listing 9-20
+## Listing 9-20
 
 
 **;**
@@ -7136,7 +7121,7 @@ allow**
 
 
 
-### Listing 9-21
+## Listing 9-21
 
 
 **;**
@@ -7165,7 +7150,7 @@ allow**
 
 
 
-### Listing 9-22
+## Listing 9-22
 
 
 **;**
@@ -7198,7 +7183,7 @@ allow**
 
 
 
-### Listing 9-23
+## Listing 9-23
 
 
 **;**
@@ -7255,7 +7240,7 @@ allow**
 
 
 
-### Listing 9-24
+## Listing 9-24
 
 
 **;**
@@ -7336,7 +7321,7 @@ allow**
 
 
 
-### Listing 9-25
+## Listing 9-25
 
 
 **;**
@@ -7417,7 +7402,7 @@ allow**
 
 
 
-### Listing 9-26
+## Listing 9-26
 
 
 **;**
@@ -7504,10 +7489,7 @@ allow**
 
 
 
-## Chapter 10
-
-
-### Listing 10-1
+## Listing 10-1
 
 
 **;**
@@ -7552,7 +7534,7 @@ allow**
 
 
 
-### Listing 10-2
+## Listing 10-2
 
 
 **;**
@@ -7599,7 +7581,7 @@ allow**
 
 
 
-### Listing 10-3
+## Listing 10-3
 
 
 **;**
@@ -7644,7 +7626,7 @@ allow**
 
 
 
-### Listing 10-4
+## Listing 10-4
 
 
 **;**
@@ -7699,7 +7681,7 @@ allow**
 
 
 
-### Listing 10-5
+## Listing 10-5
 
 
 **;**
@@ -7756,7 +7738,7 @@ allow**
 
 
 
-### Listing 10-6
+## Listing 10-6
 
 
 **;**
@@ -7811,7 +7793,7 @@ allow**
 
 
 
-### Listing 10-7
+## Listing 10-7
 
 
 **;**
@@ -7862,7 +7844,7 @@ allow**
 
 
 
-### Listing 10-8
+## Listing 10-8
 
 
 **;**
@@ -7919,7 +7901,7 @@ allow**
 
 
 
-### Listing 10-9
+## Listing 10-9
 
 
 **;**
@@ -7968,7 +7950,7 @@ allow**
 
 
 
-### Listing 10-10
+## Listing 10-10
 
 
 **;**
@@ -8019,7 +8001,7 @@ allow**
 
 
 
-### Listing 10-11
+## Listing 10-11
 
 
 **;**
@@ -8108,7 +8090,7 @@ allow**
 
 
 
-### Listing 10-12
+## Listing 10-12
 
 
 **;**
@@ -8235,7 +8217,7 @@ allow**
 
 
 
-### Listing 10-13
+## Listing 10-13
 
 
 **;**
@@ -8344,7 +8326,7 @@ allow**
 
 
 
-### Listing 10-14
+## Listing 10-14
 
 
 **;**
@@ -8403,7 +8385,7 @@ allow**
 
 
 
-### Listing 10-15
+## Listing 10-15
 
 
 **;**
@@ -8472,7 +8454,7 @@ allow**
 
 
 
-### Listing 10-16
+## Listing 10-16
 
 
 **;**
@@ -8521,7 +8503,7 @@ allow**
 
 
 
-### Listing 10-17
+## Listing 10-17
 
 
 **;**
@@ -8574,7 +8556,7 @@ allow**
 
 
 
-### Listing 10-18
+## Listing 10-18
 
 
 **;**
@@ -8629,7 +8611,7 @@ allow**
 
 
 
-### Listing 10-19
+## Listing 10-19
 
 
 **;**
@@ -8704,9 +8686,7 @@ allow**
 
 
 
-## Chapter 11
-
-### Listing 11-1
+## Listing 11-1
 
 
 **;**
@@ -8835,7 +8815,7 @@ allow**
 
 
 
-### Listing 11-2
+## Listing 11-2
 
 
 **;**
@@ -8956,7 +8936,7 @@ allow**
 
 
 
-### Listing 11-3
+## Listing 11-3
 
 
 **;**
@@ -9081,7 +9061,7 @@ allow**
 
 
 
-### Listing 11-4
+## Listing 11-4
 
 
 **;**
@@ -9188,7 +9168,7 @@ allow**
 
 
 
-### Listing 11-5
+## Listing 11-5
 
 
 **; \*\*\* Listing 11-5 \*\*\***
@@ -9245,7 +9225,7 @@ allow**
 
 
 
-### Listing 11-6
+## Listing 11-6
 
 
 **; \*\*\* Listing 11-6 \*\*\***
@@ -9294,7 +9274,7 @@ allow**
 
 
 
-### Listing 11-7
+## Listing 11-7
 
 
 **;**
@@ -9478,7 +9458,7 @@ allow**
 
 
 
-### Listing 11-8
+## Listing 11-8
 
 
 **;**
@@ -9692,7 +9672,7 @@ allow**
 
 
 
-### Listing 11-9
+## Listing 11-9
 
 
 **;**
@@ -9835,7 +9815,7 @@ allow**
 
 
 
-### Listing 11-10
+## Listing 11-10
 
 
 **;**
@@ -9974,7 +9954,7 @@ allow**
 
 
 
-### Listing 11-11
+## Listing 11-11
 
 
 **;**
@@ -10103,7 +10083,7 @@ allow**
 
 
 
-### Listing 11-12
+## Listing 11-12
 
 
 **;**
@@ -10264,7 +10244,7 @@ allow**
 
 
 
-### Listing 11-13
+## Listing 11-13
 
 
 **;**
@@ -10381,7 +10361,7 @@ allow**
 
 
 
-### Listing 11-14
+## Listing 11-14
 
 
 **; \*\*\* Listing 11-14 \*\*\***
@@ -10536,7 +10516,7 @@ allow**
 
 
 
-### Listing 11-15
+## Listing 11-15
 
 
 **;**
@@ -10693,7 +10673,7 @@ allow**
 
 
 
-### Listing 11-16
+## Listing 11-16
 
 
 **;**
@@ -10938,7 +10918,7 @@ allow**
 
 
 
-### Listing 11-17
+## Listing 11-17
 
 
 **;**
@@ -11161,7 +11141,7 @@ allow**
 
 
 
-### Listing 11-18
+## Listing 11-18
 
 
 **;**
@@ -11390,7 +11370,7 @@ allow**
 
 
 
-### Listing 11-19
+## Listing 11-19
 
 
 **;**
@@ -11501,7 +11481,7 @@ allow**
 
 
 
-### Listing 11-20
+## Listing 11-20
 
 
 **;**
@@ -11598,7 +11578,7 @@ allow**
 
 
 
-### Listing 11-21
+## Listing 11-21
 
 
 **;**
@@ -11745,7 +11725,7 @@ allow**
 
 
 
-### Listing 11-22
+## Listing 11-22
 
 
 **;**
@@ -11905,7 +11885,7 @@ allow**
 
 
 
-### Listing 11-23
+## Listing 11-23
 
 
 **;**
@@ -12044,7 +12024,7 @@ allow**
 
 
 
-### Listing 11-24
+## Listing 11-24
 
 
 **;**
@@ -12283,7 +12263,7 @@ allow**
 
 
 
-### Listing 11-25
+## Listing 11-25
 
 
 **;**
@@ -12470,7 +12450,7 @@ allow**
 
 
 
-### Listing 11-26
+## Listing 11-26
 
 
 **;**
@@ -12679,7 +12659,7 @@ allow**
 
 
 
-### Listing 11-27
+## Listing 11-27
 
 
 **;**
@@ -12902,7 +12882,7 @@ allow**
 
 
 
-### Listing 11-28
+## Listing 11-28
 
 
 **;**
@@ -13141,7 +13121,7 @@ allow**
 
 
 
-### Listing 11-29
+## Listing 11-29
 
 
 **;**
@@ -13448,7 +13428,7 @@ allow**
 
 
 
-### Listing 11-30
+## Listing 11-30
 
 
 **;**
@@ -13707,7 +13687,7 @@ allow**
 
 
 
-### Listing 11-31
+## Listing 11-31
 
 
 **;**
@@ -13928,7 +13908,7 @@ allow**
 
 
 
-### Listing 11-32
+## Listing 11-32
 
 
 **;**
@@ -14145,7 +14125,7 @@ allow**
 
 
 
-### Listing 11-33
+## Listing 11-33
 
 
 **;**
@@ -14647,7 +14627,7 @@ allow**
 
 
 
-### Listing 11-34
+## Listing 11-34
 
 
 **;**
@@ -15137,9 +15117,7 @@ allow**
 
 
 
-## Chapter 12
-
-### Listing 12-1
+## Listing 12-1
 
 
 **;**
@@ -15169,7 +15147,7 @@ allow**
 **call ZTimerOff**
 
 
-### Listing 12-2
+## Listing 12-2
 
 
 **;**
@@ -15200,7 +15178,7 @@ allow**
 
 
 
-### Listing 12-3
+## Listing 12-3
 
 
 **;**
@@ -15237,7 +15215,7 @@ allow**
 
 
 
-### Listing 12-4
+## Listing 12-4
 
 
 **;**
@@ -15282,7 +15260,7 @@ allow**
 
 
 
-### Listing 12-5
+## Listing 12-5
 
 
 **;**
@@ -15307,10 +15285,7 @@ allow**
 
 
 
-## Chapter 13
-
-
-### Listing 13-1
+## Listing 13-1
 
 
 **;**
@@ -15411,7 +15386,7 @@ allow**
 
 
 
-### Listing 13-2
+## Listing 13-2
 
 
 **;**
@@ -15512,7 +15487,7 @@ allow**
 
 
 
-### Listing 13-3
+## Listing 13-3
 
 
 **;**
@@ -15621,7 +15596,7 @@ allow**
 
 
 
-### Listing 13-4
+## Listing 13-4
 
 
 **;**
@@ -15718,7 +15693,7 @@ allow**
 
 
 
-### Listing 13-5
+## Listing 13-5
 
 
 **;**
@@ -15834,7 +15809,7 @@ allow**
 
 
 
-### Listing 13-6
+## Listing 13-6
 
 
 **;**
@@ -15897,7 +15872,7 @@ allow**
 **call ZTimerOff**
 
 
-### Listing 13-7
+## Listing 13-7
 
 
 **;**
@@ -15957,7 +15932,7 @@ allow**
 
 
 
-### Listing 13-8
+## Listing 13-8
 
 
 **;**
@@ -16076,7 +16051,7 @@ allow**
 
 
 
-### Listing 13-9
+## Listing 13-9
 
 
 **;**
@@ -16197,7 +16172,7 @@ allow**
 
 
 
-### Listing 13-10
+## Listing 13-10
 
 
 **;**
@@ -16336,7 +16311,7 @@ allow**
 
 
 
-### Listing 13-11
+## Listing 13-11
 
 
 **;**
@@ -16493,7 +16468,7 @@ allow**
 
 
 
-### Listing 13-12
+## Listing 13-12
 
 
 **; \*\*\* Listing 13-12 \*\*\***
@@ -16648,7 +16623,7 @@ allow**
 
 
 
-### Listing 13-13
+## Listing 13-13
 
 
 **;**
@@ -16815,7 +16790,7 @@ allow**
 
 
 
-### Listing 13-14
+## Listing 13-14
 
 
 **;**
@@ -17020,7 +16995,7 @@ allow**
 
 
 
-### Listing 13-15
+## Listing 13-15
 
 
 **;**
@@ -17213,7 +17188,7 @@ allow**
 
 
 
-### Listing 13-16
+## Listing 13-16
 
 
 **;**
@@ -17400,7 +17375,7 @@ allow**
 
 
 
-### Listing 13-17
+## Listing 13-17
 
 
 **;**
@@ -17589,7 +17564,7 @@ allow**
 
 
 
-### Listing 13-18
+## Listing 13-18
 
 
 **;**
@@ -17738,7 +17713,7 @@ allow**
 
 
 
-### Listing 13-19
+## Listing 13-19
 
 
 **;**
@@ -17829,7 +17804,7 @@ allow**
 
 
 
-### Listing 13-20
+## Listing 13-20
 
 
 **;**
@@ -17916,7 +17891,7 @@ allow**
 
 
 
-### Listing 13-21
+## Listing 13-21
 
 
 **;**
@@ -18083,7 +18058,7 @@ allow**
 
 
 
-### Listing 13-22
+## Listing 13-22
 
 
 **;**
@@ -18246,7 +18221,7 @@ allow**
 
 
 
-### Listing 13-23
+## Listing 13-23
 
 
 **;**
@@ -18407,7 +18382,7 @@ allow**
 
 
 
-### Listing 13-24
+## Listing 13-24
 
 
 **;**
@@ -18517,7 +18492,7 @@ allow**
 
 
 
-### Listing 13-25
+## Listing 13-25
 
 
 **;**
@@ -18686,7 +18661,7 @@ allow**
 
 
 
-### Listing 13-26
+## Listing 13-26
 
 
 **;**
@@ -18843,7 +18818,7 @@ allow**
 
 
 
-### Listing 13-27
+## Listing 13-27
 
 
 **;**
@@ -19070,9 +19045,7 @@ allow**
 
 
 
-## Chapter 14
-
-### Listing 14-1
+## Listing 14-1
 
 
 **;**
@@ -19263,7 +19236,7 @@ allow**
 
 
 
-### Listing 14-2
+## Listing 14-2
 
 
 **;**
@@ -19458,7 +19431,7 @@ allow**
 
 
 
-### Listing 14-3
+## Listing 14-3
 
 
 **;**
@@ -19663,7 +19636,7 @@ allow**
 
 
 
-### Listing 14-4
+## Listing 14-4
 
 
 **;**
@@ -19760,7 +19733,7 @@ allow**
 
 
 
-### Listing 14-5
+## Listing 14-5
 
 
 **;**
@@ -19903,7 +19876,7 @@ allow**
 
 
 
-### Listing 14-6
+## Listing 14-6
 
 
 **;**
@@ -20070,7 +20043,7 @@ allow**
 
 
 
-### Listing 14-7
+## Listing 14-7
 
 
 **;**
@@ -20245,7 +20218,7 @@ allow**
 
 
 
-### Listing 14-8
+## Listing 14-8
 
 
 **;**
@@ -20418,7 +20391,7 @@ allow**
 
 
 
-### Listing 14-9
+## Listing 14-9
 
 
 **;**
@@ -20591,7 +20564,7 @@ allow**
 
 
 
-### Listing 14-10
+## Listing 14-10
 
 
 **;**
@@ -20774,7 +20747,7 @@ allow**
 
 
 
-### Listing 14-11
+## Listing 14-11
 
 
 **;**
@@ -20957,7 +20930,7 @@ allow**
 
 
 
-### Listing 14-12
+## Listing 14-12
 
 
 **;**
@@ -21138,7 +21111,7 @@ allow**
 
 
 
-### Listing 14-13
+## Listing 14-13
 
 
 **;**
@@ -21307,7 +21280,7 @@ allow**
 
 
 
-### Listing 14-14
+## Listing 14-14
 
 
 **;**
@@ -21632,7 +21605,7 @@ allow**
 
 
 
-### Listing 14-15
+## Listing 14-15
 
 
 **;**
@@ -21789,7 +21762,7 @@ allow**
 
 
 
-### Listing 14-16
+## Listing 14-16
 
 
 **;**
@@ -22168,10 +22141,7 @@ allow**
 
 **call ZTimerOff**
 
-## Chapter 15
-
-
-### Listing 15-1
+## Listing 15-1
 
 
 **;**
@@ -22214,7 +22184,7 @@ allow**
 
 
 
-### Listing 15-2
+## Listing 15-2
 
 
 **;**
@@ -22253,7 +22223,7 @@ allow**
 
 
 
-### Listing 15-3
+## Listing 15-3
 
 
 **;**
@@ -22290,7 +22260,7 @@ allow**
 
 
 
-### Listing 15-4
+## Listing 15-4
 
 
 **;**
@@ -22319,7 +22289,7 @@ allow**
 
 
 
-### Listing 15-5
+## Listing 15-5
 
 
 **;**
@@ -22360,15 +22330,8 @@ allow**
 
 **call ZTimerOff**
 
-Plus
-----
 
-**\
-**
-
-
-### **LZTEST**
-
+## LZTEST
 
 **; LZTEST**
 
@@ -22496,7 +22459,7 @@ Plus
 
 
 
-### LZTIME.BAT
+## LZTIME.BAT
 
 
 **LZTIME.BAT**
@@ -22637,7 +22600,7 @@ Plus
 
 
 
-### LZTIME
+## LZTIME
 
 **; LZTIME**
 **;**
@@ -23907,7 +23870,7 @@ CurrentCountHigh],dx**
 
 \ 
 
-### LZTIMER
+## LZTIMER
 
 
 **; LZTIMER**
@@ -25162,7 +25125,7 @@ allow**
 
 
 
-### PZTEST
+## PZTEST
 
 
 **; PZTEST**
@@ -25249,7 +25212,7 @@ allow**
 
 
 
-### PZTIME.BAT
+## PZTIME.BAT
 
 
 **PZTIME.BAT**
@@ -25388,7 +25351,7 @@ allow**
 
 
 
-### PZTIMER
+## PZTIMER
 
 
 **; PZTIMER**
