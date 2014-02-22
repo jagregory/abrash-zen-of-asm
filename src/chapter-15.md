@@ -8,7 +8,7 @@ Nonetheless, in this chapter we'll take a quick look at optimizations for other 
 
 Finally, I'd like to get you started in the right direction if you *are* primarily interested in optimization for the 80286 and its successors. After all, the 8088 is going to go out of style *someday* (although that's certainly not happening anytime soon), and OS/2 and its ilk are creeping up on us. You have the Zen timer, and you've learned much about how to evaluate and improve code performance; with a bit of a head start here, you should be able to develop your own expertise in 80286/80386 coding if you so desire.
 
-## 15.1 Why Optimize for the 8088?
+## Why Optimize for the 8088?
 
 The great lurking unanswered question is: given that the 80286 and the 80386 (and the 80486 someday) are the future of PC-compatible computing, why optimize for the 8088? Why not use all the extra instructions and features of the newer processors to supercharge your code so it will run as fast as possible on the fastest computers?
 
@@ -38,7 +38,7 @@ What all that means is that while you can rely on fast code on one PC being fast
 
 So. I hope I've convinced you that the 8088 is the best place to focus your optimization efforts. In any case, let's tour the rest of the 8086 family.
 
-## 15.2 Which Processors Matter?
+## Which Processors Matter?
 
 While the 8086 family is a large one, only a few members of the family — which includes the 8088, 8086, 80188, 80186, 80286, 80386SX, and 80386 — really matter.
 
@@ -84,7 +84,7 @@ Also, in protected mode your programs generally run under an operating system (O
 
 In short, protected mode programming is a different kettle of fish altogether from what we've seen in *The Zen of Assembly Language*. There's certainly a Zen to protected mode... but it's not the Zen we've been learning, and now is not the time to pursue it further.
 
-## 15.3 Things Mother Never Told You, Part II
+## Things Mother Never Told You, Part II
 
 Under the programming interface, the 80286 and 80386 differ considerably from the 8088. Nonetheless, with one exception and one addition, the cycle-eaters remain much the same on computers built around the 80286 and 80386. Next, we'll review each of the familiar cycle-eaters as they apply to the 80286 and 80386, and we'll look at the new member of the gang, the data alignment cycle-eater.
 
@@ -263,7 +263,7 @@ What can we do about this new, more virulent form of the display adapter cycle-e
 
 *Access display memory as little as you possibly can.*
 
-## 15.4 New Instructions and Features
+## New Instructions and Features
 
 ### New Instructions and Features: The 80286
 
@@ -295,7 +295,7 @@ And 80386 protected mode programming, my friend, is quite a different journey fr
 
 To sum up: stick to the 8088's instruction set, registers, and addressing modes, unless you're willing to sacrifice completely the ability to run on the bulk of PC-compatible computers. 80286-specific instructions don't have a big enough payback to compensate for the inability to run on 8088-based computers, while 80386-specific instructions limit your market so sharply that you might as well go to protected mode and get the full benefits of the 80386.
 
-## 15.5 Optimization Rules: The More Things Change...
+## Optimization Rules: The More Things Change...
 
 Let's see what we've learned about 80286/80386 optimization. Mostly what we've learned is that our familiar PC cycle-eaters still apply, although in somewhat different forms, and that the major optimization rules for the PC hold true on ATs and 80386-based computers. You won't go wrong on high-end MS-DOS computers if you keep your instructions short, use the registers heavily and avoid memory, don't branch, and avoid accessing display memory like the plague.
 
@@ -343,7 +343,7 @@ On balance, my final word on 80286/80386 real-mode optimization in this: *with t
 
 When you get right down to it, isn't that everything you could ask for from a real-mode program?
 
-## 15.6 `popf` and the 80286
+## `popf` and the 80286
 
 We've one final 80286-related item to discuss: the hardware malfunction of `popf` under certain circumstances on the 80286.
 
@@ -439,7 +439,7 @@ Anyway, the overall inferiority of `EMULATE_POPF` is almost never an issue, beca
 
 And now you know the nature of and the workaround for the `popf` bug. Whether you ever need the workaround or not, it's a neatly packaged example of the tremendous flexibility of the 8088's instruction set... and of the value of the Zen of assembler.
 
-## 15.7 Coprocessors and Peripherals
+## Coprocessors and Peripherals
 
 Up to this point, we've concentrated on the various processors in the 8088 family. There are also a number of coprocessors in use in the PC world, and they can affect the performance of some programs every bit as much as processors can. Unfortunately, while processors are standard equipment (I should hope every computer comes with one!) not a single coprocessor is standard. Every PC-compatible computer can execute the 8088 instruction `mov al,1`, but the same cannot be said of the 8087 numeric coprocessor instruction `fld [MemVar]`, to say nothing of instructions for the coprocessors on a variety of graphics, sound, and other adapters available for the PC. Then, too, there are many PC peripherals that offer considerable functionality without being true coprocessors — VGAs and serial adapters, to name just two — but not a one of those is standard either.
 

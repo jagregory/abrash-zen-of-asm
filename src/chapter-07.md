@@ -34,7 +34,7 @@ Slow and lengthy as memory accessing instructions are, you're going to end up us
 
 We've got a lot of ground to cover, so let's get started.
 
-## 7.1 Definitions
+## Definitions
 
 I'm going to take a moment to define some terms I'll use in this chapter. These terms will be used to describe operands to various instructions; for example, `mov ax,segreg` refers to copying the contents of a segment register into AX.
 
@@ -59,7 +59,7 @@ mov   dx,[MemVar]
 
 However, addressing memory without square brackets is an extension of the "memory and registers are logically equivalent" mindset. I strongly recommend that you use square brackets on all memory references in order to keep the distinction between memory and registers clear in your mind. This practice also helps distinguish between immediate and memory operands.
 
-## 7.2 The Memory Architecture of the 8088
+## The Memory Architecture of the 8088
 
 The ability to address 1 Mb of memory, while unimpressive by today's standards, was quite remarkable when the PC was first introduced, 64 Kb then being standard for "serious" microcomputers. In fact, an argument could be made that the 8088's 1 Mb address space is the single factor most responsible for the success of the IBM PC and for the exceptional software that quickly became available for it. Realistically, the letters "IBM" were probably more important, but all that memory didn't hurt; quantities of memory make new sorts of software possible, and can often compensate for limited processor power in the form of lookup tables, RAM disks, data caching, and in-line code. All in all, the PC's then-large memory capacity made possible a quantum leap in software quality.
 
@@ -67,7 +67,7 @@ On the other hand, the 8088 actually addresses all that memory in what is perhap
 
 In short, the 8088's memory architecture is the best of worlds and the worst of worlds: the best because a great deal of memory is addressable (at least by 1981 standards), the worst because it's hard to access all that memory quickly. That said, let's look at the 8088's memory architecture in detail. Most likely you know what we're about to discuss, but bear with me; I want to make sure we're all speaking the same language before I go on to more advanced subjects.
 
-## 7.3 Segments and Offsets
+## Segments and Offsets
 
 20 bits are needed to address 1 Mb of memory, and every one of the one-million-plus memory addresses the 8088 can handle can indeed be expressed as a 20-bit number. However, programs do *not* address memory with 20-bit addresses. There's a good reason for that: 20-bit addresses would be most impractical. For one thing, the 8088's registers are only 16 bits in size, so they couldn't be used to point to 20-bit addresses. For another, three rather than two bytes would be needed to store each address loaded by a program, making for bloated code. In general, the 8088 just wasn't designed to handle straight 20-bit addresses.
 
@@ -257,7 +257,7 @@ On balance, segment:offset addressing is one of the less attractive features of 
 
 The remainder of this chapter will deal only with data addressing — that is, the addressing of instruction operands. Code addressing — in the forms of instruction fetching and branching — is a very real part of PC performance (heck, instruction fetching is perhaps the single most important performance factor of all!), but it's also very different from the sort of memory addressing we'll be discussing. We learned as much as we'll ever need to know (and possibly more) about instruction fetching back in Chapters 4 and 5, so we won't pursue that aspect of code addressing any further. However, Chapters 12 through 14 discuss code addressing as it relates to branching in considerable detail.
 
-## 7.4 Segment Handling
+## Segment Handling
 
 Now that we know what segments are, let's look at ways to handle the segment registers, in particular how to load them quickly. What we are *not* going to do is discuss the directives that let you create segments and the storage locations within them.
 
@@ -823,7 +823,7 @@ assume  ds:Code
 
 before we had attempted to access `ByteVar`.
 
-## 7.5 Offset Handling
+## Offset Handling
 
 At long last, we've completed our discussion of segments. Now it's time to move on to the other half of the memory-addressing equation: offsets.
 
@@ -868,7 +868,7 @@ the offset of `WordVar` relative to `_DATA` rather than `DGROUP` is loaded; give
 
 I realize that the above discussion won't make much sense if you haven't encountered the `group` directive (lucky you!). I've never found segment groups to be necessary in pure assembler code, but they are often needed when sharing segments between high-level language code and assembler. If you do find yourself using segment groups, all you need to remember is this: *when loading the offset of a variable that resides within a segment group with the ``offset`` operator, always specify the group name along with the variable name*.
 
-## 7.6 *mod-reg-rm* Addressing
+## *mod-reg-rm* Addressing
 
 There are a number of ways in which the offset of an instruction operand can be specified. Collectively, the ways of specifying operand offsets are known as addressing modes. Most of the 8088's addressing modes fall into a category known as *mod-reg-rm* addressing modes. We're going to discuss *mod-reg-rm* addressing modes next; later in the chapter we'll discuss non-*mod-reg-rm* addressing modes.
 
@@ -1274,7 +1274,7 @@ mov   dl,[bx+1]
 
 The same rule holds for all memory-accessing instructions, *mod-reg-rm* or otherwise: *offsets are 16-bit values; any additional bits that result from address calculations are ignored*. Put another way, memory addresses that reach past the end of a segment's 64 K limit wrap back to the start of the segment. This allows the use of negative displacements, and is the reason a displacement can always reach anywhere in a segment, including addresses lower than those in the base and/or index registers, as in `mov ax,[bx-1]`.
 
-## 7.7 Non-*mod-reg-rm* Memory Addressing
+## Non-*mod-reg-rm* Memory Addressing
 
 *mod-reg-rm* addressing is the most flexible memory addressing mode of the 8088, and the most widely-used as well, but it's certainly not the *only* addressing mode. The 8088 also offers a number of specialized addressing modes, including stack addressing and the string instructions. These addressing modes are supported by fewer instructions than *mod-reg-rm* instructions, and are considerably more restrictive about the operands they'll accept — but they're also more compact and/or faster than the *mod-reg-rm* instructions.
 
@@ -1823,7 +1823,7 @@ Finally, there are an awful lot of solutions to any given programming problem on
 
 We'll see look-up tables again in Chapter 14, in the form of jump tables.
 
-## 7.8 Initializing Memory
+## Initializing Memory
 
 Assembler offers excellent data-definition capabilities, and look-up tables can benefit greatly from those capabilities. No high-level language even comes close to assembler so far as flexible definition of data is concerned, both in terms of arbitrarily mixing different data types and in terms of letting the assembler perform calculations at assembly time; given that, why not let the assembler generate your look-up tables for you?
 
@@ -1851,7 +1851,7 @@ takes 20 cycles at run time, and adds 6 bytes to the program as well.
 
 In general, the rule is: *calculate results and initialize data at or before assembly time if you can, rather than at run time*. What makes look-up tables so powerful is simply that they provide an easy way to shift the overhead of calculations from run time to assembly time.
 
-## 7.9 A Brief Note on I/O Addressing
+## A Brief Note on I/O Addressing
 
 You may wonder why we've spent so much time on memory addressing but none on input/output (I/O) addressing. The answer is simple: I/O addressing is so limited that there's not much to know about it. There aren't any profound performance implications or optimizations associated with I/O addressing simply because there are only two ways to perform I/O.
 

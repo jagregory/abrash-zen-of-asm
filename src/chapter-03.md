@@ -8,7 +8,7 @@ The programmer's mistake was one of context. While his solution seemed optimal b
 
 We certainly don't want to make the same mistake, so we'll begin our search for knowledge by establishing a context for assembler programming, a usable framework within which to work for the remainder of this book. This is more challenging than it might at first glance seem, for the PC looks quite different to an assembler programmer — especially an assembler programmer interested in performance — than it does to a high-level language programmer. The difference is that a good assembler programmer sees the PC as it really is — hardware, software, warts and all — a perspective all too few programmers ever have the opportunity to enjoy.
 
-## 3.1 From the Bottom Up
+## From the Bottom Up
 
 In this volume, we're going to explore the knowledge needed for top-notch assembler programming. We'll start at the bottom, with the hardware of the PC, and we'll work our way up through the 8088's registers, memory addressing capabilities, and instruction set. In Volume II of *The Zen of Assembly Language*, we'll move on to putting that knowledge to work in the context of higher-level optimization, algorithm implementation, program design, and the like. We're not going to spend time on topics, such as BIOS and DOS calls, that are well documented elsewhere, for we've a great deal of new ground to cover.
 
@@ -18,7 +18,7 @@ You'll be amazed at how much sense they make — and at how much you've learned.
 
 Let's begin our explorations.
 
-## 3.2 The Traditional Model
+## The Traditional Model
 
 Figure 3.1 shows the traditional assembler programming model of the PC. In this model, the assembler program is separated from the hardware by layers of system software, such as DOS, the BIOS, and device drivers. Although this model recognizes that it is possible for assembler programs to make end runs around the layers to access any level of system software or the hardware directly, programs are supposed to request services from the highest level that can fulfill a given request (preferably DOS), thereby gaining hardware independence, which brings with it portability to other systems with different hardware but the same system software.
 
@@ -32,7 +32,7 @@ One shortcoming of the model of Figure 3.1 is that DOS and the BIOS provide inad
 
 When you use a system service, you're accepting someone else's solution to a problem; while it may be a good solution, you don't know that unless you check. After all, you may well be a better programmer than the author of the system software, and you're bound to be better attuned to your particular needs than he was. In short, you should know the system services well and use them fully, but you should also learn when it pays to replace them with your own code.
 
-## 3.3 Cycle-Eaters
+## Cycle-Eaters
 
 The second shortcoming of the model shown in Figure 3.1 is that it makes the hardware seem to be just another system resource, and a rather remote and uninteresting resource, at that. Nothing could be further from the truth! After all, in order to be useful programs must ultimately perform input from and output to the real world, and all input and output requires interaction with the hardware. True, DOS and the BIOS may handle much of your I/O, but DOS and the BIOS themselves are nothing more than assembly-language programs.
 
@@ -52,13 +52,13 @@ The primary virtue of Figure 3.2 is that it moves us away from the comfortable, 
 
 We need to see still more of the beast, however, and the place we'll start is with the equivalence of code and data.
 
-## 3.4 Code is Data
+## Code is Data
 
 Code is nothing more than data that the 8088 interprets as instructions. The most obvious case of this is self-modifying code, where the 8088 treats its code as data in order to modify it, then executes those same bytes as instructions. There are many other examples, though — after all, what is a compiler but a program that transforms source code data into machine-language data? Both code and data consist of byte values stored in system memory; the only thing that differentiates code from any other sort of data is that the bytes that code is made of have a special meaning to the 8088, in that when fetched as instructions they instruct the 8088 to perform a series of (presumably related) actions. In other words, the meaning of byte values as code rather than data is strictly a matter of context.
 
 Why is this important? It's important because the 8088 is really two processors in one, and therein lies a tale.
 
-## 3.5 Inside the 8088
+## Inside the 8088
 
 Internally, the 8088 consists of two complementary processors: the Bus Interface Unit (BIU) and the Execution Unit (EU), as shown in Figure 3.3. The EU is what we normally think of as being a processor; it contains the flags, the general-purpose registers, and the Arithmetic Logic Unit (ALU), and executes instructions. In fact, the EU performs just about every function you could want from a processor — except one. The one thing the EU does not do is access memory or perform I/O. That's the BIU's job, so whenever the EU needs a memory or I/O access performed, it sends a request to the BIU, which carries out the access, transferring the data according to the EU's specifications. The two units are capable of operating in parallel whenever they've got independent tasks to perform; put another way, the BIU can access memory or I/O at the same time that the EU is processing an instruction, so long as neither task is dependent on the other.
 
@@ -84,7 +84,7 @@ The instruction queue can be depleted quickly by register-only instructions. *Gi
 
 ![](images/fig3.4RT.png)
 
-## 3.6 Stepchild of the 8086
+## Stepchild of the 8086
 
 You might justifiably wonder why Intel would design a processor with an EU that can execute instructions faster than the BIU can possibly fetch them. The answer is that they didn't; they designed the 8086, then created the 8088 as a poor man's 8086.
 
@@ -104,7 +104,7 @@ Why then does the 8088 exist, and why has it become so popular? An 8-bit-bus ver
 
 Incidentally, an imbalance between processing speed and memory access speed remains a factor today with the 80286-based IBM AT and with many 80386-based computers. The memory in those computers often does not run at the speeds the processors are capable of, and assembler code encounters the same sorts of performance losses when running on those computers as it does on the 8088. We'll return to that topic in Chapter 15.
 
-## 3.7 Which Model to Use?
+## Which Model to Use?
 
 Each of the three programming models I've presented offers a useful perspective on assembler programming for the PC. However, it is the model shown in Figure 3.4 that best reflects the true nature of the 8088; consequently, that model is the most useful of the three for tapping the unique potential of assembler. While we'll use elements of all three models in *The Zen of Assembly Language*, we'll concentrate on the perspective of Figure 3.4 as we explore high-performance assembler programming.
 

@@ -10,7 +10,7 @@ That doesn't mean that the string instructions are of limited value — far from
 
 In other words, use string instructions whenever you possibly can, and try to think of ways to use them even when it seems you can't.
 
-## 10.1 A Quick Tour of the String Instructions
+## A Quick Tour of the String Instructions
 
 Odds are good that you're already at least somewhat conversant with the string instructions, so I'm not going to spend much time going over their basic functionality. I am going to summarize them briefly, however; I want to make sure that we're speaking the same language, and I also want you to be as knowledgeable as possible about these key instructions.
 
@@ -134,7 +134,7 @@ The use of DS as the destination segment can be overridden, but the use of ES as
 
 `cmps` performs its comparison as `cmp` does, by performing a trial subtraction of the memory location addressed by ES:DI from the memory location addressed by DS:SI without actually changing either location. As with `scas`, all six arithmetic flags are affected by `cmps`. The key difference between `scas` and `cmps` is that `scas` compares the accumulator to memory, while `cmps` compares two memory locations directly. The accumulator is not affected by `cmps` in any way; data is compared directly from one memory operand to the other, not by way of AL or AX. `cmps` is in a class by itself for comparing arrays, strings, and other blocks of memory data.
 
-## 10.2 Hither and Yon With the String Instructions
+## Hither and Yon With the String Instructions
 
 That does it for our quick tour of the individual string instructions. Now it's on to a variety of useful items about string instructions in general.
 

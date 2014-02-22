@@ -6,7 +6,7 @@ This chapter differs from the last few chapters in that it offers no spectacular
 
 Remember, though, that relatively fast as some of the techniques in this chapter may be, it's still faster not to branch at all!
 
-## 14.1 Don't Go Far
+## Don't Go Far
 
 Far branches are branches that load both CS and IP, by contrast with near branches, which only load IP. Whatever you do, don't use far branches — jumps, calls, and returns — any more than you absolutely must. Far calls and returns, in particular, tend to bulk up code and slow performance greatly, as the bloated size and sluggish performance of C programs written in the large code model readily attest.
 
@@ -109,7 +109,7 @@ To carry this line of thought to its logical extreme, we could even preserve the
 
 The sort of branching shown above is an example of how flexible the 8088's instruction set can be, especially if you're willing to use instructions in unusual ways, like hand-constructing far return addresses on the stack. This example certainly isn't ideal for most tasks... but it's available if you need the particular service it delivers. In truth, the only limit on the strange jobs the 8088 can be coaxed into doing is your creativity. Speed may sometimes be a problem with the 8088, but flexibility shouldn't be.
 
-## 14.2 Replacing `call` and `ret` With `jmp`
+## Replacing `call` and `ret` With `jmp`
 
 Enough of far branches, already. Let's continue with some interesting ways to replace `call` and `ret` with `jmp`.
 
@@ -238,7 +238,7 @@ pop   ax    ;gets the IP of this instruction
 
 It's not exactly what `call` was intended for, but it solved Jeff's problem — and results are what matter most in assembler programming.
 
-## 14.3 Use `int` Only When You Must
+## Use `int` Only When You Must
 
 Before we get on with more ways to branch efficiently, let's discuss `int` for a moment. `int` is an oddball among branching instructions, in that it performs a far branch to the address stored at the corresponding interrupt vector in the 1 Kb table of interrupt vectors starting at 0000:0000. `int` not only pushes a return CS:IP address, as would a far call, but pushes the FLAGS register as well.
 
@@ -288,7 +288,7 @@ This process can be repeated a block at a time until the source file runs out of
 
 I rest my case.
 
-## 14.4 Forward References Can Waste Time and Space
+## Forward References Can Waste Time and Space
 
 Many 8088 instructions offer special compressed forms. For example, `jmp`, which is normally 3 bytes long, can use the 2-byte `jmp short` form when the target in within the range of a 1-byte displacement, as we found in Chapter 12. The word-sized forms of the arithmetic instructions — `cmp`, `add`, `and`, and the like — have similarly shortened forms when used with immediate operands that can fit within a signed byte; such operands are stored in a byte rather than a word and are automatically sign-extended before being used.
 
@@ -362,7 +362,7 @@ I wouldn't be surprised if MASM added inefficient-code handling features in a fu
 
 If you aren't using an assembler that can help you generate efficient forward branches, use backward branches whenever possible. One reason is that MASM can select the smallest possible displacement for unconditional backward jumps. Another reason is that macros can be used to generate efficient code for backward *conditional* jumps, as we'll see later in this chapter.
 
-## 14.5 Saving Space With Branches
+## Saving Space With Branches
 
 When you're interested in saving space while losing as little performance as possible, you should use jumps in order to share as much code as possible between similar routines. For example, suppose you've got a routine, `SampleSub`, which performs the equivalent of a switch statement with three separate cases, depending on the value in BX. Suppose that each of the cases can succeed or fail, and that `TestSub` returns AX equal to 0 for success or 1 for failure. Suppose further that on failure the byte-sized memory variable `ErrorCode` must be set to indicate which case failed.
 
@@ -598,7 +598,7 @@ Optimizing for space rather than speed is less focused — you should save bytes
 
 At any rate, knowing when and where optimization is worth the effort is as important as knowing how to optimize. Without the "when" and "where,"the "how" is useless; you'll spend all your time tweaking code without seeing the big picture, and you'll never accomplish anything of substance.
 
-## 14.6 Double-Duty Tests
+## Double-Duty Tests
 
 There are a number of ways to get multiple uses out of a single instruction that sets the flags. Sometimes the multiple use is available because multiple flags are set, and sometimes the multiple use is available because the instruction that sets the flags performs other tasks as well. Let's look at some examples.
 
@@ -698,7 +698,7 @@ ChecksumLoop:
 
 Note that BX now starts off with the index of the last element of the array rather than the length of the array, so no adjustment by 1 is needed when each element of the array is addressed. So long as TEST\_ARRAY\_LENGTH is 32 K or less, this version isn't generally better or worse than the last version; both versions are the same length and execute at the same speed. However, the Sign flag is set when either 0 *or* any value greater than 32 K is decremented, so if TEST\_ARRAY\_LENGTH exceeds 32 K the checksum loop in the last example will end prematurely — and incorrectly.
 
-## 14.7 The Looping Instructions
+## The Looping Instructions
 
 And so we come to the 8088's special looping instructions: `jcxz`, `loop`, `loopz`, and `loopnz`. You undoubtedly know how `jcxz` and `loop` work by now — we've certainly used them often enough over the last few chapters. As a quick refresher, `jcxz` branches if and only if CX is zero, and `loop` decrements CX and branches *unless* the new value in CX is zero. None of the looping instructions — not even `loop`, which decrements CX — affects the 8088's flags in any way; we saw that put to good use in a loop that performed multi-word addition in Chapter 9.
 
@@ -736,7 +736,7 @@ While the incremental performance differences between the various implementation
 
 Whenever you must branch in order to loop, use the `loop` instruction if you possibly can. The superiority of `loop` holds true only in the realm of branching instructions, for not — branching is *much* faster than looping with any of the branching instructions... but when space is at a premium, `loop` is hard to beat.
 
-## 14.8 Only `jcxz` Can Test *and* Branch in a Single Bound
+## Only `jcxz` Can Test *and* Branch in a Single Bound
 
 `jcxz` is the only 8088 instruction that can both test a register and branch according to the outcome. Most of the applications for this unusual property of `jcxz` are well-known, most notably avoiding division by zero and guarding against zero counts in loops. You may, however, find other, less obvious, applications if you stretch your mind a little.
 
@@ -777,7 +777,7 @@ With these changes, we've managed to trim a 13-byte sequence by 4 bytes — 30% 
 
 Try it yourself and see!
 
-## 14.9 Jump and Call Tables
+## Jump and Call Tables
 
 Given that you've got an index that's associated with the execution of certain code, jump and call tables allow you to branch very quickly to the corresponding code. A jump or call table is nothing more than an array of code addresses organized to correspond to some index value; the index can then be used to look up the matching address in the table, so that a branch can be made to that address.
 
@@ -989,7 +989,7 @@ Just to demonstrate the flexibility of macros, jump tables, and branched-to in-l
 
 [Listing 14-16](#L1416) isn't *blazingly* fast, but it is fast enough to remind us that branched-to in-line code is a most attractive option... and now jump tables let us use branched-to in-line code in more situations than ever, and often with improved speed, as well.
 
-## 14.10 Forward References Rear Their Collective Ugly Head Once More
+## Forward References Rear Their Collective Ugly Head Once More
 
 You may have noticed that `CHECK_CHAR2`, the macro in [Listing 14-16](#L1416) that assembles in-line code blocks that use conditional jumps forward to `NoMatch2` and `MatchFound2`, is a bit different from `CHECK_CHAR`, which assembles blocks that use backward jumps. `CHECK_CHAR` uses the `if` directive to determine whether a conditional jump can be used, assembling a jump around a jump if a conditional jump won't reach. `CHECK_CHAR2`, on the other hand, always assembles a conditional jump.
 

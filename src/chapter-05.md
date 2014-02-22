@@ -24,7 +24,7 @@ In short, it is true that the exact performance of assembler code is indeed a so
 
 The object of this chapter is to convince you that when it comes to writing assembler code there's no complete solution, no way to understand every detail or get precise, unvarying answers about performance. We *can* come close, though, by understanding the basic operation of the PC, developing our intuition, following rules of thumb such as keeping instructions short, and always measuring code performance. Those approaches are precisely what this book is about, and are the foundation of the Zen of assembler.
 
-## 5.1 No, We're Not in Kansas Anymore
+## No, We're Not in Kansas Anymore
 
 You may be feeling a bit lost at this point. That's certainly understandable, for the last two chapters have covered what is surely the most esoteric aspect of assembler programming. I must tell you that this chapter will be more of the same.
 
@@ -42,7 +42,7 @@ The point is not, Lord knows, that you should understand how every cycle-eater a
 
 One fallout of the near-infinite variability of code performance is that the exact performance of a given instruction is for all intents and purposes undefined. There are so many factors affecting performance, and those factors can vary so easily with time and context, that there's just no use to trying to tag a given instruction with a single execution time. In other words...
 
-## 5.2 ...There's Still No Such Beast as a True Execution Time
+## ...There's Still No Such Beast as a True Execution Time
 
 Thanks to the combined efforts of the cycle-eaters, it's more true than ever that there's no such thing as a single "true" execution time for a given instruction. As you'll recall, I said that in the last chapter. Why do I keep bringing it up? Because I don't want you to look at the times reported by our tests of 1000 repetitions of the same instruction and think that those times are the true execution times of that instruction — they aren't, any more than the official cycle times in Appendix A are the true times. *There is no such thing as a true execution time on the 8088.* There are only execution times in context.
 
@@ -50,7 +50,7 @@ Do you remember the varying performances of `shr` in different contexts in Chapt
 
 There's just no way around it: *you must measure the performance of your code to know how fast it is.* Yes, I know — it would be awfully nice just to be able to look up instruction execution times and be done with it. That's not the way the 8088 works, though — and the odd architecture of the 8088 is what the Zen of assembler is all about.
 
-### 170 Cycles in the Life of a Pc
+### Cycles in the Life of a Pc
 
 Next, we're going to examine every detail of instruction execution on the PC over a period of 170 cycles. One reason for doing this is to convince any of you who may still harbor the notion that there must be some way to come up with hard-and-fast execution times that you're on a fool's quest. Another reason is to illustrate many of the concepts we've developed over the last two chapters.
 
@@ -116,7 +116,7 @@ In truth, though, the first hint of `mov ah,ds:[i]` occurs at cycle 122, when th
 
 Figure 5.3 shows that `mov ah,ds:[i]` doesn't take 34 cycles to execute, however. The instruction fetching that occurs during cycles 120 through 128 is overlapped with the execution of the preceding instruction, so those cycles aren't counted against the execution time of `mov ah,ds:[i]`. The instruction does take 25 cycles to execute, though, illustrating the power of the cycle-eaters: according to Appendix A, `mov ah,ds:[i]` should execute in 14 cycles, so just two of the cycle-eaters, the prefetch queue and DRAM refresh, have nearly doubled the actual execution time of the instruction in this context.
 
-## 5.3 The True Nature of Instruction Execution
+## The True Nature of Instruction Execution
 
 Figure 5.1 makes it perfectly clear that at the lowest level code execution is really nothing more than two parallel chains of execution, one taking place in the EU and one taking place in the BIU. What's more, the BIU interleaves instruction fetches for one instruction with memory operand accesses for another instruction. Thus, instruction execution really consists of three interleaved streams of events.
 
@@ -162,7 +162,7 @@ On the other hand, instruction bytes can be transferred from the prefetch queue 
 
 The prefetch queue cycle-eater can be observed in another way in Figure 5.1. A careful reading of Figure 5.1 will make it apparent that the prefetch queue never contains more than 2 bytes at any time. In other words, the prefetch queue not only never fills, it never gets more than 2 bytes ahead of the Execution Unit. Moreover, we can see at cycles 33 and 34 that the EU can empty those 2 bytes from the prefetch queue in just 2 cycles. There's no doubt but what the BIU often fights a losing battle in trying to keep the EU supplied with instruction bytes.
 
-## 5.4 Back to the Programming Interface
+## Back to the Programming Interface
 
 It's not important that you grasp everything in this chapter, so long as you understand that the factors affecting the performance of an instruction in a given context are complex and vary with time. These complex and varied factors make it virtually impossible to know beforehand at what speed code will actually run. They also make it both impractical and pointless to understand exactly — down to the cycles — why a particular instruction or code sequence performs as well or poorly as it does.
 

@@ -16,7 +16,7 @@ The 8080 lingers on in the instruction set and architecture of the 8088, which w
 
 Less well known, perhaps, is the degree to which the designers of the 8088 were guided by the past as well. (Actually, as discussed in Chapter 3, the 8086 was designed first and the 8088 spun off from it, but we'll refer simply to the 8088 from now on, since that's our focus and since the two processors share the same instruction set.)
 
-## 8.1 The 8080 Legacy
+## The 8080 Legacy
 
 At the time the 8088 was designed, the Intel 8080, an 8-bit processor, was an industry standard, along with the more powerful but 8080-compatible Zilog Z80 and Intel 8085 chips. The 8080 had spawned CP/M, a widely-used operating system, and with it a variety of useful programs, including word processing, spreadsheet, and database software.
 
@@ -46,7 +46,7 @@ Today the need for 8080 source-level compatibility is long gone, but that 8080-o
 
 The 8080 flavor of the 8088's instruction set is both a curse and a blessing. It's a curse because it limits the performance of average 8088 code, and a blessing because it provides great opportunity for assembler code to shine. In particular, the 8080-specific instructions occupy valuable space in the 8088 opcode set — arguably causing native 8088 code (as opposed to ported 8080 code) to be larger and slower than it would otherwise be — and that is, by-and-large, one of the less appealing aspects of the 8088. For the assembler programmer, however, the 8080-specific instructions can be an asset. Since those instructions are faster and more compact than their general-purpose counterparts, they can often be used to create significantly better code. Next, we'll examine the 8080-specific instructions in detail.
 
-## 8.2 Accumulator-Specific Instructions
+## Accumulator-Specific Instructions
 
 The accumulator is a rather special register on the 8080. For one thing, the 8080 requires that the accumulator be the destination for most arithmetic and logical operations. For another, the accumulator is the register generally used as source and destination for memory accesses that use direct addressing. (Refer back to Chapter 7 for a discussion of addressing modes.)
 
@@ -255,7 +255,7 @@ The important point is that in 8088 assembler it often matters which registers a
 
 Yet another aspect of the Zen of assembler.
 
-## 8.3 Pushing and Popping the 8080 Flags
+## Pushing and Popping the 8080 Flags
 
 Finally, we come to the strangest part of the 8080 legacy, the `lahf` and `sahf` instructions. `lahf` loads AH with the lower byte of the 8088's FLAGS register, as shown in Figure 8.12. Not coincidentally, the lower byte of the FLAGS register contains the 8088 equivalents of the 8080's flags, and those flags are located in precisely the same bit positions in the lower byte of the 8088's FLAGS register as they are in the 8080's FLAGS register. `sahf` reverses the action of `lahf`, loading the 8080-compatible flags into the 8088's FLAGS register by copying AH to the lower byte of the 8088's FLAGS register, as shown in Figure 8.13.
 
@@ -301,7 +301,7 @@ Let's look at `lahf` and `sahf` in action. Suppose we have a loop in which a val
 
 [Listing 8-14](#L814) solves this problem by using `pushf` and `popf` to preserve the Sign flag. The Zen timer reports that with this approach it takes 16.45 ms to process 1000 array elements, or 16.45 us per element. Astoundingly, [Listing 8-15](#L815), which is exactly the same as [Listing 8-14](#L814) save that it uses `lahf` and `sahf` instead of `pushf` and `popf`, takes only 11.31 ms, or 11.31 us per array element — a performance improvement of 45%! (That's a 45% improvement in *the whole loop*; the performance advantage of just `lahf` and `sahf` versus `pushf` and `popf` in this loop is far greater, in the neighborhood of 200%.)
 
-## 8.4 A Brief Digression on Optimization
+## A Brief Digression on Optimization
 
 As is always the case, there are other solutions to the programming task at hand than those shown in [Listings 8-14](#L814) and [8-15](#L815). For example, the Sign flag could be tested immediately after the addition, as shown in [Listing 8-16](#L816). The approach of [Listing 8-16](#L816) is exactly equivalent to [Listings 8-14](#L814) and [8-15](#L815), but eliminates the need to preserve the flags. [Listing 8-16](#L816) executes in 10.78 us per array element, a slight improvement over [Listing 8-15](#L815).
 

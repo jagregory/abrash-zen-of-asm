@@ -18,7 +18,7 @@ So, while we've gone a mighty long way toward mastering the Zen of assembler, we
 
 In short, in Volume II we'll experience the full spectrum of the Zen of assembler, from the details that we now know so well to the magnificent applications that make it all worthwhile.
 
-## 16.1 A Taste of What You've Learned
+## A Taste of What You've Learned
 
 Before we leave Volume I, I'd like to give you a taste of both what's to come and what you already know. Why do you need to see what you already know? The answer is that you've surely learned much more than you realize right now. The example we'll look at involves strong elements of the flexible mind, and what we'll find is that there's no neat dividing line between knowledge and the flexible mind... and that we have already ventured much farther across the fuzzy boundary between the two than you'd ever imagine.
 
@@ -26,7 +26,7 @@ We'll also see that the flexible mind involves knowledge and intuition — but n
 
 On to our final example...
 
-## 16.2 Zenning
+## Zenning
 
 In Jeff Duntemann's excellent book *Complete Turbo Pascal, Third Edition* (published by Scott, Foresman and Company), there's a small assembler subroutine that's designed to be called from a Turbo Pascal program in order to fill the screen or a system-memory screen buffer with a specified character/attribute pair in text mode. This subroutine involves only 21 instructions and works perfectly well; nonetheless, with what we know we can compact the subroutine tremendously, and speed it up a bit as well. To coin a verb, we can "Zen" this already-tight assembler code to an astonishing degree. In the process, I hope you'll get a feel for how advanced your assembler skills have become.
 
@@ -243,7 +243,7 @@ At long last, we're down to the bare metal. This version of `ClearS` is just 19 
 
 All in all, the Zenned version of `ClearS` is a vast improvement over the original. Probably not the best possible implementation — *never say never!* — but an awfully good one.
 
-## 16.3 Knowledge and Beyond
+## Knowledge and Beyond
 
 There is a point to all this Zenning above and beyond showing off some neat tricks we've learned (and a trick or two we'll learn more about in Volume II). The real point is to illustrate the breadth of knowledge you now possess, and the tremendous power that knowledge has when guided by the flexible mind.
 

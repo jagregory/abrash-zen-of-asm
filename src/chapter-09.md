@@ -8,7 +8,7 @@ Over the last few chapters, we've covered the 8088's registers, memory addressin
 
 In the next chapter we'll return to a more linear format as we discuss the string instructions. After that we'll get into branching, look-up tables, and more. For now, though, hold on to your hat as we bound through the instruction set.
 
-## 9.1 Shortcuts for Handling Zero and Constants
+## Shortcuts for Handling Zero and Constants
 
 The instruction set of the 8088 can perform any of a number of logical and arithmetic operations on byte-and word-sized, signed and unsigned integer values. What's more, those values may be stored either in registers or in memory. Much of the complexity of the 8088's instruction set results from this flexibility — and so does the slow performance of many of the 8088's instructions. However, some of the 8088's instructions can be used in a less flexible — but far speedier — fashion. Nowhere is this more apparent than in handling zero.
 
@@ -115,7 +115,7 @@ A similar case of turning a test into a zero/non-zero test occurs when testing a
 
 Unorthodox, yes — but very effective. The moral is clear: *even when the 8088 has an instruction that's clearly intended to perform a given task (such as `cmp` for comparing), don't assume that instruction is the best way to perform that task under all conditions*.
 
-## 9.2 `inc` and `dec`
+## `inc` and `dec`
 
 `inc` and `dec` are simple, unpretentious instructions — and more powerful than you might imagine. Since `inc` and `dec` require only one operand (the immediate value 1 that's added or subtracted is implied by the instruction), they are among the shortest (1 to 4 bytes) and fastest (2 to 3 cycles for a register operand, but up to 35 for a word-sized memory operand — keep your operands in registers!) instructions of the 8088. In particular, when working with 16-bit register operands, `inc` and `dec` are the fastest arithmetic instructions of the 8088, with an execution time of 2 cycles paired with a length of just 1 byte.
 
@@ -157,7 +157,7 @@ Some way is needed to address each of the words in a multi-word memory value in 
 
 `inc` and `dec` don't affect the Carry flag, however, and that greatly simplifies the process of adding multi-word memory variables. The code in [Listing 9-13](#L913), which adds together two 64bit memory variables — one pointed to by SI and the other pointed to by DI — only works because the `inc` instructions that advance the pointers don't affect the Carry flag values that join the additions of the various parts of the variables. (It's equally important that `loop` doesn't affect any flags, as we'll see in Chapter 14.)
 
-## 9.3 Carrying Results Along in a Flag
+## Carrying Results Along in a Flag
 
 As mentioned in Chapter 6 and illustrated in the last section, many instructions don't affect all the flags, and some don't affect any flags at all. You can take advantage of this by carrying a status along in the FLAGS register for several instructions before testing that status. Of course, if you do choose to carry a status along, all of the instructions executed between setting the status and testing it must leave the status alone.
 
@@ -190,7 +190,7 @@ The bugs that can arise from the use of a carried-along status that is accidenta
 
 If you do need to carry a status along for more than a few instructions, store the status with either `pushf` or `lahf`, then restore it later with `popf` or `sahf`, so there's no chance of the intervening code accidentally wiping the status out.
 
-## 9.4 Byte-To-Word and Word-To-Doubleword Conversion
+## Byte-To-Word and Word-To-Doubleword Conversion
 
 On the 8088 the need frequently arises to convert byte values to word values. A byte value might be converted to a word in order to add it to a 16-bit value, or in order to use it as a pointer into a table (remember that only 16-bit registers can be used as pointers, with the lone exception of AL in the case of `xlat`). Occasionally it's also necessary to convert word values to doubleword values. One application for word-to-doubleword conversion is the preparation of a 16-bit dividend for 32-bit by 16-bit division.
 
@@ -225,7 +225,7 @@ In the particular case of [Listing 9-16](#L916), it happens that moving the sett
 
 If for any reason AH *did* change each time through the loop, we could no longer use the method of [Listing 9-16](#L916), and [Listing 9-14](#L914) would be a good alternative. That's why there are no hard-and-fast rules that produce the best assembler code. Instead, you must respond flexibly to the virtually infinite variety of assembler coding situations that arise. The bigger your bag of tricks, the better off you'll be.
 
-## 9.5 `xchg` is Handy When Registers Are Tight
+## `xchg` is Handy When Registers Are Tight
 
 One key to good assembler code is avoiding memory and using the registers as much as possible. When you start juggling registers in order to get the maximum mileage from them, you'll find that `xchg` is a good friend.
 
@@ -258,7 +258,7 @@ xchg  [Flag],al   ;get the current flag value and
 
 Best of all, we don't need to disable interrupts in the `xchg`-based code, since interrupts can only occur between instructions, not during them! (Interrupts *can* occur between repetitions of a repeated string instruction, but that's because a single string instruction is actually executed multiple times when it's repeated. We'll discuss repeated string instructions at length in Chapters 10 and 11.)
 
-## 9.6 Destination: Register
+## Destination: Register
 
 Many arithmetic and logical operations can be performed with a register as one operand and a memory location as the other, with either one being the source and the other serving as the destination. For example, both of the following forms of `sub` are valid:
 
@@ -305,7 +305,7 @@ since only one memory access is performed by each.
 
 A final note: at least one 8088 reference lists `cmp` as requiring the same 7 additional cycles as `sub` when used with a memory operand that is the destination rather than the source. Not so — `cmp` requires the same time no matter which operand is a memory operand. That makes sense, since `cmp` doesn't actually modify the destination operand and so has no reason to perform a second memory access. The same is true for `test`, which doesn't modify the destination operand.
 
-## 9.7 `neg` and `not`
+## `neg` and `not`
 
 `neg` and `not` are short, fast instructions that are sometimes undeservedly overlooked. Each instruction is 2 bytes long and executes in just 3 cycles when used with a register operand, and each instruction can often replace a longer instruction or several instructions.
 
@@ -388,7 +388,7 @@ mov     cx,ax                 ;put the result back in CX
 
 Another advantage of `neg` in the above example is that it lets us generate the entries-remaining count without using another register. By contrast, the alternative approach requires the use of a 16-bit register for temporary storage. When registers are in short supply — as is usually the case — the register-conserving nature of `neg` can be most useful.
 
-## 9.8 Rotates and Shifts
+## Rotates and Shifts
 
 Next, we're going to spend some time going over interesting aspects of the various shift and rotate instructions. To my mind, the single most fascinating thing about these instructions concerns their ability to shift or rotate by either 1 bit or the number of bits specified by CL; in particular, it's most informative to examine the relative performance of the two approaches for multi-bit operations.
 
@@ -560,7 +560,7 @@ The `sar` approach requires only 75% as many code bytes as the approach in [List
 
 Mind you, the `sar` approach of [Listing 9-23](#L923) is still *much* slower than the look-up approach of [Listing 7-15](#L715). What's more, the code in [Listing 9-23](#L923) is both slower and larger than the `xlat`-based nibble look-up approach shown in [Listing 7-18](#L718), so `sar` really isn't a preferred technique for doubling bits. The point to our discussion of bit-doubling with `sar` is actually this: *all sorts of interesting possibilities open up once you start to view instructions in terms of what they do, rather than what they were designed to do.*
 
-## 9.9 ASCII and Decimal Adjust
+## ASCII and Decimal Adjust
 
 Now we come to the ASCII and decimal-adjust instructions: `daa`, `das`, `aaa`, `aas`, `aam`, and `aad`. To be honest, I'm covering these instructions only because many people have asked me what they are used for. In truth, they aren't useful very often, and there aren't any particularly nifty or non-obvious uses for them that I'm aware of, so I'm not going to cover them at great length, and you shouldn't spend too much time trying to understand them unless they fill a specific need of yours. Still, the ASCII and decimal-adjust instructions do have their purposes, so here goes.
 
@@ -668,7 +668,7 @@ If you do use `aaa`, remember that you have not one but two ways to use the carr
 
 `aas` ("ASCII adjust after subtraction") is well and truly the mirror image of `aaa`. `aas` is designed to be used after a `sub` or `sbb`, subtracting 6 from the result, decrementing AH, and setting the Carry flag if the result in AL is not in the range 0-9, and zeroing the high nibble of AL in any case. You'll find that wherever `aaa` is useful, so too will be `aas`.
 
-## 9.10 Mnemonics That Cover Multiple Instructions
+## Mnemonics That Cover Multiple Instructions
 
 As we've seen several times in this chapter and the last, 8088 assembler often uses a single mnemonic, such as `mov`, to name two or more instructions that perform the same operations but are quite different in size and execution speed. When the assembler encounters such a mnemonic in assembler source code, it automatically chooses the most efficient instruction that fills the bill.
 

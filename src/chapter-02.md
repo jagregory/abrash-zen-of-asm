@@ -18,25 +18,25 @@ Ignorance about true performance can be costly. When I wrote video games for a l
 
 Ignorance can also be responsible for considerable wasted effort. I recall a debate in the letters column of one computer magazine about exactly how quickly text can be drawn on a Color/Graphics Adapter screen without causing snow. The letter writers counted every cycle in their timing loops, just as the author in the story that started this chapter had. Like that author, the letter writers had failed to take the prefetch queue into account. In fact, they had neglected the effects of video wait states as well, so the code they discussed was actually *much* slower than their estimates. The proper test would, of course, have been to run the code to see if snow resulted, since the only true measure of code performance is observing it in action.
 
-## 2.1 The Zen Timer
+## The Zen Timer
 
 One key to mastering the Zen of assembler is clearly a tool with which to measure code performance. The most accurate way to measure performance is with expensive hardware, but reasonable measurements at no cost can be made with the PC's 8253 timer chip, which counts at a rate of slightly over 1,000,000 times per second. The 8253 can be started at the beginning of a block of code of interest and stopped at the end of that code, with the resulting count indicating how long the code took to execute with an accuracy of about 1 microsecond. (A microsecond is one -millionth of a second, and is abbreviated us). To be precise, the 8253 counts once every 838.1 nanoseconds. (A nanosecond is one-billionth of a second, and is abbreviated ns).
 
 [Listing 2-1](#L201) shows 8253-based timer software, consisting of three subroutines: `ZTimerOn`, `ZTimerOff`, and `ZTimerReport`. For the remainder of this book, I'll refer to these routines collectively as the "Zen timer."
 
-## 2.2 The Zen Timer is a Means, Not an End
+## The Zen Timer is a Means, Not an End
 
 We're going to spend the rest of this chapter seeing what the Zen timer can do, examining how it works, and learning how to use it. The Zen timer will be our primary tool for the remainder of *The Zen of Assembly Language*, so it's essential that you learn what the Zen timer can do and how to use it. On the other hand, it is by no means essential that you understand exactly how the Zen timer works. (Interesting, yes; essential, no.)
 
 In other words, the Zen timer isn't really part of the knowledge we seek; rather, it's one tool with which we'll acquire that knowledge. Consequently, you shouldn't worry if you don't fully grasp the inner workings of the Zen timer. Instead, focus on learning how to use the timer, since we will use it heavily throughout *The Zen of Assembly Language*.
 
-## 2.3 Starting the Zen Timer
+## Starting the Zen Timer
 
-`ZTimerOn` is called at the start of a segment of code to be timed. **ZTimerOn** saves the context of the calling code, disables interrupts, sets timer 0 of the 8253 to mode 2 (divide-by-N mode), sets the initial timer count to 0, restores the context of the calling code, and returns. (I'd like to note that while Intel's documentation for the 8253 seems to indicate that a timer won't reset to 0 until it finishes counting down, in actual practice timers seems to reset to 0 as soon as they're loaded.)
+`ZTimerOn` is called at the start of a segment of code to be timed. `ZTimerOn` saves the context of the calling code, disables interrupts, sets timer 0 of the 8253 to mode 2 (divide-by-N mode), sets the initial timer count to 0, restores the context of the calling code, and returns. (I'd like to note that while Intel's documentation for the 8253 seems to indicate that a timer won't reset to 0 until it finishes counting down, in actual practice timers seems to reset to 0 as soon as they're loaded.)
 
 Two aspects of `ZTimerOn` are worth discussing further. One point of interest is that `ZTimerOn` disables interrupts. (`ZTimerOff` later restores interrupts to the state they were in when `ZTimerOn` was called.) Were interrupts not disabled by `ZTimerOn`, keyboard, mouse, timer, and other interrupts could occur during the timing interval, and the time required to service those interrupts would incorrectly and erratically appear to be part of the execution time of the code being measured. As a result, code timed with the Zen timer should not expect any hardware interrupts to occur during the interval between any call to `ZTimerOn` and the corresponding call to `ZTimerOff`, and should not enable interrupts during that time.
 
-## 2.4 Time and the PC
+## Time and the PC
 
 A second interesting point about `ZTimerOn` is that it may introduce some small inaccuracy into the system clock time whenever it is called. To understand why this is so, we need to examine the way in which both the 8253 and the PC's system clock (which keeps the current time) work.
 
@@ -70,7 +70,7 @@ The effects on the system time of the Zen timer aren't a matter for great concer
 
 Nonetheless, it's a good idea to reboot your computer at the end of each session with the Zen timer in order to make sure that the system clock is correct.
 
-## 2.5 Stopping the Zen Timer
+## Stopping the Zen Timer
 
 At some point after `ZTimerOn` is called, `ZTimerOff` must always be called to mark the end of the timing interval. `ZTimerOff` saves the context of the calling program, latches and reads the timer 0 count, converts that count from the countdown value that the timer maintains to the number of counts elapsed since `ZTimerOn` was called, and stores the result. Immediately after latching the timer 0 count — and before enabling interrupts — `ZTimerOff` checks the 8259 interrupt controller to see if there is a pending timer interrupt, setting a flag to mark that the timer overflowed if there is indeed a pending timer interrupt.
 
@@ -80,7 +80,7 @@ Finally, `ZTimerOff` restores the context of the calling program, including the 
 
 One interesting aspect of `ZTimerOff` is the manner in which timer 0 is stopped in order to read the timer count. We don't actually have to stop timer 0 to read the count; the 8253 provides a special latched read feature for the specific purpose of reading the count while a time is running. (That's a good thing, too; we've no documented way to stop timer 0 if we wanted to, since its gate input isn't connected. Later in this chapter, though, we'll see that timer 0 can be stopped after all.) We simply tell the 8253 to latch the current count, and the 8253 does so without breaking stride.
 
-## 2.6 Reporting Timing Results
+## Reporting Timing Results
 
 `ZTimerReport` may be called to display timing results at any time after both `ZTimerOn` and `ZTimerOff` have been called. `ZTimerReport` first checks to see whether the timer overflowed (counted down to 0 and turned over) before `ZTimerOff` was called; if overflow did occur, `ZTimerOff` prints a message to that effect and returns. Otherwise, `ZTimerReport` subtracts the reference count (representing the overhead of the Zen timer) from the count measured between the calls to `ZTimerOn` and `ZTimerOff`, converts the result from timer counts to microseconds, and prints the resulting time in microseconds to the standard output.
 
@@ -98,7 +98,7 @@ A final approach is to modify `ZTimerReport` to print the result to the auxiliar
 
 You may well want to devise still other approaches better suited to your needs than those I've presented. Go to it! I've just thrown out a few possibilities to get you started.
 
-## 2.7 Notes on the Zen Timer
+## Notes on the Zen Timer
 
 The Zen timer subroutines are designed to be near-called from assembly-language code running in the public segment `Code`. The Zen timer subroutines can, however, be called from any assembler or high-level language code that generates OBJ files that are compatible with the Microsoft Linker, simply by modifying the segment that the timer code runs in to match the segment used by the code being timed, or by changing the Zen timer routines to far procedures and making far calls to the Zen timer code from the code being timed. All three subroutines preserve all registers and all flags except the interrupt flag, so calls to these routines are transparent to the calling code.
 
@@ -112,7 +112,7 @@ On the other hand, there is certainly no guarantee that code performance as meas
 
 Not that this variation between models makes the Zen timer one whit less useful — quite the contrary. The Zen timer is an excellent tool for evaluating code performance over the entire spectrum of PC-compatible computers.
 
-## 2.8 A Sample Use of the Zen Timer
+## A Sample Use of the Zen Timer
 
 [Listing 2-2](#L202) shows a test-bed program for measuring code performance with the Zen timer. This program sets DS equal to CS (for reasons we'll discuss shortly), includes the code to be measured from the file TESTCODE, and calls `ZTimerReport` to display the timing results. Consequently, the code being measured should be in the file TESTCODE, and should contain calls to `ZtimerOn` and `ZTimerOff`.
 
@@ -140,7 +140,7 @@ pztime filename
 
 In fact, that's exactly how I timed each of the listings in this book. Code fragments you write yourself can be timed in just the same way. If you wish to time code directly in place in your programs, rather than in the test-bed program of [Listing 2-2](#L202), simply insert calls to `ZTimerOn`, `ZTimerOff`, and `ZTimerReport` in the appropriate places and link [PZTIMER](#PZTIMER) to your program.
 
-## 2.9 The Long-Period Zen Timer
+## The Long-Period Zen Timer
 
 With a few exceptions, the Zen timer presented above will serve us well for the remainder of this book, since we'll be focusing on relatively short code sequences that generally take much less than 54 ms to execute. Occasionally, however, we will need to time longer intervals. What's more, it is very likely that you will want to time code sequences longer than 54 ms at some point in your programming career. Accordingly, I've also developed a Zen timer for periods longer than 54 ms. The long-period Zen timer (so named by contrast with the precision Zen timer just presented) shown in [Listing 2-5](#L205) can measure periods up to one hour in length.
 
@@ -154,7 +154,7 @@ While allowing the timer interrupt to occur allows long intervals to be timed, t
 
 The long-period Zen timer has some of the same effects on the system time as does the precision Zen timer, so it's a good idea to reboot the system after a session with the long-period Zen timer. The long-period Zen timer does not, however, have the same potential for introducing major inaccuracy into the system clock time during a single timing run, since it leaves interrupts enabled and therefore allows the system clock to update normally.
 
-## 2.10 Stopping the Clock
+## Stopping the Clock
 
 There's a potential problem with the long-period Zen timer. The problem is this: in order to measure times longer than 54 ms, we must maintain not one but two timing components, the timer 0 count and the BIOS time-of-day count. The time-of-day count measures the passage of 54.9 ms intervals, while the timer 0 count measures time within those 54.9 ms intervals. We need to read the two time components simultaneously in order to get a clean reading. Otherwise, we may read the timer count just before it turns over and generates an interrupt, then read the BIOS time-of-day count just after the interrupt has occurred and caused the time-of-day count to turn over, with a resulting 54 ms measurement inaccuracy. (The opposite sequence — reading the time-of-day count and then the timer count — can result in a 54 ms inaccuracy in the other direction.)
 
@@ -176,7 +176,7 @@ If you do leave the **PS2** equate at 1 in [Listing 2-5](#L205), you should repe
 
 Finally, please note that the *precision* Zen timer works perfectly well on both PS/2 and non-PS/2 computers. The PS/2 and 8253 considerations we've just discussed apply only to the long-period Zen timer.
 
-## 2.11 A Sample Use of the Long-Period Zen Timer
+## A Sample Use of the Long-Period Zen Timer
 
 The long-period Zen timer has exactly the same calling interface as the precision Zen timer, and can be used in place of the precision Zen timer simply by linking it to the code to be timed in place of linking the precision timer code. Whenever the precision Zen timer informs you that the code being timed takes too long for the precision timer to handle, all you have to do is link in the long-period timer instead.
 
@@ -196,13 +196,13 @@ the result is 72,544 us, or about 3.63 us per load of AL from memory. This is ju
 
 Note that the above command takes about 10 minutes to finish on a PC, with most of that time spent assembling [Listing 2-8](#L208). Why? Because MASM is notoriously slow at assembling `rept` blocks, and the block in [Listing 2-8](#L208) is repeated 20000 times.
 
-## 2.12 Further Reading
+## Further Reading
 
 For those of you who wish to pursue the mechanics of code measurement further, one good article about measuring code performance with the 8253 timer is "*Programming Insight: High-Performance Software Analysis on the IBM PC*," by Byron Sheppard, which appeared in the January, 1987 issue of *Byte*. For complete if somewhat cryptic information on the 8253 timer itself, I refer you to Intel's *Microsystem Components Handbook*, which is also a useful reference for a number of other PC components, including the 8259 Programmable Interrupt Controller and the 8237 DMA Controller. For details about the way the 8253 is used in the PC, as well as a great deal of additional information about the PC's hardware and BIOS resources, I suggest you consult IBM's series of technical reference manuals for the PC, XT, AT, Model 30, Models 50 and 60, and Model 80.
 
 For our purposes, however, it's not critical that you understand exactly how the Zen timer works. All you really need to know is what the Zen timer can do and how to use it, and we've accomplished that in this chapter.
 
-## 2.13 Armed With the Zen Timer, Onward and Upward
+## Armed With the Zen Timer, Onward and Upward
 
 The Zen timer is not perfect. For one thing, the finest resolution to which it can measure an interval is at best about 1 us, a period of time in which a 25-MHz 80386 computer can execute as many as 12 instructions (although a PC would be hard-pressed to manage two instructions in a microsecond). Another problem is that the timing code itself interferes with the state of the prefetch queue at the start of the code being timed, because the timing code is not necessarily fetched and does not necessarily access memory in exactly the same time sequence as the code immediately preceding the code under measurement normally does. This prefetch effect can introduce as much as 3 to 4 us of inaccuracy. (The nature of this problem will become more apparent when we discuss the prefetch queue.) Similarly, the state of the prefetch queue at the end of the code being timed affects how long the code that stops the timer takes to execute. Consequently, the Zen timer tends to be more accurate for longer code sequences, since the relative magnitude of the inaccuracy introduced by the Zen timer becomes less over longer periods.
 

@@ -2,7 +2,7 @@
 
 What is the Zen of assembler? Many things: a set of programming skills that lets you write incredibly fast programs, a technique for turning ideas into code, a process of looking at problems in new ways and finding fresh solutions, and more. Perhaps a brief story would be the best way to introduce the Zen of assembler.
 
-## 1.1 The Zen of Assembler in a Nutshell
+## The Zen of Assembler in a Nutshell
 
 Some time ago, I was asked to work over a critical assembler subroutine in order to make it run as fast as possible. The task of the subroutine was to construct a nibble out of four bits read from different bytes, rotating and combining the bits so that they ultimately ended up neatly aligned in bits 3-0 of a single byte. (In case you're curious, the object was to construct a 16-color pixel from bits scattered over 4 bytes.) I examined the subroutine line by line, saving a cycle here and a cycle there, until the code truly seemed to be optimized. When I was done, the key part of the code looked something like this:
 
@@ -37,7 +37,7 @@ This moved the costly multi-bit rotation out of the loop, so that it was perform
 
 The point is this: to write truly superior assembler programs, you need to know what the various instructions do and which instructions execute fastest... and more. You must also learn to look at your programming problems from a variety of perspectives, so that you can put those fast instructions to work in the most effective ways. And, that, in a nutshell, is the Zen of assembler.
 
-## 1.2 Assembler is Fundamentally Different from Other Languages
+## Assembler is Fundamentally Different from Other Languages
 
 Is it really so hard as all that to write good assembler code for the IBM PC? Yes! Thanks to the decidedly quirky nature of the 8088 processor, assembly language differs fundamentally from other languages, and is undeniably harder to work with. On the other hand, the potential of assembler code is much greater than that of other languages, as well. The Zen of assembler is the way to tap that potential.
 
@@ -59,13 +59,13 @@ The first part of the Zen of assembler, then, is self-reliance. An assembler is 
 
 Knowledge.
 
-## 1.3 Knowledge
+## Knowledge
 
 In the IBM PC world, you can never have enough knowledge, and every item you add to your store will make your programs better. Thorough familiarity with both the operating system and BIOS interfaces is important; since those interfaces are well-documented and reasonably straightforward, my advice is to get IBM's documentation and a good book or two and bring yourself up to speed. Similarly, familiarity with the hardware of the IBM PC is required. While that topic covers a lot of ground — display adapters, keyboards, serial ports, printer ports, timer and DMA channels, memory organization, and more — most of the hardware is well-documented, and articles about programming major hardware components appear frequently, so this sort of knowledge can be acquired readily enough.
 
 The single most critical aspect of the hardware, and the one about which it is hardest to learn, is the 8088 processor. The 8088 has a complex, irregular instruction set, and, unlike most processors, the 8088 is neither straightforward nor well-documented as regards true code performance. What's more, assembler is so difficult to learn that most articles and books which present assembler code settle for code that works, rather than code that pushes the 8088 to its limits. In fact, since most articles and books are written for inexperienced assembler programmers, there is very little information of any sort available about how to generate high-quality assembler code for the 8088. As a result, knowledge about programming the 8088 effectively is by far the hardest knowledge to gather. A good portion of this book is devoted to seeking out such knowledge. Be forewarned, though: no matter how much you learn about programming the IBM PC in assembler, there's always more to discover.
 
-## 1.4 The Flexible Mind
+## The Flexible Mind
 
 Is the never-ending collection of information all there is to the Zen of assembler, then? Hardly. Knowledge is simply a necessary base on which to build. Let's take a moment to examine the objectives of good assembler programming, and the remainder of the Zen of assembler will fall into place.
 
@@ -85,6 +85,6 @@ Note that I said that an assembler programmer *can* generate better code than a 
 
 The gist of all this is simply that good assembler programming is done in the context of a solid overall framework unique to each program, and the flexible mind is the key to creating that framework and holding it together.
 
-## 1.5 Where to Begin?
+## Where to Begin?
 
 To summarize, the Zen of assembler is a combination of knowledge, perspective, and way of thought that makes possible the genesis of first-rate assembler programs. Given that, where to begin our explorations of the Zen of assembler? Development of the flexible mind is an obvious step. Still, the flexible mind is no better than the knowledge at its disposal. We have much knowledge to acquire before we can begin to discuss the flexible mind, and in truth we don't even know yet how to acquire knowledge about 8088 assembler, let alone what that knowledge might be. The first step in the journey toward the Zen of assembler, then, would seem to be learning how to learn.

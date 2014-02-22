@@ -8,7 +8,7 @@ I'll frequently contrast the string instruction-based implementations with versi
 
 Contrasting string and non-string implementations also reinforces an important point. There are many, many ways to accomplish any given task on the 8088. It's knowing which approach to choose that separates the journeyman programmer from the guru.
 
-## 11.1 String Handling With `lods` and `stos`
+## String Handling With `lods` and `stos`
 
 `lods` is an odd bird among string instructions, being the only string instruction that doesn't benefit in the least from `rep`. While `rep` does work with `lods`, in that it causes `lods` to repeat multiple times, the combination of the two is nonetheless totally impractical: what good could it possibly do to load AL twice (to say nothing of 64 K times)? Without `rep`, `lods` is still better than `mov`, but not *that* much better; `lods` certainly doesn't generate the quantum jump in performance that `rep stos` and `rep movs` do. So — when *does* `lods` really shine?
 
@@ -38,7 +38,7 @@ For instance, when registers are tight, the extra pointer register `lods`/`stos`
 
 The point is not simply that the `lods`/`stos` pair is not as flexible as the non-string instructions. The real point is that you shouldn't assume you've come up with the best solution just because you've used string instructions. Yes, I know that I've been touting string instructions as the greatest thing since sliced bread, and by and large that's true. However, because the string instructions have a sharply limited repertoire and often require a good deal of preliminary set-up, you must consider your alternatives before concluding that a string instruction-based implementation is best.
 
-## 11.2 Block Handling With `movs`
+## Block Handling With `movs`
 
 Simply put, `movs` is the king of the block copy. There's no other 8088 instruction that can hold a candle to `movs`when it comes to copying blocks of data from one area of memory to another. It does take several instructions to set up for `movs`, so if you're only moving a few bytes and DS:SI and ES:DI don't happen to be pointing to your source and destination, you might want to use a regular `mov`. Whenever you want to move more than a few bytes, though, `movs` — or better yet `rep movs` — is the ticket.
 
@@ -96,7 +96,7 @@ Mind you, all this *only* applies when the Direction Flag is 1. When the Directi
 
 Enough said.
 
-## 11.3 Searching With `scas`
+## Searching With `scas`
 
 `scas` is often (but not always, as we shall see) the preferred way to search for either a given value or the absence of a given value in any array. When `scas` is well-matched to the task at hand, it is the best choice by a wide margin. For example, suppose that we want to count the number of times the letter 'A' appears in a text array. [Listing 11-9](#L1109), which uses non-string instructions, counts the number of occurrences of 'A' in the sample array in 475 us. [Listing 11-10](#L1110), which does exactly the same thing with `repnz scasb`, finishes in just 203 us. That, my friends, is an improvement of 134%. What's more, [Listing 11-10](#L1110) is shorter than [Listing 11-9](#L1109).
 
@@ -197,7 +197,7 @@ When jumps around jumps are used, the comparison time per character goes from 16
 
 Nonetheless, [Listings 11-19](#L1119) and [11-20](#L1120) illustrate two important points. Point number 1: the repeated string instructions tend to have a greater advantage when they're repeated many times, allowing their speed and compact size to offset the overhead in set-up time and code they require. Point number 2: specialized as the string instructions are, there are ways to program the 8088 that are more specialized still. In certain cases, those specialized approaches can even outperform the string instructions. Sure, the specialized approaches, such as the compare-and-jump approach we just saw, are limited and inflexible — but when you don't need the flexibility, why pay for it in lost performance?
 
-## 11.4 Comparing Memory to Memory With `cmps`
+## Comparing Memory to Memory With `cmps`
 
 When `cmps` does exactly what you need done it can't be beat, although to an even greater extent than with `scas` the cases in which that is true are relatively few. `cmps` is used for applications in which byte-for-byte or word-for-word comparisons between two memory blocks of a known length are performed, most notably array comparisons and substring searching. Like `scas`, `cmps` is not flexible enough to work at full power on other comparison tasks, such as case-insensitive substring searching or the comparison of zero-terminated strings, although with a bit of thought `cmps` can be made to serve adequately in some such applications.
 
@@ -282,7 +282,7 @@ There's no way to perform this comparison with repeated `cmps`, since greater-th
 
 By contrast, [Listing 11-32](#L1132), which performs the same crossing search but does so with non-string instructions, has 6 instructions and 13 bytes in the loop and takes considerably longer — 1821 us — to complete the sample crossing search. Although we were unable to use repeated `cmps` for this particular task, we were nonetheless able to improve performance a great deal by using the string instruction in its non-repeated form.
 
-## 11.5 A Note About Returning Values
+## A Note About Returning Values
 
 Throughout this chapter I've been returning "not found" statuses by passing zero pointers (pointers set to zero) back to the calling routine. This is a commonly used and very flexible means of returning such statuses, since the same registers that are used to return pointers when searches are successful can be used to return zero when searches are not successful. The success or failure of a subroutine can then be tested with code like:
 
@@ -317,7 +317,7 @@ jnz   NotWhitespace
 
 The particular example isn't important here. What is important is that you realize that in assembler (unlike high-level languages) there are many ways to return statuses, and that it's possible to save a great deal of code and/or time by taking advantage of that. Now is not the time to pursue the topic further, but we'll return to the issues of passing values and statuses both to and from assembler subroutines in Volume II of *The Zen of Assembly Language*.
 
-## 11.6 Putting String Instructions to Work in Unlikely Places
+## Putting String Instructions to Work in Unlikely Places
 
 I've said several times that string instructions are so powerful that you should try to use them even when they don't seem especially well-matched to a particular application. Now I'm going to back that up with an unlikely application in which the string instructions have served me well over the years: animation.
 
@@ -399,7 +399,7 @@ In short, "full" animation implementations will not only run slower than the imp
 
 By the way, [Listings 11-33](#L1133) and [11-34](#L1134) move images a full 4 pixels at a time horizontally, and that's a bit *too* far. 2 pixels is a far more visually attractive distance by which to move animated images, especially those that move slowly. However, because each byte of 320x200 4-color mode display memory controls 4 pixels, alignment of images to start in columns that aren't multiples of 4 is more difficult, although not really that hard once you get the hang of it. Since our goal in this section was to contrast block-move and exclusive-or animation, I didn't add the extra code and complications required to bit-align the images. We will discuss bit-alignment of images at length in Volume II, however.
 
-## 11.7 A Note on Handling Blocks Larger Than 64 K Bytes
+## A Note on Handling Blocks Larger Than 64 K Bytes
 
 All the string instruction-based code we've seen in this chapter handles only blocks or strings that are 64 K bytes in length or shorter. There's a very good reason for this, of course — the infernal segmented architecture of the 8088 — but there are nonetheless times when larger memory blocks are needed.
 

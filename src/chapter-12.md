@@ -12,7 +12,7 @@ This chapter is emphatically *not* going to be a comprehensive discussion of all
 
 On the other hand, there is much Zen in the way the various branching instructions *perform*. In Chapter 13 we'll talk about ways to branch as little as possible, and in Chapter 14 we'll talk about ways to make branches perform as well as possible when you must use them. Right now, let's find out why it is that branching as little as possible is a desirable goal.
 
-## 12.1 How Slow Is It?
+## How Slow Is It?
 
 We want to avoid branching for one simple reason: it's slow. It's not that there's anything inherently slow about branching; branching just happens to suffer from a slow implementation on the 8088. Even the venerable Z80 branches about 50% faster than the 8088.
 
@@ -20,7 +20,7 @@ So how slow *is* branching on the 8088? Well, the answer varies from one type of
 
 18 cycles is a long time in anybody's book... long enough to copy a byte from one memory location to another and increment both SI and DI with `movsb`, long enough to add two 32-bit values together, long enough to increment a 16-bit register at least 4 times. How could it possibly take the 8088 so long just to load a value into the Instruction Pointer? (Think about it — all a branch really consists of is setting IP, and sometimes CS as well, to point to the desired instruction.) Well, let's round up the usual suspects — the cycle eaters — and figure out what's going on. In the process, we'll surely acquire some knowledge that we can put to good use in creating high-performance code.
 
-## 12.2 Branching and Calculation of the Target Address
+## Branching and Calculation of the Target Address
 
 Of the 18 cycles `jmp` takes to execute in [Listing 12-1](#L1201), 4 cycles seem to be used to calculate the target offset. I can't state this with absolute certainty, since Intel doesn't make the inner workings of its instructions public, but it's most likely true. You see, most of the 8088's `jmp` instructions don't have the form "load the Instruction Pointer with offset *xxxx*," where the `jmp` instruction specifies the exact offset to branch to. (This sort of jump is known as an *absolute* branch, since the destination offset is specified as a fixed, or absolute offset in the code segment. Figure 12.1 shows one of the few jump instructions that does use absolute branching.)
 
@@ -64,7 +64,7 @@ Near subroutine calls (except `call reg16`) also use displacements, and, like ne
 
 Displacement arithmetic accounts for about 4 of the 18 cycles `jmp` takes to execute. That leaves 14 cycles, still an awfully long time. What else is `jmp` doing to keep itself busy?
 
-## 12.3 Branching and the Prefetch Queue
+## Branching and the Prefetch Queue
 
 Since the actual execution time of `jmp` in [Listing 12-1](#L1201) is 3 cycles longer than its official execution time, one or more of the cycle-eaters must be taking those cycles. If past experience is any guide, it's a pretty good bet that the prefetch queue cycle-eater is rearing its ugly head once again. The DRAM refresh cycle-eater may also be taking some cycles (it usually does), but the 20% discrepancy between the official and actual execution times is far too large to be explained by DRAM refresh alone. In any case, let's measure the execution time of `jmp` with `imul` instructions interspersed so that the prefetch queue is full when it comes time for each `jmp` to execute.
 
@@ -134,7 +134,7 @@ So, the time required to fetch the branched-to instruction accounts for 4 cycles
 
 The prefetch queue would indeed be emptied on an 8086 — but it would refill much more rapidly. Remember, instructions are fetched a word at a time on the 16-bit 8086. In particular, one-half of the time the 4 cycles expended on the critical first fetch after a branch would fetch not 1 but 2 bytes on an 8086 (1 byte if the address branched to is odd, 2 bytes if it is even, since the 8086 can only read words that start at even addresses). By contrast, the 8088 can only fetch 1 byte during the final 4 cycles of a branch, and therein lies the answer to our mystery of how code could possibly slow down when started with the prefetch queue full.
 
-## 12.4 Branching and the Second Byte of the Branched-To Instruction
+## Branching and the Second Byte of the Branched-To Instruction
 
 Although the execution time of each branch includes the 4 cycles required to fetch the first byte of the branched-to instruction, that's not the end of the impact of branching on instruction fetching. When a branch instruction ends, the EU is just starting to execute the first byte of the branched-to instruction, the BIU is just starting to fetch the following instruction byte... and the prefetch queue is empty. In other words, the single instruction fetch built into the execution time of each branch doesn't fully account for the prefetch queue cycle-eater consequences of branching, but merely defers them for one byte. No matter how you look at it, the prefetch queue is flat-out empty after every branch.
 

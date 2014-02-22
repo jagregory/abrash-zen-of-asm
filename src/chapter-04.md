@@ -8,7 +8,7 @@ Nearly all literature on assembler programming discusses only the programming in
 
 Which brings us to cycle-eaters.
 
-## 4.1 Cycle-Eaters Revisited
+## Cycle-Eaters Revisited
 
 You'll recall that cycle-eaters are gremlins that live on the bus or in peripherals, slowing the performance of 8088 code so that it doesn't execute at full speed. Because cycle-eaters live outside the Execution Unit of the 8088, they can *only* affect the 8088 when the 8088 performs a bus access (a memory or I/O read or write). Internally, the 8088 is a 16-bit processor, capable of running at full speed at all times — unless external data is required. External data must traverse the 8088's external data bus and the PC's data bus 1 byte at a time to and from peripherals, with cycle-eaters lurking along every step of the way. What's more, external data includes not only memory operands *but also instruction bytes*, so even instructions with no memory operands can suffer from cycle-eaters. Since some of the 8088's fastest instructions are register-only instructions, that's important indeed.
 
@@ -23,7 +23,7 @@ The locations of these cycle-eaters in the PC are shown in Figure 4.1. We'll cov
 
 ![](images/fig4.1RT.png)
 
-## 4.2 The 8-Bit Bus Cycle-Eater
+## The 8-Bit Bus Cycle-Eater
 
 *Look! Down on the motherboard! It's a 16-bit processor! It's an 8-bit processor! It's...*
 
@@ -109,7 +109,7 @@ For the last few pages, you may well have been thinking that the 8-bit bus cycle
 
 Yes and no. It's true that in general we know approximately how much longer a given instruction will take to execute with a word-sized memory operand than with a byte-sized operand, although the dynamic RAM refresh and wait state cycle-eaters can raise the cost of the 8-bit bus cycle-eater considerably, as we'll see later in this chapter. However, *all* word-sized memory accesses lose 4 cycles to the 8-bit bus cycle-eater, and there's one sort of word-sized memory access we haven't discussed yet: instruction fetching. The ugliest manifestation of the 8-bit bus cycle-eater is in fact the prefetch queue cycle-eater.
 
-## 4.3 The Prefetch Queue Cycle-Eater
+## The Prefetch Queue Cycle-Eater
 
 Simply put, here's the prefetch queue cycle-eater: the 8088's 8-bit external data bus keeps the Bus Interface Unit from fetching instruction bytes as fast as the 16-bit Execution Unit can execute them, so the Execution Unit often lies idle while waiting for the next instruction byte to be fetched.
 
@@ -210,7 +210,7 @@ Unlike all the cycle-eaters we've encountered so far, wait states and dynamic RA
 
 Let's start with DRAM refresh, which affects the performance of every program that runs on the PC.
 
-## 4.4 Dynamic Ram Refresh: The Invisible Hand
+## Dynamic Ram Refresh: The Invisible Hand
 
 Dynamic RAM (DRAM) refresh is sort of an act of God. By that I mean that DRAM refresh invisibly and inexorably steals up to 8.33% of all available memory access time from your programs. While you *could* stop DRAM refresh, you wouldn't want to, since that would be a sure prescription for crashing your computer. In the end, thanks to DRAM refresh, almost all code runs a bit slower on the PC than it otherwise would, and that's that.
 
@@ -258,7 +258,7 @@ If you're still harboring thoughts of reducing the overhead of DRAM refresh, con
 
 The important thing to understand about DRAM refresh is that it generally slows your code down, and that the extent of that performance reduction can vary considerably and unpredictably, depending on how the DRAM refreshes interact with your code's pattern of memory accesses. When you use the Zen timer and get a fractional cycle count for the execution time of an instruction, that's often DRAM refresh at work. (The display adapter cycle-eater is another possible culprit.) Whenever you get two timing results that differ less or more than they seemingly should, that's usually DRAM refresh too. Thanks to DRAM refresh, variations of up to 8.33% in PC code performance are par for the course.
 
-## 4.5 Wait States
+## Wait States
 
 Wait states are cycles during which a bus access by the 8088 to a device on the PC's bus is temporarily halted by that device while the device gets ready to complete the read or write. Wait states are well and truly the lowest level of code performance. Everything we have discussed (and will discuss) — even DMA accesses — can be affected by wait states.
 
@@ -344,7 +344,7 @@ For now, all you really need to know about the display adapter cycle-eater is th
 
 If you're interested in the detailed operation of the display adapter cycle-eater, I suggest you read my article, "The Display Adapter Bottleneck," in the January, 1987 issue of *PC Tech Journal*.
 
-## 4.6 Cycle-Eaters: A Summary
+## Cycle-Eaters: A Summary
 
 We've covered a great deal of sophisticated material in this chapter, so don't feel bad if you haven't understood everything you've read; it will all become clear as you read on. What's really important is that you come away from this chapter understanding that:
 
@@ -355,7 +355,7 @@ We've covered a great deal of sophisticated material in this chapter, so don't f
 
 This basic knowledge about cycle-eaters puts you in a good position to understand the results reported by the Zen timer, and that means that you're well on your way to writing highperformance assembler code. We will put this knowledge to work throughout the remainder of *The Zen of Assembly Language*.
 
-## 4.7 What Does It All Mean?
+## What Does It All Mean?
 
 There you have it: life under the programming interface. It's not a particularly pretty picture, for the inhabitants of that strange realm where hardware and software meet are little-known cycle-eaters that sap the speed from your unsuspecting code. Still, some of those cycle-eaters can be minimized by keeping instructions short, using the registers, using byte-sized memory operands, and accessing display memory as little as possible. None of the cycle-eaters can be eliminated, and dynamic RAM refresh can scarcely be addressed at all; still, aren't you better off knowing how fast your code *really* runs — and why — than you were reading the official execution times and guessing?
 

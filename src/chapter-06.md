@@ -1,6 +1,6 @@
 # Chapter 6: The 8088
 
-## 6.1 An Overview of the 8088
+## An Overview of the 8088
 
 In a nutshell, the 8088 is a 16-bit processor with an 8-bit data bus capable of addressing 1 Mb of memory in total but no more than four 64Kb byte blocks at a time and that via a remarkably awkward segmented memory scheme. The register space is limited, but the instruction set is powerful and flexible, albeit highly irregular. The 4.77-MHz clock speed of the 8088 as implemented in the IBM PC is slow by today's standards, and both instruction execution and memory access are relatively slow as well. What the whole 8088 package as used in the PC amounts to is a fairly low-performance processor that is hard to program.
 
@@ -10,13 +10,13 @@ Before we begin, you must understand one thing; the 8088 is a hodgepodge of a pr
 
 That certainly doesn't mean the 8088 isn't worth bothering with nowadays, as attested by 10 million or so 8088-based computers. It does, however, mean that programming the 8088 properly in assembler is not simple, since code that takes maximum advantage of the unique nature of the 8088 is generally much faster than code that uses the processor in a straightforward manner. We must take the time to understand the strengths and weaknesses of the 8088 intimately, then learn how to best structure our code in light of that knowledge.
 
-## 6.2 Resources of the 8088
+## Resources of the 8088
 
 Over the next nine chapters, we'll look at the capabilities and resources of the 8088. We'll learn a great deal about high-performance assembler programming, and we'll also lay the groundwork for the higher level assembler programming techniques of Volume II.
 
 We'll spend the remainder of this chapter looking at the registers and flags of the 8088. In Chapter 7 we'll cover the 8088's memory-addressing capabilities, and in Chapter 8 we'll start to cover the 8088's large and varied instruction set. The resources of the 8088 are both fascinating and essential, for in their infinite permutations and combinations — they are your set of tools for creating the best possible code for the IBM PC.
 
-## 6.3 Registers
+## Registers
 
 The register set of a processor is a key to understanding the processor's personality, since registers are typically where most of the action in a processor takes place. The 8088's register set is something of a mixed bag. Since the 8088 is a 16-bit processor internally, register-only instructions (instructions without memory operands) tend to be fast and compact, so the 8088's registers are no more regular than anything else about the processor. Each register offers unique, specialized (and hard to remember) functions; together, these oddball register functions make up what my friend and editor Jeff Duntemann calls "the register hidden agenda," the not obvious but powerful register capabilities that considerably increase both the difficulty and the potential power of 8088 assembler programming.
 
@@ -32,7 +32,7 @@ Alas, disabling interrupts and using SP would not have been truly brilliant, for
 
 All of which simply serves to reinforce the notion that the more we know about the 8088, the better our code will be. That's why we'll cover the 8088's other resources for most of the rest of this volume. The more thorough your understanding of the 8088, the greater the potential of your assembler code.
 
-## 6.4 The 8088's Register Set
+## The 8088's Register Set
 
 Figure 6.1 shows the 8088's register set to be a mix of general and special-purpose registers. The 8088 offers only seven truly general-purpose
 
@@ -42,7 +42,7 @@ registers — AX, BX, CX, DX, SI, DI, and BP — a small set that seems even sma
 
 Let's take a quick tour of the registers, looking at the unique capabilities of each.
 
-## 6.5 The General-Purpose Registers
+## The General-Purpose Registers
 
 Any of the eight general-purpose registers — AX, BX, CX, DX, SI, DI, BP, or SP — may serve as an operand to virtually any instruction that accepts operands, such as `add, push, shl,` or `call`. Put another way, any general-purpose register may be used as an operand by any instruction that uses mod-reg-rm addressing, the most commonly-used addressing mode of the 8088, which we'll discuss in the next chapter. Most of the logical, arithmetic, and data movement operations of the 8088 can use any of the general-purpose registers, and it is the general-purpose registers that are most often used as instruction operands.
 
@@ -105,7 +105,7 @@ push    ax
 
 The above sequence will work exactly the same way on any 8086-family processor...
 
-## 6.6 The Segment Registers
+## The Segment Registers
 
 Each of the four segment registers — CS, DS, ES, and SS — points to the start of a 64-Kb block, or segment, within which certain types of memory accesses may be performed. For instance, the stack must always reside in the segment pointed to by SS. Except as noted, segment registers can only be copied to or loaded from a memory operand, the stack, or a general-purpose register. Segment registers cannot be used as operands to instructions such as `add, dec`or `and` a property that complicates considerably the handling of blocks of memory larger than 64 Kb.
 
@@ -153,13 +153,13 @@ mov   sp,ax
 sti
 ```
 
-## 6.7 The Instruction Pointer
+## The Instruction Pointer
 
 IF, the instruction pointer, is an internal 8088 register that is not directly accessible as an instruction operand. IF contains the offset in the code segment at which the next instruction to be executed resides. After one instruction is started, IP is normally advanced to point to the next instruction; however, branching instructions, such as `jmp` and `call`, load IF with the offset of the instruction being branched to. The instructions `call` and `int` automatically push IP, allowing `ret` or `iret` to continue execution at the instruction following the `call` or `int`.
 
 As we've discussed, in one sense the instruction pointer points to the next instruction to be*fetched* from memory rather than the next instruction to be executed. This distinction arises because the bus interface unit (BID) of the 8088 can prefetch several instructions ahead of the instruction being carried out by the execution unit (EU). From the programmer's perspective, though, the instruction pointer always simply points to the next instruction byte to be executed; the 8088 handles all the complications of prefetching internally in order to present us with this consistent programming interface.
 
-## 6.8 The Flags Register
+## The Flags Register
 
 The flags register contains the nine bit-sized status flags of the 8088, as shown in Figure 6.2. Six of these flags — CF, PF, AF, ZF, SF, and OF, collectively known as the status flags — reflect the status of logical and arithmetic operations; two — IF and DF — control aspects of the 8088's operation; and one — TF — is used only by debugging software.
 
@@ -235,7 +235,7 @@ The direction flag (DF for short) controls the direction in which the pointer re
 
 The trap flag (TF for short) instructs the 8088 to execute a software interrupt 1 after the next instruction. This is specifically intended to allow debugging software to single-step through code; it has no other known use.
 
-## 6.9 There's More to Life Than Registers
+## There's More to Life Than Registers
 
 The register set is just one aspect of the 8088, albeit an important aspect indeed. The other key features of the 8088 are memory addressing, which expands the 8088's working data set from the few bytes that can be stored in the registers to the million bytes that can be stored in memory, and the instruction set, which allows manipulation of registers and memory locations and provides program flow control (branching and decision making) as well. We'll look at memory addressing next, then move on to the limitless possibilities of the instruct instruction set.
 

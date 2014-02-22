@@ -6,7 +6,7 @@ While alternatives to branching do indeed exist, they are anything but obvious. 
 
 Strange — but most rewarding. So let's get to it!
 
-## 13.1 Think Functionally
+## Think Functionally
 
 The key to not-branching lies in understanding each programming task strictly in terms of what that task needs to do, not in terms of how the task will ultimately be implemented. Put another way, you should not consider how you might implement a task, even in a general way, until you have a clear picture of exactly what results the implementation must produce.
 
@@ -38,7 +38,7 @@ In the context of not-branching (which is after all how we got into all this), Z
 
 For all their reputation as number-crunching machines, computers typically spend most of their time moving data, scanning data, and branching. In the Chapters 10 and 11 we learned how to minimize the time spent moving and scanning data. Now we're going to attack the other part of the performance equation by learning how to minimize branching.
 
-## 13.2 `rep`: Looping Without Branching
+## `rep`: Looping Without Branching
 
 It's a popular misconception that `loop` is the 8088's fastest instruction for looping. Not so. In truth, it's `rep` that supports far and away the most powerful looping possible on the 8088. In Chapters 10 and 11 we saw again and again that repeated string instructions perform repetitive tasks much, much faster than normal loops do. Not only do repeated string instructions not empty the prefetch queue on every repetition as `loop` and other branching instructions do, but they actually eliminate the prefetch queue cycle-eater altogether, since no instruction fetching at all is required while a string instruction repeats.
 
@@ -56,13 +56,13 @@ is far inferior to `shr ax,cl`.
 
 Nonetheless, repeated shifts and rotates still aren't *fast* — instead, you might think of them as less slow than the alternatives. It's easy to think that shifts and rotates by CL are so fast that they can be used with impunity, since they avoid looping and prefetching, but that's just not true. A repeated shift or rotate takes 8 cycles just to start, and then takes 4 cycles per bit shifted. Even a 4-bit shift by CL takes 24 cycles, which is not insignificant, and a 16-bit shift by CL takes a full 72 cycles. Use shifts and rotates by CL sparingly, and keep them out of loops whenever you can. Look-up tables, our next topic, are often a faster alternative to multi-bit shifts and rotates.
 
-## 13.3 Look-Up Tables: Calculating Without Branching
+## Look-Up Tables: Calculating Without Branching
 
 Like the use of repeated string instructions, the use of look-up tables is a familiar technique that can help avoid branching. Whenever you're using branching code to perform a calculation, see if you can't use a look-up table instead; tight as your branching code may be, look-up tables are usually faster still. [Listings 11-26](#L1126) and [11-27](#L1127) pit a five-instruction sequence that branches no more than once against an equivalent table look-up; you can't get branching code that's much tighter than that, and yet the table look-up is much faster.
 
 In short, if you have a calculation to make — even a simple one — see if it isn't faster to precalculate the answer at assembly time and just look it up at run time.
 
-## 13.4 Take the Branch Less Travelled By
+## Take the Branch Less Travelled By
 
 One of the best ways to avoid branching is to arrange your code so that conditional jumps rarely jump. Usually you can guess which way a given conditional test will most often go, and if that's the case, you can save a good deal of branching simply by arranging your code so that the conditional jump will fall through — that is, not branch — in the more common case. Sometimes the choice is made on the basis of which case is most time-critical rather than which is most common, but the principle remains the same.
 
@@ -166,7 +166,7 @@ LongSubroutine      endp
 
 Now we've *really* put the load on the CX equal to zero case, for two branches must be performed in that case. So what? As far as we're concerned, the CX equal to zero case can take as long as it pleases, so long as it doesn't slow down the real work of the subroutine, which is done when CX isn't equal to zero.
 
-## 13.5 Yes, Virginia, There *Is* a Faster 32-Bit Negate!
+## Yes, Virginia, There *Is* a Faster 32-Bit Negate!
 
 In Chapter 9 we came across an extremely fast and compact way to negate 32-bit values, as follows:
 
@@ -275,7 +275,7 @@ And have we finally found the fastest possible code for 32-bit negation, never t
 
 Don't bet on it.
 
-## 13.6 Arrange Your Code to Eliminate Branches
+## Arrange Your Code to Eliminate Branches
 
 There are many, many ways to arrange your code to eliminate branches. I'm going to discuss a few here, but don't consider this to be anything like an exhaustive list. Whenever you use branching instructions where performance matters, take it as a challenge to arrange those instructions for maximum performance and minimum code size.
 
@@ -610,7 +610,7 @@ Subroutines merely allow you to run the same instructions from multiple places i
 
 In short, while subroutines are great for reducing program size and have a host of other virtues as regards program design, modularity, and maintenance, they don't come under the "smaller is better" rule, and are, in fact, lousy for performance. Much the same — smaller is slower — can be said of branches of many sorts. Of all the branching instructions, loops are perhaps the worst "smaller is slower" offender. We're going to close out this chapter with a discussion of the potent in-line-code alternative to looping — yet another way to trade a few bytes for a great many cycles.
 
-## 13.7 `loop` May Not Be Bad, but Lord Knows It's Not Good: In-Line Code
+## `loop` May Not Be Bad, but Lord Knows It's Not Good: In-Line Code
 
 One of the great misconceptions of 8088 programming is that `loop` is a good instruction for looping. It's true that `loop` is designed especially for looping. It's also true that `loop` is the 8088's best looping instruction. But *good*?
 
@@ -833,7 +833,7 @@ NotUppercase:
     endm
 ```
 
-## 13.8 A Note on Self-Modifying Code
+## A Note on Self-Modifying Code
 
 Just so you won't think I've forgotten about it, let's briefly discuss self-modifying code. For those of you unfamiliar with this demon of modern programming, self-modifying code is a once-popular coding technique whereby a program modifies its own code — changes its own instruction bytes — on the fly in order to alter its operation without the need for tests and branches. (Remember how back in Chapter 3 we learned that code is just one kind of data? Self-modifying code is a logical extension of that concept.) Nowadays, self-modifying code is strongly frowned-upon, on the grounds that it makes for hard-to-follow, hard-to debug programs.
 
