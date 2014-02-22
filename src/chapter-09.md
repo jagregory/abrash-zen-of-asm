@@ -133,7 +133,7 @@ I'd like to pause at this point to emphasize that the 16-bit register versions o
 
 Figure 9.1 illustrates the two forms of `inc`. While the special form is limited to 16-bit register operands, it has the advantage of being a byte shorter and a cycle faster than the *mod-reg-rm* register form, even when both instructions operate on the same register. As you'd expect, 8088 assemblers automatically use the more efficient special version whenever possible, so you don't need to select between the two forms explicitly. However, it's up to you to use 16-bit register `inc` (and `dec`) instructions whenever you possibly can, since only then can the assembler assemble the more efficient form of those instructions.
 
-![](images/ZOA_html_m42cca5d4.jpg)
+![](images/fig9.1RT.jpg)
 
 For example, [Listing 9-7](#L907), which uses the 1-byte-long 16-bit register form of `dec` to decrement the 16-bit DX register, executes in 5.03 us per loop, 15% faster than [Listing 9-10](#L910), which uses the 2-byte-long *mod-reg-rm* form of `dec` to decrement the 8-bit DL register and executes in 5.79 us per loop.
 
@@ -438,7 +438,7 @@ One feature of the 8088 that for some reason is often overlooked is the ability 
 
 You should be well aware that there are two sorts of rotates. One category, made up of `rol` and `ror`, consists of rotates that simply rotate the bits in the operand, as shown in Figure 9.2.
 
-![](images/ZOA_html_m21e9c5e7.jpg)
+![](images/fig9.2RT.jpg)
 
 These instructions are useful for adjusting masks, swapping nibbles, and the like. For example:
 
@@ -451,7 +451,7 @@ swaps the high and low nibbles of AL. Note that these instructions don't rotate 
 
 The other rotate category, made up of `rcl` and `rcr`, consists of rotates that rotate the operand *through* the Carry flag, as shown in Figure 9.3. These instructions are useful for multi-word shifts and rotates.
 
-![](images/ZOA_html_5aad8edc.jpg)
+![](images/fig9.3RT.jpg)
 
 For example:
 
@@ -470,7 +470,7 @@ The rotate instructions affect fewer flags than you might think, befitting their
 
 Similarly, there are two sorts of shift instructions. One category, made up of `shl` (also known as `sal`) and `shr`, consists of shifts that shift out to the Carry flag, shifting a 0 into the vacated bit of the operand, as shown in Figure 9.4.
 
-![](images/ZOA_html_m6b54297.jpg)
+![](images/fig9.4RT.jpg)
 
 These instructions are used for moving masks and bits about and for performing fast unsigned division and multiplication by powers of 2. For example:
 
@@ -482,7 +482,7 @@ multiplies AX, viewed as an unsigned value, by 2.
 
 The other shift category contains only `sar`. `sar` performs the same shift right as does `shr`, save that the most significant bit of the operand is preserved rather than zeroed after the shift, as shown in Figure 9.5.
 
-![](images/ZOA_html_m398bd862.jpg)
+![](images/fig9.5RT.jpg)
 
 This preserves the sign of the operand, and is useful for performing fast signed division by powers of 2. For example:
 

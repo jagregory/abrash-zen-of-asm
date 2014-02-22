@@ -68,11 +68,11 @@ The following lines of the 8088 were monitored with OmniLab: the 16 lines that c
 
 Odds are that you, the reader, are not a hardware engineer. After all, this *is* a book about software, however far it may seem to stray at times. Consequently, I'm not going to show the execution of [Listing 5-1](#L501) in the form of the timing diagrams of which hardware engineers are so fond. Timing diagrams are fine for observing the state of a single line, but are hard to follow at an overall level, which is precisely what we want to see. Instead, I've condensed the information I collected with OmniLab into an event time-line, shown in Figure 5.1.
 
-![](images/ZOA_html_5147326d.jpg)
+![](images/fig5.1aRT.jpg)
 
-![](images/ZOA_html_406da5d7.jpg)
+![](images/fig5.1bRT.jpg)
 
-![](images/ZOA_html_m39728f2a.jpg)
+![](images/fig5.1cRT.jpg)
 
 ### The Results
 
@@ -98,7 +98,7 @@ The difference is the result of the DRAM refresh that occurred at cycle 118, pre
 
 One somewhat startling aspect of Figure 5.1 is that it makes it clear that there is no such thing as the time interval during which a given instruction — and only that instruction — executes. There is the time at which a given byte of an instruction is prefetched, there is a time at which a given byte of an instruction is sent to the EU, and there is a time at which each memory operand byte of an instruction is accessed. None of those times really marks the start or end of an instruction, though, and the instruction fetches and memory accesses of one instruction usually overlap those of other instructions.
 
-![](images/ZOA_html_2e66b6a3.jpg)
+![](images/fig5.2RT.jpg)
 
 Figure 5.2 illustrates the full range of action of each of the instructions in Figure 5.1. (In Figure 5.2, and in Figure 5.3 as well, the two sides of the time-line are equivalent; there is no specific meaning to text on, say, the left side as there is in Figure 5.1. I simply alternate sides in order to keep one instruction from running into the next.)
 
@@ -106,11 +106,11 @@ For example, at cycle 143 the last instruction byte of `mov ah,ds:[i]` is sent t
 
 It's easiest to consider execution to start when the opcode byte of an instruction is sent to the EU and end when the opcode byte of the next instruction is sent to the EU, as shown in Figure 5.3.
 
-![](images/ZOA_html_77c88edd.jpg)
+![](images/fig5.3aRT.jpg)
 
 Under this approach, the current instruction is charged with any instruction fetch time for the opcode byte of the next instruction that isn't overlapped with EU execution of the current instruction. This is consistent with our conclusion in Chapter 4 that execution time is, practically speaking, EU execution time plus any instruction fetch time that's not overlapped with the EU execution time of another instruction. Therefore, `mov ah,ds:[i]` executes during cycles 129 through 153.r
 
-![](images/ZOA_html_m4651afd4.jpg)
+![](images/fig5.3bRT.jpg)
 
 In truth, though, the first hint of `mov ah,ds:[i]` occurs at cycle 122, when the opcode byte is fetched. In fact, since read accesses to memory take 4 cycles, the 8088 must have begun fetching the opcode byte earlier still. Figure 5.2 assumes that the 8088 starts bus accesses 2 cycles before the cycle during which /MEMR or /MEMW becomes inactive. That assumption may be off by a cycle, but none of our conclusions would be altered if that were the case. Consequently, the instruction **mov ah,ds:[i]** occupies the attention of at least some part of the 8088 from around cycle 120 up through cycle 153, or 34 cycles, as shown in Figure 5.2.
 
@@ -124,7 +124,7 @@ Unfortunately, assembler itself tests the limits of human comprehension of proce
 
 And that is yet another reason why an understanding of code performance at the level shown in Figure 5.1 isn't desirable.
 
-![](images/ZOA_html_m2cf4f3a.jpg)
+![](images/fig5.3cRT.jpg)
 
 ### Variability
 

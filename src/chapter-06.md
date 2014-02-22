@@ -36,7 +36,7 @@ All of which simply serves to reinforce the notion that the more we know about t
 
 Figure 6.1 shows the 8088's register set to be a mix of general and special-purpose registers. The 8088 offers only seven truly general-purpose
 
-![](images/ZOA_html_64025bbe.jpg)
+![](images/fig6.1RT.jpg)
 
 registers — AX, BX, CX, DX, SI, DI, and BP — a small set that seems even smaller because four of these registers double as memory-addressing registers and because the slow speed of memory assess dictates use of registers whenever possible. Only certain registers can be used for many functions; for example, only BX, BP, SI, and DI can be used to generate memory-addressing offsets, and then only in certain combinations. Likewise, only AX, BX, CX, and DX can be accessed as either as single 16-bit registers or paired 8-bit registers.
 
@@ -93,14 +93,14 @@ Like the other general-purpose registers, SP may serve as an operand to any inst
 One note: never push SP directly, as in
 
 ```nasm
-push sp
+push    sp
 ```
 
 The reason is that the 80286 doesn't handle the pushing of SP in quite the same way as the 8088 does; the 80286 pushes SP before decrementing it by 2, whereas the 8088 pushes SP *after* decrementing it. As a result, code that uses `push sp`may not work in the same way on all computers. In normal code you'll rarely need to push SP, but if you do, you can simply pass the value through another register, as in
 
 ```nasm
-mov  ax,sp
-push ax
+mov     ax,sp
+push    ax
 ```
 
 The above sequence will work exactly the same way on any 8086-family processor...
@@ -138,8 +138,8 @@ The SS register points to the stack segment, the segment within which SP points 
 Although SS can be loaded directly, like DS and ES, you must always remember that SS and SP operate as a pair and together must point to a valid stack whenever stack operations might occur. As discussed above, interrupts can occur at any time, so when you load SS, interrupts must be off until both SS and SP have been loaded to point to the new stack. Intel thoughtfully provided a feature designed to take care of such problems. Whenever you load a segment register via `mov` or `pop`, interrupts are automatically disabled until the following instruction has finished. For example, in the following code
 
 ```nasm
-mov ss,dx
-mov sp,ax
+mov   ss,dx
+mov   sp,ax
 ```
 
 interrupts are disabled from the start of the first `mov` until the end of the second. After the second `mov`, interrupts are again enabled or disabled as they were before the first `mov`, depending on the state of the interrupt flag.
@@ -148,8 +148,8 @@ Unfortunately, there was a bug in early 8088 chips that caused the automatic int
 
 ```nasm
 cli
-mov ss,dx
-mov sp,ax
+mov   ss,dx
+mov   sp,ax
 sti
 ```
 
@@ -163,7 +163,7 @@ As we've discussed, in one sense the instruction pointer points to the next inst
 
 The flags register contains the nine bit-sized status flags of the 8088, as shown in Figure 6.2. Six of these flags — CF, PF, AF, ZF, SF, and OF, collectively known as the status flags — reflect the status of logical and arithmetic operations; two — IF and DF — control aspects of the 8088's operation; and one — TF — is used only by debugging software.
 
-![](images/ZOA_html_m42cd487a.jpg)
+![](images/fig6.2RT.jpg)
 
 The flags are generally tested singly (or occasionally in pairs or even three at a time, as when testing signed operands); however, many arithmetic and logical instructions set all six status flags to indicate result statuses, and a few instructions work directly with all or half of the flags register at once. For example, `pushf` pushes the flags register onto the stack, and `popf` pops the word on top of the stack into the flags register. (We'll encounter an interesting complication with `popf` on the 80286 in Chapter 15.) In Chapter 8 we'll discuss `lahf` and `sahf`, which copy the lower byte of the flags register to and from the AH register. Interrupts, both software (via `int`) and hardware (via the INTR pin), push the flags register on the stack, followed by CS and IP; `iret` reverses the action of an interrupt, popping the three words on top of the stack into IP, CS, and the flags register.
 
@@ -180,9 +180,9 @@ The carry flag (CF for short) is set to 1 by additions that result in sums too l
 The primary purpose of CF is to support addition, subtraction, rotation, and shifting of multi-byte or multi-word operands. In these applications, CF conveys the msb or lsb of one 8- or 16-bit operation to the next operation, as for example in the 32-bit right shift
 
 ```nasm
-shr dx,1 ;shift upper 16 bits
-rcr ax,1 ;shift lower 16 bits, including the bit
-         ; shifted down from the upper 16 bits
+shr   dx,1  ;shift upper 16 bits
+rcr   ax,1  ;shift lower 16 bits, including the bit
+            ; shifted down from the upper 16 bits
 ```
 
 Note that this makes CF the only flag that can participate directly in arithmetic operations.

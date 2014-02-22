@@ -14,9 +14,9 @@ Contrasting string and non-string implementations also reinforces an important p
 
 It turns out that `lods` is what might be called a "synergistic"instruction, at its best when used with `stos` (or sometimes `scas`, or even non-string instructions) in a loop. Together, `lods` and `stos` let you load an array or string element into AL, test and/or modify it, and then write the element back to either the original array or a new array, as shown in Figure 11.1.
 
-![](images/ZOA_html_m585cbb52.jpg)
+![](images/fig11.1aRT.jpg)
 
-![](images/ZOA_html_m11586983.jpg)
+![](images/fig11.1bRT.jpg)
 
 You might think of the `lods`-process-`stos` combination as being a sort of "meta-`movs`," whereby you can whip up customized memory-to-memory moves as needed. Of course, `lods`/`stos` is slower than `movs` (especially `rep movs`), but by the same token `lods`/`stos` is far more flexible. Besides, `lods`/`stos` isn't *that* slow — *all* of the 8088's memory-accessing instructions suffer by comparison with `movs`. Placed inside a loop, the `lods`/`stos` combination makes for fairly speedy array and string processing.
 
@@ -46,17 +46,17 @@ Let's look at the archetypal application for `movs`, a subroutine which copies a
 
 If the destination block overlaps the source block and starts at a lower memory address than the source block, then the copy can proceed in the normal direction, from lower to higher addresses, as shown in Figure 11.2.
 
-![](images/ZOA_html_m4967683f.jpg)
+![](images/fig11.2RT.jpg)
 
 If the destination block overlaps the source block and starts at a *higher* address, however, the block must be copied starting at its highest address and proceeding toward the low end, as shown in Figure 11.3.
 
-![](images/ZOA_html_4ebb4d6c.jpg)
+![](images/fig11.3RT.jpg)
 
 Otherwise, the first data copied to the destination block would wipe out source data that had yet to be copied, resulting in a corrupted copy, as shown in Figure 11.4.
 
-![](images/ZOA_html_1d07d5b2.jpg)
+![](images/fig11.4aRT.jpg)
 
-![](images/ZOA_html_4033a736.jpg)
+![](images/fig11.4bRT.jpg)
 
 Finally, if the blocks don't overlap, the copy can proceed in either direction, since the two blocks can't conflict.
 
@@ -66,29 +66,29 @@ There are two points of particular interest in [Listing 11-7](#L1107). First, `B
 
 Second, `BlockCopyWithOverlap` nicely illustrates a nasty aspect of the use of word-sized string instructions when the Direction flag is set to 1. The basic problem is this: if you point to the last byte of a block of memory and perform a word-sized operation, the byte *after* the end of the memory block will be accessed along with the last byte of the block, rather than the last *two* bytes of the block, as shown in Figure 11.5.
 
-![](images/ZOA_html_3818e417.jpg)
+![](images/fig11.5RT.jpg)
 
 This problem of accessing the byte after the end of a memory block can occur with all word-sized instructions, not just string instructions. However, it's especially liable to happen with a word-sized string instruction that's moving its pointer or pointers backward (with the Direction flag equal to 1) because the temptation is to point to the end of the block, set the Direction flag, and let the string instruction do its stuff in repeated word-sized chunks for maximum performance. To avoid this problem, you must always be sure to point to the last *word* rather than byte when you point to the last element in a memory block and then access memory with a word-sized instruction.
 
 Matters get even more dicey when byte-and word-sized string instructions are mixed when the Direction flag is set to 1. This is done in [Listing 11-7](#L1107) in order to use `rep movsw` to move the largest possible portion of odd-length memory blocks. The problem here is that when a string instruction moves its pointer or pointers from high addresses to low, the address of the next byte that we want to access (with `lodsb`, for example) and the address of the next word that we want to access (with `lodsw`, for example) differ, as shown in Figure 11.6.
 
-![](images/ZOA_html_m44dfcba3.jpg)
+![](images/fig11.6RT.jpg)
 
 For a byte-sized string instruction such as `lodsb`, we *do* want to point to the end of the array. After that `lodsb` has executed with the Direction flag equal to 1, though, where do the pointers point? To the address 1 byte — not 1 word — lower in memory. Then what happens when `lodsw` is executed as the next instruction, with the intent of accessing the word just above the last byte of the array? Why, the last byte of the array is incorrectly accessed again, as shown in Figure 11.7.
 
-![](images/ZOA_html_m2e2d3526.jpg)
+![](images/fig11.7aRT.jpg)
 
-![](images/ZOA_html_m7958b160.jpg)
+![](images/fig11.7bRT.jpg)
 
 The solution, as shown in [Listing 11-7](#L1107), is fairly simple. We must perform the initial `movsb` and then adjust the pointers to point 1 byte lower in memory — to the start of the next *word*. Only then can we go ahead with a `movsw`, as shown in Figure 11.8.
 
-![](images/ZOA_html_4d73d7f5.jpg)
+![](images/fig11.8aRT.jpg)
 
-![](images/ZOA_html_madc04c0.jpg)
+![](images/fig11.8bRT.jpg)
 
 Mind you, all this *only* applies when the Direction Flag is 1. When the Direction flag is 0, `movsb` and `movsw` can be mixed freely, since the address of the next byte is the same as the address of the next word when we're counting from low addresses to high, as shown in Figure 11.9.
 
-![](images/ZOA_html_11bb1124.jpg)
+![](images/fig11.9RT.jpg)
 
 [Listing 11-7](#L1107) reflects this, since the pointer adjustments are only made when the Direction flag is 1.
 
@@ -112,9 +112,9 @@ For example, suppose we need a subroutine that returns either the offset in a st
 
 Now, we *could* use `rep scasb` to find the zero byte at the end of the string, so we'd know how long the string was, and then use `rep scasb` again with CX set to the length of the string to search for the selected byte value. Unfortunately, that involves processing *every* byte in the string once before even beginning the search. On average, this double-search approach would read every element of the string being searched once and would then read one-half of the elements again, as shown in Figure 11.10. By contrast, an approach that reads each byte and immediately compares it to both the desired value *and* zero would read only one-half of the elements in the string, as shown in Figure 11.11. Powerful as repeated `scasb` is, could it
 
-![](images/ZOA_html_35084192.jpg)
+![](images/fig11.10aRT.jpg)
 
-![](images/ZOA_html_550a7781.jpg)
+![](images/fig11.10bRT.jpg)
 
 possibly run fast enough to allow the double-search approach to outperform an approach that accesses memory only one-third as many times?
 
@@ -122,7 +122,7 @@ The answer is yes... conditionally. The double-search approach actually *is* sli
 
 [Listing 11-11](#L1111) shows `lodsb`-based code that searches a zero-terminated string for the character 'z'. For the sample string, which has the first match right in the middle of the string, [Listing 11-11](#L1111) takes 375 us to find the match. [Listing 11-12](#L1112) shows `repnz scasb`-based code that uses the double-search approach. For the same sample string as [Listing 11-11](#L1111), [Listing 11-12](#L1112) takes just 340 us to find the match, despite having to perform about three times as many memory accesses as [Listing 11-11](#L1111) — a tribute to the raw
 
-![](images/ZOA_html_m748dc944.jpg)
+![](images/fig11.11RT.jpg)
 
 power of repeated `scas`. Finally, [Listing 11-13](#L1113), which performs the same search using non-string instructions, takes 419 us to find the match.
 
@@ -138,15 +138,15 @@ That's an *amazing* improvement given our earlier results involving the relative
 
 While the `scasb`-base code also has to access every character in the string, and then some, as shown in Figure 11.13, the worst case is that
 
-![](images/ZOA_html_5957ab35.jpg)
+![](images/fig11.12RT.jpg)
 
 [Listing 11-16](#L1116) accesses string elements no more than twice as many times as [Listing 11-15](#L1115). In our earlier example, the *best* case was a two-to-one ratio. The timing results for [Listings 11-15](#L1115) and [11-16](#L1116) show that the superior speed, lack of prefetching, and lack of branching associated with repeated `scas` far outweigh any performance loss resulting from a memory-access ratio of less than two-to-one.
 
 By the way, [Listing 11-16](#L1116) is an excellent example of the need to correct for pointer overrun when using the string instructions. No matter which direction we scan in, it's necessary to undo the last advance of DI performed by `scas` in order to point to the byte on which the comparison ended.
 
-![](images/ZOA_html_m677bd9d2.jpg)
+![](images/fig11.13aRT.jpg)
 
-![](images/ZOA_html_m3835c4f8.jpg)
+![](images/fig11.13bRT.jpg)
 
 [Listing 11-16](#L1116) also shows the use of `jcxz` to guard against the case where CX is zero. As you'll recall from the last chapter, repeated `scas` doesn't alter the flags when started with CX equal to zero. Consequently, we must test for the case of CX equal to zero before performing `repz scasw`, and we must treat that case if we had never found the terminating condition (a non-blank character). Otherwise, the leftover flags from an earlier instruction might give us a false result following a `repz scasw` which doesn't change the flags because it is repeated zero times. In [Listing 11-21](#L1121) we'll see that we need to do the same with repeated `cmps` as well.
 
@@ -244,17 +244,17 @@ Perhaps the single finest application of `cmps` is in searching for a sequence o
 
 One way to implement such a searching capability is by simply starting `repz cmps` at each byte of the buffer until either a match is found or the end of the buffer is reached, as shown in Figure 11.14.
 
-![](images/ZOA_html_m66cd4d65.jpg)
+![](images/fig11.14aRT.jpg)
 
-![](images/ZOA_html_mbbd5f8e.jpg)
+![](images/fig11.14bRT.jpg)
 
 [Listing 11-28](#L1128), which employs this approach, runs in 2995 us for the sample search sequence and buffer.
 
 That's not bad, but there's a better way to go. Suppose we load the first byte of the search string into AL and use `repnz scasb` to find the next candidate for the full `repz cmps` comparison, as shown in Figure 11.15.
 
-![](images/ZOA_html_6a24ea5d.jpg)
+![](images/fig11.15aRT.jpg)
 
-![](images/ZOA_html_m66772dfb.jpg)
+![](images/fig11.15bRT.jpg)
 
 By so doing we could use a fast repeated string instruction to disqualify most of the potential strings, rather than having to loop and start up `repz cmps` at each and every byte in the buffer. Would that make a difference?
 
@@ -274,7 +274,7 @@ In the last chapter I pointed out that `scas` and `cmps` are slower but more fle
 
 For instance, suppose that we're comparing two arrays that contain signed 16-bit values representing signal measurements. Suppose further that we want to find the first point at which the waves represented by the arrays cross. That is, if wave A starts out above wave B, we want to know when wave A becomes less than or equal to wave B, as shown in Figure 11.16.
 
-![](images/ZOA_html_56aac57f.jpg)
+![](images/fig11.17RT.jpg)
 
 If wave B starts out above wave A, then we want to know when wave B becomes less than or equal to wave A.
 
@@ -327,7 +327,7 @@ This section is actually a glimpse into the future. Volume II of *The Zen of Ass
 
 Animation involves erasing and redrawing one or more images quickly enough to fool the eye into perceiving motion, as shown in Figure 11.17.
 
-![](images/ZOA_html_b77fd4b.jpg)
+![](images/fig11.17RT.jpg)
 
 Animation is a marginal application for the PC, by which I mean that the 8088 barely has enough horsepower to support decent animation under the best of circumstances. What *that* means is that the Zen of assembler is an absolute must for PC animation.
 
@@ -335,7 +335,7 @@ Traditionally, microcomputer animation has been performed by exclusive-oring ima
 
 Consider this. When you exclusive-or a 1 bit with another bit once, the other bit is flipped. When you exclusive-or the same 1 bit with that other bit again, the other bit is again flipped — *right back to its original state*, as shown in Figure 11. 18.
 
-![](images/ZOA_html_148fb7e8.jpg)
+![](images/fig11.18RT.jpg)
 
 After all, a bit only has two possible states, so a double flip must restore the bit back to the state in which it started. Since exclusive-oring a 0 bit with another bit never affects the other bit, exclusive-oring a target bit twice with either a 1 or a 0 bit always leaves the target bit in its original state.
 
@@ -361,9 +361,9 @@ If string instructions can't perform exclusive-oring, then we'll just have to fi
 
 First, we'll give each image a small blank fringe. Then we'll make it a rule never to move an image by more than the width of its fringe before redrawing it. Finally we'll draw images by simply copying them to display memory, destroying whatever they overwrite, as shown in Figure 11.19. Now, what does that do for us?
 
-![](images/ZOA_html_m3203705c.jpg)
+![](images/fig11.19aRT.jpg)
 
-![](images/ZOA_html_721bcf54.jpg)
+![](images/fig11.19bRT.jpg)
 
 *Amazing* things. For starters, each image will, as it is redrawn, automatically erase its former incarnation. That means that there's no flicker, since images are never really erased, but only drawn over themselves. There are also no color effects when images overlap, since only the image that was drawn most recently at any given pixel is visible.
 

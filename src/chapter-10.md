@@ -22,7 +22,7 @@ This chapter is a tour of the string instructions, not a tutorial. We'll be movi
 
 `lodsb` ("load string byte") reads the byte addressed by DS:SI (the source operand) into AL and then either increments or decrements SI, depending on the setting of the direction flag, as shown in Figure 10.1.
 
-![](images/ZOA_html_m7b3465b9.jpg)
+![](images/fig10.1RT.jpg)
 
 `lodsw` ("load string word") reads the word addressed by DS:SI into AX and then adds or subtracts 2 to or from SI, again depending on the state of the direction flag. In either case, the use of DS as the segment can be overridden, as we'll see later.
 
@@ -50,7 +50,7 @@ Never assume, though: string instructions aren't superior in *all* cases. Always
 
 `stosb` ("store string byte") writes the value in AL to the byte addressed by ES:DI (the destination operand) and then either increments or decrements DI, depending on the setting of the direction flag. `stosw` ("store string word") writes the value in AX to the word addressed by ES:DI and then adds or subtracts 2 to or from DI, again depending on the direction flag, as shown in Figure 10.2. The use of ES as the destination segment cannot be overridden.
 
-![](images/ZOA_html_41a9076f.jpg)
+![](images/fig10.2RT.jpg)
 
 `stos` is the preferred way to initialize arrays, strings, and other blocks of memory, especially when used with the `rep` prefix, which we'll discuss shortly. `stos` also works well with `lods` for tasks that require performing some sort of translation while copying arrays or strings, such as conversion of a text string to uppercase. In this use, `lods` loads an array element into AL, the element is translated in AL, and `stos` stores the element to the new array. Put a loop around all that and you've got a compact, fast translation routine. We'll discuss this further in the next chapter.
 
@@ -58,7 +58,7 @@ Never assume, though: string instructions aren't superior in *all* cases. Always
 
 `movsb` ("move string byte") copies the value stored at the byte addressed by DS:SI (the source operand) to the byte addressed by ES:DI (the destination operand) and then either increments or decrements SI and DI, depending on the setting of the direction flag, as shown in Figure 10.3.
 
-![](images/ZOA_html_m2078e77d.jpg)
+![](images/fig10.3RT.jpg)
 
 `movsw` ("move string word") copies the value stored at the word addressed by DS:SI to the word addressed by ES:DI and then adds or subtracts 2 to or from SI or DI, again depending on the direction flag. The use of DS as the source segment can be overridden, but the use of ES as the destination segment cannot.
 
@@ -70,9 +70,9 @@ Note that the accumulator is not affected by `movs`; the data is copied directly
 
 `scasb` ("scan string byte") compares AL to the byte addressed by ES:DI (the source operand) and then either increments or decrements DI, depending on the setting of the direction flag, as shown in Figure 10.4.
 
-![](images/ZOA_html_m1f34c386.jpg)
+![](images/fig10.4aRT.jpg)
 
-![](images/ZOA_html_2a4a02f0.jpg)
+![](images/fig10.4bRT.jpg)
 
 `scasw` ("scan string word") compares the value in AX to the word addressed by ES:DI and then adds or subtracts 2 to or from DI, again depending on the direction flag. The use of ES as the source segment cannot be overridden.
 
@@ -126,9 +126,9 @@ True enough, and you should use the first approach whenever you can. I've chosen
 
 `cmpsb` ("compare string byte") compares the byte addressed by DS:SI (the destination operand) to the byte addressed by ES:DI (the source operand) and then either increments or decrements SI and DI, depending on the setting of the direction flag. `cmpsw` ("compare string word") compares the value stored at the word addressed by DS:SI to the word addressed by ES:DI and then adds or subtracts 2 to or from SI and DI, again depending on the direction flag, as shown in Figure 10.5.
 
-![](images/ZOA_html_719a1d30.jpg)
+![](images/fig10.5aRT.jpg)
 
-![](images/ZOA_html_m26df032c.jpg)
+![](images/fig10.5bRT.jpg)
 
 The use of DS as the destination segment can be overridden, but the use of ES as the source segment cannot.
 
@@ -210,7 +210,7 @@ stosw
 stosw
 ```
 
-![](images/ZOA_html_5ec6fab1.jpg)
+![](images/fig10.6RT.jpg)
 
 The `rep`-based version takes a bit more set-up, but it's worth it. Because `rep stosw` (requiring one 2-byte instruction fetch) replaces ten `stosw` instructions (requiring ten 1-byte instruction fetches), we can replace 20 instruction bytes with 15 instruction bytes. The instruction fetching benefits should be obvious.
 
@@ -248,11 +248,11 @@ By contrast, because the 8088 simply holds a repeated string instruction inside 
 
 Let's look at this from a different perspective. The 8088 must fetch 6000 instruction bytes (6 bytes per loop times 1000 loops, as shown in Figure 10.7) when the loop in [Listing 10-7](#L1007) executes.
 
-![](images/ZOA_html_m6feeb940.jpg)
+![](images/fig10.7RT.jpg)
 
 The `rep stosw` instruction in [Listing 10-8](#L1008), on the other hand, requires the fetching of exactly 2 instruction bytes *in total*, as shown in Figure 10.8 — quite a difference!
 
-![](images/ZOA_html_m12034be2.jpg)
+![](images/fig10.8RT.jpg)
 
 Better still, the prefetch queue can fill completely whenever a string instruction is repeated a few times. Fast as string instructions are, they don't keep the bus busy all the time. Since repetitions of string instructions require no additional instruction fetching, there's plenty of time for the instruction bytes of the following instructions to be fetched while string instructions repeat. On balance, then, repeated string instructions not only require very little fetching for a great many executions, but also allow the prefetch queue to fill with the bytes of the following instructions.
 
@@ -393,9 +393,9 @@ The lesson is simple: whenever you use a repeated word-sized string instruction,
 
 Sometimes it's a little tricky figuring out where your pointers are after a string instruction finishes. That's because each string instruction advances its pointer or pointers only *after* performing its primary function, so pointers are always one location past the last byte or word processed, as shown in Figures 10.9 and 10.10. This is definitely a convenience with `lods`, `stos`, and `movs`, since it always leaves the pointers ready for the next operation. However, it can be a nuisance with `scas` and `cmps`, because it complicates the process of calculating exactly where a match or non-match occurred.
 
-![](images/ZOA_html_m55be2d71.jpg)
+![](images/fig10.9RT.jpg)
 
-![](images/ZOA_html_m2d9b7032.jpg)
+![](images/fig10.10RT.jpg)
 
 Along the same lines, CX counts down one time more than you might expect when repeated `scas` and `cmps` instructions find their termination conditions. Suppose, for instance, that a `repnz scasb` instruction is started with CX equal to 100 and DI equal to 0. If the very first byte, byte 0, is a match, the `repnz scasb` instruction will terminate. However, CX will contain 99, not 100, and DI will contain 1, not 0.
 
@@ -431,7 +431,7 @@ First of all, let me point out that there's never a problem in covering large bl
 
 You'll surely recall that string instructions advance pointer registers. Those pointer registers are SI, DI or both SI and DI. Notice that we didn't mention anything about advancing DS, ES, or any other segment register. That's because the string instructions don't affect the segment registers. The implication should be pretty obvious: like all the memory addressing instructions of the 8088, the string instructions can only access those bytes that lie within the 64 Kb ranges of their associated segment registers, as shown in Figure 10.11. (We'll discuss the relationships between the segment registers and the string instructions in detail shortly.)
 
-![](images/ZOA_html_21bd1963.jpg)
+![](images/fig10.11RT.jpg)
 
 Granted, `movs` and `cmps` can access source bytes in one 64 Kb block and destination bytes in another 64 Kb block, but each pointer register has a maximum range of 64 K, and that's that.
 
@@ -439,9 +439,9 @@ While the string instructions are limited to operating within 64 Kb blocks, that
 
 The largest value a 16-bit register can contain is 0FFFFh. Consequently, SI and DI turn over from 0FFFFh to 0 as they are incremented by a string instruction (or from 0 to 0FFFFh as they're decremented.) This effectively causes each string instruction pointer to wrap when it reaches the end of the segment it's operating within, as shown in Figure 10.12.
 
-![](images/ZOA_html_174da123.jpg)
+![](images/fig10.12aRT.jpg)
 
-![](images/ZOA_html_673b219a.jpg)
+![](images/fig10.12bRT.jpg)
 
 This means that a string instruction can't access part or all of just *any* 64 Kb block starting at a given segment:offset address, but only the 64 Kb block starting at the address *segment*:0, where *segment* is whichever of CS, DS, ES, or SS the string instruction is using. For instance:
 
@@ -457,13 +457,13 @@ rep   stosw
 
 won't clear the 32 K words starting at A000:8000, but rather the 32 K words starting at A000:0000. The words will be cleared in the following order: the words from A000:8000 to A000:FFFE will be cleared first, followed by the words from A000:0000 to A000:7FFE, as shown in Figure 10.13.
 
-![](images/ZOA_html_m2aedf5f3.jpg)
+![](images/fig10.13RT.jpg)
 
 Now you can see why it's pointless to repeat a word-sized string instruction more than 8000h times. Repetitions after 8000h simply access the same addresses as the first 8000h repetitions, as shown in Figure 10.14.
 
-![](images/ZOA_html_19a40a8b.jpg)
+![](images/fig10.14aRT.jpg)
 
-![](images/ZOA_html_m20e9b589.jpg)
+![](images/fig10.14bRT.jpg)
 
 That brings us back to the original problem of handling both zero-length and 64 Kb blocks that consist of byte-sized elements. It should be clear that there's no way that a single block of code can handle both zero-length and 64 Kb blocks unless the block length is stored in something larger than a 16-bit register. Handling both the zero-length and 64 Kb cases and everything in-between takes 64 K+1 counter values, one more than the 64 K values that can be stored in 16 bits. Simply put, if CX is zero, that can mean "handle zero bytes" or "handle 64 K bytes,"but it can't mean both.
 
@@ -489,7 +489,7 @@ The 80386 has similar constraints involving doubleword alignment. We'll discuss 
 
 The second warning concerns the use of word-sized string instructions to access EGA and VGA display memory in modes 0Dh, 0Eh, 0Fh, 10h, and 12h. In each these modes it's possible to copy 4 bytes of video data -1 byte from each of the four planes at once by loading the 4 bytes into four special latches in the adapter with a single read and then storing all 4 latches back to display memory with a single write, as shown in Figure 10.15.
 
-![](images/ZOA_html_c605305.jpg)
+![](images/fig10.15RT.jpg)
 
 Use of the latches can greatly speed graphics code; for example, copying via the latches can improve the performance of tasks that require block copies from one part of display memory to another, such as scrolling, by a factor of four over normal byte-at-a-time copying techniques.
 

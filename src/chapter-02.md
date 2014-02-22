@@ -44,7 +44,7 @@ The 8253 actually contains three timers, as shown in Figure 2.1. All three timer
 
 Timer 2 drives the speaker, although it can be used for other timing purposes when the speaker is not in use. As shown in Figure 2.1, timer 2 is the only timer with a programmable gate input in the PC; that is, timer 2 is the only timer which can be started and stopped under program control in the manner specified by Intel. On the other hand, the *output* of timer 2 is connected to nothing other than the speaker. In particular, timer 2 cannot generate an interrupt to get the 8088's attention.
 
-![](images/ZOA_html_261521db.jpg)
+![](images/fig2.1RT.jpg)
 
 Timer 1 is dedicated to providing dynamic RAM refresh, and should not be tampered with lest system crashes result.
 

@@ -15,13 +15,13 @@ You see, while the 8088 lets you address a great deal of memory, it isn't partic
 Worse, many people don't seem to understand the sharp distinction between memory and registers. Some "experts" would have you view memory locations as extensions of your register set. With this sort of thinking, the instructions:
 
 ```nasm
-mov dx,ax
+mov   dx,ax
 ```
 
 and:
 
 ```nasm
-mov dx,MemVar
+mov   dx,MemVar
 ```
 
 are logically equivalent. Well, the instructions *are* logically equivalent in the sense that they both move data into DX — but they're polar opposites when it comes to performance. The register-only `mov` is half the length in bytes and anywhere from two to seven times faster than the `mov` from memory...and that's fairly typical of the differences between register-only and memory-addressing instructions.
@@ -53,8 +53,8 @@ I'm going to take a moment to define some terms I'll use in this chapter. These 
 The use of square brackets is optional when a memory location is being addressed by name. That is, the two following instructions assemble to exactly the same code:
 
 ```nasm
-mov dx,MemVar
-mov dx,[MemVar]
+mov   dx,MemVar
+mov   dx,[MemVar]
 ```
 
 However, addressing memory without square brackets is an extension of the "memory and registers are logically equivalent" mindset. I strongly recommend that you use square brackets on all memory references in order to keep the distinction between memory and registers clear in your mind. This practice also helps distinguish between immediate and memory operands.
@@ -81,7 +81,7 @@ Actually, we *don't* need 16 bits of segment. We could manage to address 1 Mb pe
 
 Anyway, although we only need 4 bits of segment, we get 16 bits, and none of them are ignored by the 8088. 20-bit addresses are formed from segment:offset pairs by shifting the segment 4 bits to the left and adding it to the offset, as shown in Figure 7.1.
 
-![](images/ZOA_html_m56831418.jpg)
+![](images/fig7.1RT.jpg)
 
 I'd like to take a moment to note that for the remainder of this book, I'll use light lines to signify memory addressing in figures and heavy lines to show data movement, as illustrated by Figure 7.1. In the future, I'll show segment:offset memory addressing by simply joining the lines from the segment register and any registers and/or displacements (fixed values) used to generate an offset, as in Figure 7.7, avoiding the shift-and-add complications of Figure 7.1(A); the 4-bit left shift of the segment and the addition to the offset to generate a 20-bit memory address, which occurs whenever a segment:offset address is used, is implied. Also, when the segment isn't germane to the discussion at hand, I may omit it and show only the offset component or components, as in Figure 7.4; although unseen, the segment is implied, since one segment register must participate in forming virtually every 20-bit memory address, as we'll see shortly.
 
@@ -146,24 +146,24 @@ Now that we know how segments and offsets work, what are the implications for as
 
 The bad news is this: while there's a lot of memory, it's only available in 64 Kb chunks. The four segment registers can only point to four 64 Kb segments at any one time, as shown in Figure 7.2.
 
-![](images/ZOA_html_m40800168.jpg)
+![](images/fig7.2RT.jpg)
 
 If you want to access a memory location that's not in any of the four currently pointed-to segments, there is *no way* to do that with a single instruction. You must first load a segment register to point to a segment containing the desired memory location, a process which takes a minimum of 1 and often 2 instructions. Only then can you access the desired memory location.
 
 Worse, there are problems dealing with blocks of memory larger than 64 Kb, because there's no easy way to perform calculations involving full 20-bit addresses, and because 64 Kb is the largest block of memory that can be addressed by way of a single segment register without reloading the segment register. It's easy enough to access a block up to 64 Kb in size; point a register to the start of the block, and then point wherever you wish. For example, the following bit of code would calculate the 16-bit sum of all the bytes in a 64 Kb array:
 
 ```nasm
-  mov   bx,seg TestArray
-  mov   ds,bx               ;point to segment:offset of start of
-  mov   bx,offset TestArray ;array to sum
-  sub   cx,cx               ;count 64 K bytes
-  mov   ax,cx               ;set initial sum to 0
-  mov   dh,ah               ;set DH to 0 for summing later
+    mov   bx,seg TestArray
+    mov   ds,bx               ;point to segment:offset of start of
+    mov   bx,offset TestArray ;array to sum
+    sub   cx,cx               ;count 64 K bytes
+    mov   ax,cx               ;set initial sum to 0
+    mov   dh,ah               ;set DH to 0 for summing later
 SumLoop:
-  mov   dl,[bx]             ;get the next array element
-  add   ax,dx               ;add the array element to the sum
-  inc   bx                  ;point to the next array element
-  loop  SumLoop
+    mov   dl,[bx]             ;get the next array element
+    add   ax,dx               ;add the array element to the sum
+    inc   bx                  ;point to the next array element
+    loop  SumLoop
 ```
 
 Easy enough, eh? Ah, but it all falls apart when a block of memory is larger than 64 Kb, or when a block crosses a segment boundary. The problem is that in either of those cases the segment must change as well as the offset, for there's simply no way for an offset to reach more than 64 K bytes away from any given segment register setting. If a register containing an offset reaches the end of a segment (reaches the value 0FFFFh), then it simply wraps back to zero when it's incremented. Likewise, the instruction sequence:
@@ -180,26 +180,26 @@ So we need to work with the whole segment:offset pair in order to handle blocks 
 For example, here's typical code to calculate the 16-bit sum of a 128 Kb array, of the sort that a high-level language might generate (actually, the following code is a good deal *better* than most high-level languages would generate, but what the heck, let's give them the benefit of the doubt!):
 
 ```nasm
-  mov   bx,seg TestArray
-  mov   ds,bx               ;point to segment:offset of start of
-  mov   bx,offset TestArray ;array to sum
-  sub   cx,cx               ;count 128 K bytes with SI:CX
-  mov   si,2
-  mov   ax,cx               ;set initial sum to 0
-  mov   dh,ah               ;set DH to 0 for summing later
+    mov   bx,seg TestArray
+    mov   ds,bx               ;point to segment:offset of start of
+    mov   bx,offset TestArray ;array to sum
+    sub   cx,cx               ;count 128 K bytes with SI:CX
+    mov   si,2
+    mov   ax,cx               ;set initial sum to 0
+    mov   dh,ah               ;set DH to 0 for summing later
 SumLoop:
-  mov   dl,[bx]             ;get the next array element
-  add   ax,dx               ;add the array element to the sum
-  inc   bx                  ;point to the next array element
-  and   bx,0fh              ;time to advance the segment?
-  jnz   SumLoopEnd          ;not yet
-  mov   di,ds               ;advance the segment by 1; since BX has
-  inc   di                  ;just gone from 15 to 0, we've advanced
-  mov   ds,di               ;1 byte in all
+    mov   dl,[bx]             ;get the next array element
+    add   ax,dx               ;add the array element to the sum
+    inc   bx                  ;point to the next array element
+    and   bx,0fh              ;time to advance the segment?
+    jnz   SumLoopEnd          ;not yet
+    mov   di,ds               ;advance the segment by 1; since BX has
+    inc   di                  ;just gone from 15 to 0, we've advanced
+    mov   ds,di               ;1 byte in all
 SumLoopEnd:
-  loop  SumLoop             ;count down 32-bit counter
-  dec   si
-  jnz   SumLoop
+    loop  SumLoop             ;count down 32-bit counter
+    dec   si
+    jnz   SumLoop
 ```
 
 ### More Good News
@@ -211,22 +211,22 @@ In high-level languages you almost always suffer both considerable performance l
 There's one more reason that handling multiple code or data segments isn't much of a problem in assembler, and that's that the assembler programmer knows exactly what his code needs to do and can optimize accordingly. For example, suppose that we know that the array `TestArray` in the last example is guaranteed to start at offset 0 in the initial data segment. Given that extra knowledge, we can put together the following version of the above code to sum a 128 Kb array:
 
 ```nasm
-  mov   bx,seg TestArray
-  mov   ds,bx    ;point to segment:offset of start of
-  sub   bx,bx    ;array to sum, which we know starts
-                 ; at offset 0
-  mov   cx,2     ;count two 64 Kb blocks
-  sub   ax,ax    ;set initial sum to 0
-  mov   dh,ah    ;set DH to 0 for summing later
+    mov   bx,seg TestArray
+    mov   ds,bx    ;point to segment:offset of start of
+    sub   bx,bx    ;array to sum, which we know starts
+                   ; at offset 0
+    mov   cx,2     ;count two 64 Kb blocks
+    sub   ax,ax    ;set initial sum to 0
+    mov   dh,ah    ;set DH to 0 for summing later
 SumLoop:
-  mov   dl,[bx]  ;get the next array element
-  add   ax,dx    ;add the array element to the sum
-  inc   bx       ;point to the next array element
-  jnz   SumLoop  ;until we wrap at the end of a 64 Kb block
-  mov   si,ds
-  add   si,1000h ;advance the segment by 64 K bytes
-  mov   ds,si
-  loop  SumLoop  ;count off this 64 Kb block
+    mov   dl,[bx]  ;get the next array element
+    add   ax,dx    ;add the array element to the sum
+    inc   bx       ;point to the next array element
+    jnz   SumLoop  ;until we wrap at the end of a 64 Kb block
+    mov   si,ds
+    add   si,1000h ;advance the segment by 64 K bytes
+    mov   ds,si
+    loop  SumLoop  ;count off this 64 Kb block
 ```
 
 Compare the code within the inner loop above to that in the inner loop of the previous version of this example — the difference is striking. This inner loop is every bit as tight as that of the code for handling blocks 64 Kb-and-less in size; in fact, it's slightly *tighter*, as `jnz` is faster than `loop`. Consequently, there shouldn't be much difference in performance between the last example and the 64 Kb and less version. Nonetheless, a basic rule of the Zen of assembler is that we should check our assumptions, so let's toss the three approaches to summing arrays into the Zen timer and see what comes out.
@@ -306,16 +306,16 @@ SS isn't in use during every cycle as CS is, but unless interrupts are off, SS *
 DS can be used for temporary storage whenever it's free. However, DS is usually used to point to the default data segment. It's rare that you'll have a tight loop in which memory isn't accessed (it's not worth bothering with such optimizations outside the tightest, most time-critical code), and memory is usually most efficiently accessed via DS. There certainly are loops in which DS is free — loops which use `scas` to scan the segment pointed to by ES, for example — but such cases are few and far between. Far more common is the case in which DS is saved and then pointed to another segment, as follows:
 
 ```nasm
-  push  ds                   ;preserve normal DS setting
-  mov   bx,seg TestArray
-  mov   ds,bx                ;point DS:BX to array in which
-  mov   bx,offset TestArray  ;to flip all bits
-  mov   cx,TEST_ARRAY_LENGTH ;# of bytes to flip
+    push  ds                   ;preserve normal DS setting
+    mov   bx,seg TestArray
+    mov   ds,bx                ;point DS:BX to array in which
+    mov   bx,offset TestArray  ;to flip all bits
+    mov   cx,TEST_ARRAY_LENGTH ;# of bytes to flip
 FlipLoop:
-  not   byte ptr [bx]        ;flip all bits in current byte
-  inc   bx                   ;point to next byte
-  loop  FlipLoop
-  pop   ds                   ;restore normal DS setting
+    not   byte ptr [bx]        ;flip all bits in current byte
+    inc   bx                   ;point to next byte
+    loop  FlipLoop
+    pop   ds                   ;restore normal DS setting
 ```
 
 This approach allows instructions within the loop to access memory without the segment override prefix required when ES is used. (More on segment override prefixes shortly.)
@@ -335,32 +335,32 @@ Let's see... that covers all eight general-purpose registers. Unfortunately, we 
 ; Sums selected points in a two-dimensional array.
 ;
 ; Input:
-; BX = list of minor dimension coordinates to sum
-; CX = number of points to sum
-; DS:SI = start address of array
-; DI = list of major dimension coordinates to sum
+;     BX = list of minor dimension coordinates to sum
+;     CX = number of points to sum
+;     DS:SI = start address of array
+;     DI = list of major dimension coordinates to sum
 ;
 ; Output:
-; BP = sum of selected points
+;     BP = sum of selected points
 ;
 ; Registers altered: AX, BX, CX, DX, SI, DI, BP, ES
 ;
-  mov   es,si ;set aside the array start offset
-  sub   bp,bp ;initialize sum to 0
+    mov   es,si ;set aside the array start offset
+    sub   bp,bp ;initialize sum to 0
 TwoDimArraySumLoop:
-  mov   ax,ARRAY_WIDTH ;convert the next major dimension
-  mul   word ptr [di]  ;coordinate to an offset in the array
-                       ; (wipes out DX)
-  add   ax,[bx]        ;add in the minor dimension coordinate
-  shl   ax,1           ;make it a word-sized lookup
-  mov   si,es          ;point to the start of the array
-  add   si,ax          ;point to the desired data point
-  add   bp,[si]        ;add it to the total
-  inc   di             ;point to the next major dimension coordinate
-  inc   di
-  inc   bx             ;point to the next minor dimension coordinate
-  inc   bx
-  loop  TwoDimArraySumLoop
+    mov   ax,ARRAY_WIDTH ;convert the next major dimension
+    mul   word ptr [di]  ;coordinate to an offset in the array
+                         ; (wipes out DX)
+    add   ax,[bx]        ;add in the minor dimension coordinate
+    shl   ax,1           ;make it a word-sized lookup
+    mov   si,es          ;point to the start of the array
+    add   si,ax          ;point to the desired data point
+    add   bp,[si]        ;add it to the total
+    inc   di             ;point to the next major dimension coordinate
+    inc   di
+    inc   bx             ;point to the next minor dimension coordinate
+    inc   bx
+    loop  TwoDimArraySumLoop
 ```
 
 If you find yourself running out of registers in a tight loop and you're not using the segment pointed to by ES, by all means reload one of your registers from ES if that will help.
@@ -452,7 +452,7 @@ However, the designers of the 8088 anticipated the need for loading 20-bit point
 
 `lds` loads *both* DS and any one general-purpose register from a doubleword of memory, and `les` similarly loads *both* ES and a general-purpose register, as shown in Figure 7.3.
 
-![](images/ZOA_html_1d3b858a.jpg)
+![](images/fig7.3RT.jpg)
 
 While both instructions are useful, `les` is by far the more commonly used of the two. Since most programs leave DS pointing to the default data segment whenever possible, it's rare that we'd want to load DS as part of a segment:offset pointer. True, it does happen, but generally only when we want to point to a block of far memory temporarily for faster processing in a tight loop.
 
@@ -628,7 +628,7 @@ mov   ah,byte ptr [WordVar+1]
 
 although the single-instruction version is much faster and smaller. All word-sized values (including address displacements, which we'll get to shortly) follow this least-significant-byte-first memory ordering.
 
-![](images/ZOA_html_mb91e59.jpg)
+![](images/fig7.4RT.jpg)
 
 Similarly, segment:offset pointers are stored with the least-significant byte of the offset at the lowest memory address, the most-significant byte of the offset next, the least-significant byte of the segment after that, and the most-significant byte of the segment at the highest memory address, as shown in Figure 7.5. This:
 
@@ -653,7 +653,7 @@ mov   ah,byte ptr [FarPtr+3]
 mov   es,ax
 ```
 
-![](images/ZOA_html_74f8efba.jpg)
+![](images/fig7.5RT.jpg)
 
 This organization applies to all segment:offset values stored in memory, including return addresses placed on the stack by far calls, far pointers used by far indirect calls, and interrupt vectors.
 
@@ -874,19 +874,19 @@ There are a number of ways in which the offset of an instruction operand can be 
 
 *mod-reg-rm* addressing modes are so named because they're specified by a second instruction byte, known as the *mod-reg-rm* byte, that follows instruction opcodes in order to specify the memory and/or register operands for many instructions. The *mod-reg-rm* byte gets its name because the various fields within the byte are used to specify the memory addressing *mod*e, the *reg*ister used for one operand, and the *r*egister or *m*emory location used for the other operand, as shown in Figure 7.6. (Figure 7.6 should make it clear that at most only one *mod-reg-rm* operand can be a memory operand; one or both operands must be register operands, for there just aren't enough bits in a *mod-reg-rm* byte to specify two memory operands.)
 
-![](images/ZOA_html_m5ffce0d7.jpg)
+![](images/fig7.6RT.jpg)
 
 Simply put, the *mod-reg-rm* byte tells the 8088 where to find an instruction's operand or operands. (It's up to the opcode byte to specify the data size, as well as which operand is the source and which is the destination.) When a memory operand is used, the *mod-reg-rm* byte tells the 8088 how to add together the contents of registers (BX or BP and/or SI or DI) and/or a fixed value built into the instruction (a displacement) in order to generate the operand's memory offset. The offset is then combined with the contents of one of the segment registers to make a full 20-bit memory address, as we saw earlier in this chapter, and that 20-bit address serves as the instruction operand. Figure 7.7 illustrates the operation of the complex base+index+displacement addressing mode, in which an offset is generated by adding BX or BP, SI or DI, and a fixed displacement. (Note that displacements are built right into instructions, coming immediately after *mod-reg-rm* bytes, as illustrated by Figure 7.9.)
 
-![](images/ZOA_html_m3382bc6d.jpg)
+![](images/fig7.7RT.jpg)
 
 For example, if the opcode for `mov reg8,[reg/mem8]` (8Ah) is followed by the *mod-reg-rm* byte 17h, that indicates that the register DL is to be loaded from the memory location pointed to by BX, as shown in Figure 7.8. Put the other way around, `mov dl,[bx]` assembles to the two byte sequence 8Ah 17h, where the first byte is the opcode for `mov reg8,[reg/mem8]` and the second byte is the *mod-reg-rm* byte that selects DL as the destination and the memory location pointed to by BX as the source.
 
-![](images/ZOA_html_12eab0be.jpg)
+![](images/fig7.8RT.jpg)
 
 You may well wonder how the *mod-reg-rm* byte works with one-operand instructions, such as `neg word ptr ds:[140h]`, or with instructions that have constant data as one operand, such as `sub [WordVar],1`. The answer is that in these cases the *reg* field isn't used for source or destination control; instead, it's used as an extension of the opcode byte. So, for instance, `neg [reg/mem16]` has an opcode byte of 0F7h and always has bits 5-3 of the *mod-reg-rm* byte set to 011b. Bits 7-6 and 2-0 of the *mod-reg-rm* byte still select the memory addressing mode for the single operand, but bits 5-3, together with the opcode byte, now simply tell the 8088 that the instruction is `neg [reg/mem16]`, as shown in Figure 7.9. `not [reg/mem16]` also has an opcode byte of 0F7h, but is distinguished from `neg [reg/mem16]` by bits 5-3 of the *mod-reg-rm* byte, which are 010b for `not` and 011b for `neg`.
 
-![](images/ZOA_html_m2e5737bd.jpg)
+![](images/fig7.9RT.jpg)
 
 At any rate, the mechanics of *mod-reg-rm* addressing aren't what we need to concern ourselves with; the assembler takes care of such details, thank goodness. We do, however, need to concern ourselves with the *implications* of *mod-reg-rm* addressing, particularly size and performance issues.
 
@@ -1026,7 +1026,7 @@ Each *mod-reg-rm* instruction has its own fixed Execution Unit execution time, w
 
 The EA calculation time, on the other hand, depends not in the least on which instruction is being executed. EA calculation time is determined solely by the *mod-reg-rm* addressing mode used, and nothing else, as shown in Figure 7.10. As you can see from Figure 7.10, the time it takes the 8088 to calculate an effective address can vary greatly, ranging from a mere 5 cycles if a single register is used to point to memory all the way up to 11 or 12 cycles if the sum of two registers and a displacement is used to point to memory. (Segment override prefixes require an additional 2 cycles each, as we saw earlier.) When I discuss the performance of an instruction that uses *mod-reg-rm* addressing, I'll often say that it takes at least a certain number of cycles to execute. What "at least" means is that the instruction will take that many cycles if the fastest *mod-reg-rm* addressing mode — base-or index-only — is used, and longer if some other *mod-reg-rm* addressing mode is selected.
 
-![](images/ZOA_html_3bb6d385.jpg)
+![](images/fig7.10RT.jpg)
 
 Only *mod-reg-rm* memory operands require EA calculations. There is no EA calculation time for register operands, or for memory operands accessed with non-*mod-reg-rm* addressing modes.
 
@@ -1270,7 +1270,7 @@ mov   bx,0ffffh
 mov   dl,[bx+1]
 ```
 
-![](images/ZOA_html_m3eec2a84.jpg)
+![](images/fig7.11RT.jpg)
 
 The same rule holds for all memory-accessing instructions, *mod-reg-rm* or otherwise: *offsets are 16-bit values; any additional bits that result from address calculations are ignored*. Put another way, memory addresses that reach past the end of a segment's 64 K limit wrap back to the start of the segment. This allows the use of negative displacements, and is the reason a displacement can always reach anywhere in a segment, including addresses lower than those in the base and/or index registers, as in `mov ax,[bx-1]`.
 
@@ -1298,7 +1298,7 @@ The string instructions are without question the most powerful instructions of t
 
 Immediate addressing is a form of memory addressing in which the constant value of one operand is built right into the instruction. You should think of immediate operands as being addressed by IP, since they directly follow opcode bytes or *mod-reg-rm* bytes, as shown in Figure 7.12.
 
-![](images/ZOA_html_77fb0464.jpg)
+![](images/fig7.12RT.jpg)
 
 Instructions that use immediate addressing are clearly faster than instructions that use *mod-reg-rm* addressing. In fact, according to official execution times, immediate addressing would seem to be *much* faster than *mod-reg-rm* addressing. For example, `add ax,1` is a 4-cycle instruction, while `add ax,[bx]` is an 18-cycle instruction. What's more, `add``*reg``*,``*immed`* is just 1 cycle slower than `add``*reg``*,``*reg`*, so immediate addressing seems to be nearly as fast as register addressing.
 
@@ -1519,7 +1519,7 @@ SP always points to the next item to be popped from the stack. When you push a v
 
 Finally, please remember that once you've popped a value from the stack, it's gone from memory. It's tempting to look at the way the stack pointer works and think that the data is still in memory at the address just below the new stack pointer, but that's simply not the case, as shown in Figure 7.13. Sure, *sometimes* the data is still there — but whenever an interrupt occurs, it uses the top of the stack, wiping out the values that were most recently popped. Interrupts can happen at any time, so unless you're willing to disable interrupts, accessing popped stack memory is a sure way to get intermittent bugs.
 
-![](images/ZOA_html_m7ad479.jpg)
+![](images/fig7.13RT.jpg)
 
 Even if interrupts are disabled, it's really not a good idea to access popped stack data. Why bother, when stack frames give you the same sort of access to stack data, but in a straightforward, risk-free way? Not coincidentally, stack frames are our next topic, but first let me emphasize: once you've popped data off the stack, it's gone from memory. Vanished. Kaput. Extinct. For all intents and purposes, that data is nonexistent.
 
@@ -1706,7 +1706,7 @@ At long last, we come to the final addressing mode of the 8088. This addressing 
 
 The operation of `xlat` is simple: AL is loaded from the offset addressed by the sum of BX and AL, as shown in Figure 7. 14. DS is the default data segment, but a segment override prefix may be used.
 
-![](images/ZOA_html_70c40265.jpg)
+![](images/fig7.14RT.jpg)
 
 As you can see, `xlat` bears no resemblance to any of the other addressing modes. It's certainly limited, and it always wipes out one of the two registers it uses to address memory (AL). In fact, the first thought that leaps to mind is: why would we *ever* want to use `xlat`?
 
