@@ -24,9 +24,9 @@ and:
 mov   dx,MemVar
 ```
 
-are logically equivalent. Well, the instructions *are* logically equivalent in the sense that they both move data into DX — but they're polar opposites when it comes to performance. The register-only `mov` is half the length in bytes and anywhere from two to seven times faster than the `mov` from memory...and that's fairly typical of the differences between register-only and memory-addressing instructions.
+are logically equivalent. Well, the instructions *are* logically equivalent in the sense that they both move data into DX — but they're polar opposites when it comes to performance. The register-only `mov` is half the length in bytes and anywhere from two to seven times faster than the `mov` from memory... and that's fairly typical of the differences between register-only and memory-addressing instructions.
 
-So you see, saying that memory is logically equivalent to registers is something like saying that a bus is logically equivalent to a 747. Sure, you can buy a ticket to get from one place to another with either mode of transportation...but which would *you* rather cross the country in?
+So you see, saying that memory is logically equivalent to registers is something like saying that a bus is logically equivalent to a 747. Sure, you can buy a ticket to get from one place to another with either mode of transportation... but which would *you* rather cross the country in?
 
 As we'll see in this chapter, and indeed throughout the rest of the *Zen of Assembly Language*, one key to optimizing 8088 code is using the registers heavily while avoiding memory whenever you can. Pick your spots for such optimizations carefully, though. Optimize instructions in tight loops and in time-critical code, but let initialization and set-up code slide; it's just not worth the time and effort to optimize code that doesn't much affect overall performance or response time.
 
@@ -71,7 +71,7 @@ In short, the 8088's memory architecture is the best of worlds and the worst of 
 
 20 bits are needed to address 1 Mb of memory, and every one of the one-million-plus memory addresses the 8088 can handle can indeed be expressed as a 20-bit number. However, programs do *not* address memory with 20-bit addresses. There's a good reason for that: 20-bit addresses would be most impractical. For one thing, the 8088's registers are only 16 bits in size, so they couldn't be used to point to 20-bit addresses. For another, three rather than two bytes would be needed to store each address loaded by a program, making for bloated code. In general, the 8088 just wasn't designed to handle straight 20-bit addresses.
 
-(You may well ask why the 8088 wasn't designed better. "Better" is a slippery term, and the 8088 certainly has been successful...nonetheless, that's a good question, which I'll answer in Chapter 8. A hint: much of the 8088's architecture is derived from the 8080, which could only address 64 Kb in all. The 8088 strongly reflects long-ago microcomputer technology, not least in its limitation to 1 Mb in total.)
+(You may well ask why the 8088 wasn't designed better. "Better" is a slippery term, and the 8088 certainly has been successful... nonetheless, that's a good question, which I'll answer in Chapter 8. A hint: much of the 8088's architecture is derived from the 8080, which could only address 64 Kb in all. The 8088 strongly reflects long-ago microcomputer technology, not least in its limitation to 1 Mb in total.)
 
 Well, if the PC doesn't use straight 20-bit addresses, what does it use? It uses paired segments and offsets, which together form an address denoted as segment:offset. For example, the address 23F0:1512 is the address composed of the segment value 23F0 hex and the offset value 1512 hex. (I'll always show segment:offset pairs in hexadecimal, which is by far the easiest numbering scheme for memory addressing.) Both segments and offsets are 16-bit values.
 
@@ -235,7 +235,7 @@ Compare the code within the inner loop above to that in the inner loop of the pr
 
 [Listing 7-2](#L702) measures the time required to calculate the 16-bit sum of a 128 Kb block. As is always the case with a memory block larger than 64 Kb, segments must be dealt with, and that shows in the performance of [Listing 7-2](#L702): 2044 ms, or 15.6 us per byte summed. In other words, [Listing 7-1](#L701), which doesn't concern itself with segments, sums bytes 66% faster than [Listing 7-2](#L702).
 
-Finally, [Listing 7-3](#L703) implements 128 Kb-block-handling code that takes advantage of the knowledge that the block of memory being summed starts at offset 0 in the initial data segment. We've speculated that [Listing 7-3](#L703) should perform on a par with [Listing 7-3](#L703), since their inner loops are similar...and the Zen timer bears that out, reporting that [Listing 7-3](#L703) runs in 1239 ms — 9.5 us per byte summed.
+Finally, [Listing 7-3](#L703) implements 128 Kb-block-handling code that takes advantage of the knowledge that the block of memory being summed starts at offset 0 in the initial data segment. We've speculated that [Listing 7-3](#L703) should perform on a par with [Listing 7-3](#L703), since their inner loops are similar... and the Zen timer bears that out, reporting that [Listing 7-3](#L703) runs in 1239 ms — 9.5 us per byte summed.
 
 Assumptions confirmed.
 
@@ -297,7 +297,7 @@ And now you know why the 8088 offers so little in the way of segment-register ma
 
 That brings us to another interesting point: the use of segment registers for temporary storage. The 8088 has just 7 available general-purpose registers (remember, we can't use SP for anything but the stack most of the time), and sometimes it would be awfully handy to have somewhere to store a 16-bit value for a little while. Can we use the segment registers for that purpose?
 
-Some people would answer that "No," because code that uses segments for temporary storage can't easily be ported to protected mode. I don't buy that, for reasons I'll explain when we get to `les`. My answer is "Yes...when they're available." Two of the segment registers are never available, one is occasionally available, and one may or may not be readily available, depending on your code.
+Some people would answer that "No," because code that uses segments for temporary storage can't easily be ported to protected mode. I don't buy that, for reasons I'll explain when we get to `les`. My answer is "Yes... when they're available." Two of the segment registers are never available, one is occasionally available, and one may or may not be readily available, depending on your code.
 
 Some segments are always in use. CS is always busy pointing to the segment of the next instruction to be executed; if you were to load CS with an arbitrary value for even 1 instruction, your program would surely crash. Clearly, it's not a good idea to use CS for temporary storage. (Actually, this isn't even a potential problem, as Intel has thoughtfully not implemented the instructions — `mov` and `pop` — that might load CS directly; MASM will simply generate an error if you try to assemble `pop cs` or `mov cs,[mem16]`. CS can only be loaded by far branches: far calls, far returns, far jumps, and interrupts.)
 
@@ -526,7 +526,7 @@ High-level languages use `les` all the time to point to data that's not in the d
 
 You can usually easily avoid `les`-related performance problems in assembler. Consider [Listing 7-4](#L704), which adds one far array to another far array in the same way that most high-level languages would, storing both far pointers in memory variables and loading each pointer with `les` every time it's used. (Actually, [Listing 7-4](#L704) is better than your average high-level language subroutine because it uses `loop`, while most high-level languages use less efficient instruction sequences to handle looping.) [Listing 7-4](#L704) runs in 43.42 ms, or 43 us per array element addition.
 
-Now look at [Listing 7-5](#L705), which does exactly the same thing that [Listing 7-4](#L704) does...except that it loads the far pointers *outside* the loop and keeps them in the registers for the duration of the loop, using the segment-loading techniques that we learned earlier in this chapter. How much difference does it make to keep the far pointers in registers at all times? [Listing 7-5](#L705) runs in 19.69 ms — *more than twice as fast as*[Listing 7-4](#L704).
+Now look at [Listing 7-5](#L705), which does exactly the same thing that [Listing 7-4](#L704) does... except that it loads the far pointers *outside* the loop and keeps them in the registers for the duration of the loop, using the segment-loading techniques that we learned earlier in this chapter. How much difference does it make to keep the far pointers in registers at all times? [Listing 7-5](#L705) runs in 19.69 ms — *more than twice as fast as*[Listing 7-4](#L704).
 
 Now you know why I keep saying that assembler can handle segments much better than high-level languages can. [Listing 7-5](#L705) isn't the ultimate in that regard, however; we can carry that concept a step further still, as shown in [Listing 7-6](#L706).
 
@@ -607,7 +607,7 @@ mov   dx,es
 
 This last bit of code is shorter, faster, and uninterruptible — in short, it's perfect for our needs. In fact, we could have put `les` to good use reading the BIOS timer count in the long-period Zen timer, way back in [Listing 2-5](#L205). Why didn't I use it there? The truth is that I didn't know about using `les` to load doublewords when I wrote the timer (which just goes to show that there's always more to learn about the 8088). When I did learn about loading doublewords with `les`, it didn't make any sense to tinker with code that worked perfectly well just to save a few bytes and cycles, particularly because the timer count load isn't time-critical.
 
-Remember, it's only worth optimizing for speed when the cycles you save make a significant difference...which usually means inside tight loops.
+Remember, it's only worth optimizing for speed when the cycles you save make a significant difference... which usually means inside tight loops.
 
 ### Segment:Offset and Byte Ordering in Memory
 
@@ -787,7 +787,7 @@ Handy as segment override prefixes are, you shouldn't use them too heavily if yo
 
 Whenever you can, organize your segments outside loops so that segment override prefixes aren't needed inside loops. For example, consider [Listing 7-7](#L707), which uses a segment override prefix while stripping the high bit of every byte in an array in the segment addressed via ES. [Listing 7-7](#L707) runs in 2.95 ms.
 
-Now consider [Listing 7-8](#L708), which does the same thing as [Listing 7-7](#L707), save that DS is set to match ES outside the loop. Since DS is the default segment for the memory accesses we perform inside the loop, there's no longer any need for a segment override prefix...and that one change improves performance by nearly 14%, reducing total execution time to 2.59 ms.
+Now consider [Listing 7-8](#L708), which does the same thing as [Listing 7-7](#L707), save that DS is set to match ES outside the loop. Since DS is the default segment for the memory accesses we perform inside the loop, there's no longer any need for a segment override prefix... and that one change improves performance by nearly 14%, reducing total execution time to 2.59 ms.
 
 The lesson is clear: don't use segment override prefixes in tight loops unless you have no choice.
 
@@ -1180,7 +1180,7 @@ Which brings us to `lea`.
 
 ### Calculating Effective Addresses With `lea`
 
-`lea` is something of an odd bird, as the only *mod-reg-rm* memory-addressing instruction that doesn't access memory. `lea` calculates the offset of the memory operand...and then loads that offset into one of the 8 general-purpose registers, without accessing memory at all. Basically, `lea` is nothing more than a means by which to load the result of an EA calculation into a register.
+`lea` is something of an odd bird, as the only *mod-reg-rm* memory-addressing instruction that doesn't access memory. `lea` calculates the offset of the memory operand... and then loads that offset into one of the 8 general-purpose registers, without accessing memory at all. Basically, `lea` is nothing more than a means by which to load the result of an EA calculation into a register.
 
 For example, `lea bx,[MemVar]` loads the offset of `MemVar` into BX. Now, we wouldn't generally want to use `lea` to load simple offsets, since `mov` can do that more efficiently; `mov bx,offset MemVar` is 1 byte shorter and 4 cycles faster than `lea bx,[MemVar]`. (Since `lea` involves EA calculation, it's not particularly fast; however, it's faster than any *mod-reg-rm* memory-accessing instruction, taking only 2 cycles plus the EA calculation time.)
 
@@ -1333,7 +1333,7 @@ There are many circumstances in which we can substitute register-only instructio
 
 By the way, you should be aware that you can use an immediate operand even when the other operand is a memory variable rather than a register. For example, `add [MemVar],16` is a valid instruction, as is `mov [MemVar],52`. As I mentioned earlier, we're better off performing single operations directly to memory than we are loading from memory into a register, operating on the register, and storing the result back to memory. However, we're generally better off working with a register when multiple operations are involved.
 
-Ideally, we'd load a memory value into a register, perform multiple operations on it there, store the result back to memory...and then have some additional use for the value left in the register, thereby getting double use out of our memory accesses. For example, suppose that we want to perform the equivalent of the C statement:
+Ideally, we'd load a memory value into a register, perform multiple operations on it there, store the result back to memory... and then have some additional use for the value left in the register, thereby getting double use out of our memory accesses. For example, suppose that we want to perform the equivalent of the C statement:
 
 ```c
 i = ++j + k;
@@ -1372,7 +1372,7 @@ For example, suppose we want to set the lower 8 bits of DX to 0. **and dx,0ff00h
 
 ### `mov` Doesn't Sign-Extend Immediate Operands
 
-Along the same lines, `or bh,0ffh` does the same thing as `or bx,0ff00h` and is shorter, while `mov bh,0ffh` is also equivalent and is shorter still...and that brings us to the one instruction which cannot sign-extend immediate operands: `mov`. Word-sized operands to `mov` are always stored as words, no matter what size they may be. However, there's a compensating factor, and that's that there's a special, non-*mod-reg-rm* form of `mov reg,immed` that's 1 byte shorter than the *mod-reg-rm* form.
+Along the same lines, `or bh,0ffh` does the same thing as `or bx,0ff00h` and is shorter, while `mov bh,0ffh` is also equivalent and is shorter still... and that brings us to the one instruction which cannot sign-extend immediate operands: `mov`. Word-sized operands to `mov` are always stored as words, no matter what size they may be. However, there's a compensating factor, and that's that there's a special, non-*mod-reg-rm* form of `mov reg,immed` that's 1 byte shorter than the *mod-reg-rm* form.
 
 Let me put it this way. `and dx,1000h` is a 4-byte instruction, with 1 opcode byte, 1 *mod-reg-rm* byte, and a 2-byte immediate operand. `mov dx,1000h`, on the other hand, is only 3 bytes long. There's a special form of the `mov` instruction, used only when a register is loaded with an immediate value, that requires just the 1 opcode byte in addition to the immediate value.
 
@@ -1779,7 +1779,7 @@ The goal of Mr. Hoyt's article was to expand a byte to a word by doubling each b
 
 Mr. Hoyt started his article with code that doubled each bit by testing that bit and branching accordingly to set the appropriate doubled bit values. He then optimized the code by eliminating branches entirely, instead using fast shift and rotate instructions, in a manner similar to that used by [Listing 7-14](#L714).
 
-Eliminating branches isn't a bad idea in general, since, as we'll see in Chapter 12, branching is very slow. However, as we've already seen in Chapter 4, instruction fetching is also very slow...and the code in [Listing 7-14](#L714) requires a *lot* of instruction fetching. 70 instruction bytes must be fetched for each byte that's doubled, meaning that this code can't possibly run in less than about 280 (70 times 4) cycles per byte doubled, even though its official Execution Unit execution time is scarcely 70 cycles.
+Eliminating branches isn't a bad idea in general, since, as we'll see in Chapter 12, branching is very slow. However, as we've already seen in Chapter 4, instruction fetching is also very slow... and the code in [Listing 7-14](#L714) requires a *lot* of instruction fetching. 70 instruction bytes must be fetched for each byte that's doubled, meaning that this code can't possibly run in less than about 280 (70 times 4) cycles per byte doubled, even though its official Execution Unit execution time is scarcely 70 cycles.
 
 The Zen timer confirms our calculations, reporting that [Listing 7-14](#L714) runs in 6.34 ms, or about 300 cycles per byte doubled. (The excess cycles are the result of DRAM refresh.) As a result of this intensive instruction fetching, Mr. Hoyt's optimized shift-and-rotate code actually ran slower than his original test-and-jump code, as discussed in my article "More Optimizing for Speed," *Programmer's Journal*, *July, 1986 (issue 4.4).*
 
@@ -1789,7 +1789,7 @@ So far, all we've done is confirm that the prefetch queue cycle-eater can cause 
 
 Bit-doubling is beautifully suited to an approach based on look-up tables. There are only 256 possible input values, all byte-sized, and only 256 possible output values, all word-sized. Better yet, each input value maps to one and only one output value, and all the input values are consecutive, covering the range 0 to 255, inclusive.
 
-Given those parameters, it should be clear that we can create a table of 256 words, one corresponding to each possible byte to be bit-doubled. We can then use each byte to be doubled as a look-up index into that table, retrieving the appropriate bit-doubled word with just a few instructions. Granted, 512 bytes would be needed to store the table, but the 50 or so instruction bytes we would save would partially compensate for the size of the table. Besides, surely the performance improvement from eliminating all those shifts, rotates, and especially instruction fetches would justify the extra bytes...wouldn't it?
+Given those parameters, it should be clear that we can create a table of 256 words, one corresponding to each possible byte to be bit-doubled. We can then use each byte to be doubled as a look-up index into that table, retrieving the appropriate bit-doubled word with just a few instructions. Granted, 512 bytes would be needed to store the table, but the 50 or so instruction bytes we would save would partially compensate for the size of the table. Besides, surely the performance improvement from eliminating all those shifts, rotates, and especially instruction fetches would justify the extra bytes... wouldn't it?
 
 It would indeed. [Listing 7-15](#L715), which uses the table look-up approach I've just described, runs in just 1.32 ms — *more than four times as fast as [Listing 7-14](#L714)!* When performance matters, trading less than 500 bytes for a more than four-fold speed increase is quite a deal. [Listing 7-15](#L715) is so fast that it's faster than [Listing 7-14](#L714) would be even if there were no prefetch queue cycle-eater; in other words, the official execution time of [Listing 7-15](#L715) is faster than that of [Listing 7-14](#L714). Factor in instruction fetch time, though, and you have a fine example of the massive performance improvement that look-up tables can offer.
 

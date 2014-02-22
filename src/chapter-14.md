@@ -12,7 +12,7 @@ Far branches are branches that load both CS and IP, by contrast with near branch
 
 Surprisingly, far jumps — direct far jumps, at least — aren't all that bad. A direct far jump — a far jump to a label, such as `jmp far ptr Target` — is big, at 5 bytes, but its EU execution time is exactly the same as that of a near jump to a label — 15 cycles. Of course, it can take extra cycles to fetch all 5 bytes, and, as with all branches, the prefetch queue is emptied; still and all, a direct jump isn't much worse than its near counterpart.
 
-The same cannot be said for an indirect far jump — that is, a far jump to the segment:offset address contained in a memory variable, as in `jmp dword ptr [Vector]`. While such an instruction is no larger than its near counterpart — both are 1 byte long plus the usual 1 to 3 bytes of *mod-reg-rm* addressing — it *is* much slower than an indirect near jump, and that's saying a lot. Where an indirect near jump takes at least 27 cycles to execute, an indirect far jump takes at least 37 cycles...one reason why jump and call tables that branch to near routines are *much* preferred to those that branch to far routines. (We'll discuss jump and call tables at the end of this chapter.)
+The same cannot be said for an indirect far jump — that is, a far jump to the segment:offset address contained in a memory variable, as in `jmp dword ptr [Vector]`. While such an instruction is no larger than its near counterpart — both are 1 byte long plus the usual 1 to 3 bytes of *mod-reg-rm* addressing — it *is* much slower than an indirect near jump, and that's saying a lot. Where an indirect near jump takes at least 27 cycles to execute, an indirect far jump takes at least 37 cycles... one reason why jump and call tables that branch to near routines are *much* preferred to those that branch to far routines. (We'll discuss jump and call tables at the end of this chapter.)
 
 Far calls and returns are worse yet. Near returns must pop IP from the stack. Far returns must pop CS as well, and those two additional memory accesses must cost at least 8 cycles. In all, far returns execute in 32 cycles, 12 cycles slower than near returns. That's not in itself so bad, especially when you consider that far returns are only 1 byte long, just like near returns.
 
@@ -107,7 +107,7 @@ FarBranchByIndex  endp
 
 To carry this line of thought to its logical extreme, we could even preserve the states of the flags by executing a `pushf` before allocating the stack space, and then performing an `iret` rather than a far `ret` to branch to the target.
 
-The sort of branching shown above is an example of how flexible the 8088's instruction set can be, especially if you're willing to use instructions in unusual ways, like hand-constructing far return addresses on the stack. This example certainly isn't ideal for most tasks...but it's available if you need the particular service it delivers. In truth, the only limit on the strange jobs the 8088 can be coaxed into doing is your creativity. Speed may sometimes be a problem with the 8088, but flexibility shouldn't be.
+The sort of branching shown above is an example of how flexible the 8088's instruction set can be, especially if you're willing to use instructions in unusual ways, like hand-constructing far return addresses on the stack. This example certainly isn't ideal for most tasks... but it's available if you need the particular service it delivers. In truth, the only limit on the strange jobs the 8088 can be coaxed into doing is your creativity. Speed may sometimes be a problem with the 8088, but flexibility shouldn't be.
 
 ## 14.2 Replacing `call` and `ret` With `jmp`
 
@@ -129,7 +129,7 @@ In truth, [Listing 14-2](#L1402) doesn't demonstrate a particularly good applica
 
 ### Flexibility *Ad Infinitum*
 
-If more flexibility is needed than the last example provides, are we fated always to use `call`-`ret` rather than `jmp-jmp`? Well, the theme of this chapter seems to be the infinite flexibility of the 8088's instruction set, so it should come as no surprise to you that the answer is: not at all. Usually, you *will* want to use `call`-`ret`, since it's by far the simplest solution and often the fastest as well...but there *are* alternatives, and they can be quite handy in a pinch.
+If more flexibility is needed than the last example provides, are we fated always to use `call`-`ret` rather than `jmp-jmp`? Well, the theme of this chapter seems to be the infinite flexibility of the 8088's instruction set, so it should come as no surprise to you that the answer is: not at all. Usually, you *will* want to use `call`-`ret`, since it's by far the simplest solution and often the fastest as well... but there *are* alternatives, and they can be quite handy in a pinch.
 
 Consider this. Suppose that you've got a set of subroutines that are called via a call table. Next, suppose that it's desirable that any of the subroutines be able to end at any point and return to the central dispatching point — *without cleaning up the stack*. That is, it must be possible to return from anywhere in any subroutine called through the call table, discarding whatever variables, return addresses and so on happen to be on the stack at the time.
 
@@ -473,7 +473,7 @@ Subroutine2 endp
 
 Here we've saved 3 or 4 bytes by replacing 6 bytes of exit code that would normally appear at the end of `Subroutine2` with a 2-or 3-byte jump. What's more, we could do the same for any number of subroutines that can use the same exit code; at worst, a 3-byte normal jump would be required to reach `Success` or `Exit`. Naturally, larger savings would result from sharing lengthier exit code.
 
-The key here is realizing that in assembler there's no need for a clean separation between subroutines. If multiple subroutines end with the same instructions, they might as well share those instructions. Of course, performance will suffer a little from the extra branch all but one of the subroutines will have to make in order to reach the common code. Once again, we've acquired a new tool that has both costs and benefits; this time it's a tool that saves bytes while expending cycles. Deciding when that's a good tradeoff is your business, to be judged on a case by case basis. Sometimes this new tool is desirable, sometimes not...but either way, making that sort of decision properly is a key to good assembler code.
+The key here is realizing that in assembler there's no need for a clean separation between subroutines. If multiple subroutines end with the same instructions, they might as well share those instructions. Of course, performance will suffer a little from the extra branch all but one of the subroutines will have to make in order to reach the common code. Once again, we've acquired a new tool that has both costs and benefits; this time it's a tool that saves bytes while expending cycles. Deciding when that's a good tradeoff is your business, to be judged on a case by case basis. Sometimes this new tool is desirable, sometimes not... but either way, making that sort of decision properly is a key to good assembler code.
 
 ### Multiple Entry Points
 
@@ -530,7 +530,7 @@ and we could likewise use `SpeakerOff` instead of calling `SpeakerControl` with 
 
 The principle of using front-end functions that set common parameter values applies to high-level language code as well. In fact, it may apply even better to high-level language code, since it takes 3 to 4 bytes to push a constant parameter onto the stack. The downside of using this technique in a high-level language is much the same as the downside of using it in assembler — it involves extra branching, so it's slower. (In high-level language code, performance will also be slowed by the time required to push any additional parameters that must be passed through the front-end functions.)
 
-Trading off cycles for bytes...so what else is new?
+Trading off cycles for bytes... so what else is new?
 
 ### A Brief Zen Exercise in Branching (And Not-Branching)
 
@@ -590,7 +590,7 @@ add   ax,bx
 adc   dx,cx
 ```
 
-This would reduce the actual addition code to 4 bytes and 6 cycles, although it would require 9 bytes overall. Such an approach would make little sense unless BX and CX were preloaded outside a loop and the 32-bit addition occurred repeatedly inside the loop...but then it doesn't make sense expending the energy for *any* of these optimizations unless either the code is inside a time-critical loop or bytes are in extremely short supply.
+This would reduce the actual addition code to 4 bytes and 6 cycles, although it would require 9 bytes overall. Such an approach would make little sense unless BX and CX were preloaded outside a loop and the 32-bit addition occurred repeatedly inside the loop... but then it doesn't make sense expending the energy for *any* of these optimizations unless either the code is inside a time-critical loop or bytes are in extremely short supply.
 
 Remember, you must pick and choose your spots when you optimize at a detailed instruction-by-instruction level. When you optimize for speed, identify the portions of your programs that significantly affect overall performance and/or make an appreciable difference in response time, and focus your detailed optimization efforts on fine-tuning that code, especially inside loops.
 
@@ -734,7 +734,7 @@ In the last chapter, I lambasted `loop` as a slow looping instruction. Well, it 
 
 While the incremental performance differences between the various implementations are fairly modest, `loop` is the clear winner, and is the shortest of the bunch as well.
 
-Whenever you must branch in order to loop, use the `loop` instruction if you possibly can. The superiority of `loop` holds true only in the realm of branching instructions, for not — branching is *much* faster than looping with any of the branching instructions...but when space is at a premium, `loop` is hard to beat.
+Whenever you must branch in order to loop, use the `loop` instruction if you possibly can. The superiority of `loop` holds true only in the realm of branching instructions, for not — branching is *much* faster than looping with any of the branching instructions... but when space is at a premium, `loop` is hard to beat.
 
 ## 14.8 Only `jcxz` Can Test *and* Branch in a Single Bound
 
@@ -987,7 +987,7 @@ In truth, the best way to speed up this code would be partial in-line code, whic
 
 Just to demonstrate the flexibility of macros, jump tables, and branched-to in-line code, however, [Listing 14-16](#L1416) is a modification of [Listing 14-14](#L1414) that branches out with 1-byte displacements at *both* ends of the in-line code, using conditional jumps around unconditional jumps only in the middle of the in-line code, where 1-byte displacements can't reach past either end. As predicted, [Listing 14-16](#L1416) is, at 908 us, a good bit faster than [Listings 14-14](#L1414) and [14-15](#L1415). (Bear in mind that the relative performances of these listings could change considerably given different search parameters. *There is no such thing as absolute performance*. Know the conditions under which your code will run!)
 
-[Listing 14-16](#L1416) isn't *blazingly* fast, but it is fast enough to remind us that branched-to in-line code is a most attractive option...and now jump tables let us use branched-to in-line code in more situations than ever, and often with improved speed, as well.
+[Listing 14-16](#L1416) isn't *blazingly* fast, but it is fast enough to remind us that branched-to in-line code is a most attractive option... and now jump tables let us use branched-to in-line code in more situations than ever, and often with improved speed, as well.
 
 ## 14.10 Forward References Rear Their Collective Ugly Head Once More
 

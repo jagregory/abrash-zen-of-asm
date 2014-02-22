@@ -8,7 +8,7 @@ In short, *The Zen of Assembler* is about nothing less than how to become the be
 
 ## Why Assembly Language?
 
-For years, people have been predicting — hoping for — the demise of assembly language, claiming that the world is ready to move on to less primitive approaches to programming...and for years, the best programs around have been written in assembly language. Why is this? Simply because assembly language is hard to work with, but — properly used — produces programs of unparalleled performance. Mediocre programmers have a terrible time working with assembly language; on the other hand, assembly language is, without fail, the language that PC gurus use when they need the best possible code.
+For years, people have been predicting — hoping for — the demise of assembly language, claiming that the world is ready to move on to less primitive approaches to programming... and for years, the best programs around have been written in assembly language. Why is this? Simply because assembly language is hard to work with, but — properly used — produces programs of unparalleled performance. Mediocre programmers have a terrible time working with assembly language; on the other hand, assembly language is, without fail, the language that PC gurus use when they need the best possible code.
 
 Which brings us to you.
 

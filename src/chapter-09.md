@@ -109,7 +109,7 @@ inc   dx
 jnz   NotFFFF
 ```
 
-are functionally the same...save that the latter version is much smaller and faster.
+are functionally the same... save that the latter version is much smaller and faster.
 
 A similar case of turning a test into a zero/non-zero test occurs when testing a value for membership in a short sequence of consecutive numbers — the equivalent of a C switch construct with just a few cases consisting of consecutive values. (Longer and/or non-consecutive sequences should be handled with look-up tables.) For example, suppose that you want to perform one action if CX is 4, another if CX is 3, a third action if CX is 2, and yet another if CX is 1. [Listing 9-5](#L905), which uses four `cmp` instructions to test for the four cases of interest, runs in 17.01 us per switch handled. That's a good 4.94 us slower per switch than the 12.07 us of [Listing 9-6](#L906), so [Listing 9-5](#L905) runs at less than 75% of the speed of [Listing 9-6](#L906). [Listing 9-6](#L906) gets its speed boost by using the 1-byte `dec cx` instruction rather than the 3-byte `cmp cx,immed8` instruction to test for each of the four cases, thereby turning all the tests into zero/non-zero tests.
 

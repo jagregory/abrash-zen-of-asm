@@ -35,7 +35,7 @@ LoopTop:
 
 This moved the costly multi-bit rotation out of the loop, so that it was performed just once, rather than four times. While the new code may not look much different from the original, and in fact still contains exactly the same number of instructions, the performance of the entire subroutine improved by about 10% from just this one change. (Incidentally, that wasn't the end of the optimization; I eliminated the `dec` and `jnz` instructions by expanding the four iterations of the loop into in-line code — but that's a tale for another chapter.)
 
-The point is this: to write truly superior assembler programs, you need to know what the various instructions do and which instructions execute fastest...and more. You must also learn to look at your programming problems from a variety of perspectives, so that you can put those fast instructions to work in the most effective ways. And, that, in a nutshell, is the Zen of assembler.
+The point is this: to write truly superior assembler programs, you need to know what the various instructions do and which instructions execute fastest... and more. You must also learn to look at your programming problems from a variety of perspectives, so that you can put those fast instructions to work in the most effective ways. And, that, in a nutshell, is the Zen of assembler.
 
 ## 1.2 Assembler is Fundamentally Different from Other Languages
 
