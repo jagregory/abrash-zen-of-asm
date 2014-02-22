@@ -6,7 +6,7 @@ all: html epub mobi
 
 html:
 	rm -rf out/html && mkdir -p out/html
-	cp -r src/images html/book.css out/html/
+	cp -r images html/book.css out/html/
 	pandoc -S --to html5 -o out/html/zen-of-asm.html --section-divs --toc --standalone --template=html/template.html $(FILES)
 
 epub:
