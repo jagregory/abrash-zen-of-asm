@@ -221,7 +221,7 @@ It may not *look* like working 32-bit negation code, but working code it is, bel
 
 In order to understand the brilliance of Dan's code, we first need to get a firm grasp on the mechanics of 32-bit negation. The basic principle of two's complement negation is that the value to be negated is first notted (that is, all its bits are flipped, from 1 to 0 or 0 to 1), and then incremented. For a 32-bit value stored in DX:AX, negation would ideally follow one of the two sequences shown in Figure 13.1, with all operations performed 32 bits at a time.
 
-![](images/fig13.1RT.jpg)
+![](images/fig13.1RT.png)
 
 Unfortunately, the 8088 can only handle data 16 bits at a time, so we must perform negation with a series of 16-bit operations like:
 
@@ -233,7 +233,7 @@ sbb   dx,-1
 
 as shown in Figure 13.2.
 
-![](images/fig13.2RT.jpg)
+![](images/fig13.2RT.png)
 
 The purpose of the first operation, notting DX with the `not` instruction, is obvious enough: flipping all the bits in the high word of the value. The purpose of the second operation, negating AX, is equally obvious: negating the low word of the value with the `neg` instruction, which both nots AX and increments it all at once.
 
@@ -241,17 +241,17 @@ After two instructions, we've successfully notted the entire 32-bit value in DX:
 
 When does DX need to be incremented? In one case only — when AX is originally 0, is notted to 0FFFFh, and is incremented back to 0, with a carry out from bit 15 of AX indicating that AX has turned over to 0 and so the notted value in DX must be incremented as well, as shown in Figure 13.3.
 
-![](images/fig13.3RT.jpg)
+![](images/fig13.3RT.png)
 
 In all other cases, incrementing the 32-bit notted value in DX:AX doesn't alter DX at all, since incrementing AX doesn't cause a carry out of bit 15 unless AX is 0FFFFh.
 
 However, due to the way that `neg` sets the Carry flag (as if subtraction from zero had occurred), the Carry flag is set by `neg` in all cases *except* the one case in which DX needs to be incremented. Consequently, after `neg ax` we subtract -1 from DX with borrow, with the 1 value of the Carry flag normally offsetting the -1, resulting in a subtraction of 0 from DX. In other words, DX remains unchanged when `neg ax` sets the Carry flag to 1, which is to say in all cases except when AX is originally zero. That's just what we want; in all those cases the 32-bit negation was actually complete after the first two instructions, since the increment of the notted 32-bit value doesn't affect DX, as shown in Figure 13.4.
 
-![](images/fig13.4RT.jpg)
+![](images/fig13.4RT.png)
 
 In the case where AX is originally 0, on the other hand, `neg ax` doesn't set the Carry flag. This is the one case in which DX must be incremented. In this one case only, `sbb dx,-1` succeeds in subtracting -1 from DX, since the Carry flag is 0. Again, that's what we want; in this one case DX is affected when the 32-bit value is incremented, and so incrementing DX completes the 32-bit negation, as shown in Figure 13.5.
 
-![](images/fig13.5RT.jpg)
+![](images/fig13.5RT.png)
 
 ### How Fast 32-Bit Negation Works
 
@@ -313,11 +313,11 @@ I'll admit that it's more than a little peculiar to go out of our way to set AL 
 
 Consider this. If DL is less than or equal to 10, then the first example (the "normal" test-and-branch code) performs a `cmp dl,10` (4 cycles/2 bytes), a `ja DLGreaterThan10` that falls through (4 cycles/2 bytes), a `sub al,al` (3 cycles/2 bytes), and a `jmp short DLCheckDone` (15 cycles/2 bytes). The grand total: 26 cycles, 8 instruction bytes and one branch, as shown in Figure 13.6a.
 
-![](images/fig13.6RT.jpg)
+![](images/fig13.6RT.png)
 
 On the other hand, the preload code of the second example handles the same case with a `sub al,al` (3 cycles/2 bytes), a `cmp dl,10` (4 cycles/2 bytes), and a `jbe DLCheckDone` that branches (16 cycles/2 bytes). The total: 23 cycles, 6 instruction bytes and one branch, as shown in Figure 13.7a.
 
-![](images/fig13.7RT.jpg)
+![](images/fig13.7RT.png)
 
 That's not much faster than the normal approach, but it is faster.
 
@@ -355,7 +355,7 @@ Speedy and compact as it is, [Listing 13-8](#L1308) *does* involve a conditional
 
 [Listing 13-9](#L1309) does just that, shifting the sign bit of each tested value into the Carry flag and then adding it — along with zero, since `adc` requires two source operands — to DX, as shown in Figure 13.8. (Note that the constant zero is stored in BX for speed, since `adc dx,bx` is 1 byte shorter and 1 cycle faster than `adc dx,0`.) The result is that DX is incremented only when the sign bit of the value being tested is 1 — that is, only when the value being tested is negative, which is exactly what we want.
 
-![](images/fig13.8RT.jpg)
+![](images/fig13.8RT.png)
 
 [Listing 13-9](#L1309) runs in 10.80 ms. That's about 14% faster than [Listing 13-8](#L1308), even though the instruction that increments DX in [Listing 13-9](#L1309) (`adc dx,bx`) is actually 1 byte longer and 1 cycle slower than its counterpart in [Listing 13-8](#L1308) (`inc dx`). The key to the improved performance is, once again, avoiding branching. In this case that's made possible by recognizing that a Carry flag-based operation can accomplish a task that we'd usually perform with a conditional jump. You wouldn't normally think to substitute `shl`/`adc` for `and`/`jns`/`inc` — they certainly don't *look* the least bit similar — but in this particular context the two instruction sequences are equivalent.
 
@@ -471,7 +471,7 @@ CheckY    endp
 
 The net effect: the code is 1 byte shorter, the time required for a branch is saved about half the time — *and there is absolutely no change in the logic of the code*. It's important that you understand that `jmp short` was basically a `nop` instruction in the first example, since all it did was unconditionally branch to another branching instruction, as shown in Figure 13.9.
 
-![](images/fig13.9RT.jpg)
+![](images/fig13.9RT.png)
 
 We removed the unconditional jump simply by replacing it with a copy of the code that it branched to.
 
@@ -638,7 +638,7 @@ Well, `loop` is used to repeat a given sequence of instructions multiple times..
 
 Heck, that's *easy*. We'll eliminate branching and loop counting entirely by *literally* repeating the instructions, as shown in Figure 13.10.
 
-![](images/fig13.10RT.jpg)
+![](images/fig13.10RT.png)
 
 Instead of using `loop` to execute the same code, say, 10 times, we'll just line up 10 repetitions of the code inside the loop, and then execute the 10 repetitions one after another. This is known as *in-line code*, because the repetitions of the code are lined up in order rather than being separated by branches. (In-line code is sometimes used to refer to subroutine code that's brought into the main code, eliminating a call, a technique we discussed in the last section. However, I'm going to use the phrase "in-line code" only to refer to code that's repeated by assembling multiple instances and running them back-to-back rather than in a loop.)
 
@@ -668,7 +668,7 @@ What we've just seen is "pure" in-line code, where a loop that's always repeated
 
 As it turns out, however, it's no great trick to modify pure in-line code to replace loops that repeat a variable number of times, so long as you know the maximum number of times you'll ever want to repeat the loop. The basic concept is shown in Figure 13.11.
 
-![](images/fig13.11RT.jpg)
+![](images/fig13.11RT.png)
 
 The loop code is repeated in-line as many times as the maximum possible number of loop repetitions. Then the specified repetition count is used to jump right into the in-line code at the distance from the end of the in-line code that will produce the desired number of repetitions. This mechanism, known as *branched-to in-line code*, is almost startlingly simple, but powerful nonetheless.
 
@@ -712,7 +712,7 @@ As it turns out, that's not a problem. The flexibility of branched-to in-line co
 
 The basic principle when branching into partial in-line code is similar to that for standard branched-to in-line code. The key is still to branch to the location in the in-line code from which the desired number of repetitions will occur. The difference with branched-to partial in-line code is that the branching-to process only needs to handle any odd repetitions that can't be handled by a full loop, as shown in Figure 13.12.
 
-![](images/fig13.12RT.jpg)
+![](images/fig13.12RT.png)
 
 In other words, if partial in-line code performs *n* repetitions per loop and we want to perform *m* repetitions, the branching-to process only needs to handle *m* modulo *n* repetitions.
 

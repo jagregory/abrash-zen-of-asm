@@ -28,7 +28,7 @@ The designers of the 8088 provided such "source-level" compatibility by making t
 
 For example, the 8088's 16-bit AX, BX, CX, and DX registers can also be accessed as paired 8-bit registers, thereby making it possible for the 8088 to mimic the seven 8-bit program-accessible registers and the 8-bit FLAGS register of the 8080, as shown in Figure 8.1. In particular, the 8088's BH and BL registers can be used together as the BX register to address memory, just as the 8080's HL register pair can.
 
-![](images/fig8.1RT.jpg)
+![](images/fig8.1RT.png)
 
 The register correspondence between the 8080 and 8088 is not perfect. For one thing, neither CX nor DX can be used to address memory as the 8080's BC and DE register pairs can; however, the 8088's `xchg` instruction and/or index registers can readily be used to compensate for this. Similarly, the 8080 can push both the flags and the accumulator onto the stack with a single instruction, while the 8088 cannot. As we'll see later in this chapter, though, the designers of the 8088 provided two instructions — `lahf` and `sahf` — to take care of that very problem.
 
@@ -60,7 +60,7 @@ The accumulator-specific 8088 instructions fall into two categories: instruction
 
 The 8088 lets you address memory operands in a great many different ways — 16 ways, to be precise, as we saw in Chapter 7. This flexibility is one of the strengths of the 8088, and is one way in which the 8088 far exceeds the 8080. There's a price for that flexibility, though, and that's the *mod-reg-rm* byte, which we encountered in Chapter 7. To briefly recap, the *mod-reg-rm* byte is a second instruction byte, immediately following the opcode byte of most instructions that access memory, which specifies which of 32 possible addressing modes are to be used to select the source and/or destination for the instruction. (8 of the addressing modes are used to select the 8 general-purpose registers as operands, and 8 addressing modes differ only in the size of the displacement field, hence the discrepancy between the 32 addressing modes and the 16 ways to address memory operands.) Together, the *mod-reg-rm* byte and the 16-bit displacement required for direct addressing mean that any instruction that uses *mod-reg-rm* direct addressing must be at least 4 bytes long, as shown in Figure 8.2.
 
-![](images/fig8.2RT.jpg)
+![](images/fig8.2RT.png)
 
 Direct addressing is used whenever you simply want to refer to a memory location by name, with no pointing or indexing. For example, a counter named `Count` could be incremented with direct addressing as follows:
 
@@ -72,7 +72,7 @@ Direct addressing is intuitive and convenient, and is one of the most heavily us
 
 Since direct addressing is one of the very few addressing modes of the 8080, and since the 8088's designers needed to make sure that ported 8080 code ran reasonably well on the 8088, there are 8088 instructions that do nothing more than load and store the accumulator from and to memory via direct addressing. These instructions are only 3 bytes long, as shown in Figure 8.3; better yet, they execute in just 10 cycles, rather than the 14 (memory read) or 15 (memory write) cycles required by *mod-reg-rm* memory accesses that use direct addressing. (Those cycle counts are for byte-sized accesses; add 4 cycles to both forms of `mov` for word-sized accesses.)
 
-![](images/fig8.3RT.jpg)
+![](images/fig8.3RT.png)
 
 ### Looks Aren't Everything
 
@@ -90,7 +90,7 @@ mov   dl,[Count]
 
 look like they refer to the same instruction, the machine code assembled from the two differs greatly, as shown in Figure 8.4; the first instruction is a byte shorter and 4 cycles faster than the second.
 
-![](images/fig8.4RT.jpg)
+![](images/fig8.4RT.png)
 
 Odder still, there are actually *two* legitimate machine-language forms of the assembler code for each of the accumulator-specific direct-addressing instructions (and, indeed, for all the accumulator-specific instructions discussed in this chapter), as shown in Figure 8.5. Any 8088 assembler worth its salt automatically assembles the shorter form, of course, so the longer, general-purpose versions of the accumulator-specific instructions aren't used. Still, the mere existence of two forms of the accumulator-specific instructions points up the special-case nature of these instructions and the general irregularity of the 8088's instruction set.
 
@@ -98,13 +98,13 @@ Odder still, there are actually *two* legitimate machine-language forms of the a
 
 How much difference does the use of the accumulator-specific direct-addressing instructions make? Generally, less difference than the official timings in Appendix A would indicate, but a significant difference
 
-![](images/fig8.5RT.jpg)
+![](images/fig8.5RT.png)
 
 nonetheless — and you save a byte every time you use an accumulator-specific direct-addressing instruction, as well.
 
 Suppose you want to copy the value of one byte-sized memory variable to another byte-sized memory variable. A common way to perform this simple task is to read the value of the first variable into a register, then write the value from the register to the other variable. [Listing 8-1](#L801) shows a code fragment that performs such a byte copy 1000 times by way of the AH register. Since the accumulator is neither source nor destination in [Listing 8-1](#L801), the 4-byte *mod-reg-rm* direct-addressing form of `mov` is assembled for each instruction; consequently, 8 bytes of code are assembled in order to copy each byte via AH, as shown in Figure 8.6. (Remember that AH is not considered the accumulator. For 8-bit operations, AL is the accumulator, and for 16-bit operations, AX is the accumulator, but AH by itself is just another general-purpose register.)
 
-![](images/fig8.6RT.jpg)
+![](images/fig8.6RT.png)
 
 Plugged into the Zen timer test program, [Listing 8-1](#L801) yields an average time per byte copied of 10.06 us, or about 48 cycles per byte copied. That's considerably longer than the 29 cycles per byte copied you'd expect from adding up the official cycle times given in Appendix A; the difference is the result of the prefetch queue and dynamic RAM refresh cycle-eaters. We can't cover all the aspects of code performance at once, so for the moment let's just discuss the implications of the times reported by the Zen timer. Remember, no matter how much theory of code performance you've mastered, there's still only one reliable way to know how fast PC code really is — measure it!
 
@@ -112,7 +112,7 @@ Plugged into the Zen timer test program, [Listing 8-1](#L801) yields an average 
 
 Enough said.
 
-![](images/fig8.7RT.jpg)
+![](images/fig8.7RT.png)
 
 ### When Should You Use Them?
 
@@ -175,11 +175,11 @@ Actively pursue the possibilities in your assembler code. You never know where t
 
 The 8088 also offers special accumulator-specific versions of a number of arithmetic and logical instructions — `adc`, `add`, `and`, `cmp`, `or`, `sub`, `sbb`, and `xor` — when these instructions are used with one register operand and one immediate operand. (Remember that an immediate operand is a constant operand that is built right into an instruction.) The *mod-reg-rm* immediate-addressing versions of the above instructions, when used with a register as the destination operand, are 3 bytes long for byte comparisons and 4 bytes long for word comparisons, as shown in Figure 8.8. The accumulator-specific immediate-addressing versions, on the other hand, are 2 bytes long for byte comparisons and 3 bytes long for word comparisons, as shown in Figure 8.9. Although the official cycle counts listed in Appendix A for all immediate-addressing forms of these instructions — accumulator-specific or otherwise — are all 4 when used with a register as the destination, shorter is generally faster, thanks to the prefetch queue cycle-eater.
 
-![](images/fig8.8RT.jpg)
+![](images/fig8.8RT.png)
 
 Let's see how much faster the accumulator-specific immediate-addressing form of `cmp` is than the *mod-reg-rm* version. (The results will hold true for all 8 accumulator-specific immediate-addressing instructions, since they all have the same sizes and execution times.) The Zen timer reports that each accumulator-specific `cmp` in [Listing 8-8](#L808) takes 1.81 us, making it 50% faster than the *mod-reg-rm* version in [Listing 8-9](#L809), which clocks in at 2.71 us per comparison. It is not in the least coincidental that the ratio of the execution times, 3:2, is the same as the ratio of instruction lengths in bytes; the performance difference is entirely due to the difference in instruction lengths.
 
-![](images/fig8.9RT.jpg)
+![](images/fig8.9RT.png)
 
 There are two *caveats* regarding accumulator-specific immediate-addressing instructions. First, unlike the accumulator-specific form of the direct-addressing `mov` instruction, the accumulator-specific immediate-addressing instructions can't work with memory operands. For instance, `add al,[Temp]` assembles to a *mod-reg-rm* instruction, not to an accumulator-specific instruction.
 
@@ -187,7 +187,7 @@ Second, there's no advantage to using the accumulator-specific immediate-address
 
 An important note: some 8088 references indicate that while immediate operands to arithmetic instructions can be sign-extended, immediate operands to logical instructions — `xor`, `and`, and `or` — cannot. Not true! Immediate operands to logical instructions *can* be sign-extended, and MASM does so automatically whenever possible.
 
-![](images/fig8.10RT.jpg)
+![](images/fig8.10RT.png)
 
 Remember, if you're not sure exactly what instructions the assembler is generating from your source code, you can always look at the instructions directly with a disassembler. Alternatively, you can look at the assembled hex bytes at the left side of the assembly listing.
 
@@ -197,7 +197,7 @@ Let's look at a real-world example of saving bytes and cycles with accumulator-s
 
 The simplest approach to setting the equipment flag to 80-column color text mode is shown in [Listing 8-10](#L810); this code uses one *mod-reg-rm* `and` instruction and one *mod-reg-rm* `or` instruction to set the equipment flag in 18.86 us. By contrast, [Listing 8-11](#L811) uses four accumulator-specific instructions to set the equipment flag. Even though [Listing 8-11](#L811) uses two more instructions than [Listing 8-10](#L810), it is 12.5% faster, taking only 16.76 us to set the equipment flag.
 
-![](images/fig8.11RT.jpg)
+![](images/fig8.11RT.png)
 
 ### Other Accumulator-Specific Instructions
 
@@ -259,9 +259,9 @@ Yet another aspect of the Zen of assembler.
 
 Finally, we come to the strangest part of the 8080 legacy, the `lahf` and `sahf` instructions. `lahf` loads AH with the lower byte of the 8088's FLAGS register, as shown in Figure 8.12. Not coincidentally, the lower byte of the FLAGS register contains the 8088 equivalents of the 8080's flags, and those flags are located in precisely the same bit positions in the lower byte of the 8088's FLAGS register as they are in the 8080's FLAGS register. `sahf` reverses the action of `lahf`, loading the 8080-compatible flags into the 8088's FLAGS register by copying AH to the lower byte of the 8088's FLAGS register, as shown in Figure 8.13.
 
-![](images/fig8.12RT.jpg)
+![](images/fig8.12RT.png)
 
-![](images/fig8.13RT.jpg)
+![](images/fig8.13RT.png)
 
 Why do these odd instructions exist? Simply to allow the 8088 to emulate efficiently the 8080's `push psw` and `pop psw` instructions, which transfer both the 8080's accumulator and FLAGS register to and from the stack as a single word. The 8088 sequence:
 

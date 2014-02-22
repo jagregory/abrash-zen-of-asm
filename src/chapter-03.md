@@ -22,7 +22,7 @@ Let's begin our explorations.
 
 Figure 3.1 shows the traditional assembler programming model of the PC. In this model, the assembler program is separated from the hardware by layers of system software, such as DOS, the BIOS, and device drivers. Although this model recognizes that it is possible for assembler programs to make end runs around the layers to access any level of system software or the hardware directly, programs are supposed to request services from the highest level that can fulfill a given request (preferably DOS), thereby gaining hardware independence, which brings with it portability to other systems with different hardware but the same system software.
 
-![](images/fig3.1RT.jpg)
+![](images/fig3.1RT.png)
 
 This model has many admirable qualities, and should be followed whenever possible. For example, because the DOS file system masks incompatibilities between the dozens of disk and disk controller models on the market, there's generally nothing to be gained and much to be lost by programming a disk controller directly. Similarly, the BIOS sometimes hides differences between makes of keyboards, so keystrokes should not be taken directly from the hardware unless that's absolutely necessary. Every assembler programmer should be thoroughly aware of the services provided by DOS and the BIOS, and should use them whenever they're good enough for a given purpose.
 
@@ -46,7 +46,7 @@ Just how important are cycle-eaters? Well, thanks to the display adapter cycle-e
 
 Given cycle-eaters and our understanding of layered system software as simply another sort of code, the programming model shown in Figure 3.2 is more appropriate than that of Figure 3.1. All system and application software, whether generated from high-level or assembler source code, ultimately becomes a series of machine-language instructions for the 8088. The 8088 executes each of those instructions in turn, accessing memory and devices as needed by way of the PC bus. In this three-level structure, the 8088 provides software with a programming interface, and in turn rests on the PC's hardware. Thanks to cycle-eaters, the PC's hardware and bus emerge as important factors in performance.
 
-![](images/fig3.2RT.jpg)
+![](images/fig3.2RT.png)
 
 The primary virtue of Figure 3.2 is that it moves us away from the comfortable, human-oriented perspective of Figure 3.1 and forces us to view program execution at a level closer to the true nature of the beast, as consisting of nothing more than the performance of a sequence of instructions that command the 8088 to perform actions; in some cases, those actions involve accessing memory and/or devices over the PC bus. From the software side, we can now see that all code consists of machine-language instructions in the end, so the distinction between high-level languages, system software, and assembler vanishes. From the hardware side, we can see that the 8088 is not the lowest level, and we can begin to appreciate the many ways in which hardware can directly affect code performance.
 
@@ -62,7 +62,7 @@ Why is this important? It's important because the 8088 is really two processors 
 
 Internally, the 8088 consists of two complementary processors: the Bus Interface Unit (BIU) and the Execution Unit (EU), as shown in Figure 3.3. The EU is what we normally think of as being a processor; it contains the flags, the general-purpose registers, and the Arithmetic Logic Unit (ALU), and executes instructions. In fact, the EU performs just about every function you could want from a processor — except one. The one thing the EU does not do is access memory or perform I/O. That's the BIU's job, so whenever the EU needs a memory or I/O access performed, it sends a request to the BIU, which carries out the access, transferring the data according to the EU's specifications. The two units are capable of operating in parallel whenever they've got independent tasks to perform; put another way, the BIU can access memory or I/O at the same time that the EU is processing an instruction, so long as neither task is dependent on the other.
 
-![](images/fig3.3RT.jpg)
+![](images/fig3.3RT.png)
 
 Each BIU memory access transfers 1 byte, since the 8088 has an 8-bit external data bus. The 8088 is designed so that each byte access takes a minimum of 4 cycles; given the PC's 4.77-MHz processor clock, which results in a 209.5 ns cycle time, the 8088 supports a maximum data transfer rate of 1 byte/838 ns, or about 1.2 bytes/us. That's an important number, and we'll come back to it shortly.
 
@@ -82,7 +82,7 @@ Ironically, code that primarily performs register-only operations and rarely acc
 
 The instruction queue can be depleted quickly by register-only instructions. *Given enough such instructions in a row, the overall time required to complete a series of register-only instructions is determined almost entirely by the time required to fetch the instructions from memory.* This is precisely the respect in which Figure 3.2 fails us; because of the prefetch queue, the instructions the 8088 executes must be viewed as data, stored along with other program data and accessed through the same PC bus and BIU, as shown in Figure 3.4. Seen in this light, it becomes apparent that instruction fetches are subject to the same cycle-eaters as are memory operand accesses. What's more, the BIU emerges as potentially the greatest cycle-eater of all, as code and data bytes struggle to get through the BIU fast enough to keep the EU busy, a phenomenon I'll refer to as the prefetch queue cycle-eater from now on. As we will see, designing code to work around the prefetch queue cycle-eater and keep the EU busy is a difficult but rewarding task.
 
-![](images/fig3.4RT.jpg)
+![](images/fig3.4RT.png)
 
 ## 3.6 Stepchild of the 8086
 
@@ -90,7 +90,7 @@ You might justifiably wonder why Intel would design a processor with an EU that 
 
 The 8086 is completely software compatible with the 8088, and in fact differs from the 8088 in only one important respect, the width of the external data bus (the bus that goes off-chip to memory and peripherals); where the 8088 has an 8-bit wide external data bus, the 8086 has a 16-bit wide bus. (The 8086 also has a 6-rather than 4-byte prefetch queue, which gives it a bit of an advantage in keeping the EU busy.) Both the 8086 and 8088 have 16-bit EUs and 16-bit internal data buses, but while the 8086's BIU can fulfill most 16-bit memory requests with a single memory access, the 8088's BIU must convert 16-bit memory requests into 8-bit memory accesses. Figure 3.5, which charts internal and external data bus sizes for processors from the 8080 through the 80386, shows that the 8088 is something of an aberration in that it is the only widely-used processor in the 8086 family with mismatched internal and external data bus sizes. (The 80386SX, which may well become a successful low-cost substitute for the 80386, also has mismatched internal and external bus sizes, and as a result suffers from many of the same performance constraints as does the 8088.)
 
-![](images/fig3.5RT.jpg)
+![](images/fig3.5RT.png)
 
 There is a significant price to be paid for the 8088's mismatched bus sizes. Why? Well, the 8086 was designed to support efficient and balanced memory access, with the external data bus in general in use as much as possible without that bus becoming a bottleneck. In other words, the 16-bit external data bus of the 8086 was designed to provide a memory access rate roughly equal to the processing rate of which the 16-bit EU is capable. While the 8088 offers the same internal 16-bit architecture as the 8086, the 8-bit external data bus of the 8088 can provide at best only half the memory access rate of the 8086, so the balance of the 8086 is lost.
 

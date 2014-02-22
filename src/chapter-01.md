@@ -45,13 +45,13 @@ To understand why this is, consider how a program gets written. A programmer exa
 
 No matter how well an implementation is derived from the corresponding design, however, high-level languages like C and Pascal inevitably introduce additional transformation inefficiencies, as shown in Figure 1.1.
 
-![](images/fig1.1RT.jpg)
+![](images/fig1.1RT.png)
 
 High-level languages provide artificial environments that lend themselves relatively well to human programming skills, in order to ease the transition from design to implementation. The price for this ease of implementation is a considerable loss of efficiency in transforming source code into machine language. This is particularly true given that the 8088, with its specialized memory-addressing instructions and segmented memory architecture, does not lend itself particularly well to compiler design.
 
 Assembler, on the other hand, is simply a human-oriented representation of machine language. As a result, assembler provides a difficult programming environment — the bare hardware and systems software of the computer — *but properly constructed assembler programs suffer no transformation loss*, as shown in Figure 1.2.
 
-![](images/fig1.2RT.jpg)
+![](images/fig1.2RT.png)
 
 The key, of course, is the programmer, since in assembler the programmer must essentially perform the transformation from the application specification to machine language entirely on his own. (The assembler merely handles the direct translation from assembler to machine language.)
 

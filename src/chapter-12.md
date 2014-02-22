@@ -24,15 +24,15 @@ So how slow *is* branching on the 8088? Well, the answer varies from one type of
 
 Of the 18 cycles `jmp` takes to execute in [Listing 12-1](#L1201), 4 cycles seem to be used to calculate the target offset. I can't state this with absolute certainty, since Intel doesn't make the inner workings of its instructions public, but it's most likely true. You see, most of the 8088's `jmp` instructions don't have the form "load the Instruction Pointer with offset *xxxx*," where the `jmp` instruction specifies the exact offset to branch to. (This sort of jump is known as an *absolute* branch, since the destination offset is specified as a fixed, or absolute offset in the code segment. Figure 12.1 shows one of the few jump instructions that does use absolute branching.)
 
-![](images/fig12.1aRT.jpg)
+![](images/fig12.1aRT.png)
 
-![](images/fig12.1bRT.jpg)
+![](images/fig12.1bRT.png)
 
 Rather, most of the 8088's `jmp` instructions have the form "add *nnnn* to the contents of the Instruction Pointer," where the byte or word following the `jmp` opcode specifies the distance from the current IP to the offset to branch to, as shown in Figure 12.2.
 
-![](images/fig12.2aRT.jpg)
+![](images/fig12.2aRT.png)
 
-![](images/fig12.2bRT.jpg)
+![](images/fig12.2bRT.png)
 
 Jumps that use displacements are known as *relative* branches, since the destination offset is specified relative to the offset of the current instruction. Relative branches are actually performed by adding a displacement to the value in the Instruction Pointer, and there's a bit of a trick there.
 
@@ -44,9 +44,9 @@ There are definite advantages to the use of relative rather than absolute branch
 
 Second (and more important), when relative branches are used, any branch whose target is within -128 to +127 bytes of the byte after the end of the branching instruction can be specified in a more compact form, with a 1-byte rather than 1-word displacement, as shown in Figure 12.3.
 
-![](images/fig12.3aRT.jpg)
+![](images/fig12.3aRT.png)
 
-![](images/fig12.3bRT.jpg)
+![](images/fig12.3bRT.png)
 
 The key, of course, is that -128 to +127 decimal is equivalent to 0FF80h to 007Fh hexadecimal, which is the range of values that can be specified with a single signed byte. The short jumps to which I referred earlier are such 1-byte-displacement short branches, in contrast to normal jumps, which use full 2-byte displacements. The smaller displacement allows short jump instructions to squeeze into 2 bytes, 1 byte less than a normal jump.
 
@@ -82,9 +82,9 @@ It's true that the prefetch queue is full when it comes time for each `jmp` to s
 
 We learned way back in Chapter 3 that the Bus Interface Unit of the 8088 reads the bytes immediately following the current instruction into the prefetch queue whenever the external data bus isn't otherwise in use. This is done in an attempt to anticipate the next few instruction-byte requests that the Execution Unit will issue. Every time that the EU requests an instruction byte and the BIU has guessed right by prefetching that byte, 4 cycles are saved that would otherwise have to be expended on fetching the requested byte while the EU waited, as shown in Figure 12.4.
 
-![](images/fig12.4aRT.jpg)
+![](images/fig12.4aRT.png)
 
-![](images/fig12.4bRT.jpg)
+![](images/fig12.4bRT.png)
 
 What happens if the BIU guesses wrong? Nothing disastrous: since the prefetched bytes are no help in fulfilling the EU's request, the requested instruction byte must be fetched from memory at a cost of 4 cycles, just as if prefetching had never occurred.
 
@@ -96,9 +96,9 @@ Think of it this way. The BIU prefetches bytes sequentially, starting with the b
 
 When a branch occurs, however, the bytes immediately following the instruction bytes for the branch instruction are no longer necessarily the next bytes the EU will want, as shown in Figure 12.5.
 
-![](images/fig12.5aRT.jpg)
+![](images/fig12.5aRT.png)
 
-![](images/fig12.5bRT.jpg)
+![](images/fig12.5bRT.png)
 
 If they aren't, the BIU has no choice but to throw away those bytes and start fetching bytes again at the location branched to. In other words, if the BIU gambles that the EU will request instruction bytes sequentially and loses that gamble because of a branch, all pending prefetches of the instruction bytes following the branch instruction in memory are wasted.
 
@@ -150,13 +150,13 @@ A quick subtraction reveals that each `jmp` in [Listing 12-4](#L1204) takes 17 c
 
 So exactly what happens when [Listing 12-3](#L1203) runs to slow performance by 3-plus cycles relative to [Listing 12-4](#L1204)? I can only speculate, but it seems likely that when the first byte of an `imul` instruction is fetched, the EU is ready for the second byte of the `imul` — the *mod-reg-rm* byte — after just 1 cycle, as shown in Figure 12.6.
 
-![](images/fig12.6RT.jpg)
+![](images/fig12.6RT.png)
 
 After all, the EU can't do much processing of a multiplication until the source and destination are known, so it makes sense that the *mod-reg-rm* byte would be needed right away. Unfortunately, the branch preceding each `imul` in [Listing 12-3](#L1203) empties the prefetch queue, so the EU must wait for several cycles while the *mod-reg-rm* byte is fetched from memory.
 
 In [Listing 12-4](#L1204), on the other hand, the first byte fetched after each branch is the instruction byte for `push ax`. Since that's the only byte of the instruction, the EU can proceed right through to completion of the instruction without requiring additional instruction bytes, affording ample time for the BIU to fetch at least the first byte of the next `jmp`, as shown in Figure 12.7.
 
-![](images/fig12.7RT.jpg)
+![](images/fig12.7RT.png)
 
 As a result, the prefetch queue cycle-eater has little or no impact on the performance of this code.
 

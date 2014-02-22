@@ -38,7 +38,7 @@ Ideally, all the code in a given program should fit in one 64 Kb segment, elimin
 
 For example, few programs with more than 64 Kb of code (large code model programs) are written in pure assembler; usually the bulk of the program is written in C, Pascal, or the like, with assembler used when speed is of the essence. In such programs all the assembler code will often fit in a single 64 Kb segment, and the complete control assembler gives you over segment naming makes it easy to place multiple assembler modules in the same code segment. Once that's done, all branches within the assembler code can be near, even though branches between the high-level language code and the assembler code must be far, as shown in Figure 14.1.
 
-![](images/fig14.1RT.jpg)
+![](images/fig14.1RT.png)
 
 Many compilers allow you to specify the segment names used for individual modules, if you so desire. If your compiler supports code segment naming and also supports near procedures in the large code model (as, for example, Turbo C does), you could actually make near calls not only within your assembler code, but also *into* that code from the high-level language. The key is giving selected high-level language modules and your assembler code identical code segment names, so they'll share a single code segment, then using the `near` keyword to declare the assembler subroutines as near externals in the high-level language code.
 
@@ -48,7 +48,7 @@ In short, in the code that really matters you can often enjoy the performance ad
 
 Whether you're programming in assembler or a high-level language, one great benefit of using near rather than far subroutines is the reduction in the size of jump and call tables that near subroutines make possible. While the address of a near subroutine can be specified as a 1-word table entry, a full doubleword is required to specify the segment and offset of a far subroutine. It doesn't take a genius to figure out that we can cut the size of a jump or call table in half if we can convert the subroutines it branches to from far to near, as shown in Figure 14.2.
 
-![](images/fig14.2RT.jpg)
+![](images/fig14.2RT.png)
 
 When we add the space savings of near-branching jump and call tables to the performance advantages of indirect near branches that we explored earlier, we can readily see that it's worth going to a good deal of trouble to make the near-branching variety of jump and call tables whenever possible. We'll return to the topic of jump and call tables at the end of this chapter.
 
@@ -262,13 +262,13 @@ In short, reserve `int` for accessing DOS and BIOS services and for those applic
 
 Interrupts are so slow that it often pays to go to considerable trouble to move them out of loops. Consider character-by-character processing of a text file, as for example when converting the contents of a text file to uppercase. In such an application it's easiest to avoid the complications of buffering text by letting DOS feed you one character at a time, as shown in Figure 14.3.
 
-![](images/fig14.3RT.jpg)
+![](images/fig14.3RT.png)
 
 [Listing 14-4](#L1404) illustrates the approach of letting DOS do the work on a character-by-character basis. [Listing 14-4](#L1404) reads characters from the standard input, converts them to uppercase, and prints the results to the standard output, interacting with DOS a character at a time at both the input and output stages. [Listing 14-4](#L1404) takes 2.009 seconds to convert the contents of the file TEST.TXT, shown in Figure 14.4, to uppercase and send the result to the standard output.
 
 (There's a slight complication in timing [Listing 14-4](#L1404). [Listing 14-4](#L1404) must be assembled and linked with LZTIME.BAT, since it takes more than 54 ms to run. However, [Listing 14-4](#L1404) expects to receive characters from the standard input when it executes. When run with the standard input *not* redirected, as occurs when LZTIME.BAT completes assembly and linking, [Listing 14-4](#L1404) waits indefinitely for input from the keyboard.
 
-![](images/fig14.4RT.jpg)
+![](images/fig14.4RT.png)
 
 Consequently, after the link is complete — when the program is waiting for keyboard input — you must press Ctrl-Break to stop the program and type:
 
@@ -280,7 +280,7 @@ at the DOS prompt to time the code in [Listing 14-4](#L1404). The same is true f
 
 The problem with the approach of [Listing 14-4](#L1404) is that all the overhead of calling a DOS function — including an `int` and an `iret` — occurs twice for each character, once during input and once during output. We can easily avoid all that simply by reading a sizable block of text with a single DOS call, processing it a character at a time *in place* (thereby avoiding the overhead of interrupts and DOS calls), and printing it out as a block with a single DOS call, as shown in Figure 14.5.
 
-![](images/fig14.5RT.jpg)
+![](images/fig14.5RT.png)
 
 This process can be repeated a block at a time until the source file runs out of characters.
 
@@ -604,7 +604,7 @@ There are a number of ways to get multiple uses out of a single instruction that
 
 Suppose that we have eight 1-bit flags stored in a single byte-sized memory variable, `StateFlags`, as shown in Figure 14.6.
 
-![](images/fig14.6RT.jpg)
+![](images/fig14.6RT.png)
 
 In order to check whether a high-or medium-priority event is pending, as indicated by bits 7 and 6 of `StateFlags`, we'd normally use something like:
 
@@ -641,7 +641,7 @@ which is one full instruction shorter.
 
 Stretching this idea still further, we could relocate three of our flags to bits 7, 6, and 5 of `EventFlags`, with bits 4-0 always set to 0, as shown in Figure 14.7.
 
-![](images/fig14.7RT.jpg)
+![](images/fig14.7RT.png)
 
 Then, if the first two tests failed, a zero/non-zero test would serve to determine whether the flag in bit 5 is set, and we could get *three* tests out of a single operation:
 
@@ -785,7 +785,7 @@ The only difference between call tables and jump tables is the type of branch ma
 
 The operation of a sample jump table is shown in Figure 14. 8.
 
-![](images/fig14.8RT.jpg)
+![](images/fig14.8RT.png)
 
 An index into the table is used to look up one of the entries in the table, and an indirect branch is performed to the address contained in that entry.
 
@@ -900,7 +900,7 @@ At any rate, jump tables operate in the same basic way no matter how indexes are
 
 In the last chapter, we simply calculated the destination offset whenever we needed to branch into in-line code. That approach is fine when the offset calculations involve nothing more than a few shifts and adds, but it can reduce performance considerably if a `mul` instruction must be used. Then, too, the calculated-offset approach only works if every repeated code block in the target in-line code is exactly the same size. That won't be the case if, for example, some repeated code blocks use short branches while others use normal branches, as shown in Figure 14.9.
 
-![](images/fig14.9RT.jpg)
+![](images/fig14.9RT.png)
 
 In such a case, a jump table is the preferred solution. Selecting an offset and branching to it through a jump table takes only a few instructions, and is certainly faster than multiplying. Jump tables can also handle repeated in-line code blocks of varying sizes, since jump tables store offsets that can point anywhere and can be arranged in any order, rather than being limited to calculations based on a fixed block size.
 
@@ -973,7 +973,7 @@ BLOCK_NUMBER=BLOCK_NUMBER-1
 
 [Listing 14-14](#L1414) puts all of the above together, creating and using unique labels in both the in-line code and the jump table. Figure 14.10 illustrates [Listing 14-14](#L1414) in action.
 
-![](images/fig14.10RT.jpg)
+![](images/fig14.10RT.png)
 
 Study both the listing and the figure carefully, for macros, repeat blocks, jump tables, and in-line code working together are potent indeed.
 
