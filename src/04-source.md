@@ -34,7 +34,7 @@ The code listings for the book are contained in a self-extracting archive file Z
 
 **\*\*\*We added some color in the figures and used a colored font for all code in the book (the original book was printed in black and white). We own a print copy of the book, so we were able to create a cover image and use OCR to help recreate Chapter 6.**
 
-**\*\*\*The ZEN\_LIST.EXE on the CD contained the programs but doesn’t auto extract on modern Windows operating systems. We were able to extract the files with WINRAR. The Listings for Chapter 15 were missing, so we recreated them from the book.**
+**\*\*\*The ZEN\_LIST.EXE on the CD contained the programs but doesn't auto extract on modern Windows operating systems. We were able to extract the files with WINRAR. The Listings for Chapter 15 were missing, so we recreated them from the book.**
 
 **\*\*\*The table of contents hyperlinks will take you to the listed title. Clicking on the title will take you back to the table of contents page.**
 
