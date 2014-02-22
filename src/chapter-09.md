@@ -123,7 +123,7 @@ How much difference does it make to use `inc`{.nasm} or `dec`{.nasm} rather than
 
 The same is true of `dec`{.nasm} versus `sub`{.nasm} as of `inc`{.nasm} versus `add`{.nasm}. For example, the code in [Listing 9-7](#listing-9-7), which uses a 16-bit register `dec`{.nasm} instruction, clocks in at 5.03 us per loop, 33% faster than the 6.70 us of the code in [Listing 9-8](#listing-9-8), which uses a `sub`{.nasm} instruction to decrement DX.
 
-The difference between the times of [Listings 9-7](#L907) and [9-8](#L908) is primarily attributable to the 8 cycles required to fetch the two extra bytes of the `sub`{.nasm} instruction. To illustrate that point, consider [Listing 9-9](#listing-9-9), which decrements DX twice per loop. [Listing 9-9](#listing-9-9) executes in 5.80 us per loop, approximately halfway between the times of [Listings 9-7](#L907) and [9-8](#L908). That's just what we'd expect, since the loop in [Listing 9-9](#listing-9-9) is 1 byte longer than the loop in [Listing 9-7](#listing-9-7) and 1 byte shorter than the loop in [Listing 9-8](#listing-9-8).
+The difference between the times of [Listings 9-7](#listing-9-7) and [9-8](#listing-9-8) is primarily attributable to the 8 cycles required to fetch the two extra bytes of the `sub`{.nasm} instruction. To illustrate that point, consider [Listing 9-9](#listing-9-9), which decrements DX twice per loop. [Listing 9-9](#listing-9-9) executes in 5.80 us per loop, approximately halfway between the times of [Listings 9-7](#listing-9-7) and [9-8](#listing-9-8). That's just what we'd expect, since the loop in [Listing 9-9](#listing-9-9) is 1 byte longer than the loop in [Listing 9-7](#listing-9-7) and 1 byte shorter than the loop in [Listing 9-8](#listing-9-8).
 
 *Use `inc`{.nasm} or `dec`{.nasm} in preference to `add`{.nasm} or `sub`{.nasm} whenever possible*.
 
@@ -271,7 +271,7 @@ The two instructions are not the same, of course. Memory is the destination in t
 
 Consider this. Any instruction, such as `sub`{.nasm}, that has a register source operand and a memory destination operand must access memory twice: once to fetch the destination operand prior to performing an operation, and once to store the result of the operation to the destination operand. By contrast, the same instruction with a memory source operand and a register destination operand must access memory just once, in order to fetch the source value from memory. Consequently, having a memory operand as the destination imposes an immediate penalty of at least 4 cycles per instruction, since each memory access takes a minimum of 4 cycles.
 
-As it turns out, however, the extra time required to access destination memory operands with such instructions — which include `adc`{.nasm}, `add`{.nasm}, `and`{.nasm}, `or`{.nasm}, `sbb`{.nasm}, `sub`{.nasm}, and `xor`{.nasm} — is not 4 but 7 cycles, according to the official specs in Appendix A. We can measure the actual difference by timing the code in [Listings 9-19](#L919) and [9-20](#L920). As it turns out, the code with AL as the destination takes just 5.03 us per instruction. That's 1.00 us (4.77 cycles) or nearly 20% faster than the code with memory as the destination operand, which takes 6.03 us per instruction.
+As it turns out, however, the extra time required to access destination memory operands with such instructions — which include `adc`{.nasm}, `add`{.nasm}, `and`{.nasm}, `or`{.nasm}, `sbb`{.nasm}, `sub`{.nasm}, and `xor`{.nasm} — is not 4 but 7 cycles, according to the official specs in Appendix A. We can measure the actual difference by timing the code in [Listings 9-19](#listing-9-19) and [9-20](#listing-9-20). As it turns out, the code with AL as the destination takes just 5.03 us per instruction. That's 1.00 us (4.77 cycles) or nearly 20% faster than the code with memory as the destination operand, which takes 6.03 us per instruction.
 
 The moral of the story? Simply to keep those operands which tend to be destination operands most frequently — counters, pointers, and the like — in registers whenever possible. The ideal situation is one in which both destination and source operands are in registers.
 
@@ -414,7 +414,7 @@ Shifting or rotating by CL also requires fewer instruction bytes for shifts of m
 
 The point is not that shifts and rotates by CL are faster than you'd expect, but rather that 1-bit shifts and rotates are *slower* than you'd expect, courtesy of the prefetch queue cycle-eater. The question is, of course, at what point does it become faster to shift or rotate by CL instead of using multiple 1-bit shift or rotate instructions?
 
-To answer that, I've timed the two approaches, shown in [Listings 9-21](#L921) and [9-22](#L922), for shifts ranging from 1 to 7 bits, by altering the equated value of BITS\_TO\_SHIFT accordingly. The results are as follows:
+To answer that, I've timed the two approaches, shown in [Listings 9-21](#listing-9-21) and [9-22](#listing-9-22), for shifts ranging from 1 to 7 bits, by altering the equated value of BITS\_TO\_SHIFT accordingly. The results are as follows:
 
 | Bits shifted (BITS\_TO\_SHIFT) | Time taken to shift by CL ([Listing 9-21](#listing-9-21)) | Time taken to shift 1 bit at a time ([Listing 9-22](#listing-9-22)) |
 |---|--------|---------|

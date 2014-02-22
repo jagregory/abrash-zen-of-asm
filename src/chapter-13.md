@@ -26,7 +26,7 @@ Zen programmers understand that the objective in generating the cumulative exclu
 
 Zen programmers have a bigger bag of tricks, however, and a more flexible view of the world. [Listing 13-2](#listing-13-2) shows a Zen solution to the array-sum problem. [Listing 13-2](#listing-13-2) performs no branches at all, thanks to the use of in-line code, which we'll discuss in detail later in this chapter.
 
-Functionally, there's not much difference between [Listings 13-1](#L1301) and [13-2](#L1302). Both listings leave the same cumulative result in AH, leave the same value in SI, and even leave the flags set to the same values. [Listing 13-1](#listing-13-1) leaves CX set to zero, while [Listing 13-2](#listing-13-2) doesn't touch CX, but that's really a point in the favor of [Listing 13-2](#listing-13-2), and could in any case be remedied simply by placing a `sub cx,cx`{.nasm} at the start of [Listing 13-2](#listing-13-2) if necessary.
+Functionally, there's not much difference between [Listings 13-1](#listing-13-1) and [13-2](#listing-13-2). Both listings leave the same cumulative result in AH, leave the same value in SI, and even leave the flags set to the same values. [Listing 13-1](#listing-13-1) leaves CX set to zero, while [Listing 13-2](#listing-13-2) doesn't touch CX, but that's really a point in the favor of [Listing 13-2](#listing-13-2), and could in any case be remedied simply by placing a `sub cx,cx`{.nasm} at the start of [Listing 13-2](#listing-13-2) if necessary.
 
 No, there's not much to choose from between the two listings... until you see them in action. [Listing 13-2](#listing-13-2) calculates the 64-byte cumulative exclusive-or value in just 275 us — more than 82% faster than [Listing 13-1](#listing-13-1). A 5% increase might not be worth worrying about, but we're talking about nearly *doubling* the performance of a well-coded three-instruction loop! Clearly, there's something to this business of Zen programming.
 
@@ -58,7 +58,7 @@ Nonetheless, repeated shifts and rotates still aren't *fast* — instead, you mi
 
 ## Look-Up Tables: Calculating Without Branching
 
-Like the use of repeated string instructions, the use of look-up tables is a familiar technique that can help avoid branching. Whenever you're using branching code to perform a calculation, see if you can't use a look-up table instead; tight as your branching code may be, look-up tables are usually faster still. [Listings 11-26](#L1126) and [11-27](#L1127) pit a five-instruction sequence that branches no more than once against an equivalent table look-up; you can't get branching code that's much tighter than that, and yet the table look-up is much faster.
+Like the use of repeated string instructions, the use of look-up tables is a familiar technique that can help avoid branching. Whenever you're using branching code to perform a calculation, see if you can't use a look-up table instead; tight as your branching code may be, look-up tables are usually faster still. [Listings 11-26](#listing-11-26) and [11-27](#listing-11-27) pit a five-instruction sequence that branches no more than once against an equivalent table look-up; you can't get branching code that's much tighter than that, and yet the table look-up is much faster.
 
 In short, if you have a calculation to make — even a simple one — see if it isn't faster to precalculate the answer at assembly time and just look it up at run time.
 
@@ -84,7 +84,7 @@ Then, too, if the characters tested are often not in the set, as may well be the
 
 There are two lessons here. The first and obvious lesson is that you should arrange your conditional jumps so that they fall through as often as possible. The second lesson is that you must understand the conditions under which your code will operate before you can truly optimize it.
 
-For instance, there's no way you can evaluate the relative merits of the versions of `CheckTestSetInclusion`{.nasm} in [Listings 11-20](#L1120) and [13-3](#L1303) until you know the mix of characters that will be tested. There's no such beast as an absolute measure of code speed, only code speed in context. You've heard that before as it relates to instruction mix and the prefetch queue, but here we're dealing with a different aspect of performance. What I mean now is that you must understand the typical and worst-case conditions under which a block of code will run before you can get a handle on its performance and consider possible alternatives.
+For instance, there's no way you can evaluate the relative merits of the versions of `CheckTestSetInclusion`{.nasm} in [Listings 11-20](#listing-11-20) and [13-3](#listing-13-3) until you know the mix of characters that will be tested. There's no such beast as an absolute measure of code speed, only code speed in context. You've heard that before as it relates to instruction mix and the prefetch queue, but here we're dealing with a different aspect of performance. What I mean now is that you must understand the typical and worst-case conditions under which a block of code will run before you can get a handle on its performance and consider possible alternatives.
 
 Your ability to understand and respond to the circumstances under which your assembler code will run gives you a big leg up on high-level language compilers. There's no way for a compiler to know the typical and/or worst-case conditions under which code will run, let alone which of those conditions is more important in your application.
 
@@ -329,7 +329,7 @@ In other words, the preload code is either 3 or 9 cycles faster than the more fa
 
 Let's run the two approaches through the Zen timer. [Listing 13-6](#listing-13-6), which times the test-and-branch code when DL is 10 (causing AL to be set to 0), runs in 10.06 us per test-and-branch. By contrast, [Listing 13-7](#listing-13-7), which times the preload code for the same case, runs in just 8.62 us.
 
-That's a healthy advantage for the preload code, but perhaps things will change if we test a case where AL is set to 1, by altering [Listings 13-6](#L1306) and [13-7](#L1307) to set DL to 11 rather than 10 prior to the tests.
+That's a healthy advantage for the preload code, but perhaps things will change if we test a case where AL is set to 1, by altering [Listings 13-6](#listing-13-6) and [13-7](#listing-13-7) to set DL to 11 rather than 10 prior to the tests.
 
 Things do indeed change when DL is set to 11. [Listing 13-6](#listing-13-6) speeds up to 8.62 ms per test, matching the performance of [Listing 13-7](#listing-13-7) when DL was 10. When DL is 11, however, [Listing 13-7](#listing-13-7) speeds up to 8.15 us, again comfortably outperforming [Listing 13-6](#listing-13-6).
 

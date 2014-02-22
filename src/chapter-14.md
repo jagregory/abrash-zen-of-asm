@@ -716,21 +716,21 @@ For example, suppose that we want to search an array for the first entry that ma
 
 You can probably see where we're heading. The `jz`{.nasm}/`loop`{.nasm} pair at the bottom of the loop in [Listing 14-6](#listing-14-6) is an obvious candidate for conversion to `loopnz`{.nasm}, and [Listing 14-7](#listing-14-7) takes advantage of just that conversion. Essentially, the test for a match is moved out of the loop in [Listing 14-7](#listing-14-7), with `loopnz`{.nasm} replacing `loop`{.nasm} in order to allow the loop to end either on a match or at the end of the array. The result: [Listing 14-7](#listing-14-7) runs in 1036 us, more than 9% faster than [Listing 14-7](#listing-14-7). Not a *massive* improvement..but not a bad payoff for replacing one instruction and moving another.
 
-(Food for thought: [Listings 14-6](#L1406) and [14-7](#L1407) could be speeded up by storing uppercase and lowercase versions of the search byte in separate registers and simply comparing each byte of the array to *both* versions. The extra comparison would be a good deal faster than the code used in [Listings 14-6](#L1406) and [14-7](#L1407) to convert each byte of the array to uppercase.)
+(Food for thought: [Listings 14-6](#listing-14-6) and [14-7](#listing-14-7) could be speeded up by storing uppercase and lowercase versions of the search byte in separate registers and simply comparing each byte of the array to *both* versions. The extra comparison would be a good deal faster than the code used in [Listings 14-6](#listing-14-6) and [14-7](#listing-14-7) to convert each byte of the array to uppercase.)
 
 ### How You Loop Matters More Than You Might Think
 
 In the last chapter, I lambasted `loop`{.nasm} as a slow looping instruction. Well, it *is* slow — but if you must perform repetitive tasks by branching — that is, if you must loop — `loop`{.nasm} is a good deal faster than other branching instructions. To drive that point home, I'm going to measure the performance of the case-insensitive search program of [Listing 14-6](#listing-14-6) with the looping code implemented as follows: with `loop`{.nasm}, with `dec reg16/jnz`{.nasm}, with `dec reg8/jnz`{.nasm}, with `dec mem8/jnz`{.nasm}, and with `dec mem16/jnz`{.nasm}. (Remember that `dec reg16`{.nasm} is faster than `dec reg8`{.nasm}, and that byte-sized memory accesses are faster than word-sized accesses.)
 
-[Listing 14-6](#listing-14-6) already shows the `loop`{.nasm}-based implementation. [Listings 14-8](#L1408) through [14-11](#L1411) show the other implementations. Here are the results:
+[Listing 14-6](#listing-14-6) already shows the `loop`{.nasm}-based implementation. [Listings 14-8](#listing-14-8) through [14-11](#listing-14-11) show the other implementations. Here are the results:
 
-| Looping code                               | Listing         | Time    |
-|--------------------------------------------|-----------------|---------|
-| loop CaseInsensitiveSearchLoop             | [14-6](#L1406)  | 1134 us |
-| Dec cx/jnz CaseInsensitiveSearchLoop       | [14-8](#L1408)  | 1199 us |
-| dec cl/jnz CaseInsensitiveSearchLoop       | [14-9](#L1409)  | 1252 us |
-| dec [BCount]/jnz CaseInsensitiveSearchLoop | [14-10](#L1410) | 1540 us |
-| dec [WCount]/jnz CaseInsensitiveSearchLoop | [14-11](#L1411) | 1652 us |
+| Looping code                               | Listing                 | Time    |
+|--------------------------------------------|-------------------------|---------|
+| loop CaseInsensitiveSearchLoop             | [14-6](#listing-14-6)   | 1134 us |
+| Dec cx/jnz CaseInsensitiveSearchLoop       | [14-8](#listing-14-8)   | 1199 us |
+| dec cl/jnz CaseInsensitiveSearchLoop       | [14-9](#listing-14-9)   | 1252 us |
+| dec [BCount]/jnz CaseInsensitiveSearchLoop | [14-10](#listing-14-10) | 1540 us |
+| dec [WCount]/jnz CaseInsensitiveSearchLoop | [14-11](#listing-14-11) | 1652 us |
 
 While the incremental performance differences between the various implementations are fairly modest, `loop`{.nasm} is the clear winner, and is the shortest of the bunch as well.
 
@@ -985,7 +985,7 @@ Why does this particular example not benefit much from the use of branched to in
 
 In truth, the best way to speed up this code would be partial in-line code, which would allow *all* the branches to use 1-byte displacements. A double-scan approach, using a repeated string instruction to search for the terminating zero and then another string instruction to search for the desired character, might also serve well.
 
-Just to demonstrate the flexibility of macros, jump tables, and branched-to in-line code, however, [Listing 14-16](#listing-14-16) is a modification of [Listing 14-14](#listing-14-14) that branches out with 1-byte displacements at *both* ends of the in-line code, using conditional jumps around unconditional jumps only in the middle of the in-line code, where 1-byte displacements can't reach past either end. As predicted, [Listing 14-16](#listing-14-16) is, at 908 us, a good bit faster than [Listings 14-14](#L1414) and [14-15](#L1415). (Bear in mind that the relative performances of these listings could change considerably given different search parameters. *There is no such thing as absolute performance*. Know the conditions under which your code will run!)
+Just to demonstrate the flexibility of macros, jump tables, and branched-to in-line code, however, [Listing 14-16](#listing-14-16) is a modification of [Listing 14-14](#listing-14-14) that branches out with 1-byte displacements at *both* ends of the in-line code, using conditional jumps around unconditional jumps only in the middle of the in-line code, where 1-byte displacements can't reach past either end. As predicted, [Listing 14-16](#listing-14-16) is, at 908 us, a good bit faster than [Listings 14-14](#listing-14-14) and [14-15](#listing-14-15). (Bear in mind that the relative performances of these listings could change considerably given different search parameters. *There is no such thing as absolute performance*. Know the conditions under which your code will run!)
 
 [Listing 14-16](#listing-14-16) isn't *blazingly* fast, but it is fast enough to remind us that branched-to in-line code is a most attractive option... and now jump tables let us use branched-to in-line code in more situations than ever, and often with improved speed, as well.
 
