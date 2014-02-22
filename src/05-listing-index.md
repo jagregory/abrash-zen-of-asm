@@ -1,468 +1,8 @@
-[**LISTINGS INDEX**](#TLIST)
-============================
+# Listings Index
 
-\
+## Chapter 2
 
-[Chapter 2](#_Chapter_2)
-
-[Listing 2-01](#L201)
-
-[Listing 2-02](#L202)
-
-[Listing 2-03](#L203)
-
-[Listing 2-04](#L204)
-
-[Listing 2-05](#L205)
-
-[Listing 2-06](#L206)
-
-[Listing 2-07](#L207)
-
-[Listing 2-08](#L208)
-
-\
-
-[Chapter 3](#_Chapter_3)
-
-[Listing 3-01](#L301)
-
-[Listing 3-02](#L302)
-
-\
-
-[Chapter 4](#_Chapter_4)
-
-[Listing 4-01](#L401)
-
-[Listing 4-02](#L402)
-
-[Listing 4-03](#L403)
-
-[Listing 4-04](#L404)
-
-[Listing 4-05](#L405)
-
-[Listing 4-06](#L406)
-
-[Listing 4-07](#L407)
-
-[Listing 4-08](#L408)
-
-[Listing 4-09](#L409)
-
-[Listing 4-10](#L410)
-
-[Listing 4-11](#L411)
-
-[Listing 4-12](#L412)
-
-\
-
-[Chapter 5](#_Chapter_5)
-
-[Listing 5-01](#L501)
-
-\
-
-[Chapter 7](#_Chapter_7)
-
-[Listing 7-01](#L701)
-
-[Listing 7-02](#L702)
-
-[Listing 7-03](#L703)
-
-[Listing 7-04](#L704)
-
-[Listing 7-05](#L705)
-
-[Listing 7-06](#L706)
-
-[Listing 7-07](#L707)
-
-[Listing 7-08](#L708)
-
-[Listing 7-09](#L709)
-
-[Listing 7-10](#L710)
-
-[Listing 7-11](#L711)
-
-[Listing 7-12](#L712)
-
-[Listing 7-13](#L713)
-
-[Listing 7-14](#L714)
-
-[Listing 7-15](#L715)
-
-[Listing 7-16](#L716)
-
-[Listing 7-17](#L717)
-
-[Listing 7-18](#L718)
-
-[Listing 7-19](#L719)
-
-[Listing 7-20](#L720)
-
-[Listing 7-21](#L721)
-
-\
-
-[Chapter 8](#_Chapter_8)
-
-[Listing 8-01](#L801)
-
-[Listing 8-02](#L802)
-
-[Listing 8-03](#L803)
-
-[Listing 8-04](#L804)
-
-[Listing 8-05](#L805)
-
-[Listing 8-06](#L806)
-
-[Listing 8-07](#L807)
-
-[Listing 8-08](#L808)
-
-[Listing 8-09](#L809)
-
-[Listing 8-10](#L810)
-
-[Listing 8-11](#L811)
-
-[Listing 8-12](#L812)
-
-[Listing 8-13](#L813)
-
-[Listing 8-14](#L814)
-
-[Listing 8-15](#L815)
-
-[Listing 8-16](#L816)
-
-[Listing 8-17](#L817)
-
-\
-
-[Chapter 9](#_Chapter_9)
-
-[Listing 9-01](#L901)
-
-[Listing 9-02](#L902)
-
-[Listing 9-03](#L903)
-
-[Listing 9-04](#L904)
-
-[Listing 9-05](#L905)
-
-[Listing 9-06](#L906)
-
-[Listing 9-07](#L907)
-
-[Listing 9-08](#L908)
-
-[Listing 9-09](#L909)
-
-[Listing 9-10](#L910)
-
-[Listing 9-11](#L911)
-
-[Listing 9-12](#L912)
-
-[Listing 9-13](#L913)
-
-[Listing 9-14](#L914)
-
-[Listing 9-15](#L915)
-
-[Listing 9-16](#L916)
-
-[Listing 9-17](#L917)
-
-[Listing 9-18](#L918)
-
-[Listing 9-19](#L919)
-
-[Listing 9-20](#L920)
-
-[Listing 9-21](#L921)
-
-[Listing 9-22](#L922)
-
-[Listing 9-23](#L923)
-
-[Listing 9-24](#L924)
-
-[Listing 9-25](#L925)
-
-[Listing 9-26](#L926)
-
-\
-
-[Chapter 10](#_Chapter_10)
-
-[Listing 10-01](#L1001)
-
-[Listing 10-02](#L1002)
-
-[Listing 10-03](#L1003)
-
-[Listing 10-04](#L1004)
-
-[Listing 10-05](#L1005)
-
-[Listing 10-06](#L1006)
-
-[Listing 10-07](#L1007)
-
-[Listing 10-08](#L1008)
-
-[Listing 10-09](#L1009)
-
-[Listing 10-10](#L1010)
-
-[Listing 10-11](#L1011)
-
-[Listing 10-12](#L1012)
-
-[Listing 10-13](#L1013)
-
-[Listing 10-14](#L1014)
-
-[Listing 10-15](#L1015)
-
-[Listing 10-16](#L1016)
-
-[Listing 10-17](#L1017)
-
-[Listing 10-18](#L1018)
-
-[Listing 10-19](#L1019)
-
-\
-
-[Chapter 11](#_Chapter_11)
-
-[Listing 11-01](#L1101)
-
-[Listing 11-02](#L1102)
-
-[Listing 11-03](#L1103)
-
-[Listing 11-04](#L1104)
-
-[Listing 11-05](#L1105)
-
-[Listing 11-06](#L1106)
-
-[Listing 11-07](#L1107)
-
-[Listing 11-08](#L1108)
-
-[Listing 11-09](#L1109)
-
-[Listing 11-10](#L1110)
-
-[Listing 11-11](#L1111)
-
-[Listing 11-12](#L1112)
-
-[Listing 11-13](#L1113)
-
-[Listing 11-14](#L1114)
-
-[Listing 11-15](#L1115)
-
-[Listing 11-16](#L1116)
-
-[Listing 11-17](#L1117)
-
-[Listing 11-18](#L1118)
-
-[Listing 11-19](#L1119)
-
-[Listing 11-20](#L1120)
-
-[Listing 11-21](#L1121)
-
-[Listing 11-22](#L1122)
-
-[Listing 11-23](#L1123)
-
-[Listing 11-24](#L1124)
-
-[Listing 11-25](#L1125)
-
-[Listing 11-26](#L1126)
-
-[Listing 11-27](#L1127)
-
-[Listing 11-28](#L1128)
-
-[Listing 11-29](#L1129)
-
-[Listing 11-30](#L1130)
-
-[Listing 11-31](#L1131)
-
-[Listing 11-32](#L1132)
-
-[Listing 11-33](#L1133)
-
-[Listing 11-34](#L1134)
-
-\
-
-[Chapter 12](#_Chapter_12)
-
-[Listing 12-01](#L1201)
-
-[Listing 12-02](#L1202)
-
-[Listing 12-03](#L1203)
-
-[Listing 12-04](#L1204)
-
-[Listing 12-05](#L1205)
-
-\
-
-[Chapter 13](#_Chapter_13)
-
-[Listing 13-01](#L1301)
-
-[Listing 13-02](#L1302)
-
-[Listing 13-03](#L1303)
-
-[Listing 13-04](#L1304)
-
-[Listing 13-05](#L1305)
-
-[Listing 13-06](#L1306)
-
-[Listing 13-07](#L1307)
-
-[Listing 13-08](#L1308)
-
-[Listing 13-09](#L1309)
-
-[Listing 13-10](#L1310)
-
-[Listing 13-11](#L1311)
-
-[Listing 13-12](#L1312)
-
-[Listing 13-13](#L1313)
-
-[Listing 13-14](#L1314)
-
-[Listing 13-15](#L1315)
-
-[Listing 13-16](#L1316)
-
-[Listing 13-17](#L1317)
-
-[Listing 13-18](#L1318)
-
-[Listing 13-19](#L1319)
-
-[Listing 13-20](#L1320)
-
-[Listing 13-21](#L1321)
-
-[Listing 13-22](#L1322)
-
-[Listing 13-23](#L1323)
-
-[Listing 13-24](#L1324)
-
-[Listing 13-25](#L1325)
-
-[Listing 13-26](#L1326)
-
-[Listing 13-27](#L1327)
-
-\
-
-[Chapter 14](#_Chapter_14)
-
-[Listing 14-01](#L1401)
-
-[Listing 14-02](#L1402)
-
-[Listing 14-03](#L1403)
-
-[Listing 14-04](#L1404)
-
-[Listing 14-05](#L1405)
-
-[Listing 14-06](#L1406)
-
-[Listing 14-07](#L1407)
-
-[Listing 14-08](#L1408)
-
-[Listing 14-09](#L1409)
-
-[Listing 14-10](#L1410)
-
-[Listing 14-11](#L1411)
-
-[Listing 14-12](#L1412)
-
-[Listing 14-13](#L1413)
-
-[Listing 14-14](#L1414)
-
-[Listing 14-15](#L1415)
-
-[Listing 14-16](#L1416)
-
-\
-
-[Chapter 15](#_Chapter_15)
-
-[Listing 15-1](#L1501)
-
-[Listing 15-2](#L1502)
-
-[Listing 15-3](#L1503)
-
-[Listing 15-4](#L1504)
-
-[Listing 15-5](#L1505)
-
-\
-
-[PLUS](#_Plus)
-
-[LZTEST](#LZTEST)
-
-[LZTIMEBAT](#LZTIMEBAT)
-
-[LZTIMER](#LZTIMER)
-
-[PZTEST](#PZTEST)
-
-[PZTIMEBAT](#PZTIMEBAT)
-
-[PZTIMER](#PZTIMER)
-
-* * * * *
-
-\
-
-Chapter 2
----------
-
-### [**Listing 2-1**](#L201R)
+### Listing 2-1
 
 ;
 
@@ -559,7 +99,6 @@ disabled**
 
 **;**
 
-\
 
 **Code segment word public 'CODE'**
 
@@ -567,7 +106,6 @@ disabled**
 
 **public ZTimerOn, ZTimerOff, ZTimerReport**
 
-\
 
 **;**
 
@@ -643,7 +181,6 @@ when**
 
 **endm**
 
-\
 
 **;**
 
@@ -665,7 +202,6 @@ when**
 
 **endm**
 
-\
 
 **OriginalFlags db ? ;storage for upper byte of**
 
@@ -741,7 +277,6 @@ when**
 
 **db '$'**
 
-\
 
 **;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
 
@@ -749,11 +284,9 @@ when**
 
 **;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
 
-\
 
 **ZTimerOn proc near**
 
-\
 
 **;**
 
@@ -889,11 +422,9 @@ when**
 
 **ret**
 
-\
 
 **ZTimerOn endp**
 
-\
 
 **;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
 
@@ -901,11 +432,9 @@ when**
 
 **;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
 
-\
 
 **ZTimerOff proc near**
 
-\
 
 **;**
 
@@ -1061,11 +590,9 @@ when**
 
 **ret**
 
-\
 
 **ZTimerOff endp**
 
-\
 
 **;**
 
@@ -1073,7 +600,6 @@ when**
 
 **;**
 
-\
 
 **ReferenceZTimerOn proc near**
 
@@ -1127,11 +653,9 @@ when**
 
 **ret**
 
-\
 
 **ReferenceZTimerOn endp**
 
-\
 
 **;**
 
@@ -1141,7 +665,6 @@ when**
 
 **;**
 
-\
 
 **ReferenceZTimerOff proc near**
 
@@ -1201,11 +724,9 @@ when**
 
 **ret**
 
-\
 
 **ReferenceZTimerOff endp**
 
-\
 
 **;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
 
@@ -1213,11 +734,9 @@ when**
 
 **;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
 
-\
 
 **ZTimerReport proc near**
 
-\
 
 **pushf**
 
@@ -1343,17 +862,15 @@ when**
 
 **ret**
 
-\
 
 **ZTimerReport endp**
 
-\
 
 **Code ends**
 
 **end**
 
-### [**Listing 2-2**](#L202R)
+### Listing 2-2
 
 **;**
 
@@ -1435,11 +952,9 @@ when**
 
 **end Start**
 
-\
 
-### [**Listing 2-3**](#L203R)
+### Listing 2-3
 
-\
 
 **; \*\*\* Listing 2-3 \*\*\***
 
@@ -1491,13 +1006,10 @@ when**
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 2-4**](#L204R)
+### Listing 2-4
 
-\
 
 **echo off**
 
@@ -1631,11 +1143,9 @@ when**
 
 **:end**
 
-\
 
-### [**Listing 2-5**](#L205R)
+### Listing 2-5
 
-\
 
 **;**
 
@@ -1800,7 +1310,6 @@ precision**
 
 **;**
 
-\
 
 **Code segment word public 'CODE'**
 
@@ -1808,7 +1317,6 @@ precision**
 
 **public ZTimerOn, ZTimerOff, ZTimerReport**
 
-\
 
 **;**
 
@@ -1910,7 +1418,6 @@ when**
 
 **endm**
 
-\
 
 **;**
 
@@ -1932,7 +1439,6 @@ when**
 
 **endm**
 
-\
 
 **StartBIOSCountLow dw ? ;BIOS count low word at the**
 
@@ -2072,7 +1578,6 @@ when**
 
 **db '$'**
 
-\
 
 **;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
 
@@ -2080,11 +1585,9 @@ when**
 
 **;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
 
-\
 
 **ZTimerOn proc near**
 
-\
 
 **;**
 
@@ -2224,11 +1727,9 @@ allow**
 
 **ret**
 
-\
 
 **ZTimerOn endp**
 
-\
 
 **;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
 
@@ -2236,11 +1737,9 @@ allow**
 
 **;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
 
-\
 
 **ZTimerOff proc near**
 
-\
 
 **;**
 
@@ -2277,7 +1776,6 @@ allow**
 
 **endm**
 
-\
 
 **;**
 
@@ -2285,11 +1783,9 @@ allow**
 
 **;**
 
-\
 
 **if PS2**
 
-\
 
 **mov al,00000000b**
 
@@ -2319,7 +1815,6 @@ allow**
 
 **else**
 
-\
 
 **;**
 
@@ -2341,11 +1836,9 @@ allow**
 
 **out MODE\_8253,al**
 
-\
 
 **endif**
 
-\
 
 **cli ;stop the BIOS count**
 
@@ -2405,11 +1898,9 @@ allow**
 
 **;**
 
-\
 
 **ife PS2**
 
-\
 
 **DELAY**
 
@@ -2433,11 +1924,9 @@ allow**
 
 **DELAY**
 
-\
 
 **endif**
 
-\
 
 **sti ;let the BIOS count continue**
 
@@ -2489,11 +1978,9 @@ allow**
 
 **ret**
 
-\
 
 **ZTimerOff endp**
 
-\
 
 **;**
 
@@ -2501,7 +1988,6 @@ allow**
 
 **;**
 
-\
 
 **ReferenceZTimerOn proc near**
 
@@ -2555,11 +2041,9 @@ allow**
 
 **ret**
 
-\
 
 **ReferenceZTimerOn endp**
 
-\
 
 **;**
 
@@ -2573,7 +2057,6 @@ allow**
 
 **;**
 
-\
 
 **ReferenceZTimerOff proc near**
 
@@ -2589,7 +2072,6 @@ allow**
 
 **push cx**
 
-\
 
 **;**
 
@@ -2605,7 +2087,6 @@ allow**
 
 **endm**
 
-\
 
 **mov al,00000000b**
 
@@ -2651,11 +2132,9 @@ allow**
 
 **ret**
 
-\
 
 **ReferenceZTimerOff endp**
 
-\
 
 **;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
 
@@ -2663,11 +2142,9 @@ allow**
 
 **;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
 
-\
 
 **ZTimerReport proc near**
 
-\
 
 **pushf**
 
@@ -2731,7 +2208,6 @@ allow**
 
 **; than an hour**
 
-\
 
 **;**
 
@@ -2911,23 +2387,18 @@ allow**
 
 **ret**
 
-\
 
 **ZTimerReport endp**
 
-\
 
 **Code ends**
 
 **End**
 
-\
 
-\
 
-### [**Listing 2-6**](#L206R)
+### Listing 2-6
 
-\
 
 **;**
 
@@ -3051,13 +2522,10 @@ allow**
 
 **end Start**
 
-\
 
-\
 
-### [**Listing 2-7**](#L207R)
+### Listing 2-7
 
-\
 
 **echo off**
 
@@ -3192,11 +2660,9 @@ allow**
 
 **:end**
 
-\
 
-### [**Listing 2-8**](#L208R)
+### Listing 2-8
 
-\
 
 **;**
 
@@ -3256,16 +2722,11 @@ allow**
 
 **call ZTimerOff**
 
-\
 
-Chapter 3
----------
+## Chapter 3
 
-\
+### Listing 3-1
 
-### [**Listing 3-1**](#L301R)
-
-\
 
 **;**
 
@@ -3331,13 +2792,10 @@ Chapter 3
 
 **;**
 
-\
 
-\
 
-### [**Listing 3-2**](#L302R)
+### Listing 3-2
 
-\
 
 **; \*\*\* Listing 3-2 \*\*\***
 
@@ -3379,18 +2837,12 @@ Chapter 3
 
 **call ZTimerOff**
 
-\
 
-\
 
-Chapter 4
----------
+## Chapter 4
 
-\
+### Listing 4-1
 
-### [**Listing 4-1**](#L401R)
-
-\
 
 **;**
 
@@ -3424,13 +2876,10 @@ Chapter 4
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 4-2**](#L402R)
+### Listing 4-2
 
-\
 
 **;**
 
@@ -3464,13 +2913,10 @@ Chapter 4
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 4-3**](#L403R)
+### Listing 4-3
 
-\
 
 **;**
 
@@ -3494,13 +2940,10 @@ Chapter 4
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 4-4**](#L404R)
+### Listing 4-4
 
-\
 
 **;**
 
@@ -3524,13 +2967,10 @@ Chapter 4
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 4-5**](#L405R)
+### Listing 4-5
 
-\
 
 **;**
 
@@ -3560,13 +3000,10 @@ Chapter 4
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 4-6**](#L406R)
+### Listing 4-6
 
-\
 
 **;**
 
@@ -3598,13 +3035,10 @@ Chapter 4
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 4-7**](#L407R)
+### Listing 4-7
 
-\
 
 **;**
 
@@ -3632,13 +3066,10 @@ Chapter 4
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 4-8**](#L408R)
+### Listing 4-8
 
-\
 
 **;**
 
@@ -3666,15 +3097,11 @@ Chapter 4
 
 **call ZTimerOff**
 
-\
 
-\
 
-\
 
-### [**Listing 4-9**](#L409R)
+### Listing 4-9
 
-\
 
 **;**
 
@@ -3704,13 +3131,10 @@ Chapter 4
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 4-10**](#L410R)
+### Listing 4-10
 
-\
 
 **;**
 
@@ -3736,13 +3160,10 @@ Chapter 4
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 4-11**](#L411R)
+### Listing 4-11
 
-\
 
 **;**
 
@@ -3806,13 +3227,10 @@ Chapter 4
 
 **int 10h ;return to text mode**
 
-\
 
-\
 
-### [**Listing 4-12**](#L412R)
+### Listing 4-12
 
-\
 
 **;**
 
@@ -3856,16 +3274,11 @@ Chapter 4
 
 **call ZTimerOff**
 
-\
 
-Chapter 5
----------
+## Chapter 5
 
-\
+### Listing 5-1
 
-### [**Listing 5-1**](#L501R)
-
-\
 
 **;**
 
@@ -3937,18 +3350,12 @@ Chapter 5
 
 **end Start**
 
-\
 
-\
 
-Chapter 7
----------
+## Chapter 7
 
-\
+### Listing 7-1
 
-### [**Listing 7-1**](#L701R)
-
-\
 
 **;**
 
@@ -3988,13 +3395,10 @@ Chapter 7
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 7-2**](#L702R)
+### Listing 7-2
 
-\
 
 **;**
 
@@ -4054,13 +3458,10 @@ Chapter 7
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 7-3**](#L703R)
+### Listing 7-3
 
-\
 
 **;**
 
@@ -4116,13 +3517,10 @@ Chapter 7
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 7-4**](#L704R)
+### Listing 7-4
 
-\
 
 **;**
 
@@ -4260,13 +3658,10 @@ Chapter 7
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 7-5**](#L705R)
+### Listing 7-5
 
-\
 
 **;**
 
@@ -4428,13 +3823,10 @@ Chapter 7
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 7-6**](#L706R)
+### Listing 7-6
 
-\
 
 **;**
 
@@ -4592,13 +3984,10 @@ Chapter 7
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 7-7**](#L707R)
+### Listing 7-7
 
-\
 
 **;**
 
@@ -4688,13 +4077,10 @@ Chapter 7
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 7-8**](#L708R)
+### Listing 7-8
 
-\
 
 **;**
 
@@ -4792,13 +4178,10 @@ Chapter 7
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 7-9**](#L709R)
+### Listing 7-9
 
-\
 
 **;**
 
@@ -4858,13 +4241,10 @@ Chapter 7
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 7-10**](#L710R)
+### Listing 7-10
 
-\
 
 **;**
 
@@ -4930,13 +4310,10 @@ Chapter 7
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 7-11**](#L711R)
+### Listing 7-11
 
-\
 
 **;**
 
@@ -5002,13 +4379,10 @@ Chapter 7
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 7-12**](#L712R)
+### Listing 7-12
 
-\
 
 **;**
 
@@ -5070,13 +4444,10 @@ Chapter 7
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 7-13**](#L713R)
+### Listing 7-13
 
-\
 
 **;**
 
@@ -5140,13 +4511,10 @@ Chapter 7
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 7-14**](#L714R)
+### Listing 7-14
 
-\
 
 **;**
 
@@ -5232,13 +4600,10 @@ Chapter 7
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 7-15**](#L715R)
+### Listing 7-15
 
-\
 
 **;**
 
@@ -5394,13 +4759,10 @@ Chapter 7
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 7-16**](#L716R)
+### Listing 7-16
 
-\
 
 **;**
 
@@ -5498,13 +4860,10 @@ Chapter 7
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 7-17**](#L717R)
+### Listing 7-17
 
-\
 
 **;**
 
@@ -5616,13 +4975,10 @@ Chapter 7
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 7-18**](#L718R)
+### Listing 7-18
 
-\
 
 **;**
 
@@ -5728,13 +5084,10 @@ Chapter 7
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 7-19**](#L719R)
+### Listing 7-19
 
-\
 
 **;**
 
@@ -5766,13 +5119,10 @@ Chapter 7
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 7-20**](#L720R)
+### Listing 7-20
 
-\
 
 **;**
 
@@ -5812,13 +5162,10 @@ Chapter 7
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 7-21**](#L721R)
+### Listing 7-21
 
-\
 
 **;**
 
@@ -5884,18 +5231,12 @@ Chapter 7
 
 **call ZTimerOff**
 
-\
 
-\
 
-Chapter 8
----------
+## Chapter 8
 
-\
+### Listing 8-1
 
-### [**Listing 8-1**](#L801R)
-
-\
 
 **;**
 
@@ -5933,13 +5274,10 @@ Chapter 8
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 8-2**](#L802R)
+### Listing 8-2
 
-\
 
 **;**
 
@@ -5977,13 +5315,10 @@ Chapter 8
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 8-3**](#L803R)
+### Listing 8-3
 
-\
 
 **;**
 
@@ -6017,13 +5352,10 @@ Chapter 8
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 8-4**](#L804R)
+### Listing 8-4
 
-\
 
 **;**
 
@@ -6061,13 +5393,10 @@ Chapter 8
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 8-5**](#L805R)
+### Listing 8-5
 
-\
 
 **;**
 
@@ -6105,13 +5434,10 @@ Chapter 8
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 8-6**](#L806R)
+### Listing 8-6
 
-\
 
 **;**
 
@@ -6145,13 +5471,10 @@ Chapter 8
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 8-7**](#L807R)
+### Listing 8-7
 
-\
 
 **;**
 
@@ -6189,13 +5512,10 @@ Chapter 8
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 8-8**](#L808R)
+### Listing 8-8
 
-\
 
 **;**
 
@@ -6217,13 +5537,10 @@ Chapter 8
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 8-9**](#L809R)
+### Listing 8-9
 
-\
 
 **;**
 
@@ -6247,13 +5564,10 @@ Chapter 8
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 8-10**](#L810R)
+### Listing 8-10
 
-\
 
 **;**
 
@@ -6291,13 +5605,10 @@ Chapter 8
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 8-11**](#L811R)
+### Listing 8-11
 
-\
 
 **;**
 
@@ -6335,13 +5646,10 @@ Chapter 8
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 8-12**](#L812R)
+### Listing 8-12
 
-\
 
 **;**
 
@@ -6419,13 +5727,10 @@ Chapter 8
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 8-13**](#L813R)
+### Listing 8-13
 
-\
 
 **;**
 
@@ -6503,13 +5808,10 @@ Chapter 8
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 8-14**](#L814R)
+### Listing 8-14
 
-\
 
 **;**
 
@@ -6555,13 +5857,10 @@ Chapter 8
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 8-15**](#L815R)
+### Listing 8-15
 
-\
 
 **;**
 
@@ -6607,13 +5906,10 @@ Chapter 8
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 8-16**](#L816R)
+### Listing 8-16
 
-\
 
 **;**
 
@@ -6663,13 +5959,10 @@ Chapter 8
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 8-17**](#L817R)
+### Listing 8-17
 
-\
 
 **;**
 
@@ -6721,20 +6014,13 @@ Chapter 8
 
 **call ZTimerOff**
 
-\
 
-\
 
-Chapter 9
----------
+## Chapter 9
 
-\
 
-\
+### Listing 9-1
 
-### [**Listing 9-1**](#L901R)
-
-\
 
 **;**
 
@@ -6786,13 +6072,10 @@ Chapter 9
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 9-2**](#L902R)
+### Listing 9-2
 
-\
 
 **;**
 
@@ -6842,13 +6125,10 @@ Chapter 9
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 9-3**](#L903R)
+### Listing 9-3
 
-\
 
 **;**
 
@@ -6880,13 +6160,10 @@ Chapter 9
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 9-4**](#L904R)
+### Listing 9-4
 
-\
 
 **;**
 
@@ -6916,13 +6193,10 @@ Chapter 9
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 9-5**](#L905R)
+### Listing 9-5
 
-\
 
 **;**
 
@@ -7000,13 +6274,10 @@ Chapter 9
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 9-6**](#L906R)
+### Listing 9-6
 
-\
 
 **;**
 
@@ -7084,13 +6355,10 @@ Chapter 9
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 9-7**](#L907R)
+### Listing 9-7
 
-\
 
 **;**
 
@@ -7118,13 +6386,10 @@ Chapter 9
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 9-8**](#L908R)
+### Listing 9-8
 
-\
 
 **;**
 
@@ -7154,13 +6419,10 @@ Chapter 9
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 9-9**](#L909R)
+### Listing 9-9
 
-\
 
 **;**
 
@@ -7190,13 +6452,10 @@ Chapter 9
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 9-10**](#L910R)
+### Listing 9-10
 
-\
 
 **;**
 
@@ -7224,13 +6483,10 @@ Chapter 9
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 9-11**](#L911R)
+### Listing 9-11
 
-\
 
 **;**
 
@@ -7268,13 +6524,10 @@ Chapter 9
 
 **jbe TestLoop**
 
-\
 
-\
 
-### [**Listing 9-12**](#L912R)
+### Listing 9-12
 
-\
 
 **;**
 
@@ -7332,13 +6585,10 @@ Chapter 9
 
 **jnz OuterLoop**
 
-\
 
-\
 
-### [**Listing 9-13**](#L913R)
+### Listing 9-13
 
-\
 
 **;**
 
@@ -7412,13 +6662,10 @@ Chapter 9
 
 **; variable together**
 
-\
 
-\
 
-### [**Listing 9-14**](#L914R)
+### Listing 9-14
 
-\
 
 **;**
 
@@ -7496,13 +6743,10 @@ Chapter 9
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 9-15**](#L915R)
+### Listing 9-15
 
-\
 
 **;**
 
@@ -7580,17 +6824,13 @@ Chapter 9
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 9-16**](#L916R)
+### Listing 9-16
 
-\
 
 **;**
 
-\
 
 **;**
 
@@ -7674,13 +6914,10 @@ Chapter 9
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 9-17**](#L917R)
+### Listing 9-17
 
-\
 
 **;**
 
@@ -7742,13 +6979,10 @@ Chapter 9
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 9-18**](#L918R)
+### Listing 9-18
 
-\
 
 **;**
 
@@ -7818,13 +7052,10 @@ Chapter 9
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 9-19**](#L919R)
+### Listing 9-19
 
-\
 
 **;**
 
@@ -7862,13 +7093,10 @@ Chapter 9
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 9-20**](#L920R)
+### Listing 9-20
 
-\
 
 **;**
 
@@ -7906,13 +7134,10 @@ Chapter 9
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 9-21**](#L921R)
+### Listing 9-21
 
-\
 
 **;**
 
@@ -7938,13 +7163,10 @@ Chapter 9
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 9-22**](#L922R)
+### Listing 9-22
 
-\
 
 **;**
 
@@ -7974,13 +7196,10 @@ Chapter 9
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 9-23**](#L923R)
+### Listing 9-23
 
-\
 
 **;**
 
@@ -8034,13 +7253,10 @@ Chapter 9
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 9-24**](#L924R)
+### Listing 9-24
 
-\
 
 **;**
 
@@ -8118,13 +7334,10 @@ Chapter 9
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 9-25**](#L925R)
+### Listing 9-25
 
-\
 
 **;**
 
@@ -8202,13 +7415,10 @@ Chapter 9
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 9-26**](#L926R)
+### Listing 9-26
 
-\
 
 **;**
 
@@ -8292,20 +7502,13 @@ Chapter 9
 
 **call ZTimerOff**
 
-\
 
-\
 
-Chapter 10
-----------
+## Chapter 10
 
-\
 
-\
+### Listing 10-1
 
-### [**Listing 10-1**](#L1001R)
-
-\
 
 **;**
 
@@ -8347,13 +7550,10 @@ Chapter 10
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 10-2**](#L1002R)
+### Listing 10-2
 
-\
 
 **;**
 
@@ -8397,13 +7597,10 @@ Chapter 10
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 10-3**](#L1003R)
+### Listing 10-3
 
-\
 
 **;**
 
@@ -8445,13 +7642,10 @@ Chapter 10
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 10-4**](#L1004R)
+### Listing 10-4
 
-\
 
 **;**
 
@@ -8503,13 +7697,10 @@ Chapter 10
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 10-5**](#L1005R)
+### Listing 10-5
 
-\
 
 **;**
 
@@ -8563,13 +7754,10 @@ Chapter 10
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 10-6**](#L1006R)
+### Listing 10-6
 
-\
 
 **;**
 
@@ -8621,13 +7809,10 @@ Chapter 10
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 10-7**](#L1007R)
+### Listing 10-7
 
-\
 
 **;**
 
@@ -8675,13 +7860,10 @@ Chapter 10
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 10-8**](#L1008R)
+### Listing 10-8
 
-\
 
 **;**
 
@@ -8735,13 +7917,10 @@ Chapter 10
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 10-9**](#L1009R)
+### Listing 10-9
 
-\
 
 **;**
 
@@ -8787,13 +7966,10 @@ Chapter 10
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 10-10**](#L1010R)
+### Listing 10-10
 
-\
 
 **;**
 
@@ -8841,13 +8017,10 @@ Chapter 10
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 10-11**](#L1011R)
+### Listing 10-11
 
-\
 
 **;**
 
@@ -8933,13 +8106,10 @@ Chapter 10
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 10-12**](#L1012R)
+### Listing 10-12
 
-\
 
 **;**
 
@@ -9063,13 +8233,10 @@ Chapter 10
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 10-13**](#L1013R)
+### Listing 10-13
 
-\
 
 **;**
 
@@ -9175,13 +8342,10 @@ Chapter 10
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 10-14**](#L1014R)
+### Listing 10-14
 
-\
 
 **;**
 
@@ -9237,13 +8401,10 @@ Chapter 10
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 10-15**](#L1015R)
+### Listing 10-15
 
-\
 
 **;**
 
@@ -9309,13 +8470,10 @@ Chapter 10
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 10-16**](#L1016R)
+### Listing 10-16
 
-\
 
 **;**
 
@@ -9361,13 +8519,10 @@ Chapter 10
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 10-17**](#L1017R)
+### Listing 10-17
 
-\
 
 **;**
 
@@ -9417,13 +8572,10 @@ Chapter 10
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 10-18**](#L1018R)
+### Listing 10-18
 
-\
 
 **;**
 
@@ -9475,13 +8627,10 @@ Chapter 10
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 10-19**](#L1019R)
+### Listing 10-19
 
-\
 
 **;**
 
@@ -9553,18 +8702,12 @@ Chapter 10
 
 **call ZTimerOff**
 
-\
 
-\
 
-Chapter 11
-----------
+## Chapter 11
 
-\
+### Listing 11-1
 
-### [**Listing 11-1**](#L1101R)
-
-\
 
 **;**
 
@@ -9690,13 +8833,10 @@ Chapter 11
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 11-2**](#L1102R)
+### Listing 11-2
 
-\
 
 **;**
 
@@ -9814,13 +8954,10 @@ Chapter 11
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 11-3**](#L1103R)
+### Listing 11-3
 
-\
 
 **;**
 
@@ -9942,13 +9079,10 @@ Chapter 11
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 11-4**](#L1004R)
+### Listing 11-4
 
-\
 
 **;**
 
@@ -10052,13 +9186,10 @@ Chapter 11
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 11-5**](#L1105R)
+### Listing 11-5
 
-\
 
 **; \*\*\* Listing 11-5 \*\*\***
 
@@ -10112,13 +9243,10 @@ Chapter 11
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 11-6**](#L1106R)
+### Listing 11-6
 
-\
 
 **; \*\*\* Listing 11-6 \*\*\***
 
@@ -10164,13 +9292,10 @@ Chapter 11
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 11-7**](#L1107R)
+### Listing 11-7
 
-\
 
 **;**
 
@@ -10256,7 +9381,6 @@ Chapter 11
 
 **; we can copy from low to high**
 
-\
 
 **;source is below destination, so we**
 
@@ -10352,13 +9476,10 @@ Chapter 11
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 11-8**](#L1108R)
+### Listing 11-8
 
-\
 
 **;**
 
@@ -10448,7 +9569,6 @@ Chapter 11
 
 **; we can copy from low to high**
 
-\
 
 **;source is below destination, so we**
 
@@ -10570,13 +9690,10 @@ Chapter 11
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 11-9**](#L1109R)
+### Listing 11-9
 
-\
 
 **;**
 
@@ -10716,13 +9833,10 @@ Chapter 11
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 11-10**](#L1110R)
+### Listing 11-10
 
-\
 
 **;**
 
@@ -10858,13 +9972,10 @@ Chapter 11
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 11-11**](#L1111R)
+### Listing 11-11
 
-\
 
 **;**
 
@@ -10990,13 +10101,10 @@ Chapter 11
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 11-12**](#L1112R)
+### Listing 11-12
 
-\
 
 **;**
 
@@ -11154,13 +10262,10 @@ Chapter 11
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 11-13**](#L1113R)
+### Listing 11-13
 
-\
 
 **;**
 
@@ -11274,13 +10379,10 @@ Chapter 11
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 11-14**](#L1114R)
+### Listing 11-14
 
-\
 
 **; \*\*\* Listing 11-14 \*\*\***
 
@@ -11432,13 +10534,10 @@ Chapter 11
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 11-15**](#L1115R)
+### Listing 11-15
 
-\
 
 **;**
 
@@ -11592,13 +10691,10 @@ Chapter 11
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 11-16**](#L1116R)
+### Listing 11-16
 
-\
 
 **;**
 
@@ -11840,13 +10936,10 @@ Chapter 11
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [Listing 11-17](#L1117R)
+### Listing 11-17
 
-\
 
 **;**
 
@@ -12066,13 +11159,10 @@ Chapter 11
 
 **end start**
 
-\
 
-\
 
-### [**Listing 11-18**](#L1118R)
+### Listing 11-18
 
-\
 
 **;**
 
@@ -12298,13 +11388,10 @@ Chapter 11
 
 **end start**
 
-\
 
-\
 
-### [**Listing 11-19**](#L1119R)
+### Listing 11-19
 
-\
 
 **;**
 
@@ -12412,13 +11499,10 @@ Chapter 11
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 11-20**](#L1120R)
+### Listing 11-20
 
-\
 
 **;**
 
@@ -12512,13 +11596,10 @@ Chapter 11
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 11-21**](#L1121R)
+### Listing 11-21
 
-\
 
 **;**
 
@@ -12662,17 +11743,13 @@ Chapter 11
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 11-22**](#L1122R)
+### Listing 11-22
 
-\
 
 **;**
 
-\
 
 **;**
 
@@ -12826,13 +11903,10 @@ Chapter 11
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 11-23**](#L1123R)
+### Listing 11-23
 
-\
 
 **;**
 
@@ -12968,13 +12042,10 @@ Chapter 11
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 11-24**](#L1124R)
+### Listing 11-24
 
-\
 
 **;**
 
@@ -13210,13 +12281,10 @@ Chapter 11
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 11-25**](#L1125R)
+### Listing 11-25
 
-\
 
 **;**
 
@@ -13400,13 +12468,10 @@ Chapter 11
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 11-26**](#L1126R)
+### Listing 11-26
 
-\
 
 **;**
 
@@ -13612,13 +12677,10 @@ Chapter 11
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 11-27**](#L1127R)
+### Listing 11-27
 
-\
 
 **;**
 
@@ -13838,13 +12900,10 @@ Chapter 11
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 11-28**](#L1128R)
+### Listing 11-28
 
-\
 
 **;**
 
@@ -14080,13 +13139,10 @@ Chapter 11
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 11-29**](#L1129R)
+### Listing 11-29
 
-\
 
 **;**
 
@@ -14390,13 +13446,10 @@ Chapter 11
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 11-30**](#L1130R)
+### Listing 11-30
 
-\
 
 **;**
 
@@ -14652,13 +13705,10 @@ Chapter 11
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 11-31**](#L1131R)
+### Listing 11-31
 
-\
 
 **;**
 
@@ -14876,13 +13926,10 @@ Chapter 11
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 11-32**](#L1132R)
+### Listing 11-32
 
-\
 
 **;**
 
@@ -15096,13 +14143,10 @@ Chapter 11
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 11-33**](#L1133R)
+### Listing 11-33
 
-\
 
 **;**
 
@@ -15568,7 +14612,6 @@ Chapter 11
 
 **; is one**
 
-\
 
 **if DELAY**
 
@@ -15602,13 +14645,10 @@ Chapter 11
 
 **; interrupt to set the mode**
 
-\
 
-\
 
-### [**Listing 11-34**](#L1134R)
+### Listing 11-34
 
-\
 
 **;**
 
@@ -16062,7 +15102,6 @@ Chapter 11
 
 **; is one**
 
-\
 
 **if DELAY**
 
@@ -16096,18 +15135,12 @@ Chapter 11
 
 **; interrupt to set the mode**
 
-\
 
-\
 
-Chapter 12
-----------
+## Chapter 12
 
-\
+### Listing 12-1
 
-### [**Listing 12-1**](#L1201R)
-
-\
 
 **;**
 
@@ -16135,11 +15168,9 @@ Chapter 12
 
 **call ZTimerOff**
 
-\
 
-### [**Listing 12-2**](#L1202R)
+### Listing 12-2
 
-\
 
 **;**
 
@@ -16167,13 +15198,10 @@ Chapter 12
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 12-3**](#L1203R)
+### Listing 12-3
 
-\
 
 **;**
 
@@ -16207,13 +15235,10 @@ Chapter 12
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 12-4**](#L1204R)
+### Listing 12-4
 
-\
 
 **;**
 
@@ -16255,13 +15280,10 @@ Chapter 12
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 12-5**](#L1205R)
+### Listing 12-5
 
-\
 
 **;**
 
@@ -16283,20 +15305,13 @@ Chapter 12
 
 **call ZTimerOff**
 
-\
 
-\
 
-Chapter 13
-----------
+## Chapter 13
 
-\
 
-\
+### Listing 13-1
 
-### [**Listing 13-1**](#L1301R)
-
-\
 
 **;**
 
@@ -16394,13 +15409,10 @@ Chapter 13
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 13-2**](#L1302R)
+### Listing 13-2
 
-\
 
 **;**
 
@@ -16498,13 +15510,10 @@ Chapter 13
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 13-3**](#L1303R)
+### Listing 13-3
 
-\
 
 **;**
 
@@ -16610,13 +15619,10 @@ Chapter 13
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 13-4**](#L1304R)
+### Listing 13-4
 
-\
 
 **;**
 
@@ -16710,13 +15716,10 @@ Chapter 13
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 13-5**](#L1305R)
+### Listing 13-5
 
-\
 
 **;**
 
@@ -16829,13 +15832,10 @@ Chapter 13
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 13-6**](#L1306R)
+### Listing 13-6
 
-\
 
 **;**
 
@@ -16896,11 +15896,9 @@ Chapter 13
 
 **call ZTimerOff**
 
-\
 
-### [**Listing 13-7**](#L1307R)
+### Listing 13-7
 
-\
 
 **;**
 
@@ -16957,13 +15955,10 @@ Chapter 13
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 13-8**](#L1308R)
+### Listing 13-8
 
-\
 
 **;**
 
@@ -17079,13 +16074,10 @@ Chapter 13
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 13-9**](#L1309R)
+### Listing 13-9
 
-\
 
 **;**
 
@@ -17203,13 +16195,10 @@ Chapter 13
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 13-10**](#L1310R)
+### Listing 13-10
 
-\
 
 **;**
 
@@ -17345,13 +16334,10 @@ Chapter 13
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 13-11**](#L1311R)
+### Listing 13-11
 
-\
 
 **;**
 
@@ -17505,13 +16491,10 @@ Chapter 13
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 13-12**](#L1312R)
+### Listing 13-12
 
-\
 
 **; \*\*\* Listing 13-12 \*\*\***
 
@@ -17663,13 +16646,10 @@ Chapter 13
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 13-13**](#L1313R)
+### Listing 13-13
 
-\
 
 **;**
 
@@ -17833,13 +16813,10 @@ Chapter 13
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 13-14**](#L1314R)
+### Listing 13-14
 
-\
 
 **;**
 
@@ -18041,13 +17018,10 @@ Chapter 13
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 13-15**](#L1315R)
+### Listing 13-15
 
-\
 
 **;**
 
@@ -18237,13 +17211,10 @@ Chapter 13
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 13-16**](#L1316R)
+### Listing 13-16
 
-\
 
 **;**
 
@@ -18427,13 +17398,10 @@ Chapter 13
 
 **call ZTimerOff**
 
-\
 
-\
 
 ### Listing 13-17
 
-\
 
 **;**
 
@@ -18619,13 +17587,10 @@ Chapter 13
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 13-18**](#L1318R)
+### Listing 13-18
 
-\
 
 **;**
 
@@ -18771,13 +17736,10 @@ Chapter 13
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 13-19**](#L1319R)
+### Listing 13-19
 
-\
 
 **;**
 
@@ -18865,13 +17827,10 @@ Chapter 13
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 13-20**](#L1320R)
+### Listing 13-20
 
-\
 
 **;**
 
@@ -18955,13 +17914,10 @@ Chapter 13
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 13-21**](#L1321R)
+### Listing 13-21
 
-\
 
 **;**
 
@@ -19125,13 +18081,10 @@ Chapter 13
 
 **ret**
 
-\
 
-\
 
-### [**Listing 13-22**](#L1322R)
+### Listing 13-22
 
-\
 
 **;**
 
@@ -19291,13 +18244,10 @@ Chapter 13
 
 **ret**
 
-\
 
-\
 
-### [**Listing 13-23**](#L1323R)
+### Listing 13-23
 
-\
 
 **;**
 
@@ -19455,13 +18405,10 @@ Chapter 13
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 13-24**](#L1324R)
+### Listing 13-24
 
-\
 
 **;**
 
@@ -19567,15 +18514,11 @@ Chapter 13
 
 **call ZTimerOff**
 
-\
 
-\
 
-\
 
-### [**Listing 13-25**](#L1325R)
+### Listing 13-25
 
-\
 
 **;**
 
@@ -19741,13 +18684,10 @@ Chapter 13
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 13-26**](#L1326R)
+### Listing 13-26
 
-\
 
 **;**
 
@@ -19901,13 +18841,10 @@ Chapter 13
 
 **ret**
 
-\
 
-\
 
-### [**Listing 13-27**](#L1327R)
+### Listing 13-27
 
-\
 
 **;**
 
@@ -20131,18 +19068,12 @@ Chapter 13
 
 **call ZTimerOff**
 
-\
 
-\
 
-Chapter 14
-----------
+## Chapter 14
 
-\
+### Listing 14-1
 
-### [**Listing 14-1**](#L1401R)
-
-\
 
 **;**
 
@@ -20330,13 +19261,10 @@ Chapter 14
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 14-2**](#L1402R)
+### Listing 14-2
 
-\
 
 **;**
 
@@ -20528,13 +19456,10 @@ Chapter 14
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 14-3**](#L1403R)
+### Listing 14-3
 
-\
 
 **;**
 
@@ -20736,13 +19661,10 @@ Chapter 14
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 14-4**](#L1404R)
+### Listing 14-4
 
-\
 
 **;**
 
@@ -20836,13 +19758,10 @@ Chapter 14
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 14-5**](#L1405R)
+### Listing 14-5
 
-\
 
 **;**
 
@@ -20982,13 +19901,10 @@ Chapter 14
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 14-6**](#L1406R)
+### Listing 14-6
 
-\
 
 **;**
 
@@ -21152,13 +20068,10 @@ Chapter 14
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 14-7**](#L1407R)
+### Listing 14-7
 
-\
 
 **;**
 
@@ -21330,13 +20243,10 @@ Chapter 14
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 14-8**](#L1408R)
+### Listing 14-8
 
-\
 
 **;**
 
@@ -21506,13 +20416,10 @@ Chapter 14
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 14-9**](#L1409R)
+### Listing 14-9
 
-\
 
 **;**
 
@@ -21682,13 +20589,10 @@ Chapter 14
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 14-10**](#L1410R)
+### Listing 14-10
 
-\
 
 **;**
 
@@ -21868,13 +20772,10 @@ Chapter 14
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 14-11**](#L1411R)
+### Listing 14-11
 
-\
 
 **;**
 
@@ -22054,13 +20955,10 @@ Chapter 14
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 14-12**](#L1412R)
+### Listing 14-12
 
-\
 
 **;**
 
@@ -22238,13 +21136,10 @@ Chapter 14
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 14-13**](#L1413R)
+### Listing 14-13
 
-\
 
 **;**
 
@@ -22410,13 +21305,10 @@ Chapter 14
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 14-14**](#L1414R)
+### Listing 14-14
 
-\
 
 **;**
 
@@ -22738,13 +21630,10 @@ Chapter 14
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 14-15**](#L1415R)
+### Listing 14-15
 
-\
 
 **;**
 
@@ -22898,13 +21787,10 @@ Chapter 14
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 14-16**](#L1416R)
+### Listing 14-16
 
-\
 
 **;**
 
@@ -23282,16 +22168,11 @@ Chapter 14
 
 **call ZTimerOff**
 
-Chapter 15
-----------
+## Chapter 15
 
-\
 
-\
+### Listing 15-1
 
-### [**Listing 15-1**](#L1501R)
-
-\
 
 **;**
 
@@ -23331,13 +22212,10 @@ Chapter 15
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 15-2**](#L1502R)
+### Listing 15-2
 
-\
 
 **;**
 
@@ -23373,13 +22251,10 @@ Chapter 15
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 15-3**](#L1503R)
+### Listing 15-3
 
-\
 
 **;**
 
@@ -23413,13 +22288,10 @@ Chapter 15
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 15-4**](#L1504R)
+### Listing 15-4
 
-\
 
 **;**
 
@@ -23445,13 +22317,10 @@ Chapter 15
 
 **call ZTimerOff**
 
-\
 
-\
 
-### [**Listing 15-5**](#L1505R)
+### Listing 15-5
 
-\
 
 **;**
 
@@ -23497,11 +22366,9 @@ Plus
 **\
 **
 
-\
 
 ### **LZTEST**
 
-\
 
 **; LZTEST**
 
@@ -23627,13 +22494,10 @@ Plus
 
 **end Start**
 
-\
 
-\
 
-### **[LZTIME.BAT](#LZTIMEBATR)**
+### LZTIME.BAT
 
-\
 
 **LZTIME.BAT**
 
@@ -23770,1598 +22634,1281 @@ Plus
 
 **:end**
 
-\
 
-\
 
-\
 
-### [\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+### LZTIME
 
-[**; LZTIME**](#LZTIMERR)
+**; LZTIME**
+**;**
+**; \*\*\* Listing 2-5 \*\*\***
+**;**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; The long-period Zen timer. (LZTIMER.ASM)**
 
-[**; \*\*\* Listing 2-5
-\*\*\***](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Uses the 8253 timer and the BIOS time-of-day count to time the**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; performance of code that takes less than an hour to execute.**
 
-[**; The long-period Zen timer.
-(LZTIMER.ASM)**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Because interrupts are left on (in order to allow the timer**
 
-[**; Uses the 8253 timer and the BIOS time-of-day count to time
-the**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; interrupt to be recognized), this is less accurate than the**
 
-[**; performance of code that takes less than an hour to
-execute.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; precision Zen timer, so it is best used only to time code that takes**
 
-[**; Because interrupts are left on (in order to allow the
-timer**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; more than about 54 milliseconds to execute (code that the precision**
 
-[**; interrupt to be recognized), this is less accurate than
-the**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Zen timer reports overflow on). Resolution is limited by the**
 
-[**; precision Zen timer, so it is best used only to time code that
-takes**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; occurrence of timer interrupts.**
 
-[**; more than about 54 milliseconds to execute (code that the
-precision**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; Zen timer reports overflow on). Resolution is limited by
-the**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; By Michael Abrash 4/26/89**
 
-[**; occurrence of timer
-interrupts.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Externally callable routines:**
 
-[**; By Michael Abrash
-4/26/89**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; ZTimerOn: Saves the BIOS time of day count and starts the**
 
-[**; Externally callable
-routines:**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; long-period Zen timer.**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; ZTimerOn: Saves the BIOS time of day count and starts
-the**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; ZTimerOff: Stops the long-period Zen timer and saves the timer**
 
-[**; long-period Zen
-timer.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; count and the BIOS time-of-day count.**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; ZTimerOff: Stops the long-period Zen timer and saves the
-timer**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; ZTimerReport: Prints the time that passed between starting and**
 
-[**; count and the BIOS time-of-day
-count.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; stopping the timer.**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; ZTimerReport: Prints the time that passed between starting
-and**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Note: If either more than an hour passes or midnight falls between**
 
-[**; stopping the
-timer.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; calls to ZTimerOn and ZTimerOff, an error is reported. For**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; timing code that takes more than a few minutes to execute,**
 
-[**; Note: If either more than an hour passes or midnight falls
-between**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; either the DOS TIME command in a batch file before and after**
 
-[**; calls to ZTimerOn and ZTimerOff, an error is reported.
-For**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; execution of the code to time or the use of the DOS**
 
-[**; timing code that takes more than a few minutes to
-execute,**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; time-of-day function in place of the long-period Zen timer is**
 
-[**; either the DOS TIME command in a batch file before and
-after**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; more than adequate.**
 
-[**; execution of the code to time or the use of the
-DOS**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; time-of-day function in place of the long-period Zen timer
-is**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Note: The PS/2 version is assembled by setting the symbol PS2 to 1.**
 
-[**; more than
-adequate.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; PS2 must be set to 1 on PS/2 computers because the PS/2's**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; timers are not compatible with an undocumented timer-stopping**
 
-[**; Note: The PS/2 version is assembled by setting the symbol PS2 to
-1.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; feature of the 8253; the alternative timing approach that**
 
-[**; PS2 must be set to 1 on PS/2 computers because the
-PS/2's**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; must be used on PS/2 computers leaves a short window**
 
-[**; timers are not compatible with an undocumented
-timer-stopping**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; during which the timer 0 count and the BIOS timer count may**
 
-[**; feature of the 8253; the alternative timing approach
-that**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; not be synchronized. You should also set the PS2 symbol to**
 
-[**; must be used on PS/2 computers leaves a short
-window**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; 1 if you're getting erratic or obviously incorrect results.**
 
-[**; during which the timer 0 count and the BIOS timer count
-may**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; When the PS/2 version is used, each block of code being timed**
 
-[**; not be synchronized. You should also set the PS2 symbol
-to**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; should be run several times, with at least two similar**
 
-[**; 1 if you're getting erratic or obviously incorrect
-results.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; readings required to establish a true measurement.**
 
-[**; When the PS/2 version is used, each block of code being
-timed**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; should be run several times, with at least two
-similar**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Note: When PS2 is 0, the code relies on an undocumented 8253**
 
-[**; readings required to establish a true
-measurement.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; feature. It is possible that the 8253 (or whatever chip**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; is emulating the 8253) may be put into an undefined or**
 
-[**; Note: When PS2 is 0, the code relies on an undocumented
-8253**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; incorrect state when this feature is used. If your computer**
 
-[**; feature. It is possible that the 8253 (or whatever
-chip**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; displays any hint of erratic behavior after the long-period**
 
-[**; is emulating the 8253) may be put into an undefined
-or**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Zen timer is used, such as the floppy drive failing to**
 
-[**; incorrect state when this feature is used. If your
-computer**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; operate properly, reboot the system, set PS2 to 1 and**
 
-[**; displays any hint of erratic behavior after the
-long-period**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; leave it that way.**
 
-[**; Zen timer is used, such as the floppy drive failing
-to**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; operate properly, reboot the system, set PS2 to 1
-and**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Note: Interrupts must not be disabled for more than 54 ms at a**
 
-[**; leave it that
-way.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; stretch during the timing interval. Because interrupts**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; are enabled, keys, mice, and other devices that generate**
 
-[**; Note: Interrupts must not be disabled for more than 54 ms at
-a**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; interrupts should not be used during the timing interval.**
 
-[**; stretch during the timing interval. Because
-interrupts**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; are enabled, keys, mice, and other devices that
-generate**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Note: Any extra code running off the timer interrupt (such as**
 
-[**; interrupts should not be used during the timing
-interval.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; some memory-resident utilities) wilLincrease the time**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; measured by the Zen timer.**
 
-[**; Note: Any extra code running off the timer interrupt (such
-as**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; some memory-resident utilities) wilLincrease the
-time**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Note: These routines can introduce inaccuracies of up to a few**
 
-[**; measured by the Zen
-timer.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; tenths of a second into the system clock count for each**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; code section timed. Consequently, it's a good idea to**
 
-[**; Note: These routines can introduce inaccuracies of up to a
-few**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; reboot at the conclusion of timing sessions. (The**
 
-[**; tenths of a second into the system clock count for
-each**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; battery-backed clock, if any, is not affected by the Zen**
 
-[**; code section timed. Consequently, it's a good idea
-to**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; timer.)**
 
-[**; reboot at the conclusion of timing sessions.
-(The**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; battery-backed clock, if any, is not affected by the
-Zen**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; All registers and all flags are preserved by all routines.**
 
-[**; timer.)**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+\ 
 
-[**; All registers and all flags are preserved by all
-routines.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**Code segment word public 'CODE'**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**assume cs:Code, ds:nothing**
 
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**public ZTimerOn, ZTimerOff, ZTimerReport**
 
-[**Code segment word public
-'CODE'**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+\ 
 
-[**assume cs:Code,
-ds:nothing**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**public ZTimerOn, ZTimerOff,
-ZTimerReport**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Set to 0 to assemble for use on a fully 8253-compatible**
 
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; system. Set to 1 to assemble for use on non-8253-compatible**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; systems, including PS/2 computers. In general, leave this**
 
-[**; Set to 0 to assemble for use on a fully
-8253-compatible**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; set to 0 on non-PS/2 computers unless you get inconsistent**
 
-[**; system. Set to 1 to assemble for use on
-non-8253-compatible**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; or inaccurate readings.**
 
-[**; systems, including PS/2 computers. In general, leave
-this**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; set to 0 on non-PS/2 computers unless you get
-inconsistent**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**PS2 equ 0**
 
-[**; or inaccurate
-readings.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Base address of the 8253 timer chip.**
 
-[**PS2 equ 0**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**BASE\_8253 equ 40h**
 
-[**; Base address of the 8253 timer
-chip.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; The address of the timer 0 count registers in the 8253.**
 
-[**BASE\_8253 equ
-40h**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**TIMER\_0\_8253 equ BASE\_8253 + 0**
 
-[**; The address of the timer 0 count registers in the
-8253.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; The address of the mode register in the 8253.**
 
-[**TIMER\_0\_8253 equ BASE\_8253 +
-0**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**MODE\_8253 equ BASE\_8253 + 3**
 
-[**; The address of the mode register in the
-8253.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; The address of the BIOS timer count variable in the BIOS**
 
-[**MODE\_8253 equ BASE\_8253 +
-3**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; data segment.**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; The address of the BIOS timer count variable in the
-BIOS**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**TIMER\_COUNT equ
+46ch**
 
-[**; data
-segment.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Macro to emulate a POPF instruction in order to fix the bug in some**
 
-[**TIMER\_COUNT equ
-46ch**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; 80286 chips which allows interrupts to occur during a POPF even when**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; interrupts remain disabled.**
 
-[**; Macro to emulate a POPF instruction in order to fix the bug in
-some**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; 80286 chips which allows interrupts to occur during a POPF even
-when**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**MPOPF macro**
 
-[**; interrupts remain
-disabled.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**local p1, p2**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**jmp short p2**
 
-[**MPOPF macro**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**p1: iret ;jump to pushed address & pop flags**
 
-[**local p1, p2**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**p2: push cs ;construct far return address to**
 
-[**jmp short p2**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**call p1 ; the next instruction**
 
-[**p1: iret ;jump to pushed address & pop
-flags**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**endm**
 
-[**p2: push cs ;construct far return address
-to**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+\ 
 
-[**call p1 ; the next
-instruction**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**endm**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Macro to delay briefly to ensure that enough time has elapsed**
 
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; between successive I/O accesses so that the device being accessed**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; can respond to both accesses even on a very fast PC.**
 
-[**; Macro to delay briefly to ensure that enough time has
-elapsed**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; between successive I/O accesses so that the device being
-accessed**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**DELAY macro**
 
-[**; can respond to both accesses even on a very fast
-PC.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**jmp $+2**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**jmp $+2**
 
-[**DELAY macro**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**jmp $+2**
 
-[**jmp $+2**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**endm**
 
-[**jmp $+2**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+\ 
 
-[**jmp $+2**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**StartBIOSCountLow dw ? ;BIOS count low word at the**
 
-[**endm**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; start of the timing period**
 
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**StartBIOSCountHigh dw ? ;BIOS count high word at the**
 
-[**StartBIOSCountLow dw ? ;BIOS count low word at
-the**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; start of the timing period**
 
-[**; start of the timing
-period**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**EndBIOSCountLow dw ? ;BIOS count low word at the**
 
-[**StartBIOSCountHigh dw ? ;BIOS count high word at
-the**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; end of the timing period**
 
-[**; start of the timing
-period**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**EndBIOSCountHigh dw ? ;BIOS count high word at the**
 
-[**EndBIOSCountLow dw ? ;BIOS count low word at
-the**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; end of the timing period**
 
-[**; end of the timing
-period**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**EndTimedCount dw ? ;timer 0 count at the end of**
 
-[**EndBIOSCountHigh dw ? ;BIOS count high word at
-the**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; the timing period**
 
-[**; end of the timing
-period**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**ReferenceCount dw ? ;number of counts required to**
 
-[**EndTimedCount dw ? ;timer 0 count at the end
-of**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; execute timer overhead code**
 
-[**; the timing
-period**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**ReferenceCount dw ? ;number of counts required
-to**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; String printed to report results.**
 
-[**; execute timer overhead
-code**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**OutputStr label byte**
 
-[**; String printed to report
-results.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**db 0dh, 0ah, 'Timed count: '**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**TimedCountStr db 10 dup (?)**
 
-[**OutputStr label
-byte**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**db ' microseconds', 0dh, 0ah**
 
-[**db 0dh, 0ah, 'Timed count:
-'**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**db '$'**
 
-[**TimedCountStr db 10 dup
-(?)**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**db ' microseconds', 0dh,
-0ah**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Temporary storage for timed count as it's divided down by powers**
 
-[**db '$'**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; of ten when converting from doubleword binary to ASCII.**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; Temporary storage for timed count as it's divided down by
-powers**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**CurrentCountLow dw ?**
 
-[**; of ten when converting from doubleword binary to
-ASCII.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**CurrentCountHigh dw ?**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**CurrentCountLow dw
-?**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Powers of ten table used to perform division by 10 when doing**
 
-[**CurrentCountHigh dw
-?**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; doubleword conversion from binary to ASCII.**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; Powers of ten table used to perform division by 10 when
-doing**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**PowersOfTen label word**
 
-[**; doubleword conversion from binary to
-ASCII.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**dd 1**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**dd 10**
 
-[**PowersOfTen label
-word**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**dd 100**
 
-[**dd 1**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**dd 1000**
 
-[**dd 10**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**dd 10000**
 
-[**dd 100**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**dd 100000**
 
-[**dd 1000**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**dd 1000000**
 
-[**dd 10000**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**dd 10000000**
 
-[**dd 100000**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**dd 100000000**
 
-[**dd 1000000**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**dd 1000000000**
 
-[**dd 10000000**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**PowersOfTenEnd label word**
 
-[**dd 100000000**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**dd 1000000000**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; String printed to report that the high word of the BIOS count**
 
-[**PowersOfTenEnd label
-word**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; changed while timing (an hour elapsed or midnight was crossed),**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; and so the count is invalid and the test needs to be rerun.**
 
-[**; String printed to report that the high word of the BIOS
-count**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; changed while timing (an hour elapsed or midnight was
-crossed),**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**TurnOverStr label byte**
 
-[**; and so the count is invalid and the test needs to be
-rerun.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**db 0dh, 0ah**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**db '\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*'**
 
-[**TurnOverStr label
-byte**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**db 0dh, 0ah**
 
-[**db 0dh, 0ah**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**db '\* Either midnight passed or an hour or more passed \*'**
 
-[**db
-'\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*'**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**db 0dh, 0ah**
 
-[**db 0dh, 0ah**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**db '\* while timing was in progress. If the former was \*'**
 
-[**db '\* Either midnight passed or an hour or more passed
-\*'**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**db 0dh, 0ah**
 
-[**db 0dh, 0ah**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**db '\* the case, please rerun the test; if the latter \*'**
 
-[**db '\* while timing was in progress. If the former was
-\*'**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**db 0dh, 0ah**
 
-[**db 0dh, 0ah**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**db '\* was the case, the test code takes too long to \*'**
 
-[**db '\* the case, please rerun the test; if the latter
-\*'**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**db 0dh, 0ah**
 
-[**db 0dh, 0ah**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**db '\* run to be timed by the long-period Zen timer. \*'**
 
-[**db '\* was the case, the test code takes too long to
-\*'**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**db 0dh, 0ah**
 
-[**db 0dh, 0ah**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**db '\* Suggestions: use the DOS TIME command, the DOS \*'**
 
-[**db '\* run to be timed by the long-period Zen timer.
-\*'**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**db 0dh, 0ah**
 
-[**db 0dh, 0ah**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**db '\* time function, or a watch. \*'**
 
-[**db '\* Suggestions: use the DOS TIME command, the DOS
-\*'**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**db 0dh, 0ah**
 
-[**db 0dh, 0ah**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**db '\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*'**
 
-[**db '\* time function, or a watch.
-\*'**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**db 0dh, 0ah**
 
-[**db 0dh, 0ah**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**db '$'**
 
-[**db
-'\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*'**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+\ 
 
-[**db 0dh, 0ah**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
 
-[**db '$'**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;\* Routine called to start timing. \***
 
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
 
-[**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+\ 
 
-[**;\* Routine called to start timing.
-\***](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**ZTimerOn proc near**
 
-[**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+\ 
 
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**ZTimerOn proc
-near**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Save the context of the program being timed.**
 
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**push ax**
 
-[**; Save the context of the program being
-timed.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**pushf**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**push ax**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Set timer 0 of the 8253 to mode 2 (divide-by-N), to cause**
 
-[**pushf**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; linear counting rather than count-by-two counting. Also stops**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; timer 0 until the timer count is loaded, except on PS/2**
 
-[**; Set timer 0 of the 8253 to mode 2 (divide-by-N), to
-cause**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; computers.**
 
-[**; linear counting rather than count-by-two counting. Also
-stops**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; timer 0 until the timer count is loaded, except on
-PS/2**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**mov al,00110100b ;mode 2**
 
-[**; computers.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**out MODE\_8253,al**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**mov al,00110100b ;mode
-2**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Set the timer count to 0, so we know we won't get another**
 
-[**out
-MODE\_8253,al**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; timer interrupt right away.**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Note: this introduces an inaccuracy of up to 54 ms in the system**
 
-[**; Set the timer count to 0, so we know we won't get
-another**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; clock count each time it is executed.**
 
-[**; timer interrupt right
-away.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; Note: this introduces an inaccuracy of up to 54 ms in the
-system**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**DELAY**
 
-[**; clock count each time it is
-executed.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**sub al,al**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**out TIMER\_0\_8253,al ;lsb**
 
-[**DELAY**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**DELAY**
 
-[**sub al,al**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**out TIMER\_0\_8253,al ;msb**
 
-[**out TIMER\_0\_8253,al
-;lsb**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**DELAY**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; In case interrupts are disabled, enable interrupts briefly to allow**
 
-[**out TIMER\_0\_8253,al
-;msb**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; the interrupt generated when switching from mode 3 to mode 2 to be**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; recognized. Interrupts must be enabled for at least 210 ns to allow**
 
-[**; In case interrupts are disabled, enable interrupts briefly to
-allow**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; time for that interrupt to occur. Here, 10 jumps are used for the**
 
-[**; the interrupt generated when switching from mode 3 to mode 2 to
-be**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; delay to ensure that the delay time will be more than long enough**
 
-[**; recognized. Interrupts must be enabled for at least 210 ns to
-allow**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; even on a very fast PC.**
 
-[**; time for that interrupt to occur. Here, 10 jumps are used for
-the**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; delay to ensure that the delay time will be more than long
-enough**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**pushf**
 
-[**; even on a very fast
-PC.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**sti**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**rept 10**
 
-[**pushf**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**jmp $+2**
 
-[**sti**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**endm**
 
-[**rept 10**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**MPOPF**
 
-[**jmp $+2**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**endm**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Store the timing start BIOS count.**
 
-[**MPOPF**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; (Since the timer count was just set to 0, the BIOS count will**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; stay the same for the next 54 ms, so we don't need to disable**
 
-[**; Store the timing start BIOS
-count.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; interrupts in order to avoid getting a half-changed count.)**
 
-[**; (Since the timer count was just set to 0, the BIOS count
-will**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; stay the same for the next 54 ms, so we don't need to
-disable**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**push ds**
 
-[**; interrupts in order to avoid getting a half-changed
-count.)**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**sub ax,ax**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**push ds**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**sub ax,ax**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**mov ds,ax**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**mov ds,ax**
 
 [**mov
-ax,ds:[TIMER\_COUNT+2]**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+ax,ds:TIMER\_COUNT+2]**
 
 [**mov
-cs:[StartBIOSCountHigh],ax**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+cs:StartBIOSCountHigh],ax**
 
 [**mov
-ax,ds:[TIMER\_COUNT]**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+ax,ds:TIMER\_COUNT]**
 
 [**mov
-cs:[StartBIOSCountLow],ax**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+cs:StartBIOSCountLow],ax**
 
-[**pop ds**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**pop ds**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; Set the timer count to 0 again to start the timing
-interval.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Set the timer count to 0 again to start the timing interval.**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**mov al,00110100b ;set up to load
-initial**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**mov al,00110100b ;set up to load initial**
 
-[**out MODE\_8253,al ; timer
-count**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**out MODE\_8253,al ; timer count**
 
-[**DELAY**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**DELAY**
 
-[**sub al,al**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**sub al,al**
 
-[**out TIMER\_0\_8253,al ;load count
-lsb**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**out TIMER\_0\_8253,al ;load count lsb**
 
-[**DELAY**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**DELAY**
 
-[**out TIMER\_0\_8253,al ;load count
-msb**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**out TIMER\_0\_8253,al ;load count msb**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; Restore the context of the program being timed and return to
-it.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Restore the context of the program being timed and return to it.**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**MPOPF**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**MPOPF**
 
-[**pop ax**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**pop ax**
 
-[**ret**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**ret**
 
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+\ 
 
-[**ZTimerOn endp**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**ZTimerOn endp**
 
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+\ 
 
-[**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
 
-[**;\* Routine called to stop timing and get count.
-\***](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;\* Routine called to stop timing and get count. \***
 
-[**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
 
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+\ 
 
-[**ZTimerOff proc
-near**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**ZTimerOff proc near**
 
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+\ 
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; Save the context of the program being
-timed.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Save the context of the program being timed.**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**pushf**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**pushf**
 
-[**push ax**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**push ax**
 
-[**push cx**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**push cx**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; In case interrupts are disabled, enable interrupts briefly to
-allow**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; In case interrupts are disabled, enable interrupts briefly to allow**
 
-[**; any pending timer interrupt to be handled. Interrupts must
-be**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; any pending timer interrupt to be handled. Interrupts must be**
 
-[**; enabled for at least 210 ns to allow time for that interrupt
-to**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; enabled for at least 210 ns to allow time for that interrupt to**
 
-[**; occur. Here, 10 jumps are used for the delay to ensure that
-the**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; occur. Here, 10 jumps are used for the delay to ensure that the**
 
-[**; delay time will be more than long enough even on a very fast
-PC.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; delay time will be more than long enough even on a very fast PC.**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**sti**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**sti**
 
-[**rept 10**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**rept 10**
 
-[**jmp $+2**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**jmp $+2**
 
-[**endm**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**endm**
 
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+\ 
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; Latch the timer
-count.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Latch the timer count.**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+\ 
 
-[**if PS2**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**if PS2**
 
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+\ 
+
+**mov al,00000000b**
+
+**out MODE\_8253,al ;latch timer 0 count**
+
+**;**
+
+**; This is where a one-instruction-long window exists on the PS/2.**
+
+**; The timer count and the BIOS count can lose synchronization;**
+
+**; since the timer keeps counting after it's latched, it can turn**
+
+**; over right after it's latched and cause the BIOS count to turn**
+
+**; over before interrupts are disabled, leaving us with the timer**
+
+**; count from before the timer turned over coupled with the BIOS**
+
+**; count from after the timer turned over. The result is a count**
+
+**; that's 54 ms too long.**
+
+**;**
+
+**\ **
+
+**else**
+
+\ 
+
+**;**
+
+**; Set timer 0 to mode 2 (divide-by-N), waiting for a 2-byte count**
+
+**; load, which stops timer 0 until the count is loaded. (Only works**
+
+**; on fully 8253-compatible chips.)**
+
+**;**
+
+**mov al,00110100b ;mode 2**
+
+**out MODE\_8253,al**
+
+**DELAY**
+
+**mov al,00000000b ;latch timer 0 count**
+
+**out MODE\_8253,al**
+
+\ 
+
+**endif**
+
+\ 
+
+**cli ;stop the BIOS count**
+
+**;**
+
+**; Read the BIOS count. (Since interrupts are disabled, the BIOS**
+
+**; count won't change.)**
+
+**;**
+
+**push ds**
+
+**sub ax,ax**
+
+**mov ds,ax**
 
 [**mov
-al,00000000b**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**out MODE\_8253,al ;latch timer 0
-count**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**; This is where a one-instruction-long window exists on the
-PS/2.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**; The timer count and the BIOS count can lose
-synchronization;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**; since the timer keeps counting after it's latched, it can
-turn**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**; over right after it's latched and cause the BIOS count to
-turn**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**; over before interrupts are disabled, leaving us with the
-timer**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**; count from before the timer turned over coupled with the
-BIOS**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**; count from after the timer turned over. The result is a
-count**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**; that's 54 ms too
-long.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[****](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**else**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**; Set timer 0 to mode 2 (divide-by-N), waiting for a 2-byte
-count**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**; load, which stops timer 0 until the count is loaded. (Only
-works**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**; on fully 8253-compatible
-chips.)**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**mov al,00110100b ;mode
-2**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**out
-MODE\_8253,al**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**DELAY**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**mov al,00000000b ;latch timer 0
-count**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**out
-MODE\_8253,al**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**endif**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**cli ;stop the BIOS
-count**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**; Read the BIOS count. (Since interrupts are disabled, the
-BIOS**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**; count won't
-change.)**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**push ds**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**sub ax,ax**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**mov ds,ax**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+ax,ds:TIMER\_COUNT+2]**
 
 [**mov
-ax,ds:[TIMER\_COUNT+2]**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+cs:EndBIOSCountHigh],ax**
 
 [**mov
-cs:[EndBIOSCountHigh],ax**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+ax,ds:TIMER\_COUNT]**
 
 [**mov
-ax,ds:[TIMER\_COUNT]**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+cs:EndBIOSCountLow],ax**
+
+**pop ds**
+
+**;**
+
+**; Read the timer count and save it.**
+
+**;**
+
+**in al,TIMER\_0\_8253 ;lsb**
+
+**DELAY**
+
+**mov ah,al**
+
+**in al,TIMER\_0\_8253 ;msb**
+
+**xchg ah,al**
+
+**neg ax ;convert from countdown**
+
+**; remaining to elapsed**
+
+**; count**
 
 [**mov
-cs:[EndBIOSCountLow],ax**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+cs:EndTimedCount],ax**
 
-[**pop ds**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Restart timer 0, which is still waiting for an initial count**
 
-[**; Read the timer count and save
-it.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; to be loaded.**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**in al,TIMER\_0\_8253
-;lsb**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+\ 
 
-[**DELAY**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**ife PS2**
 
-[**mov ah,al**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+\ 
 
-[**in al,TIMER\_0\_8253
-;msb**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**DELAY**
 
-[**xchg ah,al**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**mov al,00110100b ;mode 2, waiting to load a**
 
-[**neg ax ;convert from
-countdown**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; 2-byte count**
 
-[**; remaining to
-elapsed**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**out MODE\_8253,al**
 
-[**; count**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**DELAY**
 
-[**mov
-cs:[EndTimedCount],ax**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**sub al,al**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**out TIMER\_0\_8253,al ;lsb**
 
-[**; Restart timer 0, which is still waiting for an initial
-count**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**DELAY**
 
-[**; to be
-loaded.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**mov al,ah**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**out TIMER\_0\_8253,al ;msb**
 
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**DELAY**
 
-[**ife PS2**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+\ 
 
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**endif**
 
-[**DELAY**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+\ 
 
-[**mov al,00110100b ;mode 2, waiting to load
-a**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**sti ;let the BIOS count continue**
 
-[**; 2-byte count**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**out
-MODE\_8253,al**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Time a zero-length code fragment, to get a reference for how**
 
-[**DELAY**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; much overhead this routine has. Time it 16 times and average it,**
 
-[**sub al,al**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; for accuracy, rounding the result.**
 
-[**out TIMER\_0\_8253,al
-;lsb**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**DELAY**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**mov al,ah**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**out TIMER\_0\_8253,al
-;msb**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**DELAY**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**endif**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**sti ;let the BIOS count
-continue**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**; Time a zero-length code fragment, to get a reference for
-how**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**; much overhead this routine has. Time it 16 times and average
-it,**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**; for accuracy, rounding the
-result.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
 [**mov
-cs:[ReferenceCount],0**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+cs:ReferenceCount],0**
 
-[**mov cx,16**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**mov cx,16**
 
-[**cli ;interrupts off to allow
-a**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**cli ;interrupts off to allow a**
 
-[**; precise reference
-count**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; precise reference count**
 
-[**RefLoop:**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**RefLoop:**
 
-[**call
-ReferenceZTimerOn**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**call ReferenceZTimerOn**
 
-[**call
-ReferenceZTimerOff**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**call ReferenceZTimerOff**
 
-[**loop RefLoop**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**loop RefLoop**
 
-[**sti**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**sti**
 
-[**add cs:[ReferenceCount],8 ;total + (0.5 \*
-16)**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**add cs:[ReferenceCount],8 ;total + (0.5 \* 16)**
 
-[**mov cl,4**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**mov cl,4**
 
-[**shr cs:[ReferenceCount],cl ;(total) / 16 +
-0.5**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**shr cs:[ReferenceCount],cl ;(total) / 16 + 0.5**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; Restore the context of the program being timed and return to
-it.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Restore the context of the program being timed and return to it.**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**pop cx**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**pop cx**
 
-[**pop ax**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**pop ax**
 
-[**MPOPF**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**MPOPF**
 
-[**ret**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**ret**
 
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+\ 
 
-[**ZTimerOff endp**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**ZTimerOff endp**
 
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+\ 
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; Called by ZTimerOff to start the timer for overhead
-measurements.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Called by ZTimerOff to start the timer for overhead measurements.**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+\ 
 
-[**ReferenceZTimerOn proc
-near**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**ReferenceZTimerOn proc near**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; Save the context of the program being
-timed.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Save the context of the program being timed.**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**push ax**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**push ax**
 
-[**pushf**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**pushf**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; Set timer 0 of the 8253 to mode 2 (divide-by-N), to
-cause**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Set timer 0 of the 8253 to mode 2 (divide-by-N), to cause**
 
-[**; linear counting rather than count-by-two
-counting.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; linear counting rather than count-by-two counting.**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**mov al,00110100b ;mode
-2**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**mov al,00110100b ;mode 2**
 
-[**out
-MODE\_8253,al**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**out MODE\_8253,al**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; Set the timer count to
-0.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Set the timer count to 0.**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**DELAY**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**DELAY**
 
-[**sub al,al**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**sub al,al**
 
-[**out TIMER\_0\_8253,al
-;lsb**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**out TIMER\_0\_8253,al ;lsb**
 
-[**DELAY**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**DELAY**
 
-[**out TIMER\_0\_8253,al
-;msb**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**out TIMER\_0\_8253,al ;msb**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; Restore the context of the program being timed and return to
-it.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Restore the context of the program being timed and return to it.**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**MPOPF**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**MPOPF**
 
-[**pop ax**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**pop ax**
 
-[**ret**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**ret**
 
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+\ 
 
-[**ReferenceZTimerOn
-endp**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**ReferenceZTimerOn endp**
 
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+\ 
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; Called by ZTimerOff to stop the timer and add the result
-to**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Called by ZTimerOff to stop the timer and add the result to**
 
-[**; ReferenceCount for overhead measurements. Doesn't need to
-look**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; ReferenceCount for overhead measurements. Doesn't need to look**
 
-[**; at the BIOS count because timing a zero-length code
-fragment**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; at the BIOS count because timing a zero-length code fragment**
 
-[**; isn't going to take anywhere near 54
-ms.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; isn't going to take anywhere near 54 ms.**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+\ 
 
-[**ReferenceZTimerOff proc
-near**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**ReferenceZTimerOff proc near**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; Save the context of the program being
-timed.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Save the context of the program being timed.**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**pushf**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**pushf**
 
-[**push ax**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**push ax**
 
-[**push cx**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**push cx**
 
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+\ 
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; Match the interrupt-window delay in
-ZTimerOff.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Match the interrupt-window delay in ZTimerOff.**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**sti**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**sti**
 
-[**rept 10**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**rept 10**
 
-[**jmp $+2**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**jmp $+2**
 
-[**endm**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**endm**
 
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+\ 
 
-[**mov
-al,00000000b**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**mov al,00000000b**
 
-[**out MODE\_8253,al ;latch
-timer**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**out MODE\_8253,al ;latch timer**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; Read the count and save
-it.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Read the count and save it.**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**DELAY**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**DELAY**
 
-[**in al,TIMER\_0\_8253
-;lsb**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**in al,TIMER\_0\_8253 ;lsb**
 
-[**DELAY**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**DELAY**
 
-[**mov ah,al**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**mov ah,al**
 
-[**in al,TIMER\_0\_8253
-;msb**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**in al,TIMER\_0\_8253 ;msb**
 
-[**xchg ah,al**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**xchg ah,al**
 
-[**neg ax ;convert from
-countdown**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**neg ax ;convert from countdown**
 
-[**; remaining to
-elapsed**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; remaining to elapsed**
 
-[**; count**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; count**
 
 [**add
-cs:[ReferenceCount],ax**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+cs:ReferenceCount],ax**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; Restore the context and
-return.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Restore the context and return.**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**pop cx**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**pop cx**
 
-[**pop ax**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**pop ax**
 
-[**MPOPF**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**MPOPF**
 
-[**ret**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**ret**
 
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+\ 
 
-[**ReferenceZTimerOff
-endp**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**ReferenceZTimerOff endp**
 
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+\ 
 
-[**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
 
-[**;\* Routine called to report timing results.
-\***](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;\* Routine called to report timing results. \***
 
-[**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
 
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+\ 
 
-[**ZTimerReport proc
-near**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**ZTimerReport proc near**
 
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+\ 
 
-[**pushf**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**pushf**
 
-[**push ax**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**push ax**
 
-[**push bx**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**push bx**
 
-[**push cx**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**push cx**
 
-[**push dx**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**push dx**
 
-[**push si**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**push si**
 
-[**push di**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**push di**
 
-[**push ds**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**push ds**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**push cs ;DOS functions require that DS
-point**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**push cs ;DOS functions require that DS point**
 
-[**pop ds ; to text to be displayed on the
-screen**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**pop ds ; to text to be displayed on the screen**
 
-[**assume ds:Code**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**assume ds:Code**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; See if midnight or more than an hour passed during timing. If
-so,**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; See if midnight or more than an hour passed during timing. If so,**
 
-[**; notify the
-user.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; notify the user.**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
 [**mov
-ax,[StartBIOSCountHigh]**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+ax,StartBIOSCountHigh]**
 
 [**cmp
-ax,[EndBIOSCountHigh]**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+ax,EndBIOSCountHigh]**
 
-[**jz CalcBIOSTime ;hour count didn't
-change,**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**jz CalcBIOSTime ;hour count didn't change,**
 
-[**; so everything's
-fine**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; so everything's fine**
 
-[**inc ax**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**inc ax**
 
 [**cmp
-ax,[EndBIOSCountHigh]**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+ax,EndBIOSCountHigh]**
 
-[**jnz TestTooLong ;midnight or two
-hour**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**jnz TestTooLong ;midnight or two hour**
 
-[**; boundaries passed, so
-the**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; boundaries passed, so the**
 
-[**; results are no
-good**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; results are no good**
 
 [**mov
-ax,[EndBIOSCountLow]**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+ax,EndBIOSCountLow]**
 
 [**cmp
-ax,[StartBIOSCountLow]**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+ax,StartBIOSCountLow]**
 
-[**jb CalcBIOSTime ;a single hour
-boundary**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**jb CalcBIOSTime ;a single hour boundary**
 
-[**; passed-that's OK, so long
-as**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; passed-that's OK, so long as**
 
-[**; the total time wasn't
-more**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; the total time wasn't more**
 
-[**; than an hour**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; than an hour**
 
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+\ 
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; Over an hour elapsed or midnight passed during timing,
-which**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Over an hour elapsed or midnight passed during timing, which**
 
-[**; renders the results invalid. Notify the user. This misses
-the**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; renders the results invalid. Notify the user. This misses the**
 
-[**; case where a multiple of 24 hours has passed, but we'll
-rely**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; case where a multiple of 24 hours has passed, but we'll rely**
 
-[**; on the perspicacity of the user to detect that
-case.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; on the perspicacity of the user to detect that case.**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**TestTooLong:**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**TestTooLong:**
 
-[**mov ah,9**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**mov ah,9**
 
-[**mov dx,offset
-TurnOverStr**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**mov dx,offset TurnOverStr**
 
-[**int 21h**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**int 21h**
 
-[**jmp short
-ZTimerReportDone**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**jmp short ZTimerReportDone**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; Convert the BIOS time to
-microseconds.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Convert the BIOS time to microseconds.**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**CalcBIOSTime:**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**CalcBIOSTime:**
 
 [**mov
-ax,[EndBIOSCountLow]**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+ax,EndBIOSCountLow]**
 
 [**sub
-ax,[StartBIOSCountLow]**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+ax,StartBIOSCountLow]**
 
-[**mov dx,54925 ;number of microseconds
-each**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**mov dx,54925 ;number of microseconds each**
 
-[**; BIOS count
-represents**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; BIOS count represents**
 
-[**mul dx**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**mul dx**
 
-[**mov bx,ax ;set aside BIOS count
-in**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**mov bx,ax ;set aside BIOS count in**
 
-[**mov cx,dx ;
-microseconds**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**mov cx,dx ; microseconds**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; Convert timer count to
-microseconds.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Convert timer count to microseconds.**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
 [**mov
-ax,[EndTimedCount]**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+ax,EndTimedCount]**
 
-[**mov si,8381**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**mov si,8381**
 
-[**mul si**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**mul si**
 
-[**mov si,10000**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**mov si,10000**
 
-[**div si ;\* .8381 = \* 8381 /
-10000**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**div si ;\* .8381 = \* 8381 / 10000**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; Add timer and BIOS counts together to get an overall time
-in**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Add timer and BIOS counts together to get an overall time in**
 
-[**;
-microseconds.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; microseconds.**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**add bx,ax**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**add bx,ax**
 
-[**adc cx,0**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**adc cx,0**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; Subtract the timer overhead and save the
-result.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Subtract the timer overhead and save the result.**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
 [**mov
-ax,[ReferenceCount]**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+ax,ReferenceCount]**
 
-[**mov si,8381 ;convert the reference
-count**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**mov si,8381 ;convert the reference count**
 
-[**mul si ; to
-microseconds**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**mul si ; to microseconds**
 
-[**mov si,10000**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**mov si,10000**
 
-[**div si ;\* .8381 = \* 8381 /
-10000**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**div si ;\* .8381 = \* 8381 / 10000**
 
-[**sub bx,ax**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**sub bx,ax**
 
-[**sbb cx,0**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**sbb cx,0**
 
 [**mov
-[CurrentCountLow],bx**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+CurrentCountLow],bx**
 
 [**mov
-[CurrentCountHigh],cx**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+CurrentCountHigh],cx**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; Convert the result to an ASCII string by trial subtractions
-of**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Convert the result to an ASCII string by trial subtractions of**
 
-[**; powers of
-10.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; powers of 10.**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**mov di,offset PowersOfTenEnd -offset PowersOfTen
--4**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**mov di,offset PowersOfTenEnd -offset PowersOfTen -4**
 
-[**mov si,offset
-TimedCountStr**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**mov si,offset TimedCountStr**
 
-[**CTSNextDigit:**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**CTSNextDigit:**
 
-[**mov bl,'0'**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**mov bl,'0'**
 
-[**CTSLoop:**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**CTSLoop:**
 
 [**mov
-ax,[CurrentCountLow]**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+ax,CurrentCountLow]**
 
 [**mov
-dx,[CurrentCountHigh]**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+dx,CurrentCountHigh]**
 
 [**sub
-ax,PowersOfTen[di]**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+ax,PowersOfTendi]**
 
 [**sbb
-dx,PowersOfTen[di+2]**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+dx,PowersOfTendi+2]**
 
-[**jc
-CTSNextPowerDown**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**jc CTSNextPowerDown**
 
-[**inc bl**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
-
-[**mov
-[CurrentCountLow],ax**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**inc bl**
 
 [**mov
-[CurrentCountHigh],dx**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+CurrentCountLow],ax**
 
-[**jmp CTSLoop**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+[**mov
+CurrentCountHigh],dx**
 
-[**CTSNextPowerDown:**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**jmp CTSLoop**
 
-[**mov [si],bl**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**CTSNextPowerDown:**
 
-[**inc si**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**mov [si],bl**
 
-[**sub di,4**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**inc si**
 
-[**jns
-CTSNextDigit**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**sub di,4**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**jns CTSNextDigit**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**; Print the
-results.**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**; Print the results.**
 
-[**mov ah,9**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**mov dx,offset
-OutputStr**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**mov ah,9**
 
-[**int 21h**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**mov dx,offset OutputStr**
 
-[**;**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**int 21h**
 
-[**ZTimerReportDone:**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**;**
 
-[**pop ds**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**ZTimerReportDone:**
 
-[**pop di**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**pop ds**
 
-[**pop si**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**pop di**
 
-[**pop dx**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**pop si**
 
-[**pop cx**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**pop dx**
 
-[**pop bx**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**pop cx**
 
-[**pop ax**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**pop bx**
 
-[**MPOPF**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**pop ax**
 
-[**ret**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**MPOPF**
 
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**ret**
 
-[**ZTimerReport
-endp**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+\ 
 
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**ZTimerReport endp**
 
-[**Code ends**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+\ 
 
-[**end**](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**Code ends**
 
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+**end**
 
-[\
-](#LZTIMER%3ELZTIME%3C/H3%3E%3C/A%3E%0A%3CP%20CLASS=)
+\ 
 
-### **[LZTIMER](#LZTIMERR)**
+\ 
 
-\
+### LZTIMER
+
 
 **; LZTIMER**
 
@@ -25528,7 +24075,6 @@ precision**
 
 **;**
 
-\
 
 **Code segment word public 'CODE'**
 
@@ -25536,7 +24082,6 @@ precision**
 
 **public ZTimerOn, ZTimerOff, ZTimerReport**
 
-\
 
 **;**
 
@@ -25638,7 +24183,6 @@ when**
 
 **endm**
 
-\
 
 **;**
 
@@ -25660,7 +24204,6 @@ when**
 
 **endm**
 
-\
 
 **StartBIOSCountLow dw ? ;BIOS count low word at the**
 
@@ -25800,7 +24343,6 @@ when**
 
 **db '$'**
 
-\
 
 **;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
 
@@ -25808,11 +24350,9 @@ when**
 
 **;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
 
-\
 
 **ZTimerOn proc near**
 
-\
 
 **;**
 
@@ -25952,11 +24492,9 @@ allow**
 
 **ret**
 
-\
 
 **ZTimerOn endp**
 
-\
 
 **;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
 
@@ -25964,11 +24502,9 @@ allow**
 
 **;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
 
-\
 
 **ZTimerOff proc near**
 
-\
 
 **;**
 
@@ -26005,7 +24541,6 @@ allow**
 
 **endm**
 
-\
 
 **;**
 
@@ -26013,11 +24548,9 @@ allow**
 
 **;**
 
-\
 
 **if PS2**
 
-\
 
 **mov al,00000000b**
 
@@ -26047,7 +24580,6 @@ allow**
 
 **else**
 
-\
 
 **;**
 
@@ -26069,11 +24601,9 @@ allow**
 
 **out MODE\_8253,al**
 
-\
 
 **endif**
 
-\
 
 **cli ;stop the BIOS count**
 
@@ -26133,11 +24663,9 @@ allow**
 
 **;**
 
-\
 
 **ife PS2**
 
-\
 
 **DELAY**
 
@@ -26161,11 +24689,9 @@ allow**
 
 **DELAY**
 
-\
 
 **endif**
 
-\
 
 **sti ;let the BIOS count continue**
 
@@ -26217,11 +24743,9 @@ allow**
 
 **ret**
 
-\
 
 **ZTimerOff endp**
 
-\
 
 **;**
 
@@ -26229,7 +24753,6 @@ allow**
 
 **;**
 
-\
 
 **ReferenceZTimerOn proc near**
 
@@ -26283,11 +24806,9 @@ allow**
 
 **ret**
 
-\
 
 **ReferenceZTimerOn endp**
 
-\
 
 **;**
 
@@ -26301,7 +24822,6 @@ allow**
 
 **;**
 
-\
 
 **ReferenceZTimerOff proc near**
 
@@ -26317,7 +24837,6 @@ allow**
 
 **push cx**
 
-\
 
 **;**
 
@@ -26333,7 +24852,6 @@ allow**
 
 **endm**
 
-\
 
 **mov al,00000000b**
 
@@ -26379,11 +24897,9 @@ allow**
 
 **ret**
 
-\
 
 **ReferenceZTimerOff endp**
 
-\
 
 **;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
 
@@ -26391,11 +24907,9 @@ allow**
 
 **;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
 
-\
 
 **ZTimerReport proc near**
 
-\
 
 **pushf**
 
@@ -26459,7 +24973,6 @@ allow**
 
 **; than an hour**
 
-\
 
 **;**
 
@@ -26639,23 +25152,18 @@ allow**
 
 **ret**
 
-\
 
 **ZTimerReport endp**
 
-\
 
 **Code ends**
 
 **end**
 
-\
 
-\
 
-### [PZTEST](#PZTESTR)
+### PZTEST
 
-\
 
 **; PZTEST**
 
@@ -26739,13 +25247,10 @@ allow**
 
 **end Start**
 
-\
 
-\
 
-### [PZTIME.BAT](#PZTIMEBATR)
+### PZTIME.BAT
 
-\
 
 **PZTIME.BAT**
 
@@ -26881,13 +25386,10 @@ allow**
 
 **:end**
 
-\
 
-\
 
-### **[PZTIMER](#PZTIMERR)**
+### PZTIMER
 
-\
 
 **; PZTIMER**
 
@@ -26986,7 +25488,6 @@ disabled**
 
 **;**
 
-\
 
 **Code segment word public 'CODE'**
 
@@ -26994,7 +25495,6 @@ disabled**
 
 **public ZTimerOn, ZTimerOff, ZTimerReport**
 
-\
 
 **;**
 
@@ -27070,7 +25570,6 @@ when**
 
 **endm**
 
-\
 
 **;**
 
@@ -27092,7 +25591,6 @@ when**
 
 **endm**
 
-\
 
 **OriginalFlags db ? ;storage for upper byte of**
 
@@ -27168,7 +25666,6 @@ when**
 
 **db '$'**
 
-\
 
 **;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
 
@@ -27176,11 +25673,9 @@ when**
 
 **;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
 
-\
 
 **ZTimerOn proc near**
 
-\
 
 **;**
 
@@ -27316,11 +25811,9 @@ when**
 
 **ret**
 
-\
 
 **ZTimerOn endp**
 
-\
 
 **;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
 
@@ -27328,11 +25821,9 @@ when**
 
 **;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
 
-\
 
 **ZTimerOff proc near**
 
-\
 
 **;**
 
@@ -27488,11 +25979,9 @@ when**
 
 **ret**
 
-\
 
 **ZTimerOff endp**
 
-\
 
 **;**
 
@@ -27500,7 +25989,6 @@ when**
 
 **;**
 
-\
 
 **ReferenceZTimerOn proc near**
 
@@ -27554,11 +26042,9 @@ when**
 
 **ret**
 
-\
 
 **ReferenceZTimerOn endp**
 
-\
 
 **;**
 
@@ -27568,7 +26054,6 @@ when**
 
 **;**
 
-\
 
 **ReferenceZTimerOff proc near**
 
@@ -27628,11 +26113,9 @@ when**
 
 **ret**
 
-\
 
 **ReferenceZTimerOff endp**
 
-\
 
 **;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
 
@@ -27640,11 +26123,9 @@ when**
 
 **;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
 
-\
 
 **ZTimerReport proc near**
 
-\
 
 **pushf**
 
@@ -27770,19 +26251,10 @@ when**
 
 **ret**
 
-\
 
 **ZTimerReport endp**
 
-\
 
 **Code ends**
 
 **end**
-
-* * * * *
-
-\
-
-\
-
