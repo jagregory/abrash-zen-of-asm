@@ -1,4 +1,4 @@
-FILES=src/01-title.md src/02-acknowledgements.md src/03-publisher.md src/04-trademarks.md src/05-intro.md src/chapter-01.md src/chapter-02.md src/chapter-03.md src/chapter-04.md src/chapter-05.md src/chapter-06.md src/chapter-07.md src/chapter-08.md src/chapter-09.md src/chapter-10.md src/chapter-11.md src/chapter-12.md src/chapter-13.md src/chapter-14.md src/chapter-15.md src/chapter-16.md src/06-listing-index.md src/07-appendix-a.md src/07-appendix-b.md src/08-index.md src/about-this-version.md
+FILES=src/01-title.md src/02-acknowledgements.md src/03-trademarks.md src/04-intro.md src/chapter-01.md src/chapter-02.md src/chapter-03.md src/chapter-04.md src/chapter-05.md src/chapter-06.md src/chapter-07.md src/chapter-08.md src/chapter-09.md src/chapter-10.md src/chapter-11.md src/chapter-12.md src/chapter-13.md src/chapter-14.md src/chapter-15.md src/chapter-16.md src/05-listing-index.md src/06-appendix-a.md src/06-appendix-b.md src/07-index.md src/about-this-version.md
 
 .PHONY: html epub
 
