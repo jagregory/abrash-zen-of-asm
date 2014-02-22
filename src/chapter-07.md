@@ -24,7 +24,7 @@ and:
 mov   dx,MemVar
 ```
 
-are logically equivalent. Well, the instructions *are* logically equivalent in the sense that they both move data into DX — but they're polar opposites when it comes to performance. The register-only `mov` is half the length in bytes and anywhere from two to seven times faster than the `mov` from memory... and that's fairly typical of the differences between register-only and memory-addressing instructions.
+are logically equivalent. Well, the instructions *are* logically equivalent in the sense that they both move data into DX — but they're polar opposites when it comes to performance. The register-only `mov`{.nasm} is half the length in bytes and anywhere from two to seven times faster than the `mov`{.nasm} from memory... and that's fairly typical of the differences between register-only and memory-addressing instructions.
 
 So you see, saying that memory is logically equivalent to registers is something like saying that a bus is logically equivalent to a 747. Sure, you can buy a ticket to get from one place to another with either mode of transportation... but which would *you* rather cross the country in?
 
@@ -36,17 +36,17 @@ We've got a lot of ground to cover, so let's get started.
 
 ## Definitions
 
-I'm going to take a moment to define some terms I'll use in this chapter. These terms will be used to describe operands to various instructions; for example, `mov ax,segreg` refers to copying the contents of a segment register into AX.
+I'm going to take a moment to define some terms I'll use in this chapter. These terms will be used to describe operands to various instructions; for example, `mov ax,segreg`{.nasm} refers to copying the contents of a segment register into AX.
 
-`reg` refers to any 8-or 16-bit general-purpose register. `reg8` refers to any 8-bit (byte-sized) general-purpose register, and `reg16` refers to any 16-bit (word-sized) general-purpose register.
+`reg`{.nasm} refers to any 8-or 16-bit general-purpose register. `reg8`{.nasm} refers to any 8-bit (byte-sized) general-purpose register, and `reg16`{.nasm} refers to any 16-bit (word-sized) general-purpose register.
 
-`segreg` refers to any segment register.
+`segreg`{.nasm} refers to any segment register.
 
-`mem` refers to any 8-, 16-, or 32-bit memory operand. `mem8` refers to any byte-sized memory operand, `mem16` refers to any word-sized memory operand, and `mem32` refers to any doublewordsized memory operand.
+`mem`{.nasm} refers to any 8-, 16-, or 32-bit memory operand. `mem8`{.nasm} refers to any byte-sized memory operand, `mem16`{.nasm} refers to any word-sized memory operand, and `mem32`{.nasm} refers to any doublewordsized memory operand.
 
-`reg/mem` refers to any 8-or 16-bit register or memory operand. As you'd expect, `reg/mem8` refers to any byte-sized register or memory operand, and `reg/mem16` refers to any word-sized register or memory operand.
+`reg/mem`{.nasm} refers to any 8-or 16-bit register or memory operand. As you'd expect, `reg/mem8`{.nasm} refers to any byte-sized register or memory operand, and `reg/mem16`{.nasm} refers to any word-sized register or memory operand.
 
-`immed` refers to any immediate (constant) instruction operand. (Immediate addressing is discussed in detail below.) `immed8` refers to any byte-sized immediate operand, and `immed16` refers to any word-sized immediate operand.
+`immed`{.nasm} refers to any immediate (constant) instruction operand. (Immediate addressing is discussed in detail below.) `immed8`{.nasm} refers to any byte-sized immediate operand, and `immed16`{.nasm} refers to any word-sized immediate operand.
 
 ### Square Brackets Mean Memory Addressing
 
@@ -109,7 +109,7 @@ For example, the 20-bit memory address corresponding to 23F0:1512 is 25412 (hex)
 =   25412
 ```
 
-By the way, it happens that the 8088 isn't particularly fast at calculating 20-bit addresses from segment:offset pairs. Although it only takes the 8088's Bus Interface Unit 4 cycles to complete a memory access, the fastest memory-accessing instruction the PC has to offer (`xlat`) takes 10 cycles to run. Other memory-accessing instructions take longer, some much longer. We'll delve into the implications of the 8088's lack of memory-access performance shortly.
+By the way, it happens that the 8088 isn't particularly fast at calculating 20-bit addresses from segment:offset pairs. Although it only takes the 8088's Bus Interface Unit 4 cycles to complete a memory access, the fastest memory-accessing instruction the PC has to offer (`xlat`{.nasm}) takes 10 cycles to run. Other memory-accessing instructions take longer, some much longer. We'll delve into the implications of the 8088's lack of memory-access performance shortly.
 
 Several questions should immediately leap into your mind if you've never encountered segments and offsets before. Where do these odd beasts live? What's to prevent more than one segment:offset pair from pointing to the same 20-bit address? What happens when the sum of the two gets too large to fit in 20 bits?
 
@@ -208,7 +208,7 @@ While the above is undeniably a mess, things are not quite so grim as they might
 
 In high-level languages you almost always suffer both considerable performance loss and significant increase in code size when you start using multiple code or data segments, but in assembler it's possible to maintain near-peak performance even with many segments. In fact, segment-handling is one area in which assembler truly distinguishes itself, and we'll see examples of assembler's fine touch with segments in this chapter, Chapter 14, and Volume II of *The Zen of Assembly Language*.
 
-There's one more reason that handling multiple code or data segments isn't much of a problem in assembler, and that's that the assembler programmer knows exactly what his code needs to do and can optimize accordingly. For example, suppose that we know that the array `TestArray` in the last example is guaranteed to start at offset 0 in the initial data segment. Given that extra knowledge, we can put together the following version of the above code to sum a 128 Kb array:
+There's one more reason that handling multiple code or data segments isn't much of a problem in assembler, and that's that the assembler programmer knows exactly what his code needs to do and can optimize accordingly. For example, suppose that we know that the array `TestArray`{.nasm} in the last example is guaranteed to start at offset 0 in the initial data segment. Given that extra knowledge, we can put together the following version of the above code to sum a 128 Kb array:
 
 ```nasm
     mov   bx,seg TestArray
@@ -229,7 +229,7 @@ SumLoop:
     loop  SumLoop  ;count off this 64 Kb block
 ```
 
-Compare the code within the inner loop above to that in the inner loop of the previous version of this example — the difference is striking. This inner loop is every bit as tight as that of the code for handling blocks 64 Kb-and-less in size; in fact, it's slightly *tighter*, as `jnz` is faster than `loop`. Consequently, there shouldn't be much difference in performance between the last example and the 64 Kb and less version. Nonetheless, a basic rule of the Zen of assembler is that we should check our assumptions, so let's toss the three approaches to summing arrays into the Zen timer and see what comes out.
+Compare the code within the inner loop above to that in the inner loop of the previous version of this example — the difference is striking. This inner loop is every bit as tight as that of the code for handling blocks 64 Kb-and-less in size; in fact, it's slightly *tighter*, as `jnz`{.nasm} is faster than `loop`{.nasm}. Consequently, there shouldn't be much difference in performance between the last example and the 64 Kb and less version. Nonetheless, a basic rule of the Zen of assembler is that we should check our assumptions, so let's toss the three approaches to summing arrays into the Zen timer and see what comes out.
 
 [Listing 7-1](#L701) measures the time required to calculate the 16-bit sum of a 64 Kb block without worrying about segments. This code runs in 619 ms, or 9.4 us per byte summed. (Note that [Listings 7-1](#L701) through [7-3](#L703) must be timed with the long-period Zen timer — via LZTIME.BAT — since they take more than 54 ms to run.)
 
@@ -261,7 +261,7 @@ The remainder of this chapter will deal only with data addressing — that is, t
 
 Now that we know what segments are, let's look at ways to handle the segment registers, in particular how to load them quickly. What we are *not* going to do is discuss the directives that let you create segments and the storage locations within them.
 
-Why not discuss the segment directives? For one thing, there are enough directives, segment and otherwise, to fill a book by themselves. For another thing, there are already several such books, including both the manuals that come with MASM and TASM and the other books in this series. *The Zen of Assembly Language* is about writing efficient code, not using MASM, so I'll assume you already know how to use the `segment`, `ends`, and `assume` directives to define segments and `db`, `dw`, and the like to create and reserve storage. If that's not the case, brush up before you continue reading. We'll use all of the above directives in *The Zen of Assembly Language*, and we'll discuss `assume` at some length later in this chapter, but we won't spend time covering the basic functionality of the segment and data directives.
+Why not discuss the segment directives? For one thing, there are enough directives, segment and otherwise, to fill a book by themselves. For another thing, there are already several such books, including both the manuals that come with MASM and TASM and the other books in this series. *The Zen of Assembly Language* is about writing efficient code, not using MASM, so I'll assume you already know how to use the `segment`{.nasm}, `ends`{.nasm}, and `assume`{.nasm} directives to define segments and `db`{.nasm}, `dw`{.nasm}, and the like to create and reserve storage. If that's not the case, brush up before you continue reading. We'll use all of the above directives in *The Zen of Assembly Language*, and we'll discuss `assume`{.nasm} at some length later in this chapter, but we won't spend time covering the basic functionality of the segment and data directives.
 
 ### What Can You Do With Segment Registers? Not Much
 
@@ -287,7 +287,7 @@ There's another reason why segments can only be loaded and copied, nothing else,
 
 In protected mode, the segment registers don't contain memory addresses; instead, they contain segment selectors, which the 80286 and 80386 use to look up the actual segment information — location and attributes such as writability — in a table. Not only would it make no sense to perform arithmetic and the like on segment selectors, since selectors don't correspond directly to memory addresses, but because the segment registers are central to the memory protection scheme of the 80286 and 80386, they simply *cannot* be loaded arbitrarily — the 80286 and 80386 literally don't allow that to happen by instantly causing a trap whenever an invalid selector is loaded.
 
-What's more, it can take quite a while to load a segment register in protected mode. In real mode, moves to and from segment registers are just as fast as transfers involving general-purpose registers, but that's not the case in protected mode. For example, `mov es,ax` takes 2 cycles in real mode and 17 cycles in protected mode.
+What's more, it can take quite a while to load a segment register in protected mode. In real mode, moves to and from segment registers are just as fast as transfers involving general-purpose registers, but that's not the case in protected mode. For example, `mov es,ax`{.nasm} takes 2 cycles in real mode and 17 cycles in protected mode.
 
 Given all of the above, all you'd generally want to do in protected mode is load the segment registers with known-good segment selectors provided to you by the operating system. That doesn't affect real mode, which is all we care about, but since real mode and protected mode share most instructions, the segment-register philosophy of protected mode (which Intel no doubt had as a long-range goal even before they designed the 8088) carries over to real mode.
 
@@ -297,13 +297,13 @@ And now you know why the 8088 offers so little in the way of segment-register ma
 
 That brings us to another interesting point: the use of segment registers for temporary storage. The 8088 has just 7 available general-purpose registers (remember, we can't use SP for anything but the stack most of the time), and sometimes it would be awfully handy to have somewhere to store a 16-bit value for a little while. Can we use the segment registers for that purpose?
 
-Some people would answer that "No," because code that uses segments for temporary storage can't easily be ported to protected mode. I don't buy that, for reasons I'll explain when we get to `les`. My answer is "Yes... when they're available." Two of the segment registers are never available, one is occasionally available, and one may or may not be readily available, depending on your code.
+Some people would answer that "No," because code that uses segments for temporary storage can't easily be ported to protected mode. I don't buy that, for reasons I'll explain when we get to `les`{.nasm}. My answer is "Yes... when they're available." Two of the segment registers are never available, one is occasionally available, and one may or may not be readily available, depending on your code.
 
-Some segments are always in use. CS is always busy pointing to the segment of the next instruction to be executed; if you were to load CS with an arbitrary value for even 1 instruction, your program would surely crash. Clearly, it's not a good idea to use CS for temporary storage. (Actually, this isn't even a potential problem, as Intel has thoughtfully not implemented the instructions — `mov` and `pop` — that might load CS directly; MASM will simply generate an error if you try to assemble `pop cs` or `mov cs,[mem16]`. CS can only be loaded by far branches: far calls, far returns, far jumps, and interrupts.)
+Some segments are always in use. CS is always busy pointing to the segment of the next instruction to be executed; if you were to load CS with an arbitrary value for even 1 instruction, your program would surely crash. Clearly, it's not a good idea to use CS for temporary storage. (Actually, this isn't even a potential problem, as Intel has thoughtfully not implemented the instructions — `mov`{.nasm} and `pop`{.nasm} — that might load CS directly; MASM will simply generate an error if you try to assemble `pop cs`{.nasm} or `mov cs,[mem16]`{.nasm}. CS can only be loaded by far branches: far calls, far returns, far jumps, and interrupts.)
 
 SS isn't in use during every cycle as CS is, but unless interrupts are off, SS *might* be used on any cycle. Even if interrupts are off, non-maskable interrupts can occur, and of course your code will often use the stack directly. The risks are too great, the rewards too few. Don't use SS for temporary storage.
 
-DS can be used for temporary storage whenever it's free. However, DS is usually used to point to the default data segment. It's rare that you'll have a tight loop in which memory isn't accessed (it's not worth bothering with such optimizations outside the tightest, most time-critical code), and memory is usually most efficiently accessed via DS. There certainly are loops in which DS is free — loops which use `scas` to scan the segment pointed to by ES, for example — but such cases are few and far between. Far more common is the case in which DS is saved and then pointed to another segment, as follows:
+DS can be used for temporary storage whenever it's free. However, DS is usually used to point to the default data segment. It's rare that you'll have a tight loop in which memory isn't accessed (it's not worth bothering with such optimizations outside the tightest, most time-critical code), and memory is usually most efficiently accessed via DS. There certainly are loops in which DS is free — loops which use `scas`{.nasm} to scan the segment pointed to by ES, for example — but such cases are few and far between. Far more common is the case in which DS is saved and then pointed to another segment, as follows:
 
 ```nasm
     push  ds                   ;preserve normal DS setting
@@ -328,7 +328,7 @@ Let's look at an example of code that uses ES for temporary storage to good effe
 
 In the sample code, the list of subscripts of points to be added in the major dimension will be stored at DI, and the list of subscripts in the minor dimension will stored at BX. CX will contain the number of points to be summed, and BP will contain the final sum. AX and DX will be used for multiplying, and, as usual, SP will be used to point to the stack. Finally, when the code begins, SI will contain the offset of the start of the array.
 
-Let's see... that covers all eight general-purpose registers. Unfortunately, we need yet another storage location, this one to serve as a working pointer into the array. There are many possible solutions to this problem, including using the `xchg` instruction (which we'll cover in the next chapter), storing values in memory (slow), pushing and popping SI (also slow), or disabling interrupts and using SP (can unduly delay interrupts and carries some risk). Instead, here's a solution that uses ES for temporary storage; it's not necessarily the *best* solution, but it does nicely illustrate the use of ES for temporary storage:
+Let's see... that covers all eight general-purpose registers. Unfortunately, we need yet another storage location, this one to serve as a working pointer into the array. There are many possible solutions to this problem, including using the `xchg`{.nasm} instruction (which we'll cover in the next chapter), storing values in memory (slow), pushing and popping SI (also slow), or disabling interrupts and using SP (can unduly delay interrupts and carries some risk). Instead, here's a solution that uses ES for temporary storage; it's not necessarily the *best* solution, but it does nicely illustrate the use of ES for temporary storage:
 
 ```nasm
 ;
@@ -373,7 +373,7 @@ We'll see examples of efficient segment use throughout *The Zen of Assembly Lang
 
 For starters, let's divide segment loading into two categories: setting and copying. Segment setting refers to loading a segment register to point to a certain segment, while segment copying refers to loading a segment register with the contents of another segment register. I'm making this distinction because the instruction sequences used for the two sorts of segment loading differ considerably.
 
-Let's tackle segment copying first. Segment copying is useful when you want two segment registers to point to the same segment. For example, you'll want ES to point to the same segment as DS if you're using `rep movs` to copy data within the segment pointed to by DS, because DS and ES are the default source and destination segments, respectively, for `movs`. There are two good ways to load ES to point to the same segment as DS, given that we can't copy one segment register directly to another segment register:
+Let's tackle segment copying first. Segment copying is useful when you want two segment registers to point to the same segment. For example, you'll want ES to point to the same segment as DS if you're using `rep movs`{.nasm} to copy data within the segment pointed to by DS, because DS and ES are the default source and destination segments, respectively, for `movs`{.nasm}. There are two good ways to load ES to point to the same segment as DS, given that we can't copy one segment register directly to another segment register:
 
 ```nasm
 push  ds
@@ -389,9 +389,9 @@ mov   es,ax
 
 (Any general-purpose register would serve as well as AX.)
 
-Each of the above approaches has its virtues. The `push`/`pop` approach is extremely compact, at just 2 bytes, and affects no other registers. Unfortunately, it takes a less-than-snappy 27 cycles to run. By contrast, the `mov`/`mov` approach officially takes just 4 cycles to run; 16 cycles (4 bytes at 4 cycles to fetch each byte) is a more realistic figure, but either way, `mov`/`mov` is clearly faster than `push`/`pop`. On the other hand, `mov`/`mov` takes twice as many bytes as `push`/`pop`, and destroys the contents of a general-purpose register as well.
+Each of the above approaches has its virtues. The `push`{.nasm}/`pop`{.nasm} approach is extremely compact, at just 2 bytes, and affects no other registers. Unfortunately, it takes a less-than-snappy 27 cycles to run. By contrast, the `mov`{.nasm}/`mov`{.nasm} approach officially takes just 4 cycles to run; 16 cycles (4 bytes at 4 cycles to fetch each byte) is a more realistic figure, but either way, `mov`{.nasm}/`mov`{.nasm} is clearly faster than `push`{.nasm}/`pop`{.nasm}. On the other hand, `mov`{.nasm}/`mov`{.nasm} takes twice as many bytes as `push`{.nasm}/`pop`{.nasm}, and destroys the contents of a general-purpose register as well.
 
-There's no clear winner here. Use the `mov`/`mov` approach to copy segment registers when you're interested in speed and can spare a general-purpose register, and use the `push`/`pop` approach when bytes and/or registers are at a premium. I'll use both approaches in this book, generally using `push`/`pop` in non-time-critical code and `mov`/`mov` when speed really counts. Why waste the bytes when the cycles don't matter?
+There's no clear winner here. Use the `mov`{.nasm}/`mov`{.nasm} approach to copy segment registers when you're interested in speed and can spare a general-purpose register, and use the `push`{.nasm}/`pop`{.nasm} approach when bytes and/or registers are at a premium. I'll use both approaches in this book, generally using `push`{.nasm}/`pop`{.nasm} in non-time-critical code and `mov`{.nasm}/`mov`{.nasm} when speed really counts. Why waste the bytes when the cycles don't matter?
 
 That brings us to an important point about assembler programming. There is rarely such a beast as the "best code" in assembler; instead, there's code that's good in a given context. In any situation, the choice between fast code, small code, understandable code, portable code, maintainable code, structured code, and whatever other sort of code you can dream up is purely up to you. If you make the right decisions, your code will beat high-level language code hands down, because you know more about your code and can think far more flexibly than any high-level language possibly can.
 
@@ -410,7 +410,7 @@ officially takes 6 cycles. Since the two instructions together are 5 bytes long,
 mov   es,[DataSeg]
 ```
 
-officially takes only 18 cycles, is only 4 bytes long, and doesn't destroy a general-purpose register. (Note that the last approach assumes that the memory variable `DataSeg` has previously been set to point to the desired segment.) Loading from memory sounds better, doesn't it?
+officially takes only 18 cycles, is only 4 bytes long, and doesn't destroy a general-purpose register. (Note that the last approach assumes that the memory variable `DataSeg`{.nasm} has previously been set to point to the desired segment.) Loading from memory sounds better, doesn't it?
 
 It isn't.
 
@@ -424,7 +424,7 @@ That's not to say that there aren't times when you'll want to load a segment reg
 mov   es,[DisplayBufferSegment]
 ```
 
-Here, `DisplayBufferSegment` is set externally to point to the segment in which all screen drawing should be performed at any given time.
+Here, `DisplayBufferSegment`{.nasm} is set externally to point to the segment in which all screen drawing should be performed at any given time.
 
 Finally, segments are often passed as stack frame parameters from high-level languages to assembler subroutines — to point to far data buffers and the like — and in those cases segments can best be loaded directly from stack frames into segment registers. (We'll discuss stack frames later in this chapter.) It's easy to forget that segments can be loaded directly from *any* addressable memory location, as we'll see in Chapter 16; all too many people load segments from stack frames like this:
 
@@ -446,23 +446,23 @@ mov   es,[bp+BufferSegment]
 mov   di,[bp+BufferOffset]
 ```
 
-However, the designers of the 8088 anticipated the need for loading 20-bit pointers, and gave us two most useful instructions for just that purpose: `lds` and `les`.
+However, the designers of the 8088 anticipated the need for loading 20-bit pointers, and gave us two most useful instructions for just that purpose: `lds`{.nasm} and `les`{.nasm}.
 
 ### Loading 20-Bit Pointers With `lds` and `les`
 
-`lds` loads *both* DS and any one general-purpose register from a doubleword of memory, and `les` similarly loads *both* ES and a general-purpose register, as shown in Figure 7.3.
+`lds`{.nasm} loads *both* DS and any one general-purpose register from a doubleword of memory, and `les`{.nasm} similarly loads *both* ES and a general-purpose register, as shown in Figure 7.3.
 
 ![](images/fig7.3RT.png)
 
-While both instructions are useful, `les` is by far the more commonly used of the two. Since most programs leave DS pointing to the default data segment whenever possible, it's rare that we'd want to load DS as part of a segment:offset pointer. True, it does happen, but generally only when we want to point to a block of far memory temporarily for faster processing in a tight loop.
+While both instructions are useful, `les`{.nasm} is by far the more commonly used of the two. Since most programs leave DS pointing to the default data segment whenever possible, it's rare that we'd want to load DS as part of a segment:offset pointer. True, it does happen, but generally only when we want to point to a block of far memory temporarily for faster processing in a tight loop.
 
-ES, on the other hand, is the segment of choice when a segment:offset pointer is needed, since it's not generally reserved for any other purpose. Consequently, `les` is usually used to load segment:offset pointers.
+ES, on the other hand, is the segment of choice when a segment:offset pointer is needed, since it's not generally reserved for any other purpose. Consequently, `les`{.nasm} is usually used to load segment:offset pointers.
 
-`lds` and `les` actually don't come in for all that much use in pure assembler programs. The reason for that is that efficient assembler programs tend to be organized so that segments rarely need to be changed, and so such programs tend to work with 16-bit pointers most of the time. After all, while `lds` and `les` are efficient considering all they do, they're still slow, with official execution times of at least 29 cycles. If you need to load segment:offset pointers, use `lds` and `les`, but try to load just offsets whenever you can.
+`lds`{.nasm} and `les`{.nasm} actually don't come in for all that much use in pure assembler programs. The reason for that is that efficient assembler programs tend to be organized so that segments rarely need to be changed, and so such programs tend to work with 16-bit pointers most of the time. After all, while `lds`{.nasm} and `les`{.nasm} are efficient considering all they do, they're still slow, with official execution times of at least 29 cycles. If you need to load segment:offset pointers, use `lds`{.nasm} and `les`{.nasm}, but try to load just offsets whenever you can.
 
-One place where there's no way to avoid loading segments is in assembler code that's called from a high-level language, especially when the large data model (the model that supports more than 64 Kb of data) is used. When a high-level language passes a far pointer as a parameter to an assembler subroutine, the full 20-bit pointer must be loaded from memory before it can be used, and there `lds` and `les` work beautifully.
+One place where there's no way to avoid loading segments is in assembler code that's called from a high-level language, especially when the large data model (the model that supports more than 64 Kb of data) is used. When a high-level language passes a far pointer as a parameter to an assembler subroutine, the full 20-bit pointer must be loaded from memory before it can be used, and there `lds`{.nasm} and `les`{.nasm} work beautifully.
 
-Suppose that we have a C statement that calls the assembler subroutine `AddTwoFarInts` as follows:
+Suppose that we have a C statement that calls the assembler subroutine `AddTwoFarInts`{.nasm} as follows:
 
 ```c
 int Sum;
@@ -471,7 +471,7 @@ int far *FarPtr1, far *FarPtr2;
 Sum = AddTwoFarInts(FarPtr1, FarPtr2);
 ```
 
-`AddTwoFarInts` could be written without `les` as follows:
+`AddTwoFarInts`{.nasm} could be written without `les`{.nasm} as follows:
 
 ```nasm
 Parms struc
@@ -497,7 +497,7 @@ AddTwoFarInts proc near
 AddTwoFarInts endp
 ```
 
-The subroutine is considerably more efficient when `les` is used,
+The subroutine is considerably more efficient when `les`{.nasm} is used,
 however:
 
 ```nasm
@@ -520,43 +520,43 @@ AddTwoFarInts proc near
 AddTwoFarInts endp
 ```
 
-(We'll talk about `struc`, stack frames, and segment overrides — such as `es:` — later in this chapter.)
+(We'll talk about `struc`{.nasm}, stack frames, and segment overrides — such as `es:`{.nasm} — later in this chapter.)
 
-High-level languages use `les` all the time to point to data that's not in the default data segment, and that hurts performance significantly. Most high-level languages aren't very smart about using `les`, either. For example, high-level languages tend to load a full 20-bit pointer into ES:BX every time through a loop, even though ES never gets changed from the last pass through the loop. That's one reason why high-level languages don't perform very well with more than 64 Kb of data.
+High-level languages use `les`{.nasm} all the time to point to data that's not in the default data segment, and that hurts performance significantly. Most high-level languages aren't very smart about using `les`{.nasm}, either. For example, high-level languages tend to load a full 20-bit pointer into ES:BX every time through a loop, even though ES never gets changed from the last pass through the loop. That's one reason why high-level languages don't perform very well with more than 64 Kb of data.
 
-You can usually easily avoid `les`-related performance problems in assembler. Consider [Listing 7-4](#L704), which adds one far array to another far array in the same way that most high-level languages would, storing both far pointers in memory variables and loading each pointer with `les` every time it's used. (Actually, [Listing 7-4](#L704) is better than your average high-level language subroutine because it uses `loop`, while most high-level languages use less efficient instruction sequences to handle looping.) [Listing 7-4](#L704) runs in 43.42 ms, or 43 us per array element addition.
+You can usually easily avoid `les`{.nasm}-related performance problems in assembler. Consider [Listing 7-4](#L704), which adds one far array to another far array in the same way that most high-level languages would, storing both far pointers in memory variables and loading each pointer with `les`{.nasm} every time it's used. (Actually, [Listing 7-4](#L704) is better than your average high-level language subroutine because it uses `loop`{.nasm}, while most high-level languages use less efficient instruction sequences to handle looping.) [Listing 7-4](#L704) runs in 43.42 ms, or 43 us per array element addition.
 
 Now look at [Listing 7-5](#L705), which does exactly the same thing that [Listing 7-4](#L704) does... except that it loads the far pointers *outside* the loop and keeps them in the registers for the duration of the loop, using the segment-loading techniques that we learned earlier in this chapter. How much difference does it make to keep the far pointers in registers at all times? [Listing 7-5](#L705) runs in 19.69 ms — *more than twice as fast as*[Listing 7-4](#L704).
 
 Now you know why I keep saying that assembler can handle segments much better than high-level languages can. [Listing 7-5](#L705) isn't the ultimate in that regard, however; we can carry that concept a step further still, as shown in [Listing 7-6](#L706).
 
-[Listing 7-6](#L706) brings the full power of assembler to bear on the task of adding two arrays. [Listing 7-6](#L706)sets up the segments so that they never once need to be loaded within the loop. What's more, [Listing 7-6](#L706) arranges the registers so that the powerful `lodsb` string instruction can be used in place of a `mov` and an `inc`. (We'll discuss the string instructions in Chapter 10. For now, just take my word that the string instructions are good stuff.) In short, [Listing 7-6](#L706) organizes segment and register usage so that as much work as possible is moved out of the loop, and so that the most efficient instructions can be used.
+[Listing 7-6](#L706) brings the full power of assembler to bear on the task of adding two arrays. [Listing 7-6](#L706)sets up the segments so that they never once need to be loaded within the loop. What's more, [Listing 7-6](#L706) arranges the registers so that the powerful `lodsb`{.nasm} string instruction can be used in place of a `mov`{.nasm} and an `inc`{.nasm}. (We'll discuss the string instructions in Chapter 10. For now, just take my word that the string instructions are good stuff.) In short, [Listing 7-6](#L706) organizes segment and register usage so that as much work as possible is moved out of the loop, and so that the most efficient instructions can be used.
 
 The results are stunning.
 
-[Listing 7-6](#L706) runs in just 13.79 ms, more than three times as fast as [Listing 7-4](#L704), even though [Listing 7-4](#L704) uses the efficient `loop` and `les` instructions. This example is a powerful reminder of two important aspects of the Zen of assembler. First, you must strive to play to the strengths of the 8088 (such as the string instructions) while sidestepping its weaknesses (such as the segments and slow memory access speed). Second, *you must always concentrate on moving cycles out of loops*. The `lds` and `les` instructions outside the loop in [Listing 7-6](#L706) effectively run 1000 times faster than the `les` instructions inside the loop in [Listing 7-4](#L704), since the latter are executed 1000 times but the former are executed only once.
+[Listing 7-6](#L706) runs in just 13.79 ms, more than three times as fast as [Listing 7-4](#L704), even though [Listing 7-4](#L704) uses the efficient `loop`{.nasm} and `les`{.nasm} instructions. This example is a powerful reminder of two important aspects of the Zen of assembler. First, you must strive to play to the strengths of the 8088 (such as the string instructions) while sidestepping its weaknesses (such as the segments and slow memory access speed). Second, *you must always concentrate on moving cycles out of loops*. The `lds`{.nasm} and `les`{.nasm} instructions outside the loop in [Listing 7-6](#L706) effectively run 1000 times faster than the `les`{.nasm} instructions inside the loop in [Listing 7-4](#L704), since the latter are executed 1000 times but the former are executed only once.
 
 ### Loading Doublewords with `les`
 
-While `les` isn't often used to load segment:offset pointers in pure assembler programs, it has another less obvious use: loading doubleword values into the general-purpose registers.
+While `les`{.nasm} isn't often used to load segment:offset pointers in pure assembler programs, it has another less obvious use: loading doubleword values into the general-purpose registers.
 
-Normally, a doubleword value is loaded into two general-purpose registers with two instructions. Here's the standard way to load DX:AX from the doubleword memory variable `DVar`:
+Normally, a doubleword value is loaded into two general-purpose registers with two instructions. Here's the standard way to load DX:AX from the doubleword memory variable `DVar`{.nasm}:
 
 ```nasm
 mov   ax,word ptr [DVar]
 mov   dx,word ptr [DVar+2]
 ```
 
-There's nothing *wrong* with this approach, but it does take between 4 and 8 bytes and between 34 and 48 cycles. We can cut the time nearly in half, and can usually reduce the size as well, by using `les` in a most unusual way:
+There's nothing *wrong* with this approach, but it does take between 4 and 8 bytes and between 34 and 48 cycles. We can cut the time nearly in half, and can usually reduce the size as well, by using `les`{.nasm} in a most unusual way:
 
 ```nasm
 les   ax,[DVar]
 mov   dx,es
 ```
 
-The only disadvantage of using `les` to load doubleword values is that it wipes out the contents of ES; if that isn't a problem, there's simply no reason to load doubleword values any other way.
+The only disadvantage of using `les`{.nasm} to load doubleword values is that it wipes out the contents of ES; if that isn't a problem, there's simply no reason to load doubleword values any other way.
 
-Once again, there are those people who will tell you that it's a bad idea to load ES with anything but specific segment values, because such code won't work if you port it to run in protected mode on the 80286 and 80836. While that's a consideration, it's not an overwhelming one. For one thing, most code will never be ported to protected mode. For another, protected mode programming, which we'll touch on in Chapter 15, differs from normal 8088 assembler programming in a number of ways; using `les` to load doubleword values is unlikely to be the most difficult part of porting code to protected mode, especially if you have to rewrite the code to run under a new operating system. Still, if protected mode concerns you, use a macro such as:
+Once again, there are those people who will tell you that it's a bad idea to load ES with anything but specific segment values, because such code won't work if you port it to run in protected mode on the 80286 and 80836. While that's a consideration, it's not an overwhelming one. For one thing, most code will never be ported to protected mode. For another, protected mode programming, which we'll touch on in Chapter 15, differs from normal 8088 assembler programming in a number of ways; using `les`{.nasm} to load doubleword values is unlikely to be the most difficult part of porting code to protected mode, especially if you have to rewrite the code to run under a new operating system. Still, if protected mode concerns you, use a macro such as:
 
 ```nasm
 LOAD_32_BITS  macro Address
@@ -574,7 +574,7 @@ endif
 
 to load 32-bit values.
 
-The `les` approach to loading doubleword values is not only fast but has a unique virtue: it's indivisible. In other words, there's no way an interrupt can occur after the lower word of a doubleword is read but before the upper word is read. For example, suppose we want to read the timer count the BIOS maintains at 0000:046C. We *could* read the count like this:
+The `les`{.nasm} approach to loading doubleword values is not only fast but has a unique virtue: it's indivisible. In other words, there's no way an interrupt can occur after the lower word of a doubleword is read but before the upper word is read. For example, suppose we want to read the timer count the BIOS maintains at 0000:046C. We *could* read the count like this:
 
 ```nasm
 sub   ax,ax
@@ -583,7 +583,7 @@ mov   ax,es:[46ch]
 mov   dx,es:[46eh]
 ```
 
-There's a problem with this code, though. Every 54.9 ms, the timer generates an interrupt which starts the BIOS timer tick handler. The BIOS handler then increments the timer count. If an interrupt occurs right after `mov ax,es:[46ch]` in the above code — before **mov dx,es:[46eh]** can execute — we would read half of the value before it's advanced, and half of the value after it's advanced. If this happened as an hour or a day turned over, we could conceivably read a count that's seriously wrong, with potentially disastrous implications for any program that relies on precise time synchronization. Over time, such a misread of the timer is bound to happen if we use the above code.
+There's a problem with this code, though. Every 54.9 ms, the timer generates an interrupt which starts the BIOS timer tick handler. The BIOS handler then increments the timer count. If an interrupt occurs right after `mov ax,es:[46ch]`{.nasm} in the above code — before **mov dx,es:[46eh]** can execute — we would read half of the value before it's advanced, and half of the value after it's advanced. If this happened as an hour or a day turned over, we could conceivably read a count that's seriously wrong, with potentially disastrous implications for any program that relies on precise time synchronization. Over time, such a misread of the timer is bound to happen if we use the above code.
 
 We could solve the problem by disabling interrupts while we read the count:
 
@@ -596,7 +596,7 @@ mov   dx,es:[46eh]
 sti
 ```
 
-but there's a better solution. There's no way `les` can be interrupted as it reads a doubleword value, so we'll just load our doubleword thusly:
+but there's a better solution. There's no way `les`{.nasm} can be interrupted as it reads a doubleword value, so we'll just load our doubleword thusly:
 
 ```nasm
 sub   ax,ax
@@ -605,15 +605,15 @@ les   ax,es:[46ch]
 mov   dx,es
 ```
 
-This last bit of code is shorter, faster, and uninterruptible — in short, it's perfect for our needs. In fact, we could have put `les` to good use reading the BIOS timer count in the long-period Zen timer, way back in [Listing 2-5](#L205). Why didn't I use it there? The truth is that I didn't know about using `les` to load doublewords when I wrote the timer (which just goes to show that there's always more to learn about the 8088). When I did learn about loading doublewords with `les`, it didn't make any sense to tinker with code that worked perfectly well just to save a few bytes and cycles, particularly because the timer count load isn't time-critical.
+This last bit of code is shorter, faster, and uninterruptible — in short, it's perfect for our needs. In fact, we could have put `les`{.nasm} to good use reading the BIOS timer count in the long-period Zen timer, way back in [Listing 2-5](#L205). Why didn't I use it there? The truth is that I didn't know about using `les`{.nasm} to load doublewords when I wrote the timer (which just goes to show that there's always more to learn about the 8088). When I did learn about loading doublewords with `les`{.nasm}, it didn't make any sense to tinker with code that worked perfectly well just to save a few bytes and cycles, particularly because the timer count load isn't time-critical.
 
 Remember, it's only worth optimizing for speed when the cycles you save make a significant difference... which usually means inside tight loops.
 
 ### Segment:Offset and Byte Ordering in Memory
 
-Our discussion of `les` brings up the topic of how multi-byte values are stored in memory on the 8088. That's an interesting topic indeed; on occasion we'll need to load just the segment part of a 20-bit pointer from memory, or we'll want to modify only the upper byte of a word variable. The answer to our question is simple but by no means obvious: *multi-byte values are always stored with the least-significant byte at the lowest address*.
+Our discussion of `les`{.nasm} brings up the topic of how multi-byte values are stored in memory on the 8088. That's an interesting topic indeed; on occasion we'll need to load just the segment part of a 20-bit pointer from memory, or we'll want to modify only the upper byte of a word variable. The answer to our question is simple but by no means obvious: *multi-byte values are always stored with the least-significant byte at the lowest address*.
 
-For example, when you execute `mov ax,[WordVar]`, AL is loaded from address `WordVar`, and AH is loaded from address `WordVar+1`, as shown in Figure 7.4. Put another way, this:
+For example, when you execute `mov ax,[WordVar]`{.nasm}, AL is loaded from address `WordVar`{.nasm}, and AH is loaded from address `WordVar+1`{.nasm}, as shown in Figure 7.4. Put another way, this:
 
 ```nasm
 mov   ax,[WordVar]
@@ -659,13 +659,13 @@ This organization applies to all segment:offset values stored in memory, includi
 
 There's nothing sacred about having the least-significant byte at the lowest address; it's just the approach Intel chose. Other processors store values with most-significant byte at the lowest address, and there's a sometimes heated debate about which memory organization is better. That debate is of no particular interest to us; we'll be using an Intel chip, so we'll always be using Intel's least-significant-byte-first organization.
 
-So, to load just the segment part of the 20-bit pointer `FarPtr`, we'd use:
+So, to load just the segment part of the 20-bit pointer `FarPtr`{.nasm}, we'd use:
 
 ```nasm
 mov   es,word ptr [FarPtr+2]
 ```
 
-and to increment only the upper byte of the word variable `WordPtr`, we'd use:
+and to increment only the upper byte of the word variable `WordPtr`{.nasm}, we'd use:
 
 ```nasm
 inc   byte ptr [WordVar+1]
@@ -675,7 +675,7 @@ Remember that the least-significant byte of any value (the byte that's closest t
 
 ### Loading SS
 
-I'd like to take a moment to remind you that SP must be loaded whenever SS is loaded, and that interrupts should be disabled for the duration of the load, as we discussed in the last chapter. It would have been handy if Intel had given us an `lss` instruction, but they didn't. Instead, we'll load SS and SP with code along the lines of:
+I'd like to take a moment to remind you that SP must be loaded whenever SS is loaded, and that interrupts should be disabled for the duration of the load, as we discussed in the last chapter. It would have been handy if Intel had given us an `lss`{.nasm} instruction, but they didn't. Instead, we'll load SS and SP with code along the lines of:
 
 ```nasm
 cli
@@ -688,7 +688,7 @@ sti
 
 Next, we're going to look *very* quickly at a MASM operator and a MASM directive. As I've said, this is not a book about MASM, but these directives are closely related to the efficient use of segments.
 
-The `seg` operator returns the segment within which the following symbol (label or variable name) resides. In the following code, **seg WordVar` returns the segment `Data**, which is then loaded into ES and used to assume ES to that segment:
+The `seg`{.nasm} operator returns the segment within which the following symbol (label or variable name) resides. In the following code, `seg WordVar`{.nasm} returns the segment `Data`{.nasm}, which is then loaded into ES and used to assume ES to that segment:
 
 ```nasm
 Data  segment
@@ -704,7 +704,7 @@ Code  segment
 Code ends
 ```
 
-You may well ask why it's worth bothering with `seg`, when we could simply have used the segment name `Data` instead. The answer is that you may not know or may not have direct access to the segment name for variables that are declared in other modules. For example, suppose that `WordVar` were external in our last example:
+You may well ask why it's worth bothering with `seg`{.nasm}, when we could simply have used the segment name `Data`{.nasm} instead. The answer is that you may not know or may not have direct access to the segment name for variables that are declared in other modules. For example, suppose that `WordVar`{.nasm} were external in our last example:
 
 ```nasm
       extrn WordVar:word
@@ -718,19 +718,19 @@ Code  segment
 Code ends
 ```
 
-This code still returns the segment of `WordVar` properly, even though we don't necessarily have any idea at all as to what the name of that segment might be.
+This code still returns the segment of `WordVar`{.nasm} properly, even though we don't necessarily have any idea at all as to what the name of that segment might be.
 
-In short, `seg` makes it easier to work with multiple segments in multi-module programs.
+In short, `seg`{.nasm} makes it easier to work with multiple segments in multi-module programs.
 
 ### Joining Segments
 
 Selected assembler modules can share the same code and/or data segments even when multiple code and data segments are used. In other words, in assembler you can choose to share segments between modules or not as you choose, by contrast with high-level languages, which generally force you to choose between all or no modules sharing segments. (This is not always the case, however, as we'll see in Chapter 14.)
 
-The mechanism for joining or separating segments is the `segment` directive. If each of two modules has a segment of the same name, and if those segments are created as public segments (via the `public` option to the `segment` directive), then those segments will be joined into a single, shared segment. If the segments are code segments, you can use near calls (faster and smaller than far calls) between the modules. If the segments are data segments, then there's no need for one module to load segment registers in order to access data in the other module.
+The mechanism for joining or separating segments is the `segment`{.nasm} directive. If each of two modules has a segment of the same name, and if those segments are created as public segments (via the `public`{.nasm} option to the `segment`{.nasm} directive), then those segments will be joined into a single, shared segment. If the segments are code segments, you can use near calls (faster and smaller than far calls) between the modules. If the segments are data segments, then there's no need for one module to load segment registers in order to access data in the other module.
 
 All in all, shared segments allow multiple-module programs to produce code that's as efficient as single-module code, with the segment registers changed as infrequently as possible. In the same program in which multiple modules share a given segment, however, other modules — or even other parts of the same modules — may share segments of different names, or may have segments that are private (unique to that module). As a result, assembler programs can strike an effective balance between performance and available memory: efficient offset-only addressing most of the time, along with access to as many segments and as much memory as the PC can handle on an as-needed basis.
 
-There are many ways to join segments, including grouping them and declaring them common, and there are many options to the `segment` directive. We need to get on with our discussion of memory addressing, so we won't cover MASM's segment-related directives further, but I strongly suggest that you carefully read the discussion of those directives in your assembler's manual. In fact, you should make it a point to read your assembler's manual cover to cover — it may not be the most exciting reading around, but I guarantee that there are tricks and tips in there that you'll find nowhere else.
+There are many ways to join segments, including grouping them and declaring them common, and there are many options to the `segment`{.nasm} directive. We need to get on with our discussion of memory addressing, so we won't cover MASM's segment-related directives further, but I strongly suggest that you carefully read the discussion of those directives in your assembler's manual. In fact, you should make it a point to read your assembler's manual cover to cover — it may not be the most exciting reading around, but I guarantee that there are tricks and tips in there that you'll find nowhere else.
 
 While we won't discuss MASM's segment-related directives again, we will explore the topic of effective segment use again in Chapter 10 (as it relates to the string instructions), Chapter 14 (as it relates to branching), and in Volume II of *The Zen of Assembly Language*.
 
@@ -738,9 +738,9 @@ While we won't discuss MASM's segment-related directives again, we will explore 
 
 As we saw in Chapter 6, all memory accesses default to accessing memory relative to one of the four segment registers. Instructions come from CS, stack accesses and memory accesses that use BP as a pointer occur within SS, string instruction accesses via DI are in ES, and everything else is normally in DS. In some — but by no means all — cases, segments other than the default segments can be accessed by way of segment override prefixes, special bytes that can precede — prefix — instructions in order to cause those instructions to use any one of the four segment registers.
 
-Let's start by listing the types of memory accesses segment override prefixes *can't* affect. Instructions are always fetched from CS; there's no way to alter that. The stack pointer is always used as a pointer into SS, no matter what. ES is always the segment to which string instruction accesses via DI go, regardless of segment override prefixes. Basically, it's accesses to explicitly named memory operands and string instruction accesses via SI that are affected by segment override prefixes. (The segment accessed by the unusual `xlat` instruction, which we'll encounter later in this chapter, can also be overridden.)
+Let's start by listing the types of memory accesses segment override prefixes *can't* affect. Instructions are always fetched from CS; there's no way to alter that. The stack pointer is always used as a pointer into SS, no matter what. ES is always the segment to which string instruction accesses via DI go, regardless of segment override prefixes. Basically, it's accesses to explicitly named memory operands and string instruction accesses via SI that are affected by segment override prefixes. (The segment accessed by the unusual `xlat`{.nasm} instruction, which we'll encounter later in this chapter, can also be overridden.)
 
-The default segment for a memory operand is overridden by placing the prefix `CS:`, `DS:`, `ES:`, or `SS:` on that memory operand. For example:
+The default segment for a memory operand is overridden by placing the prefix `CS:`{.nasm}, `DS:`{.nasm}, `ES:`{.nasm}, or `SS:`{.nasm} on that memory operand. For example:
 
 ```nasm
 sub   bx,bx
@@ -758,7 +758,7 @@ which loads AX with the word at offset 0 in DS.
 
 Segment override prefixes are handy in a number of situations. They're good for accessing data out of CS when you're not sure where DS is pointing, or when DS is temporarily pointing to some segment that doesn't contain the data you want. (CS is the one segment upon whose setting you can absolutely rely at any given time, since you know that if a given instruction is being executed, CS *must* be pointing to the segment containing that instruction. Consequently, CS is a good place to put jump tables and temporary variables in multi-segment programs, and is a particularly handy segment in which to stash data in interrupt handlers, which start up with only CS among the four segment registers set to a known value.)
 
-In many programs, especially those involving high-level languages, DS and SS normally point to the same segment, since it's convenient to have both stack frame variables and static/global variables in the same segment. When that's the case, `ss:` prefixes can be used to point to data in the default data segment when DS is otherwise occupied. Even when SS doesn't point to the default data segment, segment override prefixes still let you address data on the stack using pointer registers other than BP.
+In many programs, especially those involving high-level languages, DS and SS normally point to the same segment, since it's convenient to have both stack frame variables and static/global variables in the same segment. When that's the case, `ss:`{.nasm} prefixes can be used to point to data in the default data segment when DS is otherwise occupied. Even when SS doesn't point to the default data segment, segment override prefixes still let you address data on the stack using pointer registers other than BP.
 
 Segment override prefixes are particularly handy when you need to access data in two to four segments at once. Suppose, for example, that we need to add two far word-sized arrays together and store the resulting array in the default data segment. Assuming that SS and DS both point to the default data segment, segment override prefixes let us keep all our pointers and counters in the registers as we add the arrays, as follows:
 
@@ -781,7 +781,7 @@ Add3Loop:
     pop   ds              ;restore normal DS
 ```
 
-Had we needed to, we could also have stored data in CS by using `cs:`.
+Had we needed to, we could also have stored data in CS by using `cs:`{.nasm}.
 
 Handy as segment override prefixes are, you shouldn't use them too heavily if you can help it. They're fine for one-shot instructions such as branching through a jump table in CS or retrieving a byte from the BIOS data area by way of ES, but they're to be avoided whenever possible inside tight loops. The reason: segment override prefixes officially take 2 cycles to execute and, since they're 1 byte long, they can actually take up to 4 cycles to fetch and execute — and 4 cycles is a significant amount of time inside a tight loop.
 
@@ -793,7 +793,7 @@ The lesson is clear: don't use segment override prefixes in tight loops unless y
 
 ### `assume` and Segment Override Prefixes
 
-Segment override prefixes can find their way into your code even if you don't put them there, courtesy of the assembler and the `assume` directive. `assume` tells MASM what segments are currently addressable via the segment registers. Whenever MASM doesn't think the default segment register for a given instruction can reach the desired segment but another segment register can, *MASM sticks in a segment override prefix without telling you it's doing so*. As a result, your code can get bigger and slower without you knowing about it.
+Segment override prefixes can find their way into your code even if you don't put them there, courtesy of the assembler and the `assume`{.nasm} directive. `assume`{.nasm} tells MASM what segments are currently addressable via the segment registers. Whenever MASM doesn't think the default segment register for a given instruction can reach the desired segment but another segment register can, *MASM sticks in a segment override prefix without telling you it's doing so*. As a result, your code can get bigger and slower without you knowing about it.
 
 Take a look at this code:
 
@@ -811,17 +811,17 @@ Skip:
 Code  ends
 ```
 
-You know and I know that DS can be used to address `ByteVar` in the above code, since the first thing the code does is set DS equal to CS, thereby loading DS to point to the segment `Code`. Unfortunately, the assembler does *not* know that — the `assume` directive told it only that CS points to `Code`, and `assume` is all the assembler has to go by. Given this correct but not complete information, the assembler concludes that `ByteVar` must be addressed via CS and inserts a `cs:` segment override prefix, so the `inc` instruction assembles as if `inc cs:[ByteVar]` had been used.
+You know and I know that DS can be used to address `ByteVar`{.nasm} in the above code, since the first thing the code does is set DS equal to CS, thereby loading DS to point to the segment `Code`{.nasm}. Unfortunately, the assembler does *not* know that — the `assume`{.nasm} directive told it only that CS points to `Code`{.nasm}, and `assume`{.nasm} is all the assembler has to go by. Given this correct but not complete information, the assembler concludes that `ByteVar`{.nasm} must be addressed via CS and inserts a `cs:`{.nasm} segment override prefix, so the `inc`{.nasm} instruction assembles as if `inc cs:[ByteVar]`{.nasm} had been used.
 
 The result is a wasted byte and several wasted cycles. Worse yet, you have no idea that the segment override prefix has been inserted unless you either generate and examine a listing file or view the assembled code as it runs in a debugger. The assembler is just trying to help by taking some of the burden of segment selection away from you, but the outcome is all too often code that's invisibly bloated with segment override prefixes.
 
-The solution is simple. *Keep the assembler's segment assumptions correct at all times by religiously using the``assume``directive every time you load a segment.* The above example would have assembled correctly — without a segment override prefix — if only we had inserted the line:
+The solution is simple. *Keep the assembler's segment assumptions correct at all times by religiously using the `assume`{.nasm} directive every time you load a segment.* The above example would have assembled correctly — without a segment override prefix — if only we had inserted the line:
 
 ```nasm
 assume  ds:Code
 ```
 
-before we had attempted to access `ByteVar`.
+before we had attempted to access `ByteVar`{.nasm}.
 
 ## Offset Handling
 
@@ -833,13 +833,13 @@ At any rate, we'll quickly cover offset loading, and then we'll look at the many
 
 ### Loading Offsets
 
-Offsets are loaded with the `offset` operator. `offset` is analogous to the `seg` operator we encountered earlier; the difference, of course, is that `offset` extracts the offset of a label or variable name rather than the segment. For example:
+Offsets are loaded with the `offset`{.nasm} operator. `offset`{.nasm} is analogous to the `seg`{.nasm} operator we encountered earlier; the difference, of course, is that `offset`{.nasm} extracts the offset of a label or variable name rather than the segment. For example:
 
 ```nasm
 mov   bx,offset WordVar
 ```
 
-loads BX with the offset of the variable `WordVar`. If some segment register already points to the segment containing `WordVar`, then BX can be used to address memory, as for example in:
+loads BX with the offset of the variable `WordVar`{.nasm}. If some segment register already points to the segment containing `WordVar`{.nasm}, then BX can be used to address memory, as for example in:
 
 ```nasm
 mov   bx,seg WordVar
@@ -850,9 +850,9 @@ mov   ax,es:[bx]
 
 We'll discuss the many ways in which offsets can be used to address memory next.
 
-Before we get to using offsets to address memory, there are a couple of points I'd like to make. The first point is that the `lea` instruction can also be used to load offsets into registers; however, an understanding of `lea` requires an understanding of the 8088's addressing modes, so we'll defer the discussion of `lea` until later in this chapter.
+Before we get to using offsets to address memory, there are a couple of points I'd like to make. The first point is that the `lea`{.nasm} instruction can also be used to load offsets into registers; however, an understanding of `lea`{.nasm} requires an understanding of the 8088's addressing modes, so we'll defer the discussion of `lea`{.nasm} until later in this chapter.
 
-The second point is a shortcoming of MASM that you must be aware of when you use `offset` on variables that reside in segment groups. If you are using the `group` directive to make segment groups, you must always specify the group name as well as the variable name when you use the offset operator. For example, if the segment `_DATA` is in the group `DGROUP`, and `WordVar` is in `_DATA`, you *must* load the offset of `WordVar` as follows:
+The second point is a shortcoming of MASM that you must be aware of when you use `offset`{.nasm} on variables that reside in segment groups. If you are using the `group`{.nasm} directive to make segment groups, you must always specify the group name as well as the variable name when you use the offset operator. For example, if the segment `_DATA`{.nasm} is in the group `DGROUP`{.nasm}, and `WordVar`{.nasm} is in `_DATA`{.nasm}, you *must* load the offset of `WordVar`{.nasm} as follows:
 
 ```nasm
 mov   di,offset DGROUP:WordVar
@@ -864,9 +864,9 @@ If you don't specify the group name, as in:
 mov   di,offset WordVar
 ```
 
-the offset of `WordVar` relative to `_DATA` rather than `DGROUP` is loaded; given the way segment groups are organized (with all segments in the group addressed in a single combined segment), an offset relative to `_DATA` may not work at all.
+the offset of `WordVar`{.nasm} relative to `_DATA`{.nasm} rather than `DGROUP`{.nasm} is loaded; given the way segment groups are organized (with all segments in the group addressed in a single combined segment), an offset relative to `_DATA`{.nasm} may not work at all.
 
-I realize that the above discussion won't make much sense if you haven't encountered the `group` directive (lucky you!). I've never found segment groups to be necessary in pure assembler code, but they are often needed when sharing segments between high-level language code and assembler. If you do find yourself using segment groups, all you need to remember is this: *when loading the offset of a variable that resides within a segment group with the ``offset`` operator, always specify the group name along with the variable name*.
+I realize that the above discussion won't make much sense if you haven't encountered the `group`{.nasm} directive (lucky you!). I've never found segment groups to be necessary in pure assembler code, but they are often needed when sharing segments between high-level language code and assembler. If you do find yourself using segment groups, all you need to remember is this: *when loading the offset of a variable that resides within a segment group with the `offset`{.nasm} operator, always specify the group name along with the variable name*.
 
 ## *mod-reg-rm* Addressing
 
@@ -880,11 +880,11 @@ Simply put, the *mod-reg-rm* byte tells the 8088 where to find an instruction's 
 
 ![](images/fig7.7RT.png)
 
-For example, if the opcode for `mov reg8,[reg/mem8]` (8Ah) is followed by the *mod-reg-rm* byte 17h, that indicates that the register DL is to be loaded from the memory location pointed to by BX, as shown in Figure 7.8. Put the other way around, `mov dl,[bx]` assembles to the two byte sequence 8Ah 17h, where the first byte is the opcode for `mov reg8,[reg/mem8]` and the second byte is the *mod-reg-rm* byte that selects DL as the destination and the memory location pointed to by BX as the source.
+For example, if the opcode for `mov reg8,[reg/mem8]`{.nasm} (8Ah) is followed by the *mod-reg-rm* byte 17h, that indicates that the register DL is to be loaded from the memory location pointed to by BX, as shown in Figure 7.8. Put the other way around, `mov dl,[bx]`{.nasm} assembles to the two byte sequence 8Ah 17h, where the first byte is the opcode for `mov reg8,[reg/mem8]`{.nasm} and the second byte is the *mod-reg-rm* byte that selects DL as the destination and the memory location pointed to by BX as the source.
 
 ![](images/fig7.8RT.png)
 
-You may well wonder how the *mod-reg-rm* byte works with one-operand instructions, such as `neg word ptr ds:[140h]`, or with instructions that have constant data as one operand, such as `sub [WordVar],1`. The answer is that in these cases the *reg* field isn't used for source or destination control; instead, it's used as an extension of the opcode byte. So, for instance, `neg [reg/mem16]` has an opcode byte of 0F7h and always has bits 5-3 of the *mod-reg-rm* byte set to 011b. Bits 7-6 and 2-0 of the *mod-reg-rm* byte still select the memory addressing mode for the single operand, but bits 5-3, together with the opcode byte, now simply tell the 8088 that the instruction is `neg [reg/mem16]`, as shown in Figure 7.9. `not [reg/mem16]` also has an opcode byte of 0F7h, but is distinguished from `neg [reg/mem16]` by bits 5-3 of the *mod-reg-rm* byte, which are 010b for `not` and 011b for `neg`.
+You may well wonder how the *mod-reg-rm* byte works with one-operand instructions, such as `neg word ptr ds:[140h]`{.nasm}, or with instructions that have constant data as one operand, such as `sub [WordVar],1`{.nasm}. The answer is that in these cases the *reg* field isn't used for source or destination control; instead, it's used as an extension of the opcode byte. So, for instance, `neg [reg/mem16]`{.nasm} has an opcode byte of 0F7h and always has bits 5-3 of the *mod-reg-rm* byte set to 011b. Bits 7-6 and 2-0 of the *mod-reg-rm* byte still select the memory addressing mode for the single operand, but bits 5-3, together with the opcode byte, now simply tell the 8088 that the instruction is `neg [reg/mem16]`{.nasm}, as shown in Figure 7.9. `not [reg/mem16]`{.nasm} also has an opcode byte of 0F7h, but is distinguished from `neg [reg/mem16]`{.nasm} by bits 5-3 of the *mod-reg-rm* byte, which are 010b for `not`{.nasm} and 011b for `neg`{.nasm}.
 
 ![](images/fig7.9RT.png)
 
@@ -911,7 +911,7 @@ If we look at memory addressing alone, we see that there are 24 distinct ways to
 
 For two-operand instructions, each of those memory addressing modes can serve as either source or destination, with either a constant value or one of the 8 general-purpose registers as the other operand.
 
-Basically, *mod-reg-rm* addressing lets you select a memory offset in any of 16 ways (or a general-purpose register, if you prefer), and say, "Use this as an operand." The other operand can't involve memory, but it can be any general-purpose register or (usually) a constant value. (There's no inherent support in *mod-reg-rm* addressing for constant operands. Special, separate opcodes must used to specify constant operands for instructions that support such operands, and a few *mod-reg-rm* instructions, such as `mul`, don't accept constant operands at all.)
+Basically, *mod-reg-rm* addressing lets you select a memory offset in any of 16 ways (or a general-purpose register, if you prefer), and say, "Use this as an operand." The other operand can't involve memory, but it can be any general-purpose register or (usually) a constant value. (There's no inherent support in *mod-reg-rm* addressing for constant operands. Special, separate opcodes must used to specify constant operands for instructions that support such operands, and a few *mod-reg-rm* instructions, such as `mul`{.nasm}, don't accept constant operands at all.)
 
 *mod-reg-rm* addressing is flexible indeed.
 
@@ -930,9 +930,9 @@ SAMPLE_DISPLACEMENT   equ   1
     mov   ax,[bx+9]
 ```
 
-both `mov` instructions assemble with 1-byte displacements.)
+both `mov`{.nasm} instructions assemble with 1-byte displacements.)
 
-Displacements must be constant values in order to be stored in sign-extended bytes because when a named memory variable is used, the assembler has no way of knowing where in the segment the variable will end up. Other parts of the segment may appear in other parts of the module or may be linked in from other modules, and the linker may also align the segment to various memory boundaries; any of these can have the effect of moving a given variable in the segment to an offset that doesn't fit in a sign-extended byte. As a result, the following `mov` instruction assembles with a 2-byte displacement, even though it appears to be at offset 0 in its segment:
+Displacements must be constant values in order to be stored in sign-extended bytes because when a named memory variable is used, the assembler has no way of knowing where in the segment the variable will end up. Other parts of the segment may appear in other parts of the module or may be linked in from other modules, and the linker may also align the segment to various memory boundaries; any of these can have the effect of moving a given variable in the segment to an offset that doesn't fit in a sign-extended byte. As a result, the following `mov`{.nasm} instruction assembles with a 2-byte displacement, even though it appears to be at offset 0 in its segment:
 
 ```nasm
 Data  segment
@@ -946,11 +946,11 @@ Data  ends
 
 The 16 distinct memory addressing modes supported by the *mod-reg-rm* byte are often given a slew of confusing names, such as "implied addressing," "based relative addressing," and "direct indexed addressing." Generally, there's little need to name addressing modes; you'll find you use them much more than you talk about them. However, we will need to refer to the modes later in this book, so let me explain my preferred addressing mode naming scheme.
 
-I find it simplest to give a name to each of the three possible components of a memory offset — base for BX or BP, index for SI or DI, displacement for a 1-or 2-byte fixed value — and then just refer to an addressing mode with all the components of that mode. That way, `mov [bx],al` uses base addressing, `add ax,[si+1]` uses index+displacement addressing, and `mov dl,[bp+di+1000h]` uses base+index+displacement addressing. The names may be long at times, but they're never ambiguous or hard to remember.
+I find it simplest to give a name to each of the three possible components of a memory offset — base for BX or BP, index for SI or DI, displacement for a 1-or 2-byte fixed value — and then just refer to an addressing mode with all the components of that mode. That way, `mov [bx],al`{.nasm} uses base addressing, `add ax,[si+1]`{.nasm} uses index+displacement addressing, and `mov dl,[bp+di+1000h]`{.nasm} uses base+index+displacement addressing. The names may be long at times, but they're never ambiguous or hard to remember.
 
 ### Direct Addressing
 
-There is one exception to the above naming scheme, and that's direct addressing. Direct addressing is used when a memory address is referenced with just a 16-bit displacement, as in `mov bx,[WordVar]` or `mov es:[410h],al`. You might expect direct addressing to be called displacement addressing, but it's not, for three reasons. First, the address used in direct addressing is not, properly speaking, a displacement, since it isn't relative to any register. Second, direct addressing is a time-honored term that came into use long before the 8088 was around, so experienced programmers are more likely to speak of "direct addressing" than "displacement addressing."
+There is one exception to the above naming scheme, and that's direct addressing. Direct addressing is used when a memory address is referenced with just a 16-bit displacement, as in `mov bx,[WordVar]`{.nasm} or `mov es:[410h],al`{.nasm}. You might expect direct addressing to be called displacement addressing, but it's not, for three reasons. First, the address used in direct addressing is not, properly speaking, a displacement, since it isn't relative to any register. Second, direct addressing is a time-honored term that came into use long before the 8088 was around, so experienced programmers are more likely to speak of "direct addressing" than "displacement addressing."
 
 Third, direct addressing is a bit of an anomaly in *mod-reg-rm* addressing. It's pretty obvious why we'd *want* to have direct addressing available; surely you'd rather do this:
 
@@ -968,7 +968,7 @@ mov   dx,[bx]
 
 It's just plain handy to be able to access a memory location directly by name.
 
-Now look at Figure 7.6 again. Direct addressing really doesn't belong in that figure at all, does it? The *mod-reg-rm* encoding for direct addressing should by all rights be taken by base addressing using only BP. However, there *is* no addressing mode that can use only BP — if you assemble the instruction `mov [bp],al`, you'll find that it actually assembles as `mov [bp+0],al`, with a 1-byte displacement.
+Now look at Figure 7.6 again. Direct addressing really doesn't belong in that figure at all, does it? The *mod-reg-rm* encoding for direct addressing should by all rights be taken by base addressing using only BP. However, there *is* no addressing mode that can use only BP — if you assemble the instruction `mov [bp],al`{.nasm}, you'll find that it actually assembles as `mov [bp+0],al`{.nasm}, with a 1-byte displacement.
 
 In other words, the designers of the 8088 rightly considered direct addressing important enough to build it into *mod-reg-rm* addressing in place of a little-used addressing mode. (BP is designed to point to stack frames, as we'll see shortly, and there's rarely any use for BP-only base addressing in stack frames.)
 
@@ -978,13 +978,13 @@ Along the same lines, note that direct addressing always uses a 16-bit displacem
 
 Be aware that all *mod-reg-rm* addressing defaults to accessing the segment pointed to by DS — *except* when BP is used as part of the *mod-reg-rm* address. Any *mod-reg-rm* addressing involving BP accesses the segment pointed to by SS by default. (If DS and SS point to the same segment, as they often do, you can use BP-based addressing modes to point to normal data if necessary, and you can use the other *mod-reg-rm* addressing modes to point to data on the stack.) However, *mod-reg-rm* addressing can always be forced to use any segment register with a segment override prefix.
 
-There are a few other addressing terms that I should mention now. Indirect addressing is commonly used to refer to any sort of memory addressing that uses a register (BX, BP, SI, or DI, or any of the valid combinations) to point to memory. We'll also use indirect to refer to branches that branch to destinations specified by memory operands, as in `jmp word ptr [SubroutinePointer]`. We'll discuss indirect branching in detail in Chapter 14.
+There are a few other addressing terms that I should mention now. Indirect addressing is commonly used to refer to any sort of memory addressing that uses a register (BX, BP, SI, or DI, or any of the valid combinations) to point to memory. We'll also use indirect to refer to branches that branch to destinations specified by memory operands, as in `jmp word ptr [SubroutinePointer]`{.nasm}. We'll discuss indirect branching in detail in Chapter 14.
 
 Immediate addressing is a non-*mod-reg-rm* form of addressing in which the operand is a constant value that's built right into the instruction. We'll cover immediate addressing when we're done with *mod-reg-rm* addressing.
 
-Finally, I'd like to make it clear that a displacement is nothing more than a fixed (constant) value that's added into the memory offset calculated by a *mod-reg-rm* byte. It's called a displacement because it specifies the number of bytes by which the addressed offset should be displaced from the offset specified by the registers used to point to memory. In `mov si,[bx+1]`, the displacement is 1; the address from which SI is loaded is displaced 1 byte from the memory location pointed to by BX. In `mov ax,[si+WordVar]`, the displacement is the offset of `WordVar`. We won't know exactly what that offset is unless we look at the code with a debugger, but it's a constant value nonetheless.
+Finally, I'd like to make it clear that a displacement is nothing more than a fixed (constant) value that's added into the memory offset calculated by a *mod-reg-rm* byte. It's called a displacement because it specifies the number of bytes by which the addressed offset should be displaced from the offset specified by the registers used to point to memory. In `mov si,[bx+1]`{.nasm}, the displacement is 1; the address from which SI is loaded is displaced 1 byte from the memory location pointed to by BX. In `mov ax,[si+WordVar]`{.nasm}, the displacement is the offset of `WordVar`{.nasm}. We won't know exactly what that offset is unless we look at the code with a debugger, but it's a constant value nonetheless.
 
-Don't get caught up worrying about the exact meaning of the term displacement, or indeed of any of the memory addressing terms. In a way, the terms are silly; `mov ax,[bx]` is base addressing and `mov ax,[si]` is index addressing, but both load AX from the address pointed to by a register, both are 2 bytes long, and both take 13 cycles to execute. The difference between the two is purely semantic from a programmer's perspective.
+Don't get caught up worrying about the exact meaning of the term displacement, or indeed of any of the memory addressing terms. In a way, the terms are silly; `mov ax,[bx]`{.nasm} is base addressing and `mov ax,[si]`{.nasm} is index addressing, but both load AX from the address pointed to by a register, both are 2 bytes long, and both take 13 cycles to execute. The difference between the two is purely semantic from a programmer's perspective.
 
 Notwithstanding, we needed to establish a common terminology for the *mod-reg-rm* memory addressing modes, and we've done so. Now that we understand how *mod-reg-rm* addressing works and how wonderfully flexible it is, let's look at its dark side.
 
@@ -992,15 +992,15 @@ Notwithstanding, we needed to establish a common terminology for the *mod-reg-rm
 
 Gee, if *mod-reg-rm* addressing is so flexible, why don't we use it for all memory accesses? For that matter, why does the 8088 even *have* any other addressing modes?
 
-One reason is that *mod-reg-rm* addressing doesn't work with all instructions. For example, the string instructions can't use *mod-reg-rm* addressing, and neither can `xlat`, which we'll encounter later in this chapter. Nonetheless, most instructions, including `mov`, `add`, `adc`, `sub`, `sbb`, `cmp`, `and`, `or`, `xor`, `neg`, `not`, `mul`, `div`, and more, do support *mod-reg-rm* addressing, so it would seem that there must be some other reason for the existence of other addressing modes.
+One reason is that *mod-reg-rm* addressing doesn't work with all instructions. For example, the string instructions can't use *mod-reg-rm* addressing, and neither can `xlat`{.nasm}, which we'll encounter later in this chapter. Nonetheless, most instructions, including `mov`{.nasm}, `add`{.nasm}, `adc`{.nasm}, `sub`{.nasm}, `sbb`{.nasm}, `cmp`{.nasm}, `and`{.nasm}, `or`{.nasm}, `xor`{.nasm}, `neg`{.nasm}, `not`{.nasm}, `mul`{.nasm}, `div`{.nasm}, and more, do support *mod-reg-rm* addressing, so it would seem that there must be some other reason for the existence of other addressing modes.
 
 And indeed there is another reason for the existence of other addressing modes. In fact, there are two reasons: speed and size. *mod-reg-rm* addressing is more flexible than other addressing modes — and it also produces the largest, slowest code around.
 
-It's easy to understand why *mod-reg-rm* addressing produces larger code than other memory addressing modes. The bits needed to encode *mod-reg-rm* addressing's many possible source, destination, and addressing mode combinations increase the size of *mod-reg-rm* instructions, and displacement bytes can make *mod-reg-rm* instructions larger still. It stands to reason that the string instruction `lods`, which always loads AL from the memory location pointed to by DS:SI, should have fewer instruction bytes than the *mod-reg-rm* instruction `mov al,[si]`, which selects AL from 8 possible destination registers, and which selects the memory location pointed to by SI from among 32 possible source operands.
+It's easy to understand why *mod-reg-rm* addressing produces larger code than other memory addressing modes. The bits needed to encode *mod-reg-rm* addressing's many possible source, destination, and addressing mode combinations increase the size of *mod-reg-rm* instructions, and displacement bytes can make *mod-reg-rm* instructions larger still. It stands to reason that the string instruction `lods`{.nasm}, which always loads AL from the memory location pointed to by DS:SI, should have fewer instruction bytes than the *mod-reg-rm* instruction `mov al,[si]`{.nasm}, which selects AL from 8 possible destination registers, and which selects the memory location pointed to by SI from among 32 possible source operands.
 
 It's less obvious why *mod-reg-rm* addressing is slower than other memory addressing modes. One major reason falls out from the larger size of *mod-reg-rm* instructions; we've already established that instructions with more instruction bytes tend to run more slowly, simply because it takes time to fetch those extra instruction bytes. That's not the whole story, however. It takes the 8088 a variable but considerable amount of time — 5 to 12 cycles — to calculate memory addresses from *mod-reg-rm* bytes. Those lengthy calculations, known as effective address (EA) calculations, are our next topic.
 
-Before we proceed to EA calculations, I'd like to point out that slow and bulky as *mod-reg-rm* addressing is, it's still the workhorse memory addressing mode of the 8088. It's also the addressing mode used by many register-only instructions, such as `add dx,bx` and `mov al,dl`, with the *mod-reg-rm* byte selecting register rather than memory operands. My goodness, some instructions don't even *have* a non-*mod-reg-rm* addressing mode. Without a doubt, you'll be using *mod-reg-rm* addressing often in your code, so we'll take the time to learn how to use it well.
+Before we proceed to EA calculations, I'd like to point out that slow and bulky as *mod-reg-rm* addressing is, it's still the workhorse memory addressing mode of the 8088. It's also the addressing mode used by many register-only instructions, such as `add dx,bx`{.nasm} and `mov al,dl`{.nasm}, with the *mod-reg-rm* byte selecting register rather than memory operands. My goodness, some instructions don't even *have* a non-*mod-reg-rm* addressing mode. Without a doubt, you'll be using *mod-reg-rm* addressing often in your code, so we'll take the time to learn how to use it well.
 
 Nonetheless, the less-flexible addressing modes are generally shorter and faster than *mod-reg-rm* addressing. As we'll see throughout *The Zen of Assembly Language*, one key to high-performance code is avoiding *mod-reg-rm* addressing as much as possible.
 
@@ -1008,11 +1008,11 @@ Nonetheless, the less-flexible addressing modes are generally shorter and faster
 
 As I've already said, *mod-reg-rm* memory accesses are slow partly because instructions that use *mod-reg-rm* addressing tend to have many instruction bytes. The *mod-reg-rm* byte itself adds 1 byte beyond the opcode byte, and a displacement, if used, will add 1 or 2 more bytes. Remember, 4 cycles are required to fetch each and every one of those instruction bytes.
 
-Taken a step farther, that line of thinking reveals why *all* instructions that access memory are slow: memory is slow. It takes 4 cycles per byte to access memory in any way. That means that an instruction like `mov bx,[WordVar]`, which is 4 bytes long and reads a word-sized memory variable, must perform 6 memory accesses in all; at 4 cycles a pop, that adds up to a minimum execution time of 24 cycles. Even a 2-byte memory-accessing instruction spends a minimum of 12 cycles just accessing memory. By contrast, most register-only operations are 1 to 2 bytes in length and have Execution Unit execution times of 2 to 4 cycles, so the *maximum* execution times for register-only instructions tend to be 4 to 8 cycles.
+Taken a step farther, that line of thinking reveals why *all* instructions that access memory are slow: memory is slow. It takes 4 cycles per byte to access memory in any way. That means that an instruction like `mov bx,[WordVar]`{.nasm}, which is 4 bytes long and reads a word-sized memory variable, must perform 6 memory accesses in all; at 4 cycles a pop, that adds up to a minimum execution time of 24 cycles. Even a 2-byte memory-accessing instruction spends a minimum of 12 cycles just accessing memory. By contrast, most register-only operations are 1 to 2 bytes in length and have Execution Unit execution times of 2 to 4 cycles, so the *maximum* execution times for register-only instructions tend to be 4 to 8 cycles.
 
 I've said it before, and I'll say it again: *avoid accessing memory whenever you can*. Memory is just plain slow.
 
-In actual use, many memory-accessing instructions turn out to be even slower than memory access times alone would explain. For example, the fastest possible *mod-reg-rm* memory-accessing instruction, `mov reg8,[bx]` (BP, SI, or DI would do as well as BX), has an Execution Unit execution time of 13 cycles, although only 3 memory accesses (requiring 12 cycles) are performed. Similarly, string instructions, `xlat`, `push`, and `pop` take more cycles than can be accounted for solely by memory accesses.
+In actual use, many memory-accessing instructions turn out to be even slower than memory access times alone would explain. For example, the fastest possible *mod-reg-rm* memory-accessing instruction, `mov reg8,[bx]`{.nasm} (BP, SI, or DI would do as well as BX), has an Execution Unit execution time of 13 cycles, although only 3 memory accesses (requiring 12 cycles) are performed. Similarly, string instructions, `xlat`{.nasm}, `push`{.nasm}, and `pop`{.nasm} take more cycles than can be accounted for solely by memory accesses.
 
 The full explanation for the poor performance of the 8088's memory-accessing instructions lies in the microcode of the 8088 (the built-in bit patterns that sequence the 8088 through the execution of each instruction), which is undeniably slower than it might be. (Check out the execution times of the 8088's instructions on the 80286 and 80386, and you'll see that it's possible to execute the 8088's instructions in many fewer cycles than the 8088 requires.) That's not something we can change; about all we can do is choose the fastest available instruction for each task, and we'll spend much of *The Zen of Assembly Language* doing just that.
 
@@ -1022,7 +1022,7 @@ There is one aspect of memory addressing that we *can* change, however, and that
 
 A given instruction that uses *mod-reg-rm* addressing doesn't always execute in the same number of cycles. The Execution Unit execution time of *mod-reg-rm* instructions comes in two parts: a fixed Execution Unit execution time and an effective address (EA) execution time that varies depending on the *mod-reg-rm* addressing mode used. The two times added together determine the overall execution time of each *mod-reg-rm* instruction.
 
-Each *mod-reg-rm* instruction has its own fixed Execution Unit execution time, which remains the same for all addressing modes. For example, the fixed execution time of `add bl,[mem]` is 9 cycles, as shown in Appendix A; this value is constant, no matter what *mod-reg-rm* addressing mode is used.
+Each *mod-reg-rm* instruction has its own fixed Execution Unit execution time, which remains the same for all addressing modes. For example, the fixed execution time of `add bl,[mem]`{.nasm} is 9 cycles, as shown in Appendix A; this value is constant, no matter what *mod-reg-rm* addressing mode is used.
 
 The EA calculation time, on the other hand, depends not in the least on which instruction is being executed. EA calculation time is determined solely by the *mod-reg-rm* addressing mode used, and nothing else, as shown in Figure 7.10. As you can see from Figure 7.10, the time it takes the 8088 to calculate an effective address can vary greatly, ranging from a mere 5 cycles if a single register is used to point to memory all the way up to 11 or 12 cycles if the sum of two registers and a displacement is used to point to memory. (Segment override prefixes require an additional 2 cycles each, as we saw earlier.) When I discuss the performance of an instruction that uses *mod-reg-rm* addressing, I'll often say that it takes at least a certain number of cycles to execute. What "at least" means is that the instruction will take that many cycles if the fastest *mod-reg-rm* addressing mode — base-or index-only — is used, and longer if some other *mod-reg-rm* addressing mode is selected.
 
@@ -1036,13 +1036,13 @@ In short, EA calculation time means that the choice of *mod-reg-rm* addressing m
 
 There are a number of interesting points to be made about EA calculation time. For starters, it should be clear that EA calculation time is a big reason why instructions that use *mod-reg-rm* addressing are slow. The minimum EA calculation time of 5 cycles, on top of 8 or more cycles of fixed execution time, is no bargain; the maximum EA calculation time of 12 cycles is a grim prospect indeed.
 
-For example, `add bl,[si]` takes 13 cycles to execute (8 cycles of fixed execution time and 5 cycles of EA calculation time), which is certainly not terrific by comparison with the 3-cycle execution time of `add bl,dl`. (Instruction fetching alters the picture somewhat, as we'll see shortly.) At the other end of the EA calculation spectrum, `add bl,[bx+di+100h]` takes 20 cycles to execute, which is horrendous no matter what you compare it to.
+For example, `add bl,[si]`{.nasm} takes 13 cycles to execute (8 cycles of fixed execution time and 5 cycles of EA calculation time), which is certainly not terrific by comparison with the 3-cycle execution time of `add bl,dl`{.nasm}. (Instruction fetching alters the picture somewhat, as we'll see shortly.) At the other end of the EA calculation spectrum, `add bl,[bx+di+100h]`{.nasm} takes 20 cycles to execute, which is horrendous no matter what you compare it to.
 
-The lesson seems clear: use faster *mod-reg-rm* addressing modes whenever you can. While that's true, it's not necessarily obvious which *mod-reg-rm* addressing modes are faster. Base-only addressing or index-only addressing are the *mod-reg-rm* addressing modes of choice, because they add only 5 cycles of EA calculation time and 1 byte, the *mod-reg-rm* byte. For instance, `mov dl,[bp]` is just 2 bytes long and takes a fairly reasonable 13 cycles to execute.
+The lesson seems clear: use faster *mod-reg-rm* addressing modes whenever you can. While that's true, it's not necessarily obvious which *mod-reg-rm* addressing modes are faster. Base-only addressing or index-only addressing are the *mod-reg-rm* addressing modes of choice, because they add only 5 cycles of EA calculation time and 1 byte, the *mod-reg-rm* byte. For instance, `mov dl,[bp]`{.nasm} is just 2 bytes long and takes a fairly reasonable 13 cycles to execute.
 
-Direct addressing, which has an EA calculation time of 6 cycles, is only slightly slower than base or index addressing so far as official execution time goes. However, direct addressing requires 2 additional instruction bytes (the 16-bit displacement) beyond the *mod-reg-rm* byte, so it's actually a good deal slower than base or index addressing. `mov dl,[ByteVar]` officially takes 14 cycles to execute, but given that the instruction is 4 bytes long and performs a memory access, 20 cycles is a more accurate execution time.
+Direct addressing, which has an EA calculation time of 6 cycles, is only slightly slower than base or index addressing so far as official execution time goes. However, direct addressing requires 2 additional instruction bytes (the 16-bit displacement) beyond the *mod-reg-rm* byte, so it's actually a good deal slower than base or index addressing. `mov dl,[ByteVar]`{.nasm} officially takes 14 cycles to execute, but given that the instruction is 4 bytes long and performs a memory access, 20 cycles is a more accurate execution time.
 
-Base+index addressing (`mov al,[bp+di]` and the like) takes 1 to 2 cycles more for EA calculation time than does direct addressing, but is nonetheless superior to direct addressing in most cases. The key: base+index addressing requires only the 1 *mod-reg-rm* byte. Base+index addressing instructions are 2 bytes shorter than equivalent direct addressing instructions, and that translates into a considerable instruction-fetching/performance advantage.
+Base+index addressing (`mov al,[bp+di]`{.nasm} and the like) takes 1 to 2 cycles more for EA calculation time than does direct addressing, but is nonetheless superior to direct addressing in most cases. The key: base+index addressing requires only the 1 *mod-reg-rm* byte. Base+index addressing instructions are 2 bytes shorter than equivalent direct addressing instructions, and that translates into a considerable instruction-fetching/performance advantage.
 
 The rule is: *use displacement-free *mod-reg-rm* addressing modes whenever you can*. Instructions that use displacements are always 1 to 2 bytes longer than those that use displacement-free *mod-reg-rm* addressing modes, and that means that there's generally a prefetching penalty for the use of displacements. There's also a substantial EA calculation time penalty for base+displacement, index+displacement, or base+index+displacement addressing. If you must use displacements, use 1-byte displacements as much as possible; we'll see an example of this when we get to stack frames later in this chapter.
 
@@ -1053,21 +1053,21 @@ mov   bx,offset MemVar
 mov   dx,[bx]
 ```
 
-just to use base or index addressing once — the `mov` instruction used to load BX takes 4 cycles and 3 bytes, more than negating any advantage base addressing has over direct addressing.
+just to use base or index addressing once — the `mov`{.nasm} instruction used to load BX takes 4 cycles and 3 bytes, more than negating any advantage base addressing has over direct addressing.
 
-Inside loops, however, it's well worth using the most efficient addressing mode available. [Listing 7-9](#L709), which adds up the elements of a byte-sized array using base+index+displacement addressing every time through the loop, runs in 1.17 ms. [Listing 7-10](#L710), which changes the addressing mode to base+index by adding the displacement into the base outside the loop, runs in 1.01 ms, nearly 16% faster than [Listing 7-9](#L709). Finally, [Listing 7-11](#L711), which performs all the addressing calculations outside the loop and uses plain old base-only addressing, runs in just 0.95 ms, 6% faster still. (The string instruction `lods` is even faster than `mov al,[bx]`, as we'll see in Chapter 10. Always think of your non-*mod-reg-rm* alternatives.) Clearly, the choice of addressing mode matters considerably inside tight loops.
+Inside loops, however, it's well worth using the most efficient addressing mode available. [Listing 7-9](#L709), which adds up the elements of a byte-sized array using base+index+displacement addressing every time through the loop, runs in 1.17 ms. [Listing 7-10](#L710), which changes the addressing mode to base+index by adding the displacement into the base outside the loop, runs in 1.01 ms, nearly 16% faster than [Listing 7-9](#L709). Finally, [Listing 7-11](#L711), which performs all the addressing calculations outside the loop and uses plain old base-only addressing, runs in just 0.95 ms, 6% faster still. (The string instruction `lods`{.nasm} is even faster than `mov al,[bx]`{.nasm}, as we'll see in Chapter 10. Always think of your non-*mod-reg-rm* alternatives.) Clearly, the choice of addressing mode matters considerably inside tight loops.
 
-We've learned two basic rules, then: 1) *use displacement-free mod-reg-rm addressing modes whenever you can*, and 2) *calculate memory addresses outside loops and use base-only or index-only addressing whenever possible*. The `lea` instruction, which we'll get to shortly, is most useful for calculating memory addresses outside loops.
+We've learned two basic rules, then: 1) *use displacement-free mod-reg-rm addressing modes whenever you can*, and 2) *calculate memory addresses outside loops and use base-only or index-only addressing whenever possible*. The `lea`{.nasm} instruction, which we'll get to shortly, is most useful for calculating memory addresses outside loops.
 
 ### *mod-reg-rm* Addressing: Slow, but Not *Quite* as Slow as You Think
 
 There's no doubt about it: *mod-reg-rm* addressing is slow. Still, relative to register operands, *mod-reg-rm* operands might not be quite so slow as you think, for a very strange reason — the prefetch queue. *mod-reg-rm* addressing executes so slowly that it allows time for quite a few instruction bytes to be prefetched, and that means that instructions that use *mod-reg-rm* addressing often run at pretty much their official speed.
 
-Consider this. `mov al,bl` is a 2-byte, 2-cycle instruction. String a few such instructions together and the prefetch queue empties, making the actual execution time 8 cycles — the time it takes to fetch the instruction bytes.
+Consider this. `mov al,bl`{.nasm} is a 2-byte, 2-cycle instruction. String a few such instructions together and the prefetch queue empties, making the actual execution time 8 cycles — the time it takes to fetch the instruction bytes.
 
-By contrast, `mov al,[bx]` is a 2-byte, 13-cycle instruction. Counting both the memory access needed to read the operand pointed to by BX and the two instruction fetches, only 3 memory accesses are incurred by this instruction. Since 3 memory accesses take only 12 cycles, the 13-cycle official execution time of `mov al,[bx]` is a fair reflection of the instruction's true performance.
+By contrast, `mov al,[bx]`{.nasm} is a 2-byte, 13-cycle instruction. Counting both the memory access needed to read the operand pointed to by BX and the two instruction fetches, only 3 memory accesses are incurred by this instruction. Since 3 memory accesses take only 12 cycles, the 13-cycle official execution time of `mov al,[bx]`{.nasm} is a fair reflection of the instruction's true performance.
 
-That doesn't mean that `mov al,[bx]` is *faster* than `mov al,bl`, or that memory-accessing instructions are faster than register-only instructions — they're not. `mov al,bl` is a minimum of about 50% faster than `mov al,[bx]` under any circumstances. What it does mean is that memory-accessing instructions tend to suffer less from the prefetch queue cycle-eater than do register-only instructions, because the considerably longer execution times of memory-accessing instructions often allow a good deal of prefetching per instruction byte executed. As a result, the performance difference between the two is often not quite so great as official execution times would indicate.
+That doesn't mean that `mov al,[bx]`{.nasm} is *faster* than `mov al,bl`{.nasm}, or that memory-accessing instructions are faster than register-only instructions — they're not. `mov al,bl`{.nasm} is a minimum of about 50% faster than `mov al,[bx]`{.nasm} under any circumstances. What it does mean is that memory-accessing instructions tend to suffer less from the prefetch queue cycle-eater than do register-only instructions, because the considerably longer execution times of memory-accessing instructions often allow a good deal of prefetching per instruction byte executed. As a result, the performance difference between the two is often not quite so great as official execution times would indicate.
 
 In short, memory-accessing instructions, especially those that use *mod-reg-rm* addressing, generally have a better balance between overall memory access time and execution time than register-only instructions, and consequently run closer to their rated speeds. That's a mixed blessing, since it's a side effect of the slow speed of memory-accessing instructions, but it does make memory access — which is, after all, a necessary evil — somewhat less unappealing than it might seem.
 
@@ -1130,9 +1130,9 @@ mov   word ptr [bx],0
 mov   word ptr [bx+2],0
 ```
 
-True, the latter version involves a 1-byte displacement, but that displacement is smaller than the 2 bytes required to advance BX in the first version. Since the incremental cost of base+displacement addressing over base-only addressing is 4 cycles, exactly the same number of cycles as two `inc` instructions, the code that uses base+displacement addressing is clearly superior.
+True, the latter version involves a 1-byte displacement, but that displacement is smaller than the 2 bytes required to advance BX in the first version. Since the incremental cost of base+displacement addressing over base-only addressing is 4 cycles, exactly the same number of cycles as two `inc`{.nasm} instructions, the code that uses base+displacement addressing is clearly superior.
 
-Similarly, you're invariably better off letting EA calculations add one register to another than you are using `add`. For example, consider two approaches to scanning an array pointed to by BX+SI for the byte in AL:
+Similarly, you're invariably better off letting EA calculations add one register to another than you are using `add`{.nasm}. For example, consider two approaches to scanning an array pointed to by BX+SI for the byte in AL:
 
 ```nasm
     mov   dx,bx     ;set aside the base address
@@ -1176,15 +1176,15 @@ ScanFound:
 
 Although EA calculations can add faster than separate instructions can, it's faster still not to add at all. *Whenever you can, perform your calculations outside loops.*
 
-Which brings us to `lea`.
+Which brings us to `lea`{.nasm}.
 
 ### Calculating Effective Addresses With `lea`
 
-`lea` is something of an odd bird, as the only *mod-reg-rm* memory-addressing instruction that doesn't access memory. `lea` calculates the offset of the memory operand... and then loads that offset into one of the 8 general-purpose registers, without accessing memory at all. Basically, `lea` is nothing more than a means by which to load the result of an EA calculation into a register.
+`lea`{.nasm} is something of an odd bird, as the only *mod-reg-rm* memory-addressing instruction that doesn't access memory. `lea`{.nasm} calculates the offset of the memory operand... and then loads that offset into one of the 8 general-purpose registers, without accessing memory at all. Basically, `lea`{.nasm} is nothing more than a means by which to load the result of an EA calculation into a register.
 
-For example, `lea bx,[MemVar]` loads the offset of `MemVar` into BX. Now, we wouldn't generally want to use `lea` to load simple offsets, since `mov` can do that more efficiently; `mov bx,offset MemVar` is 1 byte shorter and 4 cycles faster than `lea bx,[MemVar]`. (Since `lea` involves EA calculation, it's not particularly fast; however, it's faster than any *mod-reg-rm* memory-accessing instruction, taking only 2 cycles plus the EA calculation time.)
+For example, `lea bx,[MemVar]`{.nasm} loads the offset of `MemVar`{.nasm} into BX. Now, we wouldn't generally want to use `lea`{.nasm} to load simple offsets, since `mov`{.nasm} can do that more efficiently; `mov bx,offset MemVar`{.nasm} is 1 byte shorter and 4 cycles faster than `lea bx,[MemVar]`{.nasm}. (Since `lea`{.nasm} involves EA calculation, it's not particularly fast; however, it's faster than any *mod-reg-rm* memory-accessing instruction, taking only 2 cycles plus the EA calculation time.)
 
-`lea` shines when you need to load a register with a complex memory address, preferably without disturbing any of the registers that make up the memory address. Suppose that we want to push the address of an array element that's indexed by BP+SI. We could use:
+`lea`{.nasm} shines when you need to load a register with a complex memory address, preferably without disturbing any of the registers that make up the memory address. Suppose that we want to push the address of an array element that's indexed by BP+SI. We could use:
 
 ```nasm
 mov   ax,offset TestArray
@@ -1200,9 +1200,9 @@ lea   ax,[TestArray+bp+si]
 push  ax
 ```
 
-which is only 5 bytes long. One of the primary uses of `lea` is loading offsets of variables in stack frames, because such variables are addressed with base+displacement addressing.
+which is only 5 bytes long. One of the primary uses of `lea`{.nasm} is loading offsets of variables in stack frames, because such variables are addressed with base+displacement addressing.
 
-Refer back to the example we examined in the last section. Suppose that we wanted to scan memory without disturbing either BX or SI. In that case, we could use DI, with an assist from `lea`:
+Refer back to the example we examined in the last section. Suppose that we wanted to scan memory without disturbing either BX or SI. In that case, we could use DI, with an assist from `lea`{.nasm}:
 
 ```nasm
     lea   di,[bx+si]  ;add together the memory address components
@@ -1215,16 +1215,16 @@ ScanLoop:
 ScanFound:
 ```
 
-`lea` is particularly handy in this case because it can add two registers — BX and SI — and place the result in a third register — DI. That enables us to replace the two instructions:
+`lea`{.nasm} is particularly handy in this case because it can add two registers — BX and SI — and place the result in a third register — DI. That enables us to replace the two instructions:
 
 ```nasm
 mov   di,bx
 add   di,si
 ```
 
-with a single `lea`.
+with a single `lea`{.nasm}.
 
-`lea` should make it clear that offsets are just 16-bit numbers. Adding offsets stored in BX and SI together with `lea` is no different from adding any two 16-bit numbers together with `add`, because offsets are just 16-bit numbers. 0 is a valid offset; if we execute:
+`lea`{.nasm} should make it clear that offsets are just 16-bit numbers. Adding offsets stored in BX and SI together with `lea`{.nasm} is no different from adding any two 16-bit numbers together with `add`{.nasm}, because offsets are just 16-bit numbers. 0 is a valid offset; if we execute:
 
 ```nasm
 sub   bx,bx     ;load BX with 0
@@ -1233,7 +1233,7 @@ mov   al,[bx]   ;load AL with the byte at offset 0 in DS
 
 we'll read the byte at offset 0 in the segment pointed to by DS. It's important that you understand that offsets are just numbers, and that you can manipulate offsets every bit as flexibly as any other values.
 
-The flip side is that you could, if you wished, add two registers and/or a constant value together with `lea` and place the result in a third register. Of course, the registers would have to be BX or BP and SI or DI, but since offsets and numbers are one and the same, there's no reason that `lea` couldn't be used for arithmetic under the right circumstances. For example, here's one way to add two memory variables and 52 together and store the result in DX:
+The flip side is that you could, if you wished, add two registers and/or a constant value together with `lea`{.nasm} and place the result in a third register. Of course, the registers would have to be BX or BP and SI or DI, but since offsets and numbers are one and the same, there's no reason that `lea`{.nasm} couldn't be used for arithmetic under the right circumstances. For example, here's one way to add two memory variables and 52 together and store the result in DX:
 
 ```nasm
 mov   bx,[MemVar1]
@@ -1249,7 +1249,7 @@ add   dx,[MemVar2]
 add   dx,52
 ```
 
-Nonetheless, the first approach does serve to illustrate the flexibility of `lea`and the equivalence of offsets and numbers.
+Nonetheless, the first approach does serve to illustrate the flexibility of `lea`{.nasm}and the equivalence of offsets and numbers.
 
 ### Offset Wrapping at the Ends of Segments
 
@@ -1272,7 +1272,7 @@ mov   dl,[bx+1]
 
 ![](images/fig7.11RT.png)
 
-The same rule holds for all memory-accessing instructions, *mod-reg-rm* or otherwise: *offsets are 16-bit values; any additional bits that result from address calculations are ignored*. Put another way, memory addresses that reach past the end of a segment's 64 K limit wrap back to the start of the segment. This allows the use of negative displacements, and is the reason a displacement can always reach anywhere in a segment, including addresses lower than those in the base and/or index registers, as in `mov ax,[bx-1]`.
+The same rule holds for all memory-accessing instructions, *mod-reg-rm* or otherwise: *offsets are 16-bit values; any additional bits that result from address calculations are ignored*. Put another way, memory addresses that reach past the end of a segment's 64 K limit wrap back to the start of the segment. This allows the use of negative displacements, and is the reason a displacement can always reach anywhere in a segment, including addresses lower than those in the base and/or index registers, as in `mov ax,[bx-1]`{.nasm}.
 
 ## Non-*mod-reg-rm* Memory Addressing
 
@@ -1280,11 +1280,11 @@ The same rule holds for all memory-accessing instructions, *mod-reg-rm* or other
 
 Why are instructions that use the non-*mod-reg-rm* addressing modes generally superior to *mod-reg-rm* instructions? Simply this: being less flexible than *mod-reg-rm* instructions, they have fewer possible operands to specify, and so fewer instruction bits are needed. Non-*mod-reg-rm* instructions also don't require any EA calculation time, because they don't support the many addressing modes of the *mod-reg-rm* byte.
 
-We'll discuss five sorts of non-*mod-reg-rm* memory-addressing instructions next: special forms of common instructions, string instructions, immediate-addressing instructions, stack-oriented instructions, and `xlat`, which is in a category all its own. For all these sorts of instructions, the rule is that if they're well matched to your application, they're almost surely worth using in preference to *mod-reg-rm* addressing. Some of the non-*mod-reg-rm* instructions, especially the string instructions, are so much faster than *mod-reg-rm* instructions that they're worth going out of your way for, as we'll see throughout *The Zen of Assembly Language*.
+We'll discuss five sorts of non-*mod-reg-rm* memory-addressing instructions next: special forms of common instructions, string instructions, immediate-addressing instructions, stack-oriented instructions, and `xlat`{.nasm}, which is in a category all its own. For all these sorts of instructions, the rule is that if they're well matched to your application, they're almost surely worth using in preference to *mod-reg-rm* addressing. Some of the non-*mod-reg-rm* instructions, especially the string instructions, are so much faster than *mod-reg-rm* instructions that they're worth going out of your way for, as we'll see throughout *The Zen of Assembly Language*.
 
 ### Special Forms of Common Instructions
 
-The 8088 offers special shorter, faster forms of several commonly used *mod-reg-rm* instructions, including `mov`, `inc`, and `xchg`. These special forms are both shorter and less flexible than the *mod-reg-rm* forms. For example, the special form of `inc` is just 1 byte long and requires only 2 cycles to execute, but can only work with 16-bit registers. By contrast, the *mod-reg-rm* form of `inc` is at least 2 bytes long and takes at least 3 cycles to execute, but can work with 8-or 16-bit registers or memory locations.
+The 8088 offers special shorter, faster forms of several commonly used *mod-reg-rm* instructions, including `mov`{.nasm}, `inc`{.nasm}, and `xchg`{.nasm}. These special forms are both shorter and less flexible than the *mod-reg-rm* forms. For example, the special form of `inc`{.nasm} is just 1 byte long and requires only 2 cycles to execute, but can only work with 16-bit registers. By contrast, the *mod-reg-rm* form of `inc`{.nasm} is at least 2 bytes long and takes at least 3 cycles to execute, but can work with 8-or 16-bit registers or memory locations.
 
 You don't have to specify that a special form of an instruction is to be used; the assembler automatically selects the shortest possible form of each instruction it assembles. That doesn't mean that you don't need to be familiar with the special forms, however. To the contrary, you need to be well aware of the sorts of instructions that have special forms, as well as the circumstances under which those special forms will be assembled. Armed with that knowledge, you can arrange your code so that the special forms will be assembled as often as possible.
 
@@ -1300,13 +1300,13 @@ Immediate addressing is a form of memory addressing in which the constant value 
 
 ![](images/fig7.12RT.png)
 
-Instructions that use immediate addressing are clearly faster than instructions that use *mod-reg-rm* addressing. In fact, according to official execution times, immediate addressing would seem to be *much* faster than *mod-reg-rm* addressing. For example, `add ax,1` is a 4-cycle instruction, while `add ax,[bx]` is an 18-cycle instruction. What's more, `add``*reg``*,``*immed`* is just 1 cycle slower than `add``*reg``*,``*reg`*, so immediate addressing seems to be nearly as fast as register addressing.
+Instructions that use immediate addressing are clearly faster than instructions that use *mod-reg-rm* addressing. In fact, according to official execution times, immediate addressing would seem to be *much* faster than *mod-reg-rm* addressing. For example, `add ax,1`{.nasm} is a 4-cycle instruction, while `add ax,[bx]`{.nasm} is an 18-cycle instruction. What's more, `add reg,immed`{.nasm} is just 1 cycle slower than `add reg,reg`{.nasm}, so immediate addressing seems to be nearly as fast as register addressing.
 
 The official cycle counts are misleading, however. While immediate addressing is certainly faster than *mod-reg-rm* addressing, it is by no means as fast as register-only addressing, and the reason is a familiar one: the prefetch queue cycle-eater. You see, immediate operands are instruction bytes; when we use an immediate operand, we increase the size of that instruction, and that increases the number of cycles needed to fetch the instruction's bytes.
 
 Looked at another way, immediate operands need to be fetched from the memory location pointed to by IP, so immediate addressing could be considered a memory addressing mode. Granted, immediate addressing is an efficient memory addressing mode, with no EA calculation time or the like — but memory accesses are nonetheless required, at the inescapable 4 cycles per byte.
 
-The upshot is simply that register operands are superior to immediate operands in loops and time-critical code, although immediate operands are still much better than *mod-reg-rm* memory operands. Back in [Listing 7-11](#L711), we set DL to 0 outside the loop so that we could use register-register `adc` inside the loop. That approach allowed the code to run in 0.95 ms. [Listing 7-12](#L712) is similar to [Listing 7-11](#L711), but is modified to use an immediate operand of 0 rather than a register operand containing 0. Even though the immediate operand is only byte-sized, [Listing 7-12](#L712) slows down to 1.02 ms. In other words, the need to fetch just 1 immediate operand byte every time through the loop slowed the entire loop by about 7%. What's more, the performance loss would have been approximately twice as great if we had used a word-sized immediate operand.
+The upshot is simply that register operands are superior to immediate operands in loops and time-critical code, although immediate operands are still much better than *mod-reg-rm* memory operands. Back in [Listing 7-11](#L711), we set DL to 0 outside the loop so that we could use register-register `adc`{.nasm} inside the loop. That approach allowed the code to run in 0.95 ms. [Listing 7-12](#L712) is similar to [Listing 7-11](#L711), but is modified to use an immediate operand of 0 rather than a register operand containing 0. Even though the immediate operand is only byte-sized, [Listing 7-12](#L712) slows down to 1.02 ms. In other words, the need to fetch just 1 immediate operand byte every time through the loop slowed the entire loop by about 7%. What's more, the performance loss would have been approximately twice as great if we had used a word-sized immediate operand.
 
 On the other hand, immediate operands are certainly preferable to memory operands. [Listing 7-13](#L713), which adds the constant value 0 from memory, runs in 1.26 ms. (I should hope you'll never use code as obviously inefficient as [Listing 7-13](#L713); I'm just presenting it for illustrative purposes.)
 
@@ -1329,9 +1329,9 @@ LoopTop:
 
 However, the latter, register-only version is faster, because it moves 2 bytes out of the loop.
 
-There are many circumstances in which we can substitute register-only instructions for instructions that use immediate operands *without* adding any extra instructions. The commonest of these cases involve testing for zero. There's almost never a need to compare a register to zero; instead, we can simply `and` or `or` the register with itself and check the resulting flags. We'll discuss ways to handle zero in the next two chapters, and we'll see similar cases in which immediate operands can be eliminated throughout *The Zen of Assembly Language*.
+There are many circumstances in which we can substitute register-only instructions for instructions that use immediate operands *without* adding any extra instructions. The commonest of these cases involve testing for zero. There's almost never a need to compare a register to zero; instead, we can simply `and`{.nasm} or `or`{.nasm} the register with itself and check the resulting flags. We'll discuss ways to handle zero in the next two chapters, and we'll see similar cases in which immediate operands can be eliminated throughout *The Zen of Assembly Language*.
 
-By the way, you should be aware that you can use an immediate operand even when the other operand is a memory variable rather than a register. For example, `add [MemVar],16` is a valid instruction, as is `mov [MemVar],52`. As I mentioned earlier, we're better off performing single operations directly to memory than we are loading from memory into a register, operating on the register, and storing the result back to memory. However, we're generally better off working with a register when multiple operations are involved.
+By the way, you should be aware that you can use an immediate operand even when the other operand is a memory variable rather than a register. For example, `add [MemVar],16`{.nasm} is a valid instruction, as is `mov [MemVar],52`{.nasm}. As I mentioned earlier, we're better off performing single operations directly to memory than we are loading from memory into a register, operating on the register, and storing the result back to memory. However, we're generally better off working with a register when multiple operations are involved.
 
 Ideally, we'd load a memory value into a register, perform multiple operations on it there, store the result back to memory... and then have some additional use for the value left in the register, thereby getting double use out of our memory accesses. For example, suppose that we want to perform the equivalent of the C statement:
 
@@ -1348,7 +1348,7 @@ add   ax,[k]
 mov   [i],ax
 ```
 
-However, we can eliminate a memory access by incrementing `j` in a register:
+However, we can eliminate a memory access by incrementing `j`{.nasm} in a register:
 
 ```nasm
 mov   ax,[j]
@@ -1358,33 +1358,33 @@ add   ax,[k]
 mov   [i],ax
 ```
 
-While the latter version is one instruction longer than the original version, it's actually faster and shorter. One reason for this is that we get double use out of loading `j` into AX; we increment `j` in AX and store the result to memory, then immediately use the incremented value left in AX as part of the calculation being performed.
+While the latter version is one instruction longer than the original version, it's actually faster and shorter. One reason for this is that we get double use out of loading `j`{.nasm} into AX; we increment `j`{.nasm} in AX and store the result to memory, then immediately use the incremented value left in AX as part of the calculation being performed.
 
-The other reason the second example above is superior to the original version is that it used two of the special, more efficient instruction forms: the accumulator-specific direct-addressed form of `mov` and the 16-bit register-only form of `inc`. We'll study these instructions in detail in Chapters 8 and 9.
+The other reason the second example above is superior to the original version is that it used two of the special, more efficient instruction forms: the accumulator-specific direct-addressed form of `mov`{.nasm} and the 16-bit register-only form of `inc`{.nasm}. We'll study these instructions in detail in Chapters 8 and 9.
 
 ### Sign-Extension of Immediate Operands
 
-I've already noted that immediate operands tend to make for compact code. One key to this property is that like displacements in *mod-reg-rm* addressing, word-sized immediate operands can be stored as a byte and then extended to a word by replicating bit 7 as bits 15-8; that is, word-sized immediate operands can be sign-extended. Almost all instructions that support immediate operands allow word-sized operands in the range -128 to +127 to be stored as single bytes. That means that while `and dx,1000h` is a 4-byte instruction (1 opcode byte, 1 *mod-reg-rm* byte, and a 2-byte immediate operand), `and dx,0fffeh` is just 3 bytes long; since the signed value of the immediate operand 0FFFEh is -2, 0FFFEh is stored as a single immediate operand byte.
+I've already noted that immediate operands tend to make for compact code. One key to this property is that like displacements in *mod-reg-rm* addressing, word-sized immediate operands can be stored as a byte and then extended to a word by replicating bit 7 as bits 15-8; that is, word-sized immediate operands can be sign-extended. Almost all instructions that support immediate operands allow word-sized operands in the range -128 to +127 to be stored as single bytes. That means that while `and dx,1000h`{.nasm} is a 4-byte instruction (1 opcode byte, 1 *mod-reg-rm* byte, and a 2-byte immediate operand), `and dx,0fffeh`{.nasm} is just 3 bytes long; since the signed value of the immediate operand 0FFFEh is -2, 0FFFEh is stored as a single immediate operand byte.
 
 Not all values of the form 000*nn*h and 0FF*nn*h (where *nn* is any two hex digits) can be stored as a single byte and sign-extended. 0007Fh can be stored as a single byte; 00080h cannot. 0FF80h can be stored as a single byte; 0FF7Fh cannot. Watch out for cases where you're using a word-sized immediate operand that can't be stored as a byte, when a byte-sized immediate operand would serve as well.
 
-For example, suppose we want to set the lower 8 bits of DX to 0. **and dx,0ff00h** is a 4-byte instruction that accomplishes the desired result. `and dl,000h` produces the same result in just 3 bytes. (Of course, `sub dl,dl` does the same thing in just 2 bytes — there are *many* ways to skin a cat in assembler.) Recognizing when a word-sized immediate operand can be handled as a byte-sized operand is still more important when using accumulator-specific immediate-operand instructions, which we'll explore in the next chapter.
+For example, suppose we want to set the lower 8 bits of DX to 0. `{.nasm}and dx,0ff00h`{.nasm} is a 4-byte instruction that accomplishes the desired result. `and dl,000h`{.nasm} produces the same result in just 3 bytes. (Of course, `sub dl,dl`{.nasm} does the same thing in just 2 bytes — there are *many* ways to skin a cat in assembler.) Recognizing when a word-sized immediate operand can be handled as a byte-sized operand is still more important when using accumulator-specific immediate-operand instructions, which we'll explore in the next chapter.
 
 ### `mov` Doesn't Sign-Extend Immediate Operands
 
-Along the same lines, `or bh,0ffh` does the same thing as `or bx,0ff00h` and is shorter, while `mov bh,0ffh` is also equivalent and is shorter still... and that brings us to the one instruction which cannot sign-extend immediate operands: `mov`. Word-sized operands to `mov` are always stored as words, no matter what size they may be. However, there's a compensating factor, and that's that there's a special, non-*mod-reg-rm* form of `mov reg,immed` that's 1 byte shorter than the *mod-reg-rm* form.
+Along the same lines, `or bh,0ffh`{.nasm} does the same thing as `or bx,0ff00h`{.nasm} and is shorter, while `mov bh,0ffh`{.nasm} is also equivalent and is shorter still... and that brings us to the one instruction which cannot sign-extend immediate operands: `mov`{.nasm}. Word-sized operands to `mov`{.nasm} are always stored as words, no matter what size they may be. However, there's a compensating factor, and that's that there's a special, non-*mod-reg-rm* form of `mov reg,immed`{.nasm} that's 1 byte shorter than the *mod-reg-rm* form.
 
-Let me put it this way. `and dx,1000h` is a 4-byte instruction, with 1 opcode byte, 1 *mod-reg-rm* byte, and a 2-byte immediate operand. `mov dx,1000h`, on the other hand, is only 3 bytes long. There's a special form of the `mov` instruction, used only when a register is loaded with an immediate value, that requires just the 1 opcode byte in addition to the immediate value.
+Let me put it this way. `and dx,1000h`{.nasm} is a 4-byte instruction, with 1 opcode byte, 1 *mod-reg-rm* byte, and a 2-byte immediate operand. `mov dx,1000h`{.nasm}, on the other hand, is only 3 bytes long. There's a special form of the `mov`{.nasm} instruction, used only when a register is loaded with an immediate value, that requires just the 1 opcode byte in addition to the immediate value.
 
-There's also the standard *mod-reg-rm* form of `mov`, which is 4 bytes long for word-sized immediate operands. This form does exactly the same thing as the special form, but is a different instruction, with a different opcode and a *mod-reg-rm* byte. The 8088 offers a number of duplicate instructions, as we'll see in the next chapter. Don't worry about selecting the right form of `mov`, however; the assembler does that for you automatically.
+There's also the standard *mod-reg-rm* form of `mov`{.nasm}, which is 4 bytes long for word-sized immediate operands. This form does exactly the same thing as the special form, but is a different instruction, with a different opcode and a *mod-reg-rm* byte. The 8088 offers a number of duplicate instructions, as we'll see in the next chapter. Don't worry about selecting the right form of `mov`{.nasm}, however; the assembler does that for you automatically.
 
-In short, you're no worse off — and often better off — moving immediate values into registers than you are using immediate operands with instructions such as `add` and `xor`. It takes just 2 or 3 bytes, for byte-or word-sized registers, respectively, to load a register with an immediate operand. `mov al,2` is actually the same size as `mov al,bl` (both are 2 bytes), although the official execution time of the register-only `mov` is 2 cycles shorter.
+In short, you're no worse off — and often better off — moving immediate values into registers than you are using immediate operands with instructions such as `add`{.nasm} and `xor`{.nasm}. It takes just 2 or 3 bytes, for byte-or word-sized registers, respectively, to load a register with an immediate operand. `mov al,2`{.nasm} is actually the same size as `mov al,bl`{.nasm} (both are 2 bytes), although the official execution time of the register-only `mov`{.nasm} is 2 cycles shorter.
 
-On balance, immediate operands used with `mov reg,immed` perform at nearly the speed of register operands, especially when the register is byte-sized; consequently, there's less need to avoid immediate operands with `mov` than with other instructions. Nonetheless, register-only instructions are never slower, so you won't go wrong using register rather than immediate operands.
+On balance, immediate operands used with `mov reg,immed`{.nasm} perform at nearly the speed of register operands, especially when the register is byte-sized; consequently, there's less need to avoid immediate operands with `mov`{.nasm} than with other instructions. Nonetheless, register-only instructions are never slower, so you won't go wrong using register rather than immediate operands.
 
 ### Don't `mov` Immediate Operands to Memory if You Can Help It
 
-One final note, and then we're done with immediate addressing. There is *no* special form of `mov` for moving an immediate operand to a memory operand; the special form is limited to register operands only. What's more, `mov [mem16],immed16` has no sign-extension capability. This double whammy means that storing immediate values to memory is the single least desirable way to use immediate operands. Over the next few chapters, we'll explore several ways to set memory operands to given values. The one thing that the various approaches have in common is that they all improve performance by avoiding immediate operands to `mov`.
+One final note, and then we're done with immediate addressing. There is *no* special form of `mov`{.nasm} for moving an immediate operand to a memory operand; the special form is limited to register operands only. What's more, `mov [mem16],immed16`{.nasm} has no sign-extension capability. This double whammy means that storing immediate values to memory is the single least desirable way to use immediate operands. Over the next few chapters, we'll explore several ways to set memory operands to given values. The one thing that the various approaches have in common is that they all improve performance by avoiding immediate operands to `mov`{.nasm}.
 
 *Don't move immediate values to memory unless you have no choice.*
 
@@ -1426,9 +1426,9 @@ pop   dx                    ;get the actual count back into DX
 
 The important point in the above code is that we created a temporary memory variable on the stack as we needed it; then, when the call was over, we simply popped the variable back into DX, and its space on the stack was freed up for other use. The code is compact, and not a single byte of memory storage had to be reserved permanently.
 
-Compact code without the need for permanent memory space is the hallmark of stack-based code. It's often possible to write amazingly complex code without using *mod-reg-rm* addressing or named variables simply by pushing and popping registers. The code tends to be compact because `push reg16` and `pop reg16` are each only 1 byte long. `push reg16` and `pop reg16` are so compact because they don't need to support the complex memory-addressing options of *mod-reg-rm* addressing; there are only 8 possible register operands, and each instruction can only address one location, by way of the stack pointer, at any one time. (`push mem16` and `pop mem16` are *mod-reg-rm* instructions, and so they're 2-4 bytes long; `push reg16` and `pop reg16`, and `push segreg` and `pop segreg` as well, are special, shorter forms of `push` and `pop`.)
+Compact code without the need for permanent memory space is the hallmark of stack-based code. It's often possible to write amazingly complex code without using *mod-reg-rm* addressing or named variables simply by pushing and popping registers. The code tends to be compact because `push reg16`{.nasm} and `pop reg16`{.nasm} are each only 1 byte long. `push reg16`{.nasm} and `pop reg16`{.nasm} are so compact because they don't need to support the complex memory-addressing options of *mod-reg-rm* addressing; there are only 8 possible register operands, and each instruction can only address one location, by way of the stack pointer, at any one time. (`push mem16`{.nasm} and `pop mem16`{.nasm} are *mod-reg-rm* instructions, and so they're 2-4 bytes long; `push reg16`{.nasm} and `pop reg16`{.nasm}, and `push segreg`{.nasm} and `pop segreg`{.nasm} as well, are special, shorter forms of `push`{.nasm} and `pop`{.nasm}.)
 
-For once, though, shorter isn't necessarily better. You see, `push` and `pop` are memory-accessing instructions, and although they don't require EA calculation time, they're still slow -like all instructions that access memory. `push` and `pop` are fast considering that they are word-sized memory-accessing instructions -`push` takes 15 cycles, `pop` takes just 12 — and they make for good prefetching, since only 3 memory accesses (including instruction fetches) are performed during an official execution time of 12 to 15 cycles. Nonetheless, they're clearly slower than register-only instructions. This is basically the same case we studied when we looked into copying segments; it's faster but takes more bytes and requires a free register to preserve a register by copying it to another register:
+For once, though, shorter isn't necessarily better. You see, `push`{.nasm} and `pop`{.nasm} are memory-accessing instructions, and although they don't require EA calculation time, they're still slow -like all instructions that access memory. `push`{.nasm} and `pop`{.nasm} are fast considering that they are word-sized memory-accessing instructions -`push`{.nasm} takes 15 cycles, `pop`{.nasm} takes just 12 — and they make for good prefetching, since only 3 memory accesses (including instruction fetches) are performed during an official execution time of 12 to 15 cycles. Nonetheless, they're clearly slower than register-only instructions. This is basically the same case we studied when we looked into copying segments; it's faster but takes more bytes and requires a free register to preserve a register by copying it to another register:
 
 ```nasm
 mov   dx,ax
@@ -1444,11 +1444,11 @@ push  ax
 pop   ax
 ```
 
-What does all this mean to you? Simply this: use a free register for temporary storage if speed is of the essence, and `push` and `pop` if code size is your primary concern, if speed is not an issue, or if no registers happen to be free. In any case, it's faster and far more compact to store register values temporarily by pushing and popping them than it is to store them to memory with *mod-reg-rm* instructions. So use `push` and `pop`... but remember that they come with substantial performance overhead relative to register-only instructions.
+What does all this mean to you? Simply this: use a free register for temporary storage if speed is of the essence, and `push`{.nasm} and `pop`{.nasm} if code size is your primary concern, if speed is not an issue, or if no registers happen to be free. In any case, it's faster and far more compact to store register values temporarily by pushing and popping them than it is to store them to memory with *mod-reg-rm* instructions. So use `push`{.nasm} and `pop`{.nasm}... but remember that they come with substantial performance overhead relative to register-only instructions.
 
 ### An Example of Avoiding `push` and `pop`
 
-Let's quickly look at an example of improving performance by using register-only instructions rather than `push` and `pop`. When copying images into display memory, it's common to use code like:
+Let's quickly look at an example of improving performance by using register-only instructions rather than `push`{.nasm} and `pop`{.nasm}. When copying images into display memory, it's common to use code like:
 
 ```nasm
 ;
@@ -1476,7 +1476,7 @@ DrawLoop:
     jnz   DrawLoop
 ```
 
-That's fine, but 1 `push` and 1 `pop` are performed per line, which seems a shame... all the more so given that we can eliminate those pushes and pops altogether, as follows:
+That's fine, but 1 `push`{.nasm} and 1 `pop`{.nasm} are performed per line, which seems a shame... all the more so given that we can eliminate those pushes and pops altogether, as follows:
 
 ```nasm
 ;
@@ -1505,7 +1505,7 @@ DrawLoop:
     jnz   DrawLoop
 ```
 
-Do you see what we've done? By converting an obvious solution (advancing 1 full line at a time) to a less-obvious but fully equivalent solution (advancing only the remaining portion of the line), we've saved about 27 cycles per loop... *at no cost*. Given inputs like the width of the screen and instructions like `push` and `pop`, we tend to use them; it's just human nature to frame solutions in familiar terms. By rethinking the problem just a little, however, we can often find a simpler, better solution.
+Do you see what we've done? By converting an obvious solution (advancing 1 full line at a time) to a less-obvious but fully equivalent solution (advancing only the remaining portion of the line), we've saved about 27 cycles per loop... *at no cost*. Given inputs like the width of the screen and instructions like `push`{.nasm} and `pop`{.nasm}, we tend to use them; it's just human nature to frame solutions in familiar terms. By rethinking the problem just a little, however, we can often find a simpler, better solution.
 
 Saving 27 cycles not by knowing more instructions but by *not* using two powerful instructions is an excellent example indeed of the Zen of assembler.
 
@@ -1515,7 +1515,7 @@ Before we proceed to stack frames, I'd like to take a moment to review a few imp
 
 SP always points to the next item to be popped from the stack. When you push a value onto the stack, SP is first decremented by 2, and then the value is stored at the location pointed to by SP. When you pop a value off of the stack, the value is read from the location pointed to by SP, and then SP is incremented by 2. It's useful to know this whenever you need to point to data stored on the stack, as we did when we created and pointed to a temporary variable on the stack a few sections back, and as we will need to do when we work with stack frames.
 
-`push` and `pop` can work with *mod-reg-rm*-addressed memory variables as easily as with registers, albeit more slowly and with more instruction bytes. `push [WordVar]` is perfectly legitimate, as is `pop word ptr [bx+si+100h]`. Bear in mind, however, that only 16-bit values can be pushed and popped; `push bl` won't work, and neither will `pop byte ptr [bx]`.
+`push`{.nasm} and `pop`{.nasm} can work with *mod-reg-rm*-addressed memory variables as easily as with registers, albeit more slowly and with more instruction bytes. `push [WordVar]`{.nasm} is perfectly legitimate, as is `pop word ptr [bx+si+100h]`{.nasm}. Bear in mind, however, that only 16-bit values can be pushed and popped; `push bl`{.nasm} won't work, and neither will `pop byte ptr [bx]`{.nasm}.
 
 Finally, please remember that once you've popped a value from the stack, it's gone from memory. It's tempting to look at the way the stack pointer works and think that the data is still in memory at the address just below the new stack pointer, but that's simply not the case, as shown in Figure 7.13. Sure, *sometimes* the data is still there — but whenever an interrupt occurs, it uses the top of the stack, wiping out the values that were most recently popped. Interrupts can happen at any time, so unless you're willing to disable interrupts, accessing popped stack memory is a sure way to get intermittent bugs.
 
@@ -1529,7 +1529,7 @@ Even if interrupts are disabled, it's really not a good idea to access popped st
 
 Stack frames are transient data structures, usually local to specific subroutines, that are stored on the stack. Two sorts of data are normally stored in stack frames: parameters that are passed from the calling routine by being pushed on the stack, and variables that are local to the subroutine using the stack frame.
 
-Why use stack frames? Well, as we discussed earlier, the stack is an excellent place to store temporary data, a category into which both passed parameters and local storage fall. `push` and `pop` aren't good for accessing stack frames, which often contain many variables and which aren't generally accessed in LIFO order; however, there are several *mod-reg-rm* addressing modes that are perfect for accessing stack frames — the *mod-reg-rm* addressing modes involving BP. (We can't use SP for two reasons: it can't serve as a memory pointer with *mod-reg-rm* addressing modes, and it changes constantly during code execution, making offsets from SP hard to calculate.)
+Why use stack frames? Well, as we discussed earlier, the stack is an excellent place to store temporary data, a category into which both passed parameters and local storage fall. `push`{.nasm} and `pop`{.nasm} aren't good for accessing stack frames, which often contain many variables and which aren't generally accessed in LIFO order; however, there are several *mod-reg-rm* addressing modes that are perfect for accessing stack frames — the *mod-reg-rm* addressing modes involving BP. (We can't use SP for two reasons: it can't serve as a memory pointer with *mod-reg-rm* addressing modes, and it changes constantly during code execution, making offsets from SP hard to calculate.)
 
 If you'll recall, BP-based addressing modes are the only *mod-reg-rm* addressing modes that don't access DS by default. BP-based addressing modes access SS by default, and now we can see why — in order to access stack frames. Typically, BP is set to equal the stack pointer at the start of a subroutine, and is then used to point to data in the stack frame for the remainder of the subroutine, as in:
 
@@ -1558,7 +1558,7 @@ ret
 
 I'm not going to spend a great deal of time on stack frames, for one simple reason: they're not all that terrific in assembler code. Stack frames are ideal for high-level languages, because they allow regular parameter-passing schemes and support dynamically allocated local variables. For assembler code, however, stack frames are quite limiting, in that they require a single consistent parameter-passing convention and the presence of code to create and destroy stack frames at the beginning and end of each subroutine. In particular, the ability of assembler code to pass pointers and variables in registers (which is much more efficient than pushing them on the stack) is constrained by standard stack frames conventions. In addition, the BP register, which is dedicated to pointing to stack frames, normally cannot be used for other purposes when stack frames are used; the loss of one of a mere seven generally-available 16-bit registers is not insignificant.
 
-High-level language stack frame conventions also generally mandate the preservation of several registers — always BP, usually DS, and often SI and DI as well — and that requires time-consuming pushes and pops. Finally, while stack frame addressing is compact (owing to the heavy use of `bp+disp` addressing with 1-byte displacements), it is rather inefficient, even as memory-accessing instructions go; `mov ax,[bp+disp8]` is only 3 bytes long, but takes 21 cycles to execute.
+High-level language stack frame conventions also generally mandate the preservation of several registers — always BP, usually DS, and often SI and DI as well — and that requires time-consuming pushes and pops. Finally, while stack frame addressing is compact (owing to the heavy use of `bp+disp`{.nasm} addressing with 1-byte displacements), it is rather inefficient, even as memory-accessing instructions go; `mov ax,[bp+disp8]`{.nasm} is only 3 bytes long, but takes 21 cycles to execute.
 
 In short, stack frames are powerful and useful — but they don't make for the best possible 8088 code. The best *compiled* code, yes, but not the best assembler code.
 
@@ -1582,7 +1582,7 @@ void SetVideoMode(unsigned char ModeNumber) {
 }
 ```
 
-What makes in-line assembler so terrific is that it lets the compiler handle all the messy details of stack frames while freeing you to use assembler. In the above example, we didn't have to worry about defining and accessing the stack frame; Turbo C handled all that for us, saving and setting up BP and substituting the appropriate BP+*disp* value for `ModeNumber`. In-line assembler is harder to use for large tasks than is pure assembler, but in most cases where the power of assembler is needed in a high-level language, in-line assembler is a very good compromise.
+What makes in-line assembler so terrific is that it lets the compiler handle all the messy details of stack frames while freeing you to use assembler. In the above example, we didn't have to worry about defining and accessing the stack frame; Turbo C handled all that for us, saving and setting up BP and substituting the appropriate BP+*disp* value for `ModeNumber`{.nasm}. In-line assembler is harder to use for large tasks than is pure assembler, but in most cases where the power of assembler is needed in a high-level language, in-line assembler is a very good compromise.
 
 One warning: many compilers turn off some or all code optimization in subroutines that contain in-line assembler. For that reason, it's often a good idea *not* to mix high-level language and in-line assembler statements when performance matters. Write your time-critical code either entirely in in-line assembler or entirely in pure assembler; don't let the compiler insert code of uncertain quality when every cycle counts.
 
@@ -1590,9 +1590,9 @@ Still and all, when you need to create the fastest or tightest code, try to avoi
 
 ### Tips on Stack Frames
 
-Before we go on to `xlat`, I'm going to skim over a few items that you may find useful should you need to use stack frames in assembler code.
+Before we go on to `xlat`{.nasm}, I'm going to skim over a few items that you may find useful should you need to use stack frames in assembler code.
 
-MASM provides the `struc` directive for defining data structures. Such data structures can be used to access stack frames, as in:
+MASM provides the `struc`{.nasm} directive for defining data structures. Such data structures can be used to access stack frames, as in:
 
 ```nasm
 Parms   struc
@@ -1638,7 +1638,7 @@ DrawXY  proc  near
 DrawXY  endp
 ```
 
-this approach has two disadvantages. First, it prevents us from dumping temporary storage with `mov sp,bp`, requiring instead that we use the less efficient `add sp,OldBP`. Second, and more important, it makes it more likely that parameters will be accessed with a 2-byte displacement.
+this approach has two disadvantages. First, it prevents us from dumping temporary storage with `mov sp,bp`{.nasm}, requiring instead that we use the less efficient `add sp,OldBP`{.nasm}. Second, and more important, it makes it more likely that parameters will be accessed with a 2-byte displacement.
 
 Why? Remember that a 1-byte displacement can address memory in the range -128 to +127 bytes away from BP. If our entire stack frame is addressed at positive offsets from BP, then we've lost the use of a full one-half of the addresses that we can access with 1-byte displacements.
 
@@ -1658,9 +1658,9 @@ X     equ   4   ;X coordinate parameter`
 Y     equ   X+2 ;Y coordinate parameter`
 ```
 
-up to ways to get the assembler to adjust structure offsets for us. See my "On Graphics" column in the July 1987 issue of *Programmer's Journal* (issue 5.4) for an elegant solution, provided by John Navas. (Incidentally, TASM provides special directives — `arg` and `local` — that handle many of the complications of stack frame addressing and allow negative offsets.)
+up to ways to get the assembler to adjust structure offsets for us. See my "On Graphics" column in the July 1987 issue of *Programmer's Journal* (issue 5.4) for an elegant solution, provided by John Navas. (Incidentally, TASM provides special directives — `arg`{.nasm} and `local`{.nasm} — that handle many of the complications of stack frame addressing and allow negative offsets.)
 
-While we're discussing stack frame displacements, allow me to emphasize that you should strive to use 1-byte displacements into stack frames as much as possible. If you have so many parameters or local variables that 2-byte displacements must be used, make an effort to put the least frequently used variables at those larger displacements. Alternatively, you may want to put large data elements such as arrays and structures in the stack frame areas that are addressed with 2-byte displacements, since such data elements are often accessed by way of pointer registers such as BX and SI, rather than directly via `bp+``*disp`* addressing. Finally, you should avoid forward references to structures; if you refer to elements of a structure before the structure itself is defined in the code, you'll always get 2-byte displacements, as we'll see in Chapter 14.
+While we're discussing stack frame displacements, allow me to emphasize that you should strive to use 1-byte displacements into stack frames as much as possible. If you have so many parameters or local variables that 2-byte displacements must be used, make an effort to put the least frequently used variables at those larger displacements. Alternatively, you may want to put large data elements such as arrays and structures in the stack frame areas that are addressed with 2-byte displacements, since such data elements are often accessed by way of pointer registers such as BX and SI, rather than directly via `bp+disp`{.nasm} addressing. Finally, you should avoid forward references to structures; if you refer to elements of a structure before the structure itself is defined in the code, you'll always get 2-byte displacements, as we'll see in Chapter 14.
 
 Whenever you're uncertain whether 1-or 2-byte displacements are being used, simply generate a listing file, or look at your code with a debugger.
 
@@ -1670,7 +1670,7 @@ By the way, it's worth examining the size of your stack frame displacements even
 
 While it's not always the case, often enough the stack segment pointed to by SS and the default data segment pointed to by DS are one and the same. This is true in most high-level language memory models, and is standard for COM programs.
 
-If DS and SS are the same, the implication is clear: *all* *mod-reg-rm* addressing modes can be used to point to stack frames. That's a real advantage if you need to scan stack frame arrays and the like, because SI or DI can be loaded with the array start address and used to address the array without the need for segment override prefixes. Similarly, BX could be set to point to a stack frame structure, which could then be accessed by way of `bx+disp` addressing without a segment override. In short, be sure to take advantage of the extra stack frame addressing power that you have at your disposal when SS equals DS.
+If DS and SS are the same, the implication is clear: *all* *mod-reg-rm* addressing modes can be used to point to stack frames. That's a real advantage if you need to scan stack frame arrays and the like, because SI or DI can be loaded with the array start address and used to address the array without the need for segment override prefixes. Similarly, BX could be set to point to a stack frame structure, which could then be accessed by way of `bx+disp`{.nasm} addressing without a segment override. In short, be sure to take advantage of the extra stack frame addressing power that you have at your disposal when SS equals DS.
 
 ### Use BP as a Normal Register if You Must
 
@@ -1692,9 +1692,9 @@ Using BP as a normal register in a tight loop can make the difference between a 
 
 ### The Many Ways of Specifying *mod-reg-rm* Addressing
 
-There are, it seems, more ways of specifying an operand addressed with *mod-reg-rm* addressing than you can shake a stick at. For example, `[bp+MemVar+si]`, `MemVar[bp+si]`, `MemVar[si][bp]`, and `[bp][MemVar+si]` are all equivalent. Now stack frame addressing introduces us to a new form, involving the dot operator: `[bp.MemVar+si]`. Or `[bp.MemVar.si]`. What's the story with all these *mod-reg-rm* forms?
+There are, it seems, more ways of specifying an operand addressed with *mod-reg-rm* addressing than you can shake a stick at. For example, `[bp+MemVar+si]`{.nasm}, `MemVar[bp+si]`{.nasm}, `MemVar[si][bp]`{.nasm}, and `[bp][MemVar+si]`{.nasm} are all equivalent. Now stack frame addressing introduces us to a new form, involving the dot operator: `[bp.MemVar+si]`{.nasm}. Or `[bp.MemVar.si]`{.nasm}. What's the story with all these *mod-reg-rm* forms?
 
-It's actually fairly simple. The dot operator does the same thing as the plus operator: it adds two memory addressing components together. Any memory-addressing component enclosed in brackets is also added into the memory address. The order of the operands doesn't matter, since everything resolves to a *mod-reg-rm* byte in the end; `mov al,[bx+si]` assembles to exactly the same instruction as `mov al,[si+bx]`. All the constant values and symbols (variable names and equated values) in an address are added together into a single displacement, and that's used with whatever memory addressing registers are present (from among BX, BP, SI, and DI) to form a *mod-reg-rm* address. (Of course, only valid combinations — the combinations listed in Figure 7.6 — will assemble.) Lastly, if memory addressing registers are present, they must be inside square brackets, but that's optional for constant values and symbols.
+It's actually fairly simple. The dot operator does the same thing as the plus operator: it adds two memory addressing components together. Any memory-addressing component enclosed in brackets is also added into the memory address. The order of the operands doesn't matter, since everything resolves to a *mod-reg-rm* byte in the end; `mov al,[bx+si]`{.nasm} assembles to exactly the same instruction as `mov al,[si+bx]`{.nasm}. All the constant values and symbols (variable names and equated values) in an address are added together into a single displacement, and that's used with whatever memory addressing registers are present (from among BX, BP, SI, and DI) to form a *mod-reg-rm* address. (Of course, only valid combinations — the combinations listed in Figure 7.6 — will assemble.) Lastly, if memory addressing registers are present, they must be inside square brackets, but that's optional for constant values and symbols.
 
 There are a few other rules about constructing memory addressing operands, but I avoid those complications by making it a practice to use a single simple *mod-reg-rm* memory address notation. As I said at the start of this chapter, I prefer to put square brackets around all memory operands, and I also prefer to use only the plus operator. There are three reasons for this: it's not complicated, it reminds me that I'm programming in assembler, not in a high-level language where complications such as array element size are automatically taken care of, and it reminds me that I'm accessing a memory operand rather than a register operand, thereby losing performance and gaining bytes.
 
@@ -1702,17 +1702,17 @@ You can use whatever *mod-reg-rm* addressing notation you wish. I do suggest, ho
 
 ### `xlat`
 
-At long last, we come to the final addressing mode of the 8088. This addressing mode is unique to the `xlat` instruction, an odd and rather limited instruction that can nonetheless outperform every other 8088 instruction under the proper circumstances.
+At long last, we come to the final addressing mode of the 8088. This addressing mode is unique to the `xlat`{.nasm} instruction, an odd and rather limited instruction that can nonetheless outperform every other 8088 instruction under the proper circumstances.
 
-The operation of `xlat` is simple: AL is loaded from the offset addressed by the sum of BX and AL, as shown in Figure 7. 14. DS is the default data segment, but a segment override prefix may be used.
+The operation of `xlat`{.nasm} is simple: AL is loaded from the offset addressed by the sum of BX and AL, as shown in Figure 7. 14. DS is the default data segment, but a segment override prefix may be used.
 
 ![](images/fig7.14RT.png)
 
-As you can see, `xlat` bears no resemblance to any of the other addressing modes. It's certainly limited, and it always wipes out one of the two registers it uses to address memory (AL). In fact, the first thought that leaps to mind is: why would we *ever* want to use `xlat`?
+As you can see, `xlat`{.nasm} bears no resemblance to any of the other addressing modes. It's certainly limited, and it always wipes out one of the two registers it uses to address memory (AL). In fact, the first thought that leaps to mind is: why would we *ever* want to use `xlat`{.nasm}?
 
-If `xlat` were slow and large, the answer would be never. However, `xlat` is just 1 byte long, and, at 10 cycles, is as fast at accessing a memory operand as any 8088 instruction. As a result, `xlat` is excellent for a small but often time-critical category of tasks.
+If `xlat`{.nasm} were slow and large, the answer would be never. However, `xlat`{.nasm} is just 1 byte long, and, at 10 cycles, is as fast at accessing a memory operand as any 8088 instruction. As a result, `xlat`{.nasm} is excellent for a small but often time-critical category of tasks.
 
-`xlat` excels when byte values must be translated from one representation to another. The most common example occurs when one character set must be translated to another, as for example when the ASCII character set used by the PC is translated to the EBCDIC character set used by IBM mainframes. In such a case `xlat` can form the heart of an extremely efficient loop, along the lines of the following:
+`xlat`{.nasm} excels when byte values must be translated from one representation to another. The most common example occurs when one character set must be translated to another, as for example when the ASCII character set used by the PC is translated to the EBCDIC character set used by IBM mainframes. In such a case `xlat`{.nasm} can form the heart of an extremely efficient loop, along the lines of the following:
 
 ```nasm
 ;
@@ -1741,7 +1741,7 @@ ASCIIToEBCDICLoop:
     jnz   ASCIIToEBCDICLoop
 ```
 
-Besides being small and fast, `xlat` has an advantage in that byte-sized look-up values don't need to be converted to words before they can be used to address memory. (Remember, *mod-reg-rm* addressing modes allow only word-sized registers to be used to address memory.) If we were to implement the look-up in the last example with *mod-reg-rm* instructions, the code would become a good deal less efficient no matter how efficiently we set up for *mod-reg-rm* addressing:
+Besides being small and fast, `xlat`{.nasm} has an advantage in that byte-sized look-up values don't need to be converted to words before they can be used to address memory. (Remember, *mod-reg-rm* addressing modes allow only word-sized registers to be used to address memory.) If we were to implement the look-up in the last example with *mod-reg-rm* instructions, the code would become a good deal less efficient no matter how efficiently we set up for *mod-reg-rm* addressing:
 
 ```nasm
     sub   bh,bh       ;for use in converting a byte in BL
@@ -1759,17 +1759,17 @@ ASCIIToEBCDICLoop:
     jnz   ASCIIToEBCDICLoop
 ```
 
-In short, `xlat` is clearly superior when a byte-sized look-up is performed, so long as it's possible to put both the look-up value and the result in AL. Shortly, we'll see how `xlat` can be used to good effect in a case where it certainly isn't the obvious choice.
+In short, `xlat`{.nasm} is clearly superior when a byte-sized look-up is performed, so long as it's possible to put both the look-up value and the result in AL. Shortly, we'll see how `xlat`{.nasm} can be used to good effect in a case where it certainly isn't the obvious choice.
 
 ### Memory is Cheap: You Could Look It Up
 
-`xlat`, simply put, is a table look-up instruction. A table look-up occurs whenever you use an index value to look up a result in an array, or table, of data. A rough analogy might be using the number on a ballplayer's uniform to look up his name in a program.
+`xlat`{.nasm}, simply put, is a table look-up instruction. A table look-up occurs whenever you use an index value to look up a result in an array, or table, of data. A rough analogy might be using the number on a ballplayer's uniform to look up his name in a program.
 
 Look-up tables are a superb way to improve performance. The basic premise of look-up tables is that it's faster to precalculate results, either by letting the assembler do the work or by calculating the results yourself and inserting them in the source code, than it is to have the 8088 calculate them at run time. The key factor is this: the 8088 is relatively fast at looking up data in tables and slow at performing almost any kind of calculation. Given that, why not perform your calculations before run time, when speed doesn't matter, and let the 8088 do what it does best at run time?
 
 Now, look-up tables do have a significant disadvantage — they require extra memory. This is a trade-off we'll see again and again in *The Zen of Assembly Language*: cycles for bytes. If you're willing to expend more memory, you can almost always improve the performance of your code. One trick to generating top-notch code is knowing when that trade-off is worth making.
 
-Let's look at an example that illustrates the power of look-up tables. In the process, we'll see an unusual but effective use of `xlat`; we'll also see that there are many ways to approach any programming task, and we'll get a first-hand look at the cycles-for-bytes tradeoff that arises so often in assembler programming.
+Let's look at an example that illustrates the power of look-up tables. In the process, we'll see an unusual but effective use of `xlat`{.nasm}; we'll also see that there are many ways to approach any programming task, and we'll get a first-hand look at the cycles-for-bytes tradeoff that arises so often in assembler programming.
 
 ### Five Ways to Double Bits
 
@@ -1813,13 +1813,13 @@ There's that choice again: cycles or bytes.
 
 In truth, there are both cycles and bytes yet to be saved in [Listing 7-16](#L716). If we apply our knowledge of *mod-reg-rm* addressing to [Listing 7-16](#L716), we'll realize that it's a waste to use base+displacement addressing with the same displacement twice in a row; we can save a byte and a few cycles by loading SI with the displacement and using base+index addressing instead. [Listing 7-17](#L717), which incorporates this optimization, runs in 2.44 ms, a bit faster than [Listing 7-16](#L716).
 
-There's yet another optimization to be made, and this one brings us full circle, back to the start of our discussion of look-up tables. Think about it: [Listing 7-17](#L717) basically does nothing more than use two nibble values as look-up indices into a table of byte values. Sound familiar? It should — that's an awful lot like a description of `xlat`. (`xlat` can handle byte look-up values, but this task is just a subset of that.)
+There's yet another optimization to be made, and this one brings us full circle, back to the start of our discussion of look-up tables. Think about it: [Listing 7-17](#L717) basically does nothing more than use two nibble values as look-up indices into a table of byte values. Sound familiar? It should — that's an awful lot like a description of `xlat`{.nasm}. (`xlat`{.nasm} can handle byte look-up values, but this task is just a subset of that.)
 
-[Listing 7-18](#L718) shows an `xlat`-based version of our bit-doubling code. This code runs in just 1.94 ms, still about 50% slower than the single look-up approach, but a good deal faster than anything else we've seen. Better yet, this approach takes just 16 instruction bytes per bit-doubled byte (32 if you count the table) — which makes this by far the shortest approach we've seen. Comparing [Listing 7-18](#L718) to [Listing 7-14](#L714) reveals that we've improved the code to an astonishing degree: [Listing 7-18](#L718) runs more than three times as fast as [Listing 7-14](#L714), and yet it requires less than one-fourth as many instruction bytes per bit-doubled byte.
+[Listing 7-18](#L718) shows an `xlat`{.nasm}-based version of our bit-doubling code. This code runs in just 1.94 ms, still about 50% slower than the single look-up approach, but a good deal faster than anything else we've seen. Better yet, this approach takes just 16 instruction bytes per bit-doubled byte (32 if you count the table) — which makes this by far the shortest approach we've seen. Comparing [Listing 7-18](#L718) to [Listing 7-14](#L714) reveals that we've improved the code to an astonishing degree: [Listing 7-18](#L718) runs more than three times as fast as [Listing 7-14](#L714), and yet it requires less than one-fourth as many instruction bytes per bit-doubled byte.
 
-There are many lessons here. First, `xlat` is extremely efficient at performing the limited category of tasks it can manage; when you need to use a byte index into a byte-sized look-up table, `xlat` is often your best bet. Second, the official execution times aren't a particularly good guide to writing high-performance code. (Of course, you already knew *that*!) Third, there is no such thing as the best code, because the fastest code is rarely the smallest code, and vice-versa.
+There are many lessons here. First, `xlat`{.nasm} is extremely efficient at performing the limited category of tasks it can manage; when you need to use a byte index into a byte-sized look-up table, `xlat`{.nasm} is often your best bet. Second, the official execution times aren't a particularly good guide to writing high-performance code. (Of course, you already knew *that*!) Third, there is no such thing as the best code, because the fastest code is rarely the smallest code, and vice-versa.
 
-Finally, there are an awful lot of solutions to any given programming problem on the 8088. Don't fall into the trap of thinking that the obvious solution is the best one. In fact, we'll see yet another solution to the bit-doubling problem in Chapter 9; this solution, based on the `sar` instruction, isn't like *any* of the solutions we've seen so far.
+Finally, there are an awful lot of solutions to any given programming problem on the 8088. Don't fall into the trap of thinking that the obvious solution is the best one. In fact, we'll see yet another solution to the bit-doubling problem in Chapter 9; this solution, based on the `sar`{.nasm} instruction, isn't like *any* of the solutions we've seen so far.
 
 We'll see look-up tables again in Chapter 14, in the form of jump tables.
 
@@ -1827,9 +1827,9 @@ We'll see look-up tables again in Chapter 14, in the form of jump tables.
 
 Assembler offers excellent data-definition capabilities, and look-up tables can benefit greatly from those capabilities. No high-level language even comes close to assembler so far as flexible definition of data is concerned, both in terms of arbitrarily mixing different data types and in terms of letting the assembler perform calculations at assembly time; given that, why not let the assembler generate your look-up tables for you?
 
-For example, consider the multiplication of a word-sized value by 80, a task often performed in order to calculate row offsets in display memory. [Listing 7-19](#L719) does this with the compact but slow `mul` instruction, at a pace of 30.17 us per multiply. [Listing 7-20](#L720) improves to 15.08 us per multiply by using a faster shift-and-add approach. However, the performance of the shift-and-add approach is limited by the prefetch queue cycle-eater; [Listing 7-21](#L721), which looks the multiplication results up in a table, is considerably faster yet, at 12.26 us per multiply. Once again, the look-up approach is faster even than tight register-only code, but that's not what's most interesting here.
+For example, consider the multiplication of a word-sized value by 80, a task often performed in order to calculate row offsets in display memory. [Listing 7-19](#L719) does this with the compact but slow `mul`{.nasm} instruction, at a pace of 30.17 us per multiply. [Listing 7-20](#L720) improves to 15.08 us per multiply by using a faster shift-and-add approach. However, the performance of the shift-and-add approach is limited by the prefetch queue cycle-eater; [Listing 7-21](#L721), which looks the multiplication results up in a table, is considerably faster yet, at 12.26 us per multiply. Once again, the look-up approach is faster even than tight register-only code, but that's not what's most interesting here.
 
-What's really interesting about [Listing 7-21](#L721) is that it's the assembler, not the programmer, that generates the look-up table of multiples of 80. Back in [Listing 7-15](#L715), I had to calculate and type each entry in the look-up table myself. In [Listing 7-21](#L721), however, I've used the `rept` and `=` directives to instruct the assembler to build the table automatically. That's even more convenient than you might think; not only does it save the tedium of a lot of typing, but it avoids the sort of typos that inevitably creep in whenever a lot of typing is involved.
+What's really interesting about [Listing 7-21](#L721) is that it's the assembler, not the programmer, that generates the look-up table of multiples of 80. Back in [Listing 7-15](#L715), I had to calculate and type each entry in the look-up table myself. In [Listing 7-21](#L721), however, I've used the `rept`{.nasm} and `=`{.nasm} directives to instruct the assembler to build the table automatically. That's even more convenient than you might think; not only does it save the tedium of a lot of typing, but it avoids the sort of typos that inevitably creep in whenever a lot of typing is involved.
 
 Another area in which assembler's data-definition capabilities lend themselves to good code is in constructing and using mini-interpreters, which are nothing less than task-specific mini-languages that are easily created and used in assembler. We'll discuss mini-interpreters at length in Volume II of *The Zen of Assembly Language*.
 
@@ -1839,7 +1839,7 @@ You can also take advantage of assembler's data definition capabilities by assig
 MemVar  dw 0
 ```
 
-takes no time at all at run time; `MemVar` simply *is* 0 when the program starts. By contrast:
+takes no time at all at run time; `MemVar`{.nasm} simply *is* 0 when the program starts. By contrast:
 
 ```nasm
 MemVar  dw ?
@@ -1855,7 +1855,7 @@ In general, the rule is: *calculate results and initialize data at or before ass
 
 You may wonder why we've spent so much time on memory addressing but none on input/output (I/O) addressing. The answer is simple: I/O addressing is so limited that there's not much to know about it. There aren't any profound performance implications or optimizations associated with I/O addressing simply because there are only two ways to perform I/O.
 
-`out`, which writes data to a port, always uses the accumulator for the source operand: AL when writing to byte-sized ports, AX when writing to word-sized ports. The destination port address may be specified either by a constant value in the range 0-255 (basically direct port addressing with a byte-sized displacement) or by the value in DX (basically indirect port addressing). Here are the two possible ways to send the value 5Ah to port 99:
+`out`{.nasm}, which writes data to a port, always uses the accumulator for the source operand: AL when writing to byte-sized ports, AX when writing to word-sized ports. The destination port address may be specified either by a constant value in the range 0-255 (basically direct port addressing with a byte-sized displacement) or by the value in DX (basically indirect port addressing). Here are the two possible ways to send the value 5Ah to port 99:
 
 ```nasm
 mov   al,5ah
@@ -1864,7 +1864,7 @@ mov   dx,99
 out   dx,al
 ```
 
-Likewise, `in`, which reads data from a port, always uses AL or AX for the destination operand, and may use either a constant port value between 0 and 255 or the port pointed to by DX as the source operand. Here are the two ways to read a value from port 255 into AL:
+Likewise, `in`{.nasm}, which reads data from a port, always uses AL or AX for the destination operand, and may use either a constant port value between 0 and 255 or the port pointed to by DX as the source operand. Here are the two ways to read a value from port 255 into AL:
 
 ```nasm
 in    al,0ffh
@@ -1874,9 +1874,9 @@ in    al,dx
 
 And that just about does it for I/O addressing. As you can see, there's not much flexibility or opportunity for Zen here. All I/O data must pass through the accumulator, and if you want to access a port address greater than 255, you *must* address the port with DX. What's more, there are no substitutes for the I/O instructions; when you need to perform I/O, what we've just seen is all there is.
 
-While the I/O instructions are a bit awkward, at least they aren't particularly slow, at 8 (DX-indirect) or 10 (direct-addressed) cycles apiece, with no EA calculation time. Neither are the I/O instructions particularly lengthy; in fact, `in` and `out` are considerably more compact than the memory-addressing instructions, which shouldn't be surprising given that the I/O instructions provide such limited functionality. The DX-indirect forms of both `in` and `out` are just 1 byte long, while the direct-addressed forms are 2 bytes long.
+While the I/O instructions are a bit awkward, at least they aren't particularly slow, at 8 (DX-indirect) or 10 (direct-addressed) cycles apiece, with no EA calculation time. Neither are the I/O instructions particularly lengthy; in fact, `in`{.nasm} and `out`{.nasm} are considerably more compact than the memory-addressing instructions, which shouldn't be surprising given that the I/O instructions provide such limited functionality. The DX-indirect forms of both `in`{.nasm} and `out`{.nasm} are just 1 byte long, while the direct-addressed forms are 2 bytes long.
 
-Each I/O access takes over the bus and thereby briefly prevents prefetching, much as each memory access does. However, the ratio of total bus accesses (including instruction byte fetches) to execution time for `in` and `out` isn't bad. In fact, byte-sized DX-indirect I/O instructions, which are only 1 byte long and perform only one I/O access, should actually run in close to the advertised 8 cycles per out.
+Each I/O access takes over the bus and thereby briefly prevents prefetching, much as each memory access does. However, the ratio of total bus accesses (including instruction byte fetches) to execution time for `in`{.nasm} and `out`{.nasm} isn't bad. In fact, byte-sized DX-indirect I/O instructions, which are only 1 byte long and perform only one I/O access, should actually run in close to the advertised 8 cycles per out.
 
 Among our limited repertoire of I/O instructions, which is best? It doesn't make all *that* much difference, but given the choice between DX-indirect I/O instructions and direct-addressed I/O instructions for heavy I/O, choose DX-indirect, which is slightly faster and more compact. For one-shot I/O to ports in the 0-255 range, use direct-addressed I/O instructions, since it takes three bytes and 4 cycles to set up DX for a DX-indirect I/O instruction.
 
@@ -1886,7 +1886,7 @@ On balance, though, don't worry about I/O — just do it when you must. Rare ind
 
 I'd like to make one final point about I/O addressing. This section won't mean much to you if you haven't worked with video programming, and I'm not going to explain it further now; we'll return to the topic when we discuss video programming in Volume II. For those of you who are involved with video programming, however, here goes.
 
-Word-sized `out` instructions — `out dx,ax` — unquestionably provide the fastest way to set the indexed video registers of the CGA, EGA, and VGA. Just put the index of the video register you're setting in AL and the value you're setting the register to in AH, and `out dx,ax` sets both the index and the register in a single instruction. Using byte-sized `out` instructions, we'd have to do all this to achieve the same results:
+Word-sized `out`{.nasm} instructions — `out dx,ax`{.nasm} — unquestionably provide the fastest way to set the indexed video registers of the CGA, EGA, and VGA. Just put the index of the video register you're setting in AL and the value you're setting the register to in AH, and `out dx,ax`{.nasm} sets both the index and the register in a single instruction. Using byte-sized `out`{.nasm} instructions, we'd have to do all this to achieve the same results:
 
 ```nasm
 out   dx,al
@@ -1897,18 +1897,18 @@ dec   dx
 xchg  ah,al
 ```
 
-(Sometimes you can leave off the final `dec` and `xchg`, but the word-sized approach is still much more efficient.)
+(Sometimes you can leave off the final `dec`{.nasm} and `xchg`{.nasm}, but the word-sized approach is still much more efficient.)
 
-However, there's a potential pitfall to the use of word-sized `out` instructions to set indexed video registers. The 8088 can't actually perform word-sized I/O accesses, since the bus is only 8 bits wide. Consequently, the 8088 breaks 16-bit I/O accesses into two 8-bit accesses, one sending AL to the addressed port, and a second one sending AH to the addressed port plus one. (If you think about it, you'll realize that this is exactly how the 8088 handles word-sized memory accesses too.)
+However, there's a potential pitfall to the use of word-sized `out`{.nasm} instructions to set indexed video registers. The 8088 can't actually perform word-sized I/O accesses, since the bus is only 8 bits wide. Consequently, the 8088 breaks 16-bit I/O accesses into two 8-bit accesses, one sending AL to the addressed port, and a second one sending AH to the addressed port plus one. (If you think about it, you'll realize that this is exactly how the 8088 handles word-sized memory accesses too.)
 
-All well and good. Unfortunately, on computers built around the 8086, 80286, and the like, the processors do not automatically break up word-sized I/O accesses, since they're fully capable of outputting 16 bits at once. Consequently, when word-sized accesses are made to 8-bit adapters like the EGA by code running on such computers, it's the bus, not the processor, that breaks up those accesses. Generally, that works perfectly well — but on certain PC — compatible computers, the bus outputs the byte in AH to the addressed port plus one first, and *then* sends the byte in AL to the addressed port. The correct values go to the correct ports, but here sequence is critical; `out dx,ax` to an indexed video register relies on the index in AL being output before the data in AH, and that simply doesn't happen. As a result, the data goes to the wrong video register, and the video programming works incorrectly — sometimes disastrously so.
+All well and good. Unfortunately, on computers built around the 8086, 80286, and the like, the processors do not automatically break up word-sized I/O accesses, since they're fully capable of outputting 16 bits at once. Consequently, when word-sized accesses are made to 8-bit adapters like the EGA by code running on such computers, it's the bus, not the processor, that breaks up those accesses. Generally, that works perfectly well — but on certain PC — compatible computers, the bus outputs the byte in AH to the addressed port plus one first, and *then* sends the byte in AL to the addressed port. The correct values go to the correct ports, but here sequence is critical; `out dx,ax`{.nasm} to an indexed video register relies on the index in AL being output before the data in AH, and that simply doesn't happen. As a result, the data goes to the wrong video register, and the video programming works incorrectly — sometimes disastrously so.
 
-You may protest that any computer that gets the sequencing of word-sized `out` instructions wrong isn't truly a PC-compatible, and I suppose that's so. Nonetheless, if a computer runs *everything* except your code that uses word-sized `out` instructions, you're going to have a tough time selling that explanation. Consequently, I recommend using byte-sized `out` instructions to indexed video registers whenever you can't be sure of the particular PC-compatible models on which your code will run.
+You may protest that any computer that gets the sequencing of word-sized `out`{.nasm} instructions wrong isn't truly a PC-compatible, and I suppose that's so. Nonetheless, if a computer runs *everything* except your code that uses word-sized `out`{.nasm} instructions, you're going to have a tough time selling that explanation. Consequently, I recommend using byte-sized `out`{.nasm} instructions to indexed video registers whenever you can't be sure of the particular PC-compatible models on which your code will run.
 
 ### Avoid Memory!
 
 We've come to the end of our discussion of memory addressing. Memory addressing on the 8088 is no trivial matter, is it? Now that we've familiarized ourselves with the registers and memory addressing capabilities of the 8088, we'll start exploring the instruction set, a journey that will occupy most of the rest of this volume.
 
-Before we leave the realm of memory addressing, let me repeat: *avoid memory*. Use the registers to the hilt; register-only instructions are shorter and faster. If you must access memory, try not to use *mod-reg-rm* addressing; the special memory-accessing instructions, such as the string instructions and `xlat`, are generally shorter and faster. When you do use *mod-reg-rm* addressing, try not to use displacements, especially 2-byte displacements.
+Before we leave the realm of memory addressing, let me repeat: *avoid memory*. Use the registers to the hilt; register-only instructions are shorter and faster. If you must access memory, try not to use *mod-reg-rm* addressing; the special memory-accessing instructions, such as the string instructions and `xlat`{.nasm}, are generally shorter and faster. When you do use *mod-reg-rm* addressing, try not to use displacements, especially 2-byte displacements.
 
 Last but not least, choose your spots. Don't waste time optimizing non-critical code; focus on loops and other chunks of code in which every cycle counts. Assembler programming is not some sort of game where the object is to save cycles and bytes blindly. Rather, the goal is a dual one: to produce whole programs that perform well *and to produce those programs as quickly as possible*. The key to doing that is knowing how to optimize code, and then doing so in time-critical code — and *only* in time-critical code.

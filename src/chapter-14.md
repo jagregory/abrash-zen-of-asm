@@ -10,9 +10,9 @@ Remember, though, that relatively fast as some of the techniques in this chapter
 
 Far branches are branches that load both CS and IP, by contrast with near branches, which only load IP. Whatever you do, don't use far branches — jumps, calls, and returns — any more than you absolutely must. Far calls and returns, in particular, tend to bulk up code and slow performance greatly, as the bloated size and sluggish performance of C programs written in the large code model readily attest.
 
-Surprisingly, far jumps — direct far jumps, at least — aren't all that bad. A direct far jump — a far jump to a label, such as `jmp far ptr Target` — is big, at 5 bytes, but its EU execution time is exactly the same as that of a near jump to a label — 15 cycles. Of course, it can take extra cycles to fetch all 5 bytes, and, as with all branches, the prefetch queue is emptied; still and all, a direct jump isn't much worse than its near counterpart.
+Surprisingly, far jumps — direct far jumps, at least — aren't all that bad. A direct far jump — a far jump to a label, such as `jmp far ptr Target`{.nasm} — is big, at 5 bytes, but its EU execution time is exactly the same as that of a near jump to a label — 15 cycles. Of course, it can take extra cycles to fetch all 5 bytes, and, as with all branches, the prefetch queue is emptied; still and all, a direct jump isn't much worse than its near counterpart.
 
-The same cannot be said for an indirect far jump — that is, a far jump to the segment:offset address contained in a memory variable, as in `jmp dword ptr [Vector]`. While such an instruction is no larger than its near counterpart — both are 1 byte long plus the usual 1 to 3 bytes of *mod-reg-rm* addressing — it *is* much slower than an indirect near jump, and that's saying a lot. Where an indirect near jump takes at least 27 cycles to execute, an indirect far jump takes at least 37 cycles... one reason why jump and call tables that branch to near routines are *much* preferred to those that branch to far routines. (We'll discuss jump and call tables at the end of this chapter.)
+The same cannot be said for an indirect far jump — that is, a far jump to the segment:offset address contained in a memory variable, as in `jmp dword ptr [Vector]`{.nasm}. While such an instruction is no larger than its near counterpart — both are 1 byte long plus the usual 1 to 3 bytes of *mod-reg-rm* addressing — it *is* much slower than an indirect near jump, and that's saying a lot. Where an indirect near jump takes at least 27 cycles to execute, an indirect far jump takes at least 37 cycles... one reason why jump and call tables that branch to near routines are *much* preferred to those that branch to far routines. (We'll discuss jump and call tables at the end of this chapter.)
 
 Far calls and returns are worse yet. Near returns must pop IP from the stack. Far returns must pop CS as well, and those two additional memory accesses must cost at least 8 cycles. In all, far returns execute in 32 cycles, 12 cycles slower than near returns. That's not in itself so bad, especially when you consider that far returns are only 1 byte long, just like near returns.
 
@@ -20,9 +20,9 @@ Now, however, consider that far returns must be paired with far calls. So what, 
 
 58 cycles — and where there's a far call, there's a far return yet to come. Together, an indirect far call and the corresponding return take at least 90 cycles — as long as or longer than an 8-bit divide! Even a direct far call and the corresponding return together take at least 68 cycles — and very possibly more when you add in the prefetch queue effects of fetching a 5-byte instruction and emptying the prefetch queue twice.
 
-Let's see just how bad far calls are. In the last chapter, we compared the performance of a subroutine in [Listing 13-16](#L1316) with that of a macro in [Listing 13-17](#L1317). The subroutine in [Listing 13-16](#L1316) — `IsPrintable` — is called with a near `call` and returns with a near `ret`. Given that quite a bit besides the `call` and `ret` occurs each time the subroutine is called — including several branches and two memory accesses — how much slower do you suppose overall performance would be if `IsPrintable` were entered and exited with far branches?
+Let's see just how bad far calls are. In the last chapter, we compared the performance of a subroutine in [Listing 13-16](#L1316) with that of a macro in [Listing 13-17](#L1317). The subroutine in [Listing 13-16](#L1316) — `IsPrintable`{.nasm} — is called with a near `call`{.nasm} and returns with a near `ret`{.nasm}. Given that quite a bit besides the `call`{.nasm} and `ret`{.nasm} occurs each time the subroutine is called — including several branches and two memory accesses — how much slower do you suppose overall performance would be if `IsPrintable`{.nasm} were entered and exited with far branches?
 
-Quite a bit, as it turns out. [Listing 13-16](#L1316) ran in 3.48 ms. [Listing 14-1](#L1401), which is identical to [Listing 13-16](#L1316) save that `IsPrintable` is a far procedure, takes 4.32 ms to finish. In other words, the simple substitution of a near `call`/`ret` for a far `call`/`ret` results in a 24% performance increase.
+Quite a bit, as it turns out. [Listing 13-16](#L1316) ran in 3.48 ms. [Listing 14-1](#L1401), which is identical to [Listing 13-16](#L1316) save that `IsPrintable`{.nasm} is a far procedure, takes 4.32 ms to finish. In other words, the simple substitution of a near `call`{.nasm}/`ret`{.nasm} for a far `call`{.nasm}/`ret`{.nasm} results in a 24% performance increase.
 
 I don't think I really have to interpret those results for you, but just in case...
 
@@ -40,9 +40,9 @@ For example, few programs with more than 64 Kb of code (large code model program
 
 ![](images/fig14.1RT.png)
 
-Many compilers allow you to specify the segment names used for individual modules, if you so desire. If your compiler supports code segment naming and also supports near procedures in the large code model (as, for example, Turbo C does), you could actually make near calls not only within your assembler code, but also *into* that code from the high-level language. The key is giving selected high-level language modules and your assembler code identical code segment names, so they'll share a single code segment, then using the `near` keyword to declare the assembler subroutines as near externals in the high-level language code.
+Many compilers allow you to specify the segment names used for individual modules, if you so desire. If your compiler supports code segment naming and also supports near procedures in the large code model (as, for example, Turbo C does), you could actually make near calls not only within your assembler code, but also *into* that code from the high-level language. The key is giving selected high-level language modules and your assembler code identical code segment names, so they'll share a single code segment, then using the `near`{.nasm} keyword to declare the assembler subroutines as near externals in the high-level language code.
 
-In fact, you can readily benefit from localized near branching even if you're not using assembler at all. You can use the `near` keyword to declare routines that are referenced only within one high-level language module to be near routines, allowing the compiler to generate near rather than far calls to those routines. As noted above, you can even place several modules in the same code segment and use near calls for functions referenced only within those modules that share the same segment.
+In fact, you can readily benefit from localized near branching even if you're not using assembler at all. You can use the `near`{.nasm} keyword to declare routines that are referenced only within one high-level language module to be near routines, allowing the compiler to generate near rather than far calls to those routines. As noted above, you can even place several modules in the same code segment and use near calls for functions referenced only within those modules that share the same segment.
 
 In short, in the code that really matters you can often enjoy the performance advantage of small code model programming — that is, near branches — even when your program has more than 64 Kb of code and so must use the large code model overall.
 
@@ -69,7 +69,7 @@ is equivalent to:
 call  far ptr FarSubroutine
 ```
 
-when `FarSubroutine` is in the same segment as the calling code. Since a direct near call is 2 bytes shorter than a direct far call and `push cs` is only 1 byte long, we actually come out 1 byte ahead by pushing CS and making a near call. According to the official cycle counts, the push/near call approach is 1 cycle slower; however, the alternative approach requires that 1 more instruction byte be fetched, so the scales could easily tip the other way.
+when `FarSubroutine`{.nasm} is in the same segment as the calling code. Since a direct near call is 2 bytes shorter than a direct far call and `push cs`{.nasm} is only 1 byte long, we actually come out 1 byte ahead by pushing CS and making a near call. According to the official cycle counts, the push/near call approach is 1 cycle slower; however, the alternative approach requires that 1 more instruction byte be fetched, so the scales could easily tip the other way.
 
 One more item on far calls, and then we'll get on to other topics. Often it's necessary to perform a far branch to an address specified by an entry in a look-up table. That's generally no problem — we point to the table entry, perform an indirect far branch, and away we go.
 
@@ -105,17 +105,17 @@ FarBranchByIndex  proc  near
 FarBranchByIndex  endp
 ```
 
-To carry this line of thought to its logical extreme, we could even preserve the states of the flags by executing a `pushf` before allocating the stack space, and then performing an `iret` rather than a far `ret` to branch to the target.
+To carry this line of thought to its logical extreme, we could even preserve the states of the flags by executing a `pushf`{.nasm} before allocating the stack space, and then performing an `iret`{.nasm} rather than a far `ret`{.nasm} to branch to the target.
 
 The sort of branching shown above is an example of how flexible the 8088's instruction set can be, especially if you're willing to use instructions in unusual ways, like hand-constructing far return addresses on the stack. This example certainly isn't ideal for most tasks... but it's available if you need the particular service it delivers. In truth, the only limit on the strange jobs the 8088 can be coaxed into doing is your creativity. Speed may sometimes be a problem with the 8088, but flexibility shouldn't be.
 
 ## Replacing `call` and `ret` With `jmp`
 
-Enough of far branches, already. Let's continue with some interesting ways to replace `call` and `ret` with `jmp`.
+Enough of far branches, already. Let's continue with some interesting ways to replace `call`{.nasm} and `ret`{.nasm} with `jmp`{.nasm}.
 
 Suppose that we've got a subroutine that's only called from one place in an entire program. That might be the case with a subroutine called through a call table from a central dispatch point, for example. Well, then, there's really no reason to call and return; instead, we can simply jump to the subroutine, and then jump back to the instruction after the call point, saving some cycles in the process.
 
-For example, consider the code in [Listing 14-2](#L1402), which is yet another modification of the printable character filtering program of [Listing 13-16](#L1316). The modification in [Listing 14-2](#L1402) is that the call to `IsPrintable` has been replaced with a jump to the subroutine, and the return from `IsPrintable` has been replaced with a second jump, this time to the instruction after the jump that invoked the subroutine.
+For example, consider the code in [Listing 14-2](#L1402), which is yet another modification of the printable character filtering program of [Listing 13-16](#L1316). The modification in [Listing 14-2](#L1402) is that the call to `IsPrintable`{.nasm} has been replaced with a jump to the subroutine, and the return from `IsPrintable`{.nasm} has been replaced with a second jump, this time to the instruction after the jump that invoked the subroutine.
 
 That simple change cuts overall execution time to 3.09 ms, an improvement of more than 12%. Granted, part of the improvement is due to the use of short jumps, each of which reduces prefetching by 1 byte over normal jumps; when:
 
@@ -123,17 +123,17 @@ That simple change cuts overall execution time to 3.09 ms, an improvement of mor
 db  128 dup(?)
 ```
 
-is placed between `IsPrintable` and the rest of the code, forcing the use of jumps with normal 2-byte displacements, overall execution time rises to 3.33 ms, less than 5% faster than the original version. All that means, however, is that the `jmp`-`jmp` technique as a replacement for `call`-`ret` is most desirable when short jumps can be used. That's particularly true since two normal jumps total 6 bytes in length, 2 bytes longer than a `call`-`ret` pair.
+is placed between `IsPrintable`{.nasm} and the rest of the code, forcing the use of jumps with normal 2-byte displacements, overall execution time rises to 3.33 ms, less than 5% faster than the original version. All that means, however, is that the `jmp`{.nasm}-`jmp`{.nasm} technique as a replacement for `call`{.nasm}-`ret`{.nasm} is most desirable when short jumps can be used. That's particularly true since two normal jumps total 6 bytes in length, 2 bytes longer than a `call`{.nasm}-`ret`{.nasm} pair.
 
-In truth, [Listing 14-2](#L1402) doesn't demonstrate a particularly good application for replacing `call`-`ret` with `jmp`-`jmp`. As shown in [Listing 14-2](#L1402), `IsPrintable` could only be called from one place in the program, the `CopyPrintable` subroutine, and we usually want more flexibility in invoking our subroutines than that. (Otherwise we might just as well make the subroutines macros and move them right into the calling code.) That's why subroutines called through call tables are much better candidates for the `jmp`-`jmp` technique, since such subroutines often really are invoked from just one place.
+In truth, [Listing 14-2](#L1402) doesn't demonstrate a particularly good application for replacing `call`{.nasm}-`ret`{.nasm} with `jmp`{.nasm}-`jmp`{.nasm}. As shown in [Listing 14-2](#L1402), `IsPrintable`{.nasm} could only be called from one place in the program, the `CopyPrintable`{.nasm} subroutine, and we usually want more flexibility in invoking our subroutines than that. (Otherwise we might just as well make the subroutines macros and move them right into the calling code.) That's why subroutines called through call tables are much better candidates for the `jmp`{.nasm}-`jmp`{.nasm} technique, since such subroutines often really are invoked from just one place.
 
 ### Flexibility *Ad Infinitum*
 
-If more flexibility is needed than the last example provides, are we fated always to use `call`-`ret` rather than `jmp-jmp`? Well, the theme of this chapter seems to be the infinite flexibility of the 8088's instruction set, so it should come as no surprise to you that the answer is: not at all. Usually, you *will* want to use `call`-`ret`, since it's by far the simplest solution and often the fastest as well... but there *are* alternatives, and they can be quite handy in a pinch.
+If more flexibility is needed than the last example provides, are we fated always to use `call`{.nasm}-`ret`{.nasm} rather than `jmp-jmp`{.nasm}? Well, the theme of this chapter seems to be the infinite flexibility of the 8088's instruction set, so it should come as no surprise to you that the answer is: not at all. Usually, you *will* want to use `call`{.nasm}-`ret`{.nasm}, since it's by far the simplest solution and often the fastest as well... but there *are* alternatives, and they can be quite handy in a pinch.
 
 Consider this. Suppose that you've got a set of subroutines that are called via a call table. Next, suppose that it's desirable that any of the subroutines be able to end at any point and return to the central dispatching point — *without cleaning up the stack*. That is, it must be possible to return from anywhere in any subroutine called through the call table, discarding whatever variables, return addresses and so on happen to be on the stack at the time.
 
-Well, that's no great trick; we can simply jump back to the dispatch point, where the original (pre-call) stack pointer could be retrieved from a memory variable and loaded into SP. I know it's a strange thought, but it's perfectly legal to clear the stack simply by reloading SP. Now, however, suppose that the call table can be started from any of several locations. That means that a simple direct jump will no longer serve to return us to the calling code, since the calling code could be in any of several places. We certainly can't use `call` and `ret` either, since the return address could well be buried under data pushed on the stack at any given time.
+Well, that's no great trick; we can simply jump back to the dispatch point, where the original (pre-call) stack pointer could be retrieved from a memory variable and loaded into SP. I know it's a strange thought, but it's perfectly legal to clear the stack simply by reloading SP. Now, however, suppose that the call table can be started from any of several locations. That means that a simple direct jump will no longer serve to return us to the calling code, since the calling code could be in any of several places. We certainly can't use `call`{.nasm} and `ret`{.nasm} either, since the return address could well be buried under data pushed on the stack at any given time.
 
 The solution is simple: place the return address in a register before jumping at the central dispatch point, preserve the register throughout each subroutine, and return by branching to the offset in the register. The code would look something like this:
 
@@ -157,9 +157,9 @@ Subroutine1:                        ;one of the subroutines
     jmp   di                        ;return to the calling code
 ```
 
-Make no mistake: this approach has its flaws. For one thing, it ties up a 16-bit register for the duration of each subroutine, and registers are scarce enough as it is. (The return address could instead be stored in a memory variable, but that reduces performance and causes reentrancy problems.) For another, it wastes bytes, since the `jmp di` instruction used to return to the dispatcher is 1 byte longer than `ret`, and the `mov`-`jmp` pair used by the dispatcher is 3 bytes longer than `call`. Yet another fault is the inherently greater complexity of the code, which brings with it an increased probability of bugs.
+Make no mistake: this approach has its flaws. For one thing, it ties up a 16-bit register for the duration of each subroutine, and registers are scarce enough as it is. (The return address could instead be stored in a memory variable, but that reduces performance and causes reentrancy problems.) For another, it wastes bytes, since the `jmp di`{.nasm} instruction used to return to the dispatcher is 1 byte longer than `ret`{.nasm}, and the `mov`{.nasm}-`jmp`{.nasm} pair used by the dispatcher is 3 bytes longer than `call`{.nasm}. Yet another fault is the inherently greater complexity of the code, which brings with it an increased probability of bugs.
 
-Nonetheless, the above approach offers the flexibility we need — and then some. Think for a moment, and you'll realize that we can, if we wish, return anywhere at all with the above approach. For example, the following saves a branch by returning right to `DispatchLoopTop`:
+Nonetheless, the above approach offers the flexibility we need — and then some. Think for a moment, and you'll realize that we can, if we wish, return anywhere at all with the above approach. For example, the following saves a branch by returning right to `DispatchLoopTop`{.nasm}:
 
 ```nasm
     mov   [OriginalSP],sp             ;save the stack state
@@ -193,13 +193,13 @@ Subroutine1:                          ;one of the subroutines
     ret                               ;return to the calling code
 ```
 
-pushes `DispatchLoopTop` before jumping, so each subroutine returns to `DispatchLoopTop` rather than to the instruction after the `jmp`.)
+pushes `DispatchLoopTop`{.nasm} before jumping, so each subroutine returns to `DispatchLoopTop`{.nasm} rather than to the instruction after the `jmp`{.nasm}.)
 
-Surprisingly, flexibility is not the only virtue of the return-through-register approach — under the right circumstances, performance can benefit as well, since a branch through a register is only 2 bytes long and executes in just 11 cycles. [Listing 14-3](#L1403) shows [Listing 14-2](#L1402) modified to store the return address in BP. While this code is a tad longer than [Listing 14-2](#L1402), since BP must be loaded, [Listing 14-3](#L1403) executes in 3.03 ms — slightly *faster* than [Listing 14-2](#L1402). The key is that BP is loaded only once, outside the loop, in `CopyPrintable`, so the extra overhead of loading BP is spread over the many repetitions of the loop. Meanwhile, the 4-cycle performance advantage of `jmp bp` over `jmp short IsPrintableReturn` is gained every time through the loop.
+Surprisingly, flexibility is not the only virtue of the return-through-register approach — under the right circumstances, performance can benefit as well, since a branch through a register is only 2 bytes long and executes in just 11 cycles. [Listing 14-3](#L1403) shows [Listing 14-2](#L1402) modified to store the return address in BP. While this code is a tad longer than [Listing 14-2](#L1402), since BP must be loaded, [Listing 14-3](#L1403) executes in 3.03 ms — slightly *faster* than [Listing 14-2](#L1402). The key is that BP is loaded only once, outside the loop, in `CopyPrintable`{.nasm}, so the extra overhead of loading BP is spread over the many repetitions of the loop. Meanwhile, the 4-cycle performance advantage of `jmp bp`{.nasm} over `jmp short IsPrintableReturn`{.nasm} is gained every time through the loop.
 
-What's more, the version of `IsPrintable` in [Listing 14-3](#L1403) can be called from anywhere, so long as the calling code sets BP to the return address. By contrast, `IsPrintable` is hardwired to return only to `CopyPrintable` in [Listing 14-2](#L1402).
+What's more, the version of `IsPrintable`{.nasm} in [Listing 14-3](#L1403) can be called from anywhere, so long as the calling code sets BP to the return address. By contrast, `IsPrintable`{.nasm} is hardwired to return only to `CopyPrintable`{.nasm} in [Listing 14-2](#L1402).
 
-Once again, the point is not that you should generally replace `call`-`ret` with one of the many flavors of `jmp`-`jmp`, but rather that you should understand the unusual flexibility that `jmp`-`jmp` offers. It's a bonus that `jmp`-`jmp` can sometimes improve performance; the main point is that the flexibility of this approach lets you perform an odd lot of slightly improbable but sometimes most useful tasks.
+Once again, the point is not that you should generally replace `call`{.nasm}-`ret`{.nasm} with one of the many flavors of `jmp`{.nasm}-`jmp`{.nasm}, but rather that you should understand the unusual flexibility that `jmp`{.nasm}-`jmp`{.nasm} offers. It's a bonus that `jmp`{.nasm}-`jmp`{.nasm} can sometimes improve performance; the main point is that the flexibility of this approach lets you perform an odd lot of slightly improbable but sometimes most useful tasks.
 
 ### Tinkering With the Stack in a Subroutine
 
@@ -229,34 +229,34 @@ If we can tinker with the stack in a subroutine with such impunity, it would see
 
 As a simple example, consider the following. Once upon a time, Jeff Duntemann needed to obtain the IP of a particular instruction. Normally, that's no problem: the value of any label can be loaded into a general-purpose register as an immediate value. That wouldn't do in Jeff's situation, however, because his code was in-line assembler code in a Pascal program. The code was nothing more than a series of hex bytes that could be compiled directly into the program at any location at all; because the code could be placed at any location, the current IP couldn't be represented by any label or immediate value. Given that IP can't be read directly, what was Jeff to do?
 
-The solution was remarkably simple... given a solid understanding of the 8088's instruction set and a flexible mind. The `call` instruction pushes the IP of the next instruction, so Jeff just called the very next instruction and popped the IP of that instruction from the stack as follows:
+The solution was remarkably simple... given a solid understanding of the 8088's instruction set and a flexible mind. The `call`{.nasm} instruction pushes the IP of the next instruction, so Jeff just called the very next instruction and popped the IP of that instruction from the stack as follows:
 
 ```nasm
 call  $+3   ;pushes IP and branches to the next instruction
 pop   ax    ;gets the IP of this instruction
 ```
 
-It's not exactly what `call` was intended for, but it solved Jeff's problem — and results are what matter most in assembler programming.
+It's not exactly what `call`{.nasm} was intended for, but it solved Jeff's problem — and results are what matter most in assembler programming.
 
 ## Use `int` Only When You Must
 
-Before we get on with more ways to branch efficiently, let's discuss `int` for a moment. `int` is an oddball among branching instructions, in that it performs a far branch to the address stored at the corresponding interrupt vector in the 1 Kb table of interrupt vectors starting at 0000:0000. `int` not only pushes a return CS:IP address, as would a far call, but pushes the FLAGS register as well.
+Before we get on with more ways to branch efficiently, let's discuss `int`{.nasm} for a moment. `int`{.nasm} is an oddball among branching instructions, in that it performs a far branch to the address stored at the corresponding interrupt vector in the 1 Kb table of interrupt vectors starting at 0000:0000. `int`{.nasm} not only pushes a return CS:IP address, as would a far call, but pushes the FLAGS register as well.
 
-`int` operates as it does because it's really more of a hardware instruction than a software instruction. When interrupts are enabled (via the Interrupt flag) and one of the 8088's hardware interrupts occurs, the 8088 automatically executes an `int` instruction at the end of the current instruction. Because the currently executing code can be interrupted at any time, the exact state of the registers and flags *must* be preserved; hence the pushing of the FLAGS register. The `iret` instruction provides a neat method for restoring the flags and branching back to continue the interrupted code.
+`int`{.nasm} operates as it does because it's really more of a hardware instruction than a software instruction. When interrupts are enabled (via the Interrupt flag) and one of the 8088's hardware interrupts occurs, the 8088 automatically executes an `int`{.nasm} instruction at the end of the current instruction. Because the currently executing code can be interrupted at any time, the exact state of the registers and flags *must* be preserved; hence the pushing of the FLAGS register. The `iret`{.nasm} instruction provides a neat method for restoring the flags and branching back to continue the interrupted code.
 
 From the perspective of servicing hardware that can require attention at any time, the 8088's interrupt mechanism is ideal. Interrupts are location — and code — independent; no matter what code you're executing, where that code resides, or what the setting of the registers are, an interrupt will branch to the correct interrupt handler and allow you to restore the state of the 8088 when you're done.
 
-From a software perspective, the interrupt mechanism is considerably less ideal. Since an `int` instruction must be executed to perform a software interrupt, there's no possibility of asynchronous execution of a software interrupt, and hence no real need to save the state of the flags. What's more, `int` is astonishingly slow, making almost any sort of branch — yes, even a far call — preferable.
+From a software perspective, the interrupt mechanism is considerably less ideal. Since an `int`{.nasm} instruction must be executed to perform a software interrupt, there's no possibility of asynchronous execution of a software interrupt, and hence no real need to save the state of the flags. What's more, `int`{.nasm} is astonishingly slow, making almost any sort of branch — yes, even a far call — preferable.
 
-How slow is `int`? *Slow*. `int` itself takes 71 cycles and empties the prefetch queue, and `iret` takes an additional 44 cycles and empties the prefetch queue again. At 115 cycles and two queue flushes a pop, you won't be using `int` too often in your time-critical code!
+How slow is `int`{.nasm}? *Slow*. `int`{.nasm} itself takes 71 cycles and empties the prefetch queue, and `iret`{.nasm} takes an additional 44 cycles and empties the prefetch queue again. At 115 cycles and two queue flushes a pop, you won't be using `int`{.nasm} too often in your time-critical code!
 
-Why would you ever want to use `int`? The obvious answer is that you *must* use `int` to invoke DOS and BIOS functions. `int` is used for these services because it's a handy way to provide entry points into routines that may move around in memory. No matter where the BIOS keyboard interface resides (and it may well move from one version of the BIOS to another, to say nothing of memory-resident programs that intercept keystrokes), it can always be accessed with `int 16h`. Basically, `int` is a useful way to access code that's external to the program that's running and consequently can't be branched to directly.
+Why would you ever want to use `int`{.nasm}? The obvious answer is that you *must* use `int`{.nasm} to invoke DOS and BIOS functions. `int`{.nasm} is used for these services because it's a handy way to provide entry points into routines that may move around in memory. No matter where the BIOS keyboard interface resides (and it may well move from one version of the BIOS to another, to say nothing of memory-resident programs that intercept keystrokes), it can always be accessed with `int 16h`{.nasm}. Basically, `int`{.nasm} is a useful way to access code that's external to the program that's running and consequently can't be branched to directly.
 
-IBM left a number of interrupt vectors free for application program use, and that, along with the knowledge that `int` is a compact 2 bytes in length, might start you thinking that you could use `int` rather than `call` to branch to routines *within* a program. After all, in a large code model program `int` is 3 bytes shorter than a direct call.
+IBM left a number of interrupt vectors free for application program use, and that, along with the knowledge that `int`{.nasm} is a compact 2 bytes in length, might start you thinking that you could use `int`{.nasm} rather than `call`{.nasm} to branch to routines *within* a program. After all, in a large code model program `int`{.nasm} is 3 bytes shorter than a direct call.
 
-It's a nice idea — but not, as a general rule, a *good* idea. For one thing, you might well find that your chosen interrupt vectors conflict with those used by a memory-resident program. There aren't very many available vectors, and interrupt conflicts can easily crash a computer. Also, `int` is just too slow to be of much use; you'd have to have a powerful need to save space and an equally powerful insensitivity to performance to even consider using `int`. Also, because there aren't many interrupt vectors, you'll probably find yourself using a register to pass function numbers. Having to load a register pretty much wipes out the space savings `int` offers, and because the interrupt handler will have to perform another branch internally in order to vector to the code for the desired function, performance will be even worse.
+It's a nice idea — but not, as a general rule, a *good* idea. For one thing, you might well find that your chosen interrupt vectors conflict with those used by a memory-resident program. There aren't very many available vectors, and interrupt conflicts can easily crash a computer. Also, `int`{.nasm} is just too slow to be of much use; you'd have to have a powerful need to save space and an equally powerful insensitivity to performance to even consider using `int`{.nasm}. Also, because there aren't many interrupt vectors, you'll probably find yourself using a register to pass function numbers. Having to load a register pretty much wipes out the space savings `int`{.nasm} offers, and because the interrupt handler will have to perform another branch internally in order to vector to the code for the desired function, performance will be even worse.
 
-In short, reserve `int` for accessing DOS and BIOS services and for those applications where there simply is no substitute — applications in which location independence is paramount.
+In short, reserve `int`{.nasm} for accessing DOS and BIOS services and for those applications where there simply is no substitute — applications in which location independence is paramount.
 
 ### Beware of Letting Dos Do the Work
 
@@ -278,7 +278,7 @@ LZTEST <TEST.TXT
 
 at the DOS prompt to time the code in [Listing 14-4](#L1404). The same is true for [Listing 14-5](#L1405).)
 
-The problem with the approach of [Listing 14-4](#L1404) is that all the overhead of calling a DOS function — including an `int` and an `iret` — occurs twice for each character, once during input and once during output. We can easily avoid all that simply by reading a sizable block of text with a single DOS call, processing it a character at a time *in place* (thereby avoiding the overhead of interrupts and DOS calls), and printing it out as a block with a single DOS call, as shown in Figure 14.5.
+The problem with the approach of [Listing 14-4](#L1404) is that all the overhead of calling a DOS function — including an `int`{.nasm} and an `iret`{.nasm} — occurs twice for each character, once during input and once during output. We can easily avoid all that simply by reading a sizable block of text with a single DOS call, processing it a character at a time *in place* (thereby avoiding the overhead of interrupts and DOS calls), and printing it out as a block with a single DOS call, as shown in Figure 14.5.
 
 ![](images/fig14.5RT.png)
 
@@ -290,17 +290,17 @@ I rest my case.
 
 ## Forward References Can Waste Time and Space
 
-Many 8088 instructions offer special compressed forms. For example, `jmp`, which is normally 3 bytes long, can use the 2-byte `jmp short` form when the target in within the range of a 1-byte displacement, as we found in Chapter 12. The word-sized forms of the arithmetic instructions — `cmp`, `add`, `and`, and the like — have similarly shortened forms when used with immediate operands that can fit within a signed byte; such operands are stored in a byte rather than a word and are automatically sign-extended before being used.
+Many 8088 instructions offer special compressed forms. For example, `jmp`{.nasm}, which is normally 3 bytes long, can use the 2-byte `jmp short`{.nasm} form when the target in within the range of a 1-byte displacement, as we found in Chapter 12. The word-sized forms of the arithmetic instructions — `cmp`{.nasm}, `add`{.nasm}, `and`{.nasm}, and the like — have similarly shortened forms when used with immediate operands that can fit within a signed byte; such operands are stored in a byte rather than a word and are automatically sign-extended before being used.
 
-As yet another example, any instruction that uses a *mod-reg-rm* byte and has a displacement field — `Index` in `mov al,[bx+Index]`, for example — is a byte shorter if the displacement fits within a signed byte. In fact, if `Index` is 0 in `mov al,[bx+Index]`, the displacement field can be done away with entirely, saving 2 bytes. (The potential waste of 2 bytes also applies when SI or DI is used with a displacement, but not when BP is used; the organization of the *mod-reg-rm* byte requires that BP-based addressing have at least a 1-byte displacement, so only 1 byte at most can be wasted.)
+As yet another example, any instruction that uses a *mod-reg-rm* byte and has a displacement field — `Index`{.nasm} in `mov al,[bx+Index]`{.nasm}, for example — is a byte shorter if the displacement fits within a signed byte. In fact, if `Index`{.nasm} is 0 in `mov al,[bx+Index]`{.nasm}, the displacement field can be done away with entirely, saving 2 bytes. (The potential waste of 2 bytes also applies when SI or DI is used with a displacement, but not when BP is used; the organization of the *mod-reg-rm* byte requires that BP-based addressing have at least a 1-byte displacement, so only 1 byte at most can be wasted.)
 
 Obviously, we'd like the assembler to use the shortest possible forms of compressible instructions such as those mentioned above, and the assembler does just that *when it knows enough to do so* — which is not always the case.
 
-Consider this. If the assembler comes to a `jmp` instruction, a great deal depends on whether the jump goes backward or forward. If it's a backward jump, the target label is already defined, and the assembler knows exactly how far away the jump destination is. If a backward destination is within the range of a 1-byte displacement, a short jump is generated; otherwise, a normal jump with a 2-byte displacement is generated. Either way, you can rest assured that the assembler has assembled the shortest possible jump.
+Consider this. If the assembler comes to a `jmp`{.nasm} instruction, a great deal depends on whether the jump goes backward or forward. If it's a backward jump, the target label is already defined, and the assembler knows exactly how far away the jump destination is. If a backward destination is within the range of a 1-byte displacement, a short jump is generated; otherwise, a normal jump with a 2-byte displacement is generated. Either way, you can rest assured that the assembler has assembled the shortest possible jump.
 
 Not so with a forward jump. In this case, the target label hasn't been reached yet, so the assembler hasn't the faintest idea of how far away it is. Either type of jump *might* be appropriate, but the assembler won't know until the target label is reached in the course of assembly. The assembler can't wait until then to decide how big to make the jump, though. The jump size *must* be set before assembly can continue past the jump instruction; otherwise, the assembler wouldn't know where to place the next instruction.
 
-Faced with such a dilemma, the assembler takes the only possible way out: it reserves space for the larger possibility, a normal jump. Later, when the target label becomes defined, the jump is assembled as a short jump if possible, but the damage has already been done; since 3 bytes were originally reserved for the jump, 3 bytes must be used, and a `nop` is stuffed in after the short jump. That is, a jump to the very next instruction, as in:
+Faced with such a dilemma, the assembler takes the only possible way out: it reserves space for the larger possibility, a normal jump. Later, when the target label becomes defined, the jump is assembled as a short jump if possible, but the damage has already been done; since 3 bytes were originally reserved for the jump, 3 bytes must be used, and a `nop`{.nasm} is stuffed in after the short jump. That is, a jump to the very next instruction, as in:
 
 ```nasm
     jmp   NearLabel
@@ -315,14 +315,14 @@ assembles to the following:
 NearLabel:
 ```
 
-From a speed perspective, that's fine, but why waste a byte on a `nop`? The correct code is:
+From a speed perspective, that's fine, but why waste a byte on a `nop`{.nasm}? The correct code is:
 
 ```nasm
     jmp   short NearLabel
 NearLabel:
 ```
 
-Now consider the case of forward references to structure elements. The following `mov`:
+Now consider the case of forward references to structure elements. The following `mov`{.nasm}:
 
 ```nasm
       mov   ax,[bx+FirstEntry]
@@ -334,7 +334,7 @@ ThirdEntry  dw    ?
 EntryList   struc
 ```
 
-assembles with a 2-byte displacement field, while this `mov`:
+assembles with a 2-byte displacement field, while this `mov`{.nasm}:
 
 ```nasm
 EntryList   struc
@@ -346,9 +346,9 @@ EntryList   struc
       mov   ax,[bx+FirstEntry]
 ```
 
-assembles with no displacement field at all. Again, the assembler has no way of knowing on a forward reference how much space will be required for the displacement field, and must assume the worst. Unlike the previous `jmp` example, however, performance as well as code size suffers in this case, since the additional displacement bytes must be fetched and a more complex effective address calculation must be made.
+assembles with no displacement field at all. Again, the assembler has no way of knowing on a forward reference how much space will be required for the displacement field, and must assume the worst. Unlike the previous `jmp`{.nasm} example, however, performance as well as code size suffers in this case, since the additional displacement bytes must be fetched and a more complex effective address calculation must be made.
 
-The same is true of forward-referenced immediate operands to the arithmetic instructions, and, indeed, of forward-referenced operands to any instruction that has a compressed form. You can improve the quality of your code considerably by avoiding forward references to data of all sorts (this will also speed up assembly a bit) and by explicitly using `jmp short` whenever it will reach on forward jumps.
+The same is true of forward-referenced immediate operands to the arithmetic instructions, and, indeed, of forward-referenced operands to any instruction that has a compressed form. You can improve the quality of your code considerably by avoiding forward references to data of all sorts (this will also speed up assembly a bit) and by explicitly using `jmp short`{.nasm} whenever it will reach on forward jumps.
 
 ### The Right Assembler Can Help
 
@@ -364,7 +364,7 @@ If you aren't using an assembler that can help you generate efficient forward br
 
 ## Saving Space With Branches
 
-When you're interested in saving space while losing as little performance as possible, you should use jumps in order to share as much code as possible between similar routines. For example, suppose you've got a routine, `SampleSub`, which performs the equivalent of a switch statement with three separate cases, depending on the value in BX. Suppose that each of the cases can succeed or fail, and that `TestSub` returns AX equal to 0 for success or 1 for failure. Suppose further that on failure the byte-sized memory variable `ErrorCode` must be set to indicate which case failed.
+When you're interested in saving space while losing as little performance as possible, you should use jumps in order to share as much code as possible between similar routines. For example, suppose you've got a routine, `SampleSub`{.nasm}, which performs the equivalent of a switch statement with three separate cases, depending on the value in BX. Suppose that each of the cases can succeed or fail, and that `TestSub`{.nasm} returns AX equal to 0 for success or 1 for failure. Suppose further that on failure the byte-sized memory variable `ErrorCode`{.nasm} must be set to indicate which case failed.
 
 One possible implementation is:
 
@@ -398,7 +398,7 @@ SampleSubSuccess:
 SampleSub   endp
 ```
 
-In this implementation, all cases jump to the common code at `Success` when they succeed, so that the code to return a success status appears just once but serves all three cases.
+In this implementation, all cases jump to the common code at `Success`{.nasm} when they succeed, so that the code to return a success status appears just once but serves all three cases.
 
 Although it's not quite so obvious, we can shrink the code a good bit by doing the same for the failure case, as follows:
 
@@ -432,11 +432,11 @@ SampleSubSuccess:
 SampleSub   endp
 ```
 
-Although this latter version doesn't look much different from the original, it's a full 10 bytes shorter, and functionally equivalent. (If there were more cases, we'd save proportionally more bytes, too.) This substantial reduction in size results from two factors: the instruction pair `mov ax,1`/`ret` appears once rather than three times, saving 8 bytes, and three `mov al,``*immed`* instructions along with one accumulator-specific direct-addressed memory access replace three *mod-reg-rm* direct-addressed memory accesses, saving 6 bytes. Those 14 bytes saved more than offset the 4 bytes added by two `jmp short` instructions.
+Although this latter version doesn't look much different from the original, it's a full 10 bytes shorter, and functionally equivalent. (If there were more cases, we'd save proportionally more bytes, too.) This substantial reduction in size results from two factors: the instruction pair `mov ax,1`{.nasm}/`ret`{.nasm} appears once rather than three times, saving 8 bytes, and three `mov al,immed`{.nasm} instructions along with one accumulator-specific direct-addressed memory access replace three *mod-reg-rm* direct-addressed memory accesses, saving 6 bytes. Those 14 bytes saved more than offset the 4 bytes added by two `jmp short`{.nasm} instructions.
 
-There are two points to be made here. First, we can save many bytes by jumping to common exit code from various places in a subroutine, provided that the common exit code performs a reasonably lengthy task that would otherwise have to be performed at the end of a number of code sequences. (If the common exit code is just a `ret`, we're better off executing a 1-byte `ret` in several places in the subroutine than we are executing a 2-byte `jmp short` just to get to the `ret`, as we saw in the last chapter.)
+There are two points to be made here. First, we can save many bytes by jumping to common exit code from various places in a subroutine, provided that the common exit code performs a reasonably lengthy task that would otherwise have to be performed at the end of a number of code sequences. (If the common exit code is just a `ret`{.nasm}, we're better off executing a 1-byte `ret`{.nasm} in several places in the subroutine than we are executing a 2-byte `jmp short`{.nasm} just to get to the `ret`{.nasm}, as we saw in the last chapter.)
 
-Second, we can save bytes by altering our code a bit to allow common exit code to do more than it normally would. This is illustrated in the above example in that each of the cases loads an error code into AL, rather than storing it to memory, so that a single accumulator-specific direct-addressed `mov` can store the error code to memory. Off the top, it would seem that the error-code setting belongs in the separate cases, since each case stores a different error value, but with a little ingenuity, a single memory-accessing instruction can do the trick.
+Second, we can save bytes by altering our code a bit to allow common exit code to do more than it normally would. This is illustrated in the above example in that each of the cases loads an error code into AL, rather than storing it to memory, so that a single accumulator-specific direct-addressed `mov`{.nasm} can store the error code to memory. Off the top, it would seem that the error-code setting belongs in the separate cases, since each case stores a different error value, but with a little ingenuity, a single memory-accessing instruction can do the trick.
 
 The idea of sharing common exit code can be extended across several functions. Suppose that we've got two subroutines that end by popping DI, SI, and BP, then returning. Suppose also that in case of success these subroutines return AX set to 0, while in case of failure they return AX set to a non-zero error code.
 
@@ -471,7 +471,7 @@ Subroutine2   proc  near
 Subroutine2 endp
 ```
 
-Here we've saved 3 or 4 bytes by replacing 6 bytes of exit code that would normally appear at the end of `Subroutine2` with a 2-or 3-byte jump. What's more, we could do the same for any number of subroutines that can use the same exit code; at worst, a 3-byte normal jump would be required to reach `Success` or `Exit`. Naturally, larger savings would result from sharing lengthier exit code.
+Here we've saved 3 or 4 bytes by replacing 6 bytes of exit code that would normally appear at the end of `Subroutine2`{.nasm} with a 2-or 3-byte jump. What's more, we could do the same for any number of subroutines that can use the same exit code; at worst, a 3-byte normal jump would be required to reach `Success`{.nasm} or `Exit`{.nasm}. Naturally, larger savings would result from sharing lengthier exit code.
 
 The key here is realizing that in assembler there's no need for a clean separation between subroutines. If multiple subroutines end with the same instructions, they might as well share those instructions. Of course, performance will suffer a little from the extra branch all but one of the subroutines will have to make in order to reach the common code. Once again, we've acquired a new tool that has both costs and benefits; this time it's a tool that saves bytes while expending cycles. Deciding when that's a good tradeoff is your business, to be judged on a case by case basis. Sometimes this new tool is desirable, sometimes not... but either way, making that sort of decision properly is a key to good assembler code.
 
@@ -483,11 +483,11 @@ Assembler facilitates that sort of sharing of code, because if we really want to
 
 There's another meaning to multiple entry points, as well, and that's the technique of using several front-end entry points to a subroutine in order to set up commonly-used parameters. I can best explain this by way of example.
 
-Imagine that we've got a subroutine, `SpeakerControl`, that's called with one parameter, passed in AX. A call to `SpeakerControl` with AX set to 0 turns off the PC's speaker, while a call with AX set to 1 turns on the speaker.
+Imagine that we've got a subroutine, `SpeakerControl`{.nasm}, that's called with one parameter, passed in AX. A call to `SpeakerControl`{.nasm} with AX set to 0 turns off the PC's speaker, while a call with AX set to 1 turns on the speaker.
 
-Now imagine that `SpeakerControl` is called from dozens — perhaps hundreds — of places in a program. Every time `SpeakerControl` is called, a 2-or 3-byte instruction must be used to set AX to the desired state. If there are 100 calls to `SpeakerControl`, approximately 250 bytes are used simply selecting the mode of operation of `SpeakerControl`.
+Now imagine that `SpeakerControl`{.nasm} is called from dozens — perhaps hundreds — of places in a program. Every time `SpeakerControl`{.nasm} is called, a 2-or 3-byte instruction must be used to set AX to the desired state. If there are 100 calls to `SpeakerControl`{.nasm}, approximately 250 bytes are used simply selecting the mode of operation of `SpeakerControl`{.nasm}.
 
-Instead, why not simply provide two front-end entry points to `SpeakerControl`, one to turn the speaker on (`SpeakerOn`) and one to turn the speaker off (`SpeakerOff`)? The code would be as simple as this:
+Instead, why not simply provide two front-end entry points to `SpeakerControl`{.nasm}, one to turn the speaker on (`SpeakerOn`{.nasm}) and one to turn the speaker off (`SpeakerOff`{.nasm})? The code would be as simple as this:
 
 ```nasm
 ; Turns the speaker on.
@@ -526,7 +526,7 @@ we can simply use:
 call  SpeakerOn
 ```
 
-and we could likewise use `SpeakerOff` instead of calling `SpeakerControl` with AX equal to 0. At the cost of the 7 bytes taken by the two front-end functions, we would save 250 bytes worth of parameter-setting code, for a net savings of 243 bytes.
+and we could likewise use `SpeakerOff`{.nasm} instead of calling `SpeakerControl`{.nasm} with AX equal to 0. At the cost of the 7 bytes taken by the two front-end functions, we would save 250 bytes worth of parameter-setting code, for a net savings of 243 bytes.
 
 The principle of using front-end functions that set common parameter values applies to high-level language code as well. In fact, it may apply even better to high-level language code, since it takes 3 to 4 bytes to push a constant parameter onto the stack. The downside of using this technique in a high-level language is much the same as the downside of using it in assembler — it involves extra branching, so it's slower. (In high-level language code, performance will also be slowed by the time required to push any additional parameters that must be passed through the front-end functions.)
 
@@ -602,11 +602,11 @@ At any rate, knowing when and where optimization is worth the effort is as impor
 
 There are a number of ways to get multiple uses out of a single instruction that sets the flags. Sometimes the multiple use is available because multiple flags are set, and sometimes the multiple use is available because the instruction that sets the flags performs other tasks as well. Let's look at some examples.
 
-Suppose that we have eight 1-bit flags stored in a single byte-sized memory variable, `StateFlags`, as shown in Figure 14.6.
+Suppose that we have eight 1-bit flags stored in a single byte-sized memory variable, `StateFlags`{.nasm}, as shown in Figure 14.6.
 
 ![](images/fig14.6RT.png)
 
-In order to check whether a high-or medium-priority event is pending, as indicated by bits 7 and 6 of `StateFlags`, we'd normally use something like:
+In order to check whether a high-or medium-priority event is pending, as indicated by bits 7 and 6 of `StateFlags`{.nasm}, we'd normally use something like:
 
 ```nasm
 mov   al,[StateFlags]
@@ -626,7 +626,7 @@ shl   al,1                        ;medium-priority event pending?
 jc    HandleMediumPriorityEvent   ;yes
 ```
 
-If we think for a moment, however, we'll realize that shifting a value to the left has a most desirable property. `shl` not only sets the Carry flag to reflect carry out of the most significant bit of the result, but also sets the Sign flag to reflect the value stored *into* the most significant bit of the result.
+If we think for a moment, however, we'll realize that shifting a value to the left has a most desirable property. `shl`{.nasm} not only sets the Carry flag to reflect carry out of the most significant bit of the result, but also sets the Sign flag to reflect the value stored *into* the most significant bit of the result.
 
 Do you see it now? After a register is shifted 1 bit to the left, the Carry and Sign flags are set to reflect the states of the *two* most significant bits originally stored in that register. That means that we can replace the above code with:
 
@@ -639,7 +639,7 @@ js    HandleMediumPriorityEvent   ;medium-priority event pending
 
 which is one full instruction shorter.
 
-Stretching this idea still further, we could relocate three of our flags to bits 7, 6, and 5 of `EventFlags`, with bits 4-0 always set to 0, as shown in Figure 14.7.
+Stretching this idea still further, we could relocate three of our flags to bits 7, 6, and 5 of `EventFlags`{.nasm}, with bits 4-0 always set to 0, as shown in Figure 14.7.
 
 ![](images/fig14.7RT.png)
 
@@ -670,7 +670,7 @@ ChecksumLoop:
     loop  ChecksumLoop
 ```
 
-(Yes, I know that this could be speeded up and shrunk by loading BX with the offset of `TestArray` outside the loop, but bear with me while we look at a specific optimization.)
+(Yes, I know that this could be speeded up and shrunk by loading BX with the offset of `TestArray`{.nasm} outside the loop, but bear with me while we look at a specific optimization.)
 
 Now consider the following:
 
@@ -700,29 +700,29 @@ Note that BX now starts off with the index of the last element of the array rath
 
 ## The Looping Instructions
 
-And so we come to the 8088's special looping instructions: `jcxz`, `loop`, `loopz`, and `loopnz`. You undoubtedly know how `jcxz` and `loop` work by now — we've certainly used them often enough over the last few chapters. As a quick refresher, `jcxz` branches if and only if CX is zero, and `loop` decrements CX and branches *unless* the new value in CX is zero. None of the looping instructions — not even `loop`, which decrements CX — affects the 8088's flags in any way; we saw that put to good use in a loop that performed multi-word addition in Chapter 9.
+And so we come to the 8088's special looping instructions: `jcxz`{.nasm}, `loop`{.nasm}, `loopz`{.nasm}, and `loopnz`{.nasm}. You undoubtedly know how `jcxz`{.nasm} and `loop`{.nasm} work by now — we've certainly used them often enough over the last few chapters. As a quick refresher, `jcxz`{.nasm} branches if and only if CX is zero, and `loop`{.nasm} decrements CX and branches *unless* the new value in CX is zero. None of the looping instructions — not even `loop`{.nasm}, which decrements CX — affects the 8088's flags in any way; we saw that put to good use in a loop that performed multi-word addition in Chapter 9.
 
-(In fact, the only branching instruction of the 8088 that affects the FLAGS register are the interrupt-related instructions. `int` sets the Interrupt and Trap flags to 0, disabling interrupts and single-stepping, as does `into` when the Overflow flag is 1, while `iret` sets the entire FLAGS register to the 16-bit value popped from the stack.)
+(In fact, the only branching instruction of the 8088 that affects the FLAGS register are the interrupt-related instructions. `int`{.nasm} sets the Interrupt and Trap flags to 0, disabling interrupts and single-stepping, as does `into`{.nasm} when the Overflow flag is 1, while `iret`{.nasm} sets the entire FLAGS register to the 16-bit value popped from the stack.)
 
-Given that we're already familiar with `jcxz` and `loop`, we'll take a look at the useful and often overlooked `loopz` and `loopnz`, and then we'll touch on a few items of interest involving `jcxz` and `loop`. Always bear in mind, however, that while the special looping instructions are more efficient than the other branching instructions, they're still branching instructions — and that means that they're still slow. When performance matters, not-branching is the way to go.
+Given that we're already familiar with `jcxz`{.nasm} and `loop`{.nasm}, we'll take a look at the useful and often overlooked `loopz`{.nasm} and `loopnz`{.nasm}, and then we'll touch on a few items of interest involving `jcxz`{.nasm} and `loop`{.nasm}. Always bear in mind, however, that while the special looping instructions are more efficient than the other branching instructions, they're still branching instructions — and that means that they're still slow. When performance matters, not-branching is the way to go.
 
 ### `loopz` and `loopnz`
 
-`loopz` and `loopnz` (also known as `loope` and `loopne`, respectively) are essentially `loop` with a little something extra added. `loopz` (which we can remember as "loop while zero," as we did with `repz`) decrements CX and then branches unless either CX is 0 *or* the Zero flag is 0. Likewise, `loopnz` ("loop while not zero") decrements CX and branches unless either CX is 0 *or* the Zero flag is 1. Depending on whether they branch or not, these instructions are anywhere from 0 to 2 cycles slower than `loop`, but all three instructions are the same size, 2 bytes.
+`loopz`{.nasm} and `loopnz`{.nasm} (also known as `loope`{.nasm} and `loopne`{.nasm}, respectively) are essentially `loop`{.nasm} with a little something extra added. `loopz`{.nasm} (which we can remember as "loop while zero," as we did with `repz`{.nasm}) decrements CX and then branches unless either CX is 0 *or* the Zero flag is 0. Likewise, `loopnz`{.nasm} ("loop while not zero") decrements CX and branches unless either CX is 0 *or* the Zero flag is 1. Depending on whether they branch or not, these instructions are anywhere from 0 to 2 cycles slower than `loop`{.nasm}, but all three instructions are the same size, 2 bytes.
 
-`loopz` and `loopnz` provide an extremely compact way to repeat a loop up to a maximum number of repetitions while waiting for an event that affects the Zero flag to occur. If, when the loop ends, the Zero flag isn't in the sought-after state, then the event hasn't occurred within the maximum number of repetitions.
+`loopz`{.nasm} and `loopnz`{.nasm} provide an extremely compact way to repeat a loop up to a maximum number of repetitions while waiting for an event that affects the Zero flag to occur. If, when the loop ends, the Zero flag isn't in the sought-after state, then the event hasn't occurred within the maximum number of repetitions.
 
-For example, suppose that we want to search an array for the first entry that matches a particular character. Normally, we would do that with `repnz scasb`, but in this particular case we need to perform a case-insensitive search. [Listing 14-6](#L1406) shows a standard solution to this problem, which tests for a match and branches out of the loop when a match is found, or falls through the bottom of the loop if no match exists. [Listing 14-6](#L1406) runs in 1134 us for the test case.
+For example, suppose that we want to search an array for the first entry that matches a particular character. Normally, we would do that with `repnz scasb`{.nasm}, but in this particular case we need to perform a case-insensitive search. [Listing 14-6](#L1406) shows a standard solution to this problem, which tests for a match and branches out of the loop when a match is found, or falls through the bottom of the loop if no match exists. [Listing 14-6](#L1406) runs in 1134 us for the test case.
 
-You can probably see where we're heading. The `jz`/`loop` pair at the bottom of the loop in [Listing 14-6](#L1406) is an obvious candidate for conversion to `loopnz`, and [Listing 14-7](#L1407) takes advantage of just that conversion. Essentially, the test for a match is moved out of the loop in [Listing 14-7](#L1407), with `loopnz` replacing `loop` in order to allow the loop to end either on a match or at the end of the array. The result: [Listing 14-7](#L1407) runs in 1036 us, more than 9% faster than [Listing 14-7](#L1407). Not a *massive* improvement..but not a bad payoff for replacing one instruction and moving another.
+You can probably see where we're heading. The `jz`{.nasm}/`loop`{.nasm} pair at the bottom of the loop in [Listing 14-6](#L1406) is an obvious candidate for conversion to `loopnz`{.nasm}, and [Listing 14-7](#L1407) takes advantage of just that conversion. Essentially, the test for a match is moved out of the loop in [Listing 14-7](#L1407), with `loopnz`{.nasm} replacing `loop`{.nasm} in order to allow the loop to end either on a match or at the end of the array. The result: [Listing 14-7](#L1407) runs in 1036 us, more than 9% faster than [Listing 14-7](#L1407). Not a *massive* improvement..but not a bad payoff for replacing one instruction and moving another.
 
 (Food for thought: [Listings 14-6](#L1406) and [14-7](#L1407) could be speeded up by storing uppercase and lowercase versions of the search byte in separate registers and simply comparing each byte of the array to *both* versions. The extra comparison would be a good deal faster than the code used in [Listings 14-6](#L1406) and [14-7](#L1407) to convert each byte of the array to uppercase.)
 
 ### How You Loop Matters More Than You Might Think
 
-In the last chapter, I lambasted `loop` as a slow looping instruction. Well, it *is* slow — but if you must perform repetitive tasks by branching — that is, if you must loop — `loop` is a good deal faster than other branching instructions. To drive that point home, I'm going to measure the performance of the case-insensitive search program of [Listing 14-6](#L1406) with the looping code implemented as follows: with `loop`, with `dec reg16/jnz`, with `dec reg8/jnz`, with `dec mem8/jnz`, and with `dec mem16/jnz`. (Remember that `dec reg16` is faster than `dec reg8`, and that byte-sized memory accesses are faster than word-sized accesses.)
+In the last chapter, I lambasted `loop`{.nasm} as a slow looping instruction. Well, it *is* slow — but if you must perform repetitive tasks by branching — that is, if you must loop — `loop`{.nasm} is a good deal faster than other branching instructions. To drive that point home, I'm going to measure the performance of the case-insensitive search program of [Listing 14-6](#L1406) with the looping code implemented as follows: with `loop`{.nasm}, with `dec reg16/jnz`{.nasm}, with `dec reg8/jnz`{.nasm}, with `dec mem8/jnz`{.nasm}, and with `dec mem16/jnz`{.nasm}. (Remember that `dec reg16`{.nasm} is faster than `dec reg8`{.nasm}, and that byte-sized memory accesses are faster than word-sized accesses.)
 
-[Listing 14-6](#L1406) already shows the `loop`-based implementation. [Listings 14-8](#L1408) through [14-11](#L1411) show the other implementations. Here are the results:
+[Listing 14-6](#L1406) already shows the `loop`{.nasm}-based implementation. [Listings 14-8](#L1408) through [14-11](#L1411) show the other implementations. Here are the results:
 
 | Looping code                               | Listing         | Time    |
 |--------------------------------------------|-----------------|---------|
@@ -732,13 +732,13 @@ In the last chapter, I lambasted `loop` as a slow looping instruction. Well, it 
 | dec [BCount]/jnz CaseInsensitiveSearchLoop | [14-10](#L1410) | 1540 us |
 | dec [WCount]/jnz CaseInsensitiveSearchLoop | [14-11](#L1411) | 1652 us |
 
-While the incremental performance differences between the various implementations are fairly modest, `loop` is the clear winner, and is the shortest of the bunch as well.
+While the incremental performance differences between the various implementations are fairly modest, `loop`{.nasm} is the clear winner, and is the shortest of the bunch as well.
 
-Whenever you must branch in order to loop, use the `loop` instruction if you possibly can. The superiority of `loop` holds true only in the realm of branching instructions, for not — branching is *much* faster than looping with any of the branching instructions... but when space is at a premium, `loop` is hard to beat.
+Whenever you must branch in order to loop, use the `loop`{.nasm} instruction if you possibly can. The superiority of `loop`{.nasm} holds true only in the realm of branching instructions, for not — branching is *much* faster than looping with any of the branching instructions... but when space is at a premium, `loop`{.nasm} is hard to beat.
 
 ## Only `jcxz` Can Test *and* Branch in a Single Bound
 
-`jcxz` is the only 8088 instruction that can both test a register and branch according to the outcome. Most of the applications for this unusual property of `jcxz` are well-known, most notably avoiding division by zero and guarding against zero counts in loops. You may, however, find other, less obvious, applications if you stretch your mind a little.
+`jcxz`{.nasm} is the only 8088 instruction that can both test a register and branch according to the outcome. Most of the applications for this unusual property of `jcxz`{.nasm} are well-known, most notably avoiding division by zero and guarding against zero counts in loops. You may, however, find other, less obvious, applications if you stretch your mind a little.
 
 For example, suppose that we have an animation program that needs to be speed-synchronized. This program has a delay loop built into each pass through the main loop; however, the proper delay will vary from processor to processor and from one display adapter to another, so the delay will need to be adjusted as the program runs.
 
@@ -761,7 +761,7 @@ We could do that easily enough with:
 ; Decrease the delay proportionately to the value in AX.
 ```
 
-With `jcxz` and a little creativity, however, we can tighten the code considerably:
+With `jcxz`{.nasm} and a little creativity, however, we can tighten the code considerably:
 
 ```nasm
     mov   cx,INITIAL_COUNT
@@ -773,7 +773,7 @@ With `jcxz` and a little creativity, however, we can tighten the code considerab
 ; Decrease the delay proportionately to the value in CX.
 ```
 
-With these changes, we've managed to trim a 13-byte sequence by 4 bytes — 30% — even though the original sequence used the accumulator-specific direct-addressed form of `mov`. There's nothing more profound here than familiarity with the 8088's instruction set and a willingness to mix and match instructions inventively — which, when you get right down to it, is where some of the best 8088 code comes from.
+With these changes, we've managed to trim a 13-byte sequence by 4 bytes — 30% — even though the original sequence used the accumulator-specific direct-addressed form of `mov`{.nasm}. There's nothing more profound here than familiarity with the 8088's instruction set and a willingness to mix and match instructions inventively — which, when you get right down to it, is where some of the best 8088 code comes from.
 
 Try it yourself and see!
 
@@ -789,11 +789,11 @@ The operation of a sample jump table is shown in Figure 14. 8.
 
 An index into the table is used to look up one of the entries in the table, and an indirect branch is performed to the address contained in that entry.
 
-The size of a jump table entry can be either 2 or 4 bytes, depending on whether near or far branches are used by the code that branches through the jump table. As we discussed earlier, the 2-byte jump table entries used with near branches are vastly preferable to the 4-byte jump table entries used with far branches, for two reasons: 2-byte-per-entry jump tables are half the size of equivalent 4-byte-per-table jump tables, and near indirect branches are much faster than far indirect branches, especially when `call` and `ret` are used.
+The size of a jump table entry can be either 2 or 4 bytes, depending on whether near or far branches are used by the code that branches through the jump table. As we discussed earlier, the 2-byte jump table entries used with near branches are vastly preferable to the 4-byte jump table entries used with far branches, for two reasons: 2-byte-per-entry jump tables are half the size of equivalent 4-byte-per-table jump tables, and near indirect branches are much faster than far indirect branches, especially when `call`{.nasm} and `ret`{.nasm} are used.
 
 So, what's so great about jump tables? Simply put, they're usually the fastest way to turn an index into execution of the corresponding code. In the sorts of applications jump tables are best suited to, we basically already know which routine we want to branch to, thanks to the index — it's just a matter of getting there as fast as possible and in the fewest bytes, and jump tables are winners on both counts.
 
-For example, suppose that we have a program that monitors the serial port and needs to branch quickly to 1 of 128 subroutines, depending on which one of the 128 7-bit ASCII characters is in AL. We could do that with 127 `cmp` instructions followed by conditional jumps, something like this:
+For example, suppose that we have a program that monitors the serial port and needs to branch quickly to 1 of 128 subroutines, depending on which one of the 128 7-bit ASCII characters is in AL. We could do that with 127 `cmp`{.nasm} instructions followed by conditional jumps, something like this:
 
 ```nasm
     and   al,7fh    ;make it 7-bit ASCII
@@ -880,7 +880,7 @@ Granted, pure jump table code would be slightly faster, since it's 2 instruction
 
 ### Generating Jump Table Indexes
 
-There are many ways to generate indexes into jump tables. Sometimes indexes are passed in as parameters by calling routines, as in a function dispatcher. Sometimes indexes are read from ports or from memory. Indexes may also be looked up in *other* tables. For example, a keyboard handler might use `repnz scasw` to find the index for the current 16-bit key code in a key-mapping table, then use that index to jump to the appropriate key-handling routine via a jump table, as shown in [Listing 14-12](#L1412), which runs in 504 us for the sample keystrokes. ([Listing 14-12](#L1412) is a modification of the key-handling jump table code we saw in [Listing 11-17](#L1117).)
+There are many ways to generate indexes into jump tables. Sometimes indexes are passed in as parameters by calling routines, as in a function dispatcher. Sometimes indexes are read from ports or from memory. Indexes may also be looked up in *other* tables. For example, a keyboard handler might use `repnz scasw`{.nasm} to find the index for the current 16-bit key code in a key-mapping table, then use that index to jump to the appropriate key-handling routine via a jump table, as shown in [Listing 14-12](#L1412), which runs in 504 us for the sample keystrokes. ([Listing 14-12](#L1412) is a modification of the key-handling jump table code we saw in [Listing 11-17](#L1117).)
 
 Why not simply put the address of each key handler right next to the corresponding 16-bit key code in a single look-up table, so no calculation is needed in order to perform the second look-up? For one thing, the second look-up takes hardly any time at all in [Listing 14-12](#L1412), since the calculation of the jump table address is performed as a *mod-reg-rm* calculation by:
 
@@ -888,9 +888,9 @@ Why not simply put the address of each key handler right next to the correspondi
 jmp   cs:[KeyJumpTable+di-2-offset KeyLookUpTable]
 ```
 
-Even if the second look-up were slow, however, the two-table approach would still be preferable. You see, contiguous data arrays are required in order to use `repnz scasw`, and, as we learned a few chapters back, it's worth structuring your code so that repeated string instructions can be used whenever possible.
+Even if the second look-up were slow, however, the two-table approach would still be preferable. You see, contiguous data arrays are required in order to use `repnz scasw`{.nasm}, and, as we learned a few chapters back, it's worth structuring your code so that repeated string instructions can be used whenever possible.
 
-Does it really make that much difference to structure the table so that `rep scasw` can be used? It surely does. [Listing 14-13](#L1413), which uses a single look-up table containing both key codes and handler addresses, takes 969 us to run — nearly twice as long as [Listing 14-12](#L1412).
+Does it really make that much difference to structure the table so that `rep scasw`{.nasm} can be used? It surely does. [Listing 14-13](#L1413), which uses a single look-up table containing both key codes and handler addresses, takes 969 us to run — nearly twice as long as [Listing 14-12](#L1412).
 
 Design your code to use repeated string instructions!
 
@@ -898,7 +898,7 @@ At any rate, jump tables operate in the same basic way no matter how indexes are
 
 ### Jump Tables, Macros and Branched-To In-Line Code
 
-In the last chapter, we simply calculated the destination offset whenever we needed to branch into in-line code. That approach is fine when the offset calculations involve nothing more than a few shifts and adds, but it can reduce performance considerably if a `mul` instruction must be used. Then, too, the calculated-offset approach only works if every repeated code block in the target in-line code is exactly the same size. That won't be the case if, for example, some repeated code blocks use short branches while others use normal branches, as shown in Figure 14.9.
+In the last chapter, we simply calculated the destination offset whenever we needed to branch into in-line code. That approach is fine when the offset calculations involve nothing more than a few shifts and adds, but it can reduce performance considerably if a `mul`{.nasm} instruction must be used. Then, too, the calculated-offset approach only works if every repeated code block in the target in-line code is exactly the same size. That won't be the case if, for example, some repeated code blocks use short branches while others use normal branches, as shown in Figure 14.9.
 
 ![](images/fig14.9RT.png)
 
@@ -910,39 +910,39 @@ What we really want to do is use conditional jumps in some in-line code blocks �
 
 The answer (surprise!) is to use a jump table, as shown in [Listing 14-14](#L1414). The jump table simply stores the start offset of each in-line code block, regardless of how large that block may be. While the jump table is 162 bytes in size, there's no speed penalty for using it, since the process of looking up a table entry and branching accordingly requires only a few instructions. Indeed, it's often faster to use a jump table in this way than it is to calculate the target offset even when the repeated in-line code blocks *are* all the same size.
 
-How does [Listing 14-14](#L1414) generate in-line code blocks of varying sizes? The macro `CHECK_CHAR`, which is used to generate each in-line code block, actually calculates the distance from the end of each conditional jump to the target label, and uses the `if` directive to assemble a single conditional jump if a 1-byte displacement will reach the target label, or a conditional jump around an unconditional jump if necessary. In some cases a conditional jump does reach, while in others it doesn't; as a result, the in-line code blocks vary in size.
+How does [Listing 14-14](#L1414) generate in-line code blocks of varying sizes? The macro `CHECK_CHAR`{.nasm}, which is used to generate each in-line code block, actually calculates the distance from the end of each conditional jump to the target label, and uses the `if`{.nasm} directive to assemble a single conditional jump if a 1-byte displacement will reach the target label, or a conditional jump around an unconditional jump if necessary. In some cases a conditional jump does reach, while in others it doesn't; as a result, the in-line code blocks vary in size.
 
-[Listing 14-14](#L1414) illustrates the use of a clever technique that's most useful for generating jump tables that point to in-line code: macro text substitution. In order to generate a unique label for each repeated code block, the assembler variable `BLOCK_NUMBER` is initially set to zero, and then incremented each time a new code block is created. (Note that `BLOCK_NUMBER` is a variable used during assembly, not a variable used by the assembler program. Such variables are used to control assembly, and the program being assembled has no knowledge of them at run time.)
+[Listing 14-14](#L1414) illustrates the use of a clever technique that's most useful for generating jump tables that point to in-line code: macro text substitution. In order to generate a unique label for each repeated code block, the assembler variable `BLOCK_NUMBER`{.nasm} is initially set to zero, and then incremented each time a new code block is created. (Note that `BLOCK_NUMBER`{.nasm} is a variable used during assembly, not a variable used by the assembler program. Such variables are used to control assembly, and the program being assembled has no knowledge of them at run time.)
 
-The value of `BLOCK_NUMBER` is passed to `CHECK_CHAR`, the macro that creates each instance of the repeated code, as follows:
+The value of `BLOCK_NUMBER`{.nasm} is passed to `CHECK_CHAR`{.nasm}, the macro that creates each instance of the repeated code, as follows:
 
 ```nasm
 CHECK_CHAR   %BLOCK_NUMBER
 ```
 
-The macro sees this passed parameter as the parameter `NUMBER`. Thanks to the percent-sign, the assembler actually makes the value of `BLOCK_NUMBER` into a text string when it passes it to `CHECK_CHAR`; that text string is then substituted wherever the parameter `NUMBER` appears in the macro.
+The macro sees this passed parameter as the parameter `NUMBER`{.nasm}. Thanks to the percent-sign, the assembler actually makes the value of `BLOCK_NUMBER`{.nasm} into a text string when it passes it to `CHECK_CHAR`{.nasm}; that text string is then substituted wherever the parameter `NUMBER`{.nasm} appears in the macro.
 
-What's really interesting is what comes of butting `&NUMBER&` up against the text "CheckChar" in the macro `CHECK_CHAR`, as follows:
+What's really interesting is what comes of butting `&NUMBER&`{.nasm} up against the text "CheckChar" in the macro `CHECK_CHAR`{.nasm}, as follows:
 
 ```nasm
 CheckChar&NUMBER&:
 ```
 
-(The ampersands ('&') around `NUMBER` ensure that the assembler knows that parameter substitution should take place; otherwise, when `NUMBER` is butted up against other text, as it is above, the assembler has no way of knowing whether to treat `NUMBER` as a parameter or as part of a longer text string.) A text representation of the value of `NUMBER` is substituted into the above line, so if `NUMBER` is 2, the line becomes:
+(The ampersands ('&') around `NUMBER`{.nasm} ensure that the assembler knows that parameter substitution should take place; otherwise, when `NUMBER`{.nasm} is butted up against other text, as it is above, the assembler has no way of knowing whether to treat `NUMBER`{.nasm} as a parameter or as part of a longer text string.) A text representation of the value of `NUMBER`{.nasm} is substituted into the above line, so if `NUMBER`{.nasm} is 2, the line becomes:
 
 ```nasm
 CheckChar2:
 ```
 
-If `NUMBER` is 10, the line becomes:
+If `NUMBER`{.nasm} is 10, the line becomes:
 
 ```nasm
 CheckChar10:
 ```
 
-Do you see what we've done? We've created a unique label for each repeated code block, since `BLOCK_NUMBER` is incremented after each code block is created. Better yet, the labels are organized in a predictable manner, with the first code block labelled with `CheckChar0`, the second labelled with `CheckChar1`, and so on.
+Do you see what we've done? We've created a unique label for each repeated code block, since `BLOCK_NUMBER`{.nasm} is incremented after each code block is created. Better yet, the labels are organized in a predictable manner, with the first code block labelled with `CheckChar0`{.nasm}, the second labelled with `CheckChar1`{.nasm}, and so on.
 
-It should be pretty clear that this is an ideal set-up for a jump table. There are a couple of tricks here, however. First, if we want to check at most one character, we must branch to not the first but the *last* repeated in-line code block, and that code block is labelled with `CheckChar79`. That means that our jump table should look something like this:
+It should be pretty clear that this is an ideal set-up for a jump table. There are a couple of tricks here, however. First, if we want to check at most one character, we must branch to not the first but the *last* repeated in-line code block, and that code block is labelled with `CheckChar79`{.nasm}. That means that our jump table should look something like this:
 
 ```nasm
 CheckCharJumpTable  label   word
@@ -981,7 +981,7 @@ Now for the kicker: all that fancy coding actually doesn't even pay off in this 
 
 Why have I spent all this time developing *slower* code? Forget the specific example: the idea was to show you how jump tables can be used to branch into in-line code, even when the in-line code consists of code blocks of varying lengths. The particular example I chose doesn't benefit from these techniques because it was selected for illustrative rather than practical purposes. While there are good applications for jump tables that branch into in-line code — plenty of them! — they tend to be lengthy and complex, and I decided to choose an example that was short enough so that the decidedly non-obvious techniques used could be readily understood.
 
-Why does this particular example not benefit much from the use of branched to in-line code? The answer is that too few of the branches in [Listing 14-14](#L1414) are able to use a 1-byte conditional jump. As a result, many of the branches — especially those between the middle and end of the in-line code, which tend to be executed most often — must use jumps around jumps. The end result is that *two* branches, in the form of jumps around jumps, are often performed for each byte checked in [Listing 14-14](#L1414), while only one branch — a `loop` — is performed for each byte checked in [Listing 14-15](#L1415).
+Why does this particular example not benefit much from the use of branched to in-line code? The answer is that too few of the branches in [Listing 14-14](#L1414) are able to use a 1-byte conditional jump. As a result, many of the branches — especially those between the middle and end of the in-line code, which tend to be executed most often — must use jumps around jumps. The end result is that *two* branches, in the form of jumps around jumps, are often performed for each byte checked in [Listing 14-14](#L1414), while only one branch — a `loop`{.nasm} — is performed for each byte checked in [Listing 14-15](#L1415).
 
 In truth, the best way to speed up this code would be partial in-line code, which would allow *all* the branches to use 1-byte displacements. A double-scan approach, using a repeated string instruction to search for the terminating zero and then another string instruction to search for the desired character, might also serve well.
 
@@ -991,13 +991,13 @@ Just to demonstrate the flexibility of macros, jump tables, and branched-to in-l
 
 ## Forward References Rear Their Collective Ugly Head Once More
 
-You may have noticed that `CHECK_CHAR2`, the macro in [Listing 14-16](#L1416) that assembles in-line code blocks that use conditional jumps forward to `NoMatch2` and `MatchFound2`, is a bit different from `CHECK_CHAR`, which assembles blocks that use backward jumps. `CHECK_CHAR` uses the `if` directive to determine whether a conditional jump can be used, assembling a jump around a jump if a conditional jump won't reach. `CHECK_CHAR2`, on the other hand, always assembles a conditional jump.
+You may have noticed that `CHECK_CHAR2`{.nasm}, the macro in [Listing 14-16](#L1416) that assembles in-line code blocks that use conditional jumps forward to `NoMatch2`{.nasm} and `MatchFound2`{.nasm}, is a bit different from `CHECK_CHAR`{.nasm}, which assembles blocks that use backward jumps. `CHECK_CHAR`{.nasm} uses the `if`{.nasm} directive to determine whether a conditional jump can be used, assembling a jump around a jump if a conditional jump won't reach. `CHECK_CHAR2`{.nasm}, on the other hand, always assembles a conditional jump.
 
-The reason is this: when the assembler performs arithmetic for use in `if` directives, all the values in the expression must already be known when the `if` is encountered. In particular, the offset of a forward-referenced label can't be used in `if` arithmetic. Why? When performing `if` arithmetic with a forward-referenced label, the assembler doesn't know whether the `if` is true until the forward-referenced label has been assembled. That creates a nasty paradox, since the assembler can't assemble the label, which follows the `if`, until the `if` has been evaluated and the code associated with the `if` has or hasn't been assembled. The assembler resolves this chicken-and-egg problem by reporting an error.
+The reason is this: when the assembler performs arithmetic for use in `if`{.nasm} directives, all the values in the expression must already be known when the `if`{.nasm} is encountered. In particular, the offset of a forward-referenced label can't be used in `if`{.nasm} arithmetic. Why? When performing `if`{.nasm} arithmetic with a forward-referenced label, the assembler doesn't know whether the `if`{.nasm} is true until the forward-referenced label has been assembled. That creates a nasty paradox, since the assembler can't assemble the label, which follows the `if`{.nasm}, until the `if`{.nasm} has been evaluated and the code associated with the `if`{.nasm} has or hasn't been assembled. The assembler resolves this chicken-and-egg problem by reporting an error.
 
 The upshot is that while a line like:
 
-````nasm
+```nasm
 if ($-BackwardReferencedLabel)
 ```
 
@@ -1007,11 +1007,11 @@ is fine, a line like:
 if (ForwardReferencedLabel-$)
 ```
 
-is not. Alas, that means that there's no way to have a macro do automatic jump sizing for branches to forward-referenced labels — hence the lack of conditional assembly in `CHECK_CHAR2` — although there's no problem with backward-referenced labels, as evidenced by `CHECK_CHAR`. In fact, I arrived at the optimum number of repetitions of `CHECK_CHAR2` in [Listing 14-16](#L1416) by rough calculation followed by trial-and-error... and that's what you'll have to do when trying to get maximum performance out of forward branches in in-line code.
+is not. Alas, that means that there's no way to have a macro do automatic jump sizing for branches to forward-referenced labels — hence the lack of conditional assembly in `CHECK_CHAR2`{.nasm} — although there's no problem with backward-referenced labels, as evidenced by `CHECK_CHAR`{.nasm}. In fact, I arrived at the optimum number of repetitions of `CHECK_CHAR2`{.nasm} in [Listing 14-16](#L1416) by rough calculation followed by trial-and-error... and that's what you'll have to do when trying to get maximum performance out of forward branches in in-line code.
 
 Actually, there is an alternative to trial-and-error: as I mentioned earlier, assemblers that detect and/or correct suboptimal branches can help considerably in optimizing forward in-line branches. If you're using MASM, however, backward branches, which macros (or even the assembler, for unconditional branches) can easily optimize, should be used whenever possible.
 
-A final note: macros can easily obscure the true nature of your code, since you don't see the actual code that's assembled when you scan a listing containing macros. That problem becomes all the more acute when the `if` directive is used to produce conditionally assembled code. Whenever you're not sure exactly what code you're assembling, generate an assembler listing file that shows macro expansions, or take a look at the actual code with a debugger.
+A final note: macros can easily obscure the true nature of your code, since you don't see the actual code that's assembled when you scan a listing containing macros. That problem becomes all the more acute when the `if`{.nasm} directive is used to produce conditionally assembled code. Whenever you're not sure exactly what code you're assembling, generate an assembler listing file that shows macro expansions, or take a look at the actual code with a debugger.
 
 ### Still and All... Don't Jump!
 

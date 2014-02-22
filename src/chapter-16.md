@@ -69,13 +69,13 @@ Bye: mov  sp,bp                     ;restore original stack pointer
 ClearS    endp
 ```
 
-The first thing you'll notice about the above code is that `ClearS` uses a `rep stosw` instruction. That means that we're not going to improve performance by any great amount, no matter how clever we are. While we can eliminate some cycles, the bulk of the work in `ClearS` is done by that one repeated string instruction, and there's no way to improve on that.
+The first thing you'll notice about the above code is that `ClearS`{.nasm} uses a `rep stosw`{.nasm} instruction. That means that we're not going to improve performance by any great amount, no matter how clever we are. While we can eliminate some cycles, the bulk of the work in `ClearS`{.nasm} is done by that one repeated string instruction, and there's no way to improve on that.
 
-Does that mean that the above code is as good as it can be? Hardly. While the speed of `ClearS` is very good, there's another side to the optimization equation: size. The whole of `ClearS` is 52 bytes long as it stands — but, as we'll see, that size is hardly graven in stone.
+Does that mean that the above code is as good as it can be? Hardly. While the speed of `ClearS`{.nasm} is very good, there's another side to the optimization equation: size. The whole of `ClearS`{.nasm} is 52 bytes long as it stands — but, as we'll see, that size is hardly graven in stone.
 
-Where do we begin with `ClearS`? For starters, there's an instruction in there that serves no earthly purpose — `mov sp,bp`. SP is guaranteed to be equal to BP at that point anyway, so why reload it with the same value? Removing that instruction saves us 2 bytes.
+Where do we begin with `ClearS`{.nasm}? For starters, there's an instruction in there that serves no earthly purpose — `mov sp,bp`{.nasm}. SP is guaranteed to be equal to BP at that point anyway, so why reload it with the same value? Removing that instruction saves us 2 bytes.
 
-Well, that was certainly easy enough! We're not going to find any more totally non-functional instructions in `ClearS`, however, so let's get on to some serious optimizing. We'll look first for cases where we know of better instructions for particular tasks than those that were chosen. For example, there's no need to load any register, whether segment or general-purpose, through BX; we can eliminate two instructions by simply loading ES and DI directly:
+Well, that was certainly easy enough! We're not going to find any more totally non-functional instructions in `ClearS`{.nasm}, however, so let's get on to some serious optimizing. We'll look first for cases where we know of better instructions for particular tasks than those that were chosen. For example, there's no need to load any register, whether segment or general-purpose, through BX; we can eliminate two instructions by simply loading ES and DI directly:
 
 ```nasm
 ClearS    proc  near
@@ -101,11 +101,11 @@ Bye:
 ClearS    endp
 ```
 
-(The `OnStack` structure definition doesn't change in any of our examples, so I'm not going clutter up this chapter by reproducing it for each new version of `ClearS`.)
+(The `OnStack`{.nasm} structure definition doesn't change in any of our examples, so I'm not going clutter up this chapter by reproducing it for each new version of `ClearS`{.nasm}.)
 
-Okay, loading ES and DI directly saves another 4 bytes. We've squeezed a total of 6 bytes — about 11% — out of `ClearS`. What next?
+Okay, loading ES and DI directly saves another 4 bytes. We've squeezed a total of 6 bytes — about 11% — out of `ClearS`{.nasm}. What next?
 
-Well, `les` would serve better than two `mov` instructions for loading ES and DI:
+Well, `les`{.nasm} would serve better than two `mov`{.nasm} instructions for loading ES and DI:
 
 ```nasm
 ClearS    proc  near
@@ -132,7 +132,7 @@ ClearS    endp
 
 That's good for another 3 bytes. We're down to 43 bytes, and counting.
 
-We can save 3 more bytes by clearing the low and high bytes of AX and BX, respectively, by using `sub reg8,reg8` rather than anding 16-bit values:
+We can save 3 more bytes by clearing the low and high bytes of AX and BX, respectively, by using `sub reg8,reg8`{.nasm} rather than anding 16-bit values:
 
 ```nasm
 ClearS    proc  near
@@ -185,7 +185,7 @@ ClearS    endp
 
 (We could get rid of yet another instruction by having the calling code pack both the attribute and the fill value into the same word, but that's not part of the specification for this particular routine.)
 
-Another nifty instruction-rearrangement trick saves 6 more bytes. `ClearS` checks to see whether the far pointer is null (zero) at the start of the routine... then loads and uses that same far pointer later on. Let's get that pointer into memory and keep it there; that way we can check to see whether it's null with a single comparison, and can use it later without having to reload it from memory:
+Another nifty instruction-rearrangement trick saves 6 more bytes. `ClearS`{.nasm} checks to see whether the far pointer is null (zero) at the start of the routine... then loads and uses that same far pointer later on. Let's get that pointer into memory and keep it there; that way we can check to see whether it's null with a single comparison, and can use it later without having to reload it from memory:
 
 ```nasm
 ClearS    proc  near
@@ -208,17 +208,17 @@ ClearS    endp
 
 Well. Now we're down to 28 bytes, having reduced the size of this subroutine by nearly 50%. Only 13 instructions remain. Realistically, how much smaller can we make this code?
 
-About one-third smaller yet, as it turns out — but in order to do that, we must stretch our minds and use the 8088's instructions in unusual ways. Let me ask you this: what do most of the instructions in the current version of `ClearS` do?
+About one-third smaller yet, as it turns out — but in order to do that, we must stretch our minds and use the 8088's instructions in unusual ways. Let me ask you this: what do most of the instructions in the current version of `ClearS`{.nasm} do?
 
-Answer: they either load parameters from the stack frame or set up the registers so that the parameters can be accessed. Mind you, there's nothing wrong with the stack-frame-oriented instructions used in `ClearS`; those instructions access the stack frame in a highly efficient way, exactly as the designers of the 8088 intended, and just as the code generated by a high-level language would. That means that we aren't going to be able to improve the code if we don't bend the rules a bit.
+Answer: they either load parameters from the stack frame or set up the registers so that the parameters can be accessed. Mind you, there's nothing wrong with the stack-frame-oriented instructions used in `ClearS`{.nasm}; those instructions access the stack frame in a highly efficient way, exactly as the designers of the 8088 intended, and just as the code generated by a high-level language would. That means that we aren't going to be able to improve the code if we don't bend the rules a bit.
 
 Let's think... the parameters are sitting on the stack, and most of our instruction bytes are being used to read bytes off the stack with BP-based addressing... we need a more efficient way to address the stack... *the stack*... THE STACK!
 
-Ye gods! That's easy — we can use the *stack pointer* to address the stack. While it's true that the stack pointer can't be used for *mod-reg-rm* addressing, as BP can, it *can* be used to pop data off the stack — and `pop` is a 1-byte instruction. Instructions don't get any shorter than that.
+Ye gods! That's easy — we can use the *stack pointer* to address the stack. While it's true that the stack pointer can't be used for *mod-reg-rm* addressing, as BP can, it *can* be used to pop data off the stack — and `pop`{.nasm} is a 1-byte instruction. Instructions don't get any shorter than that.
 
-There is one detail to be taken care of before we can put our plan into action: the return address — the address of the calling code — is on top of the stack, so the parameters we want can't be reached with `pop`. That's easily solved, however — we'll just pop the return address into an unused register, then branch through that register when we're done, as we learned to do in Chapter 14. As we pop the parameters, we'll also be removing them from the stack, thereby neatly avoiding the need to discard them when it's time to return.
+There is one detail to be taken care of before we can put our plan into action: the return address — the address of the calling code — is on top of the stack, so the parameters we want can't be reached with `pop`{.nasm}. That's easily solved, however — we'll just pop the return address into an unused register, then branch through that register when we're done, as we learned to do in Chapter 14. As we pop the parameters, we'll also be removing them from the stack, thereby neatly avoiding the need to discard them when it's time to return.
 
-With that problem dealt with, here's the Zenned version of `ClearS`:
+With that problem dealt with, here's the Zenned version of `ClearS`{.nasm}:
 
 ```nasm
 ClearS    proc  near
@@ -239,21 +239,21 @@ Bye:
 ClearS    endp
 ```
 
-At long last, we're down to the bare metal. This version of `ClearS` is just 19 bytes long. That's just 37% as long as the original version, *without any change whatsoever in the functionality``ClearS``makes available to the calling code*. The code is bound to run a bit faster too, given that there are far fewer instruction bytes and fewer memory accesses.
+At long last, we're down to the bare metal. This version of `ClearS`{.nasm} is just 19 bytes long. That's just 37% as long as the original version, *without any change whatsoever in the functionality `ClearS`{.nasm} makes available to the calling code*. The code is bound to run a bit faster too, given that there are far fewer instruction bytes and fewer memory accesses.
 
-All in all, the Zenned version of `ClearS` is a vast improvement over the original. Probably not the best possible implementation — *never say never!* — but an awfully good one.
+All in all, the Zenned version of `ClearS`{.nasm} is a vast improvement over the original. Probably not the best possible implementation — *never say never!* — but an awfully good one.
 
 ## Knowledge and Beyond
 
 There is a point to all this Zenning above and beyond showing off some neat tricks we've learned (and a trick or two we'll learn more about in Volume II). The real point is to illustrate the breadth of knowledge you now possess, and the tremendous power that knowledge has when guided by the flexible mind.
 
-Consider the optimizations we made to `ClearS` above. Our initial optimizations resulted purely from knowing particular facts about the 8088, and nothing more. We knew, for example, that segment registers do not have to be loaded from memory by way of general-purpose registers but can instead be loaded directly, so we made that change.
+Consider the optimizations we made to `ClearS`{.nasm} above. Our initial optimizations resulted purely from knowing particular facts about the 8088, and nothing more. We knew, for example, that segment registers do not have to be loaded from memory by way of general-purpose registers but can instead be loaded directly, so we made that change.
 
 As optimizations became harder to come by, however, we shifted from applying pure knowledge to coming up with creative solutions that involved understanding and reworking the code as a whole. We started out by compacting individual instructions and bits of code, but in the end we came up with a solution that applied our knowledge of the PC to implementing the functionality of the entire subroutine as efficiently as possible.
 
 And that, simply put, is the flexible mind.
 
-Think back. Did you have any trouble following the optimizations to `ClearS`? I very much doubt it; in fact, I would guess that you were ahead of me much of the way. So, you see, you already have a good feel for the flexible mind.
+Think back. Did you have any trouble following the optimizations to `ClearS`{.nasm}? I very much doubt it; in fact, I would guess that you were ahead of me much of the way. So, you see, you already have a good feel for the flexible mind.
 
 There will be much more of the flexible mind in Volume II of *The Zen of Assembly Language*, but it won't be an abrupt change from what we've been doing; rather, it will be a gradual raising of our focus from learning the nuts and bolts of the PC to building applications with those nuts and bolts. We've trekked through knowledge and beyond; now it's time to seek out ways to bring the magic of the Zen of assembler to the real world of applications.
 
