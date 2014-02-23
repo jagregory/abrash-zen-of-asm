@@ -11734,58 +11734,49 @@ end Start
 ## LZTIME.BAT
 
 ```bat
-LZTIME.BAT
 echo off
 rem
 rem *** Listing 2-7 ***
 rem
-rem
-***************************************************************
-rem * Batch file LZTIME.BAT, which builds and runs the *
-rem * long-period Zen timer program LZTEST.EXE to time the code *
-rem * named as the command-line parameter. Listing 2-5 must be *
-rem * named LZTIMER.ASM, and Listing 2-6 must be named *
-rem * LZTEST.ASM. To time the code in LST2-8, you'd type the *
-rem * DOS command: *
-rem * *
-rem * lztime lst2-8 *
-rem * *
-rem * Note that MASM and LINK must be in the current directory or
-*
-rem * on the current path in order for this batch file to work. *
-rem * *
-rem * This batch file can be speeded up by assembling LZTIMER.ASM
-*
-rem * once, then removing the lines: *
-rem * *
-rem * masm lztimer; *
-rem * if errorlevel 1 goto errorend *
-rem * *
-rem * from this file. *
-rem * *
-rem * By Michael Abrash 4/26/89 *
-rem
-***************************************************************
+rem ***************************************************************
+rem * Batch file LZTIME.BAT, which builds and runs the            *
+rem * long-period Zen timer program LZTEST.EXE to time the code   *
+rem * named as the command-line parameter. Listing 2-5 must be    *
+rem * named LZTIMER.ASM, and Listing 2-6 must be named            *
+rem * LZTEST.ASM. To time the code in LST2-8, you'd type the      *
+rem * DOS command:                                                *
+rem *                                                             *
+rem * lztime lst2-8                                               *
+rem *                                                             *
+rem * Note that MASM and LINK must be in the current directory or *
+rem * on the current path in order for this batch file to work.   *
+rem *                                                             *
+rem * This batch file can be speeded up by assembling LZTIMER.ASM *
+rem * once, then removing the lines:                              *
+rem *                                                             *
+rem * masm lztimer;                                               *
+rem * if errorlevel 1 goto errorend                               *
+rem *                                                             *
+rem * from this file.                                             *
+rem *                                                             *
+rem * By Michael Abrash 4/26/89                                   *
+rem ***************************************************************
 rem
 rem Make sure a file to test was specified.
 rem
 if not x%1==x goto ckexist
-echo
-***************************************************************
-echo * Please specify a file to test. *
-echo
-***************************************************************
+echo ***************************************************************
+echo * Please specify a file to test.                              *
+echo ***************************************************************
 goto end
 rem
 rem Make sure the file exists.
 rem
 :ckexist
 if exist %1 goto docopy
-echo
-***************************************************************
+echo ***************************************************************
 echo * The specified file, "%1," doesn't exist.
-echo
-***************************************************************
+echo ***************************************************************
 goto end
 rem
 rem copy the file to measure to TESTCODE.
@@ -11800,12 +11791,9 @@ if errorlevel 1 goto errorend
 lztest
 goto end
 :errorend
-echo
-***************************************************************
-echo * An error occurred while building the long-period Zen timer.
-*
-echo
-***************************************************************
+echo ***************************************************************
+echo * An error occurred while building the long-period Zen timer. *
+echo ***************************************************************
 :end
 ```
 
