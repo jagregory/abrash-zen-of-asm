@@ -65,11 +65,15 @@ figcaption {
   text-align: justify;
 }
 
+figcaption code {
+  font-size: 95%;
+}
+
 figcaption strong {
-  display: block;
-  float: left;
+  display: inline-block;
   font-weight: bold;
   margin-left: -85px;
+  padding-right: 10px;
 }
 
 caption {
