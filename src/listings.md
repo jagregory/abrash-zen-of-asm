@@ -11663,31 +11663,3 @@ add [WordVar],100h
 endm
 call ZTimerOff
 ```
-
-## LZTEST
-
-[See Listing 2-6](#listing-2-6)
-
-## LZTIME.BAT
-
-[See Listing 2-7](#listing-2-7)
-
-## LZTIME
-
-[See Listing 2-5](#listing-2-5)
-
-## LZTIMER
-
-[See Listing 2-5](#listing-2-5)
-
-## PZTEST
-
-[See Listing 2-2](#listing-2-2)
-
-## PZTIME.BAT
-
-[See Listing 2-4](#listing-2-4)
-
-## PZTIMER
-
-[See Listing 2-1](#listing-2-1)
