@@ -2,3818 +2,1998 @@
 
 ## Listing 2-1
 
+```nasm
+;
+; *** Listing 2-1 ***
+;
+; The precision Zen timer (PZTIMER.ASM)
+;
+; Uses the 8253 timer to time the performance of code that takes
+; less than about 54 milliseconds to execute, with a resolution
+; of better than 10 microseconds.
+;
+; By Michael Abrash 4/26/89
+;
+; Externally callable routines:
+;
+;   ZTimerOn: Starts the Zen timer, with interrupts disabled.
+;
+;   ZTimerOff: Stops the Zen timer, saves the timer count,
+;     times the overhead code, and restores interrupts to the
+;     state they were in when ZTimerOn was called.
+;
+;   ZTimerReport: Prints the net time that passed between starting
+;     and stopping the timer.
+;
+; Note: If longer than about 54 ms passes between ZTimerOn and
+;       ZTimerOff calls, the timer turns over and the count is
+;       inaccurate. When this happens, an error message is displayed
+;       instead of a count. The long-period Zen timer should be used
+;       in such cases.
+;
+; Note: Interrupts *MUST* be left off between calls to ZTimerOn
+;       and ZTimerOff for accurate timing and for detection of
+;       timer overflow.
+;
+; Note: These routines can introduce slight inaccuracies into the
+;       system clock count for each code section timed even if
+;       timer 0 doesn't overflow. If timer 0 does overflow, the
+;       system clock can become slow by virtually any amount of
+;       time, since the system clock can't advance while the
+;       precison timer is timing. Consequently, it's a good idea
+;       to reboot at the end of each timing session. (The
+;       battery-backed clock, if any, is not affected by the Zen
+;       timer.)
+;
+; All registers, and all flags except the interrupt flag, are
+; preserved by all routines. Interrupts are enabled and then disabled
+; by ZTimerOn, and are restored by ZTimerOff to the state they were
+; in when ZTimerOn was called.
 ;
 
-**; \*\*\* Listing 2-1 \*\*\***
-
-**;**
-
-**; The precision Zen timer (PZTIMER.ASM)**
-
-**;**
-
-**; Uses the 8253 timer to time the performance of code that takes**
-
-**; less than about 54 milliseconds to execute, with a resolution**
-
-**; of better than 10 microseconds.**
-
-**;**
-
-**; By Michael Abrash 4/26/89**
-
-**;**
-
-**; Externally callable routines:**
-
-**;**
-
-**; ZTimerOn: Starts the Zen timer, with interrupts disabled.**
-
-**;**
-
-**; ZTimerOff: Stops the Zen timer, saves the timer count,**
-
-**; times the overhead code, and restores interrupts to the**
-
-**; state they were in when ZTimerOn was called.**
-
-**;**
-
-**; ZTimerReport: Prints the net time that passed between starting**
-
-**; and stopping the timer.**
-
-**;**
-
-**; Note: If longer than about 54 ms passes between ZTimerOn and**
-
-**; ZTimerOff calls, the timer turns over and the count is**
-
-**; inaccurate. When this happens, an error message is displayed**
-
-**; instead of a count. The long-period Zen timer should be used**
-
-**; in such cases.**
-
-**;**
-
-**; Note: Interrupts \*MUST\* be left off between calls to ZTimerOn**
-
-**; and ZTimerOff for accurate timing and for detection of**
-
-**; timer overflow.**
-
-**;**
-
-**; Note: These routines can introduce slight inaccuracies into the**
-
-**; system clock count for each code section timed even if**
-
-**; timer 0 doesn't overflow. If timer 0 does overflow, the**
-
-**; system clock can become slow by virtually any amount of**
-
-**; time, since the system clock can't advance while the**
-
-**; precison timer is timing. Consequently, it's a good idea**
-
-**; to reboot at the end of each timing session. (The**
-
-**; battery-backed clock, if any, is not affected by the Zen**
-
-**; timer.)**
-
-**;**
-
-**; All registers, and all flags except the interrupt flag, are**
-
-**; preserved by all routines. Interrupts are enabled and then
-disabled**
-
-**; by ZTimerOn, and are restored by ZTimerOff to the state they were**
-
-**; in when ZTimerOn was called.**
-
-**;**
-
-
-**Code segment word public 'CODE'**
-
-**assume cs:Code, ds:nothing**
-
-**public ZTimerOn, ZTimerOff, ZTimerReport**
-
-
-**;**
-
-**; Base address of the 8253 timer chip.**
-
-**;**
-
-**BASE\_8253 equ 40h**
-
-**;**
-
-**; The address of the timer 0 count registers in the 8253.**
-
-**;**
-
-**TIMER\_0\_8253 equ BASE\_8253 + 0**
-
-**;**
-
-**; The address of the mode register in the 8253.**
-
-**;**
-
-**MODE\_8253 equ BASE\_8253 + 3**
-
-**;**
-
-**; The address of Operation Command Word 3 in the 8259 Programmable**
-
-**; Interrupt Controller (PIC) (write only, and writable only when**
-
-**; bit 4 of the byte written to this address is 0 and bit 3 is 1).**
-
-**;**
-
-**OCW3 equ 20h**
-
-**;**
-
-**; The address of the Interrupt Request register in the 8259 PIC**
-
-**; (read only, and readable only when bit 1 of OCW3 = 1 and bit 0**
-
-**; of OCW3 = 0).**
-
-**;**
-
-**IRR equ 20h**
-
-**;**
-
-**; Macro to emulate a POPF instruction in order to fix the bug in
-some**
-
-**; 80286 chips which allows interrupts to occur during a POPF even
-when**
-
-**; interrupts remain disabled.**
-
-**;**
-
-**MPOPF macro**
-
-**local p1, p2**
-
-**jmp short p2**
-
-**p1: iret ;jump to pushed address & pop flags**
-
-**p2: push cs ;construct far return address to**
-
-**call p1 ; the next instruction**
-
-**endm**
-
-
-**;**
-
-**; Macro to delay briefly to ensure that enough time has elapsed**
-
-**; between successive I/O accesses so that the device being accessed**
-
-**; can respond to both accesses even on a very fast PC.**
-
-**;**
-
-**DELAY macro**
-
-**jmp $+2**
-
-**jmp $+2**
-
-**jmp $+2**
-
-**endm**
-
-
-**OriginalFlags db ? ;storage for upper byte of**
-
-**; FLAGS register when**
-
-**; ZTimerOn called**
-
-**TimedCount dw ? ;timer 0 count when the timer**
-
-**; is stopped**
-
-**ReferenceCount dw ? ;number of counts required to**
-
-**; execute timer overhead code**
-
-**OverflowFlag db ? ;used to indicate whether the**
-
-**; timer overflowed during the**
-
-**; timing interval**
-
-**;**
-
-**; String printed to report results.**
-
-**;**
-
-**OutputStr label byte**
-
-**db 0dh, 0ah, 'Timed count: ', 5 dup (?)**
-
-**ASCIICountEnd label byte**
-
-**db ' microseconds', 0dh, 0ah**
-
-**db '$'**
-
-**;**
-
-**; String printed to report timer overflow.**
-
-**;**
-
-**OverflowStr label byte**
-
-**db 0dh, 0ah**
-
-**db
-'\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*'**
-
-**db 0dh, 0ah**
-
-**db '\* The timer overflowed, so the interval timed was \*'**
-
-**db 0dh, 0ah**
-
-**db '\* too long for the precision timer to measure. \*'**
-
-**db 0dh, 0ah**
-
-**db '\* Please perform the timing test again with the \*'**
-
-**db 0dh, 0ah**
-
-**db '\* long-period timer. \*'**
-
-**db 0dh, 0ah**
-
-**db
-'\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*'**
-
-**db 0dh, 0ah**
-
-**db '$'**
-
-
-**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
-
-**;\* Routine called to start timing. \***
-
-**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
-
-
-**ZTimerOn proc near**
-
-
-**;**
-
-**; Save the context of the program being timed.**
-
-**;**
-
-**push ax**
-
-**pushf**
-
-**pop ax ;get flags so we can keep**
-
-**; interrupts off when leaving**
-
-**; this routine**
-
-**mov cs:[OriginalFlags],ah ;remember the state of the**
-
-**; Interrupt flag**
-
-**and ah,0fdh ;set pushed interrupt flag**
-
-**; to 0**
-
-**push ax**
-
-**;**
-
-**; Turn on interrupts, so the timer interrupt can occur if it's**
-
-**; pending.**
-
-**;**
-
-**sti**
-
-**;**
-
-**; Set timer 0 of the 8253 to mode 2 (divide-by-N), to cause**
-
-**; linear counting rather than count-by-two counting. Also**
-
-**; leaves the 8253 waiting for the initial timer 0 count to**
-
-**; be loaded.**
-
-**;**
-
-**mov al,00110100b ;mode 2**
-
-**out MODE\_8253,al**
-
-**;**
-
-**; Set the timer count to 0, so we know we won't get another**
-
-**; timer interrupt right away.**
-
-**; Note: this introduces an inaccuracy of up to 54 ms in the system**
-
-**; clock count each time it is executed.**
-
-**;**
-
-**DELAY**
-
-**sub al,al**
-
-**out TIMER\_0\_8253,al ;lsb**
-
-**DELAY**
-
-**out TIMER\_0\_8253,al ;msb**
-
-**;**
-
-**; Wait before clearing interrupts to allow the interrupt generated**
-
-**; when switching from mode 3 to mode 2 to be recognized. The delay**
-
-**; must be at least 210 ns long to allow time for that interrupt to**
-
-**; occur. Here, 10 jumps are used for the delay to ensure that the**
-
-**; delay time will be more than long enough even on a very fast PC.**
-
-**;**
-
-**rept 10**
-
-**jmp $+2**
-
-**endm**
-
-**;**
-
-**; Disable interrupts to get an accurate count.**
-
-**;**
-
-**cli**
-
-**;**
-
-**; Set the timer count to 0 again to start the timing interval.**
-
-**;**
-
-**mov al,00110100b ;set up to load initial**
-
-**out MODE\_8253,al ; timer count**
-
-**DELAY**
-
-**sub al,al**
-
-**out TIMER\_0\_8253,al ;load count lsb**
-
-**DELAY**
-
-**out TIMER\_0\_8253,al ;load count msb**
-
-**;**
-
-**; Restore the context and return.**
-
-**;**
-
-**MPOPF ;keeps interrupts off**
-
-**pop ax**
-
-**ret**
-
-
-**ZTimerOn endp**
-
-
-**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
-
-**;\* Routine called to stop timing and get count. \***
-
-**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
-
-
-**ZTimerOff proc near**
-
-
-**;**
-
-**; Save the context of the program being timed.**
-
-**;**
-
-**push ax**
-
-**push cx**
-
-**pushf**
-
-**;**
-
-**; Latch the count.**
-
-**;**
-
-**mov al,00000000b ;latch timer 0**
-
-**out MODE\_8253,al**
-
-**;**
-
-**; See if the timer has overflowed by checking the 8259 for a pending**
-
-**; timer interrupt.**
-
-**;**
-
-**mov al,00001010b ;OCW3, set up to read**
-
-**out OCW3,al ; Interrupt Request register**
-
-**DELAY**
-
-**in al,IRR ;read Interrupt Request**
-
-**; register**
-
-**and al,1 ;set AL to 1 if IRQ0 (the**
-
-**; timer interrupt) is pending**
-
-**mov cs:[OverflowFlag],al ;store the timer overflow**
-
-**; status**
-
-**;**
-
-**; Allow interrupts to happen again.**
-
-**;**
-
-**sti**
-
-**;**
-
-**; Read out the count we latched earlier.**
-
-**;**
-
-**in al,TIMER\_0\_8253 ;least significant byte**
-
-**DELAY**
-
-**mov ah,al**
-
-**in al,TIMER\_0\_8253 ;most significant byte**
-
-**xchg ah,al**
-
-**neg ax ;convert from countdown**
-
-**; remaining to elapsed**
-
-**; count**
-
-**mov cs:[TimedCount],ax**
-
-**; Time a zero-length code fragment, to get a reference for how**
-
-**; much overhead this routine has. Time it 16 times and average it,**
-
-**; for accuracy, rounding the result.**
-
-**;**
-
-**mov cs:[ReferenceCount],0**
-
-**mov cx,16**
-
-**cli ;interrupts off to allow a**
-
-**; precise reference count**
-
-**RefLoop:**
-
-**call ReferenceZTimerOn**
-
-**call ReferenceZTimerOff**
-
-**loop RefLoop**
-
-**sti**
-
-**add cs:[ReferenceCount],8 ;total + (0.5 \* 16)**
-
-**mov cl,4**
-
-**shr cs:[ReferenceCount],cl ;(total) / 16 + 0.5**
-
-**;**
-
-**; Restore originaLinterrupt state.**
-
-**;**
-
-**pop ax ;retrieve flags when called**
-
-**mov ch,cs:[OriginalFlags] ;get back the original upper**
-
-**; byte of the FLAGS register**
-
-**and ch,not 0fdh ;only care about original**
-
-**; interrupt flag...**
-
-**and ah,0fdh ;...keep all other flags in**
-
-**; their current condition**
-
-**or ah,ch ;make flags word with original**
-
-**; interrupt flag**
-
-**push ax ;prepare flags to be popped**
-
-**;**
-
-**; Restore the context of the program being timed and return to it.**
-
-**;**
-
-**MPOPF ;restore the flags with the**
-
-**; originaLinterrupt state**
-
-**pop cx**
-
-**pop ax**
-
-**ret**
-
-
-**ZTimerOff endp**
-
-
-**;**
-
-**; Called by ZTimerOff to start timer for overhead measurements.**
-
-**;**
-
-
-**ReferenceZTimerOn proc near**
-
-**;**
-
-**; Save the context of the program being timed.**
-
-**;**
-
-**push ax**
-
-**pushf ;interrupts are already off**
-
-**;**
-
-**; Set timer 0 of the 8253 to mode 2 (divide-by-N), to cause**
-
-**; linear counting rather than count-by-two counting.**
-
-**;**
-
-**mov al,00110100b ;set up to load**
-
-**out MODE\_8253,al ; initial timer count**
-
-**DELAY**
-
-**;**
-
-**; Set the timer count to 0.**
-
-**;**
-
-**sub al,al**
-
-**out TIMER\_0\_8253,al ;load count lsb**
-
-**DELAY**
-
-**out TIMER\_0\_8253,al ;load count msb**
-
-**;**
-
-**; Restore the context of the program being timed and return to it.**
-
-**;**
-
-**MPOPF**
-
-**pop ax**
-
-**ret**
-
-
-**ReferenceZTimerOn endp**
-
-
-**;**
-
-**; Called by ZTimerOff to stop timer and add result to ReferenceCount**
-
-**; for overhead measurements.**
-
-**;**
-
-
-**ReferenceZTimerOff proc near**
-
-**;**
-
-**; Save the context of the program being timed.**
-
-**;**
-
-**push ax**
-
-**push cx**
-
-**pushf**
-
-**;**
-
-**; Latch the count and read it.**
-
-**;**
-
-**mov al,00000000b ;latch timer 0**
-
-**out MODE\_8253,al**
-
-**DELAY**
-
-**in al,TIMER\_0\_8253 ;lsb**
-
-**DELAY**
-
-**mov ah,al**
-
-**in al,TIMER\_0\_8253 ;msb**
-
-**xchg ah,al**
-
-**neg ax ;convert from countdown**
-
-**; remaining to amount**
-
-**; counted down**
-
-**add cs:[ReferenceCount],ax**
-
-**;**
-
-**; Restore the context of the program being timed and return to it.**
-
-**;**
-
-**MPOPF**
-
-**pop cx**
-
-**pop ax**
-
-**ret**
-
-
-**ReferenceZTimerOff endp**
-
-
-**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
-
-**;\* Routine called to report timing results. \***
-
-**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
-
-
-**ZTimerReport proc near**
-
-
-**pushf**
-
-**push ax**
-
-**push bx**
-
-**push cx**
-
-**push dx**
-
-**push si**
-
-**push ds**
-
-**;**
-
-**push cs ;DOS functions require that DS point**
-
-**pop ds ; to text to be displayed on the screen**
-
-**assume ds:Code**
-
-**;**
-
-**; Check for timer 0 overflow.**
-
-**;**
-
-**cmp [OverflowFlag],0**
-
-**jz PrintGoodCount**
-
-**mov dx,offset OverflowStr**
-
-**mov ah,9**
-
-**int 21h**
-
-**jmp short EndZTimerReport**
-
-**;**
-
-**; Convert net count to decimal ASCII in microseconds.**
-
-**;**
-
-**PrintGoodCount:**
-
-**mov ax,[TimedCount]**
-
-**sub ax,[ReferenceCount]**
-
-**mov si,offset ASCIICountEnd -1**
-
-**;**
-
-**; Convert count to microseconds by multiplying by .8381.**
-
-**;**
-
-**mov dx,8381**
-
-**mul dx**
-
-**mov bx,10000**
-
-**div bx ;\* .8381 = \* 8381 / 10000**
-
-**;**
-
-**; Convert time in microseconds to 5 decimal ASCII digits.**
-
-**;**
-
-**mov bx,10**
-
-**mov cx,5**
-
-**CTSLoop:**
-
-**sub dx,dx**
-
-**div bx**
-
-**add dl,'0'**
-
-**mov [si],dl**
-
-**dec si**
-
-**loop CTSLoop**
-
-**;**
-
-**; Print the results.**
-
-**;**
-
-**mov ah,9**
-
-**mov dx,offset OutputStr**
-
-**int 21h**
-
-**;**
-
-**EndZTimerReport:**
-
-**pop ds**
-
-**pop si**
-
-**pop dx**
-
-**pop cx**
-
-**pop bx**
-
-**pop ax**
-
-**MPOPF**
-
-**ret**
-
-
-**ZTimerReport endp**
-
-
-**Code ends**
-
-**end**
+Code    segment word public 'CODE'
+        assume  cs:Code, ds:nothing
+        public ZTimerOn, ZTimerOff, ZTimerReport
+
+;
+; Base address of the 8253 timer chip.
+;
+BASE_8253       equ     40h
+;
+; The address of the timer 0 count registers in the 8253.
+;
+TIMER_0_8253    equ     BASE_8253 + 0
+;
+; The address of the mode register in the 8253.
+;
+MODE_8253       equ     BASE_8253 + 3
+;
+; The address of Operation Command Word 3 in the 8259 Programmable
+; Interrupt Controller (PIC) (write only, and writable only when
+; bit 4 of the byte written to this address is 0 and bit 3 is 1).
+;
+OCW3            equ     20h
+;
+; The address of the Interrupt Request register in the 8259 PIC
+; (read only, and readable only when bit 1 of OCW3 = 1 and bit 0
+; of OCW3 = 0).
+;
+IRR             equ     20h
+;
+; Macro to emulate a POPF instruction in order to fix the bug in some
+; 80286 chips which allows interrupts to occur during a POPF even when
+; interrupts remain disabled.
+;
+MPOPF macro
+    local   p1, p2
+    jmp short p2
+p1: iret                ;jump to pushed address & pop flags
+p2: push    cs          ;construct far return address to
+    call    p1          ; the next instruction
+    endm
+
+;
+; Macro to delay briefly to ensure that enough time has elapsed
+; between successive I/O accesses so that the device being accessed
+; can respond to both accesses even on a very fast PC.
+;
+DELAY       macro
+    jmp     $+2
+    jmp     $+2
+    jmp     $+2
+    endm
+
+OriginalFlags   db  ?   ;storage for upper byte of
+                        ; FLAGS register when
+                        ; ZTimerOn called
+TimedCount      dw  ?   ;timer 0 count when the timer
+                        ; is stopped
+ReferenceCount  dw  ?   ;number of counts required to
+                        ; execute timer overhead code
+OverflowFlag    db  ?   ;used to indicate whether the
+                        ; timer overflowed during the
+                        ; timing interval
+;
+; String printed to report results.
+;
+OutputStr   label   byte
+            db      0dh, 0ah, 'Timed count: ', 5 dup (?)
+ASCIICountEnd   label   byte
+            db ' microseconds', 0dh, 0ah
+            db '$'
+;
+; String printed to report timer overflow.
+;
+OverflowStr label   byte
+        db 0dh, 0ah
+        db '***************************************************'
+        db 0dh, 0ah
+        db '* The timer overflowed, so the interval timed was *'
+        db 0dh, 0ah
+        db '* too long for the precision timer to measure.    *'
+        db 0dh, 0ah
+        db '* Please perform the timing test again with the   *'
+        db 0dh, 0ah
+        db '* long-period timer.                              *'
+        db 0dh, 0ah
+        db '***************************************************'
+        db 0dh, 0ah
+        db '$'
+
+;***********************************
+;* Routine called to start timing. *
+;***********************************
+
+ZTimerOn    proc    near
+
+;
+; Save the context of the program being timed.
+;
+    push    ax
+    pushf
+    pop     ax                      ;get flags so we can keep
+                                    ; interrupts off when leaving
+                                    ; this routine
+    mov     cs:[OriginalFlags],ah   ;remember the state of the
+                                    ; Interrupt flag
+    and     ah,0fdh                 ;set pushed interrupt flag
+                                    ; to 0
+    push    ax
+;
+; Turn on interrupts, so the timer interrupt can occur if it's
+; pending.
+;
+    sti
+;
+; Set timer 0 of the 8253 to mode 2 (divide-by-N), to cause
+; linear counting rather than count-by-two counting. Also
+; leaves the 8253 waiting for the initial timer 0 count to
+; be loaded.
+;
+    mov     al,00110100b            ;mode 2
+    out     MODE_8253,al
+;
+; Set the timer count to 0, so we know we won't get another
+; timer interrupt right away.
+; Note: this introduces an inaccuracy of up to 54 ms in the system
+; clock count each time it is executed.
+;
+    DELAY
+    sub     al,al
+    out     TIMER_0_8253,al         ;lsb
+    DELAY
+    out     TIMER_0_8253,al         ;msb
+;
+; Wait before clearing interrupts to allow the interrupt generated
+; when switching from mode 3 to mode 2 to be recognized. The delay
+; must be at least 210 ns long to allow time for that interrupt to
+; occur. Here, 10 jumps are used for the delay to ensure that the
+; delay time will be more than long enough even on a very fast PC.
+;
+    rept    10
+    jmp     $+2
+    endm
+;
+; Disable interrupts to get an accurate count.
+;
+    cli
+;
+; Set the timer count to 0 again to start the timing interval.
+;
+    mov     al,00110100b            ;set up to load initial
+    out     MODE_8253,al            ; timer count
+    DELAY
+    sub     al,al
+    out     TIMER_0_8253,al         ;load count lsb
+    DELAY
+    out     TIMER_0_8253,al         ;load count msb
+;
+; Restore the context and return.
+;
+    MPOPF                           ;keeps interrupts off
+    pop     ax
+    ret
+
+ZTimerOn    endp
+
+;************************************************
+;* Routine called to stop timing and get count. *
+;************************************************
+
+ZTimerOff proc  near
+
+;
+; Save the context of the program being timed.
+;
+    push    ax
+    push    cx
+    pushf
+;
+; Latch the count.
+;
+    mov     al,00000000b            ;latch timer 0
+    out     MODE_8253,al
+;
+; See if the timer has overflowed by checking the 8259 for a pending
+; timer interrupt.
+;
+    mov     al,00001010b            ;OCW3, set up to read
+    out     OCW3,al                 ; Interrupt Request register
+    DELAY
+    in      al,IRR                  ;read Interrupt Request
+                                    ; register
+    and     al,1                    ;set AL to 1 if IRQ0 (the
+                                    ; timer interrupt) is pending
+    mov     cs:[OverflowFlag],al    ;store the timer overflow
+                                    ; status
+;
+; Allow interrupts to happen again.
+;
+    sti
+;
+; Read out the count we latched earlier.
+;
+    in      al,TIMER_0_8253         ;least significant byte
+    DELAY
+    mov     ah,al
+    in      al,TIMER_0_8253         ;most significant byte
+    xchg    ah,al
+    neg     ax                      ;convert from countdown
+                                    ; remaining to elapsed
+                                    ; count
+    mov     cs:[TimedCount],ax
+; Time a zero-length code fragment, to get a reference for how
+; much overhead this routine has. Time it 16 times and average it,
+; for accuracy, rounding the result.
+;
+    mov     cs:[ReferenceCount],0
+    mov     cx,16
+    cli                             ;interrupts off to allow a
+                                    ; precise reference count
+RefLoop:
+    call    ReferenceZTimerOn
+    call    ReferenceZTimerOff
+    loop    RefLoop
+    sti
+    add     cs:[ReferenceCount],8   ;total + (0.5 * 16)
+    mov     cl,4
+    shr     cs:[ReferenceCount],cl  ;(total) / 16 + 0.5
+;
+; Restore originaLinterrupt state.
+;
+    pop     ax                      ;retrieve flags when called
+    mov     ch,cs:[OriginalFlags]   ;get back the original upper
+                                    ; byte of the FLAGS register
+    and     ch,not 0fdh             ;only care about original
+                                    ; interrupt flag...
+    and     ah,0fdh                 ;...keep all other flags in
+                                    ; their current condition
+    or      ah,ch                   ;make flags word with original
+                                    ; interrupt flag
+    push    ax                      ;prepare flags to be popped
+;
+; Restore the context of the program being timed and return to it.
+;
+    MPOPF                           ;restore the flags with the
+                                    ; originaLinterrupt state
+    pop     cx
+    pop     ax
+    ret
+
+ZTimerOff endp
+
+;
+; Called by ZTimerOff to start timer for overhead measurements.
+;
+
+ReferenceZTimerOn proc  near
+;
+; Save the context of the program being timed.
+;
+    push    ax
+    pushf                       ;interrupts are already off
+;
+; Set timer 0 of the 8253 to mode 2 (divide-by-N), to cause
+; linear counting rather than count-by-two counting.
+;
+    mov     al,00110100b        ;set up to load
+    out     MODE_8253,al        ; initial timer count
+    DELAY
+;
+; Set the timer count to 0.
+;
+    sub     al,al
+    out     TIMER_0_8253,al     ;load count lsb
+    DELAY
+    out     TIMER_0_8253,al     ;load count msb
+;
+; Restore the context of the program being timed and return to it.
+;
+    MPOPF
+    pop     ax
+    ret
+
+ReferenceZTimerOn endp
+
+;
+; Called by ZTimerOff to stop timer and add result to ReferenceCount
+; for overhead measurements.
+;
+
+ReferenceZTimerOff proc     near
+;
+; Save the context of the program being timed.
+;
+    push    ax
+    push    cx
+    pushf
+;
+; Latch the count and read it.
+;
+    mov     al,00000000b            ;latch timer 0
+    out     MODE_8253,al
+    DELAY
+    in      al,TIMER_0_8253         ;lsb
+    DELAY
+    mov     ah,al
+    in      al,TIMER_0_8253         ;msb
+    xchg    ah,al
+    neg     ax                      ;convert from countdown
+                                    ; remaining to amount
+                                    ; counted down
+    add     cs:[ReferenceCount],ax
+;
+; Restore the context of the program being timed and return to it.
+;
+    MPOPF
+    pop     cx
+    pop     ax
+    ret
+
+ReferenceZTimerOff endp
+
+;********************************************
+;* Routine called to report timing results. *
+;********************************************
+
+ZTimerReport proc   near
+
+    pushf
+    push    ax
+    push    bx
+    push    cx
+    push    dx
+    push    si
+    push    ds
+;
+    push    cs          ;DOS functions require that DS point
+    pop     ds          ; to text to be displayed on the screen
+    assume  ds:Code
+;
+; Check for timer 0 overflow.
+;
+    cmp     [OverflowFlag],0
+    jz      PrintGoodCount
+    mov     dx,offset OverflowStr
+    mov     ah,9
+    int     21h
+    jmp     short EndZTimerReport
+;
+; Convert net count to decimal ASCII in microseconds.
+;
+PrintGoodCount:
+    mov     ax,[TimedCount]
+    sub     ax,[ReferenceCount]
+    mov     si,offset ASCIICountEnd -1
+;
+; Convert count to microseconds by multiplying by .8381.
+;
+    mov     dx,8381
+    mul     dx
+    mov     bx,10000
+    div     bx          ;* .8381 = * 8381 / 10000
+;
+; Convert time in microseconds to 5 decimal ASCII digits.
+;
+    mov     bx,10
+    mov     cx,5
+CTSLoop:
+    sub     dx,dx
+    div     bx
+    add     dl,'0'
+    mov     [si],dl
+    dec     si
+    loop    CTSLoop
+;
+; Print the results.
+;
+    mov     ah,9
+    mov     dx,offset OutputStr
+    int     21h
+;
+EndZTimerReport:
+    pop     ds
+    pop     si
+    pop     dx
+    pop     cx
+    pop     bx
+    pop     ax
+    MPOPF
+    ret
+
+ZTimerReport    endp
+
+Code    ends
+        end
+```
 
 ## Listing 2-2
 
-**;**
-
-**; \*\*\* Listing 2-2 \*\*\***
-
-**;**
-
-**; Program to measure performance of code that takes less than**
-
-**; 54 ms to execute. (PZTEST.ASM)**
-
-**;**
-
-**; Link with PZTIMER.ASM (Listing 2-1). PZTEST.BAT (Listing 2-4)**
-
-**; can be used to assemble and link both files. Code to be**
-
-**; measured must be in the file TESTCODE; Listing 2-3 shows**
-
-**; a sample TESTCODE file.**
-
-**;**
-
-**; By Michael Abrash 4/26/89**
-
-**;**
-
-**mystack segment para stack 'STACK'**
-
-**db 512 dup(?)**
-
-**mystack ends**
-
-**;**
-
-**Code segment para public 'CODE'**
-
-**assume cs:Code, ds:Code**
-
-**extrn ZTimerOn:near, ZTimerOff:near, ZTimerReport:near**
-
-**Start proc near**
-
-**push cs**
-
-**pop ds ;set DS to point to the code segment,**
-
-**; so data as well as code can easily**
-
-**; be included in TESTCODE**
-
-**;**
-
-**include TESTCODE ;code to be measured, including**
-
-**; calls to ZTimerOn and ZTimerOff**
-
-**;**
-
-**; Display the results.**
-
-**;**
-
-**call ZTimerReport**
-
-**;**
-
-**; Terminate the program.**
-
-**;**
-
-**mov ah,4ch**
-
-**int 21h**
-
-**Start endp**
-
-**Code ends**
-
-**end Start**
-
+```nasm
+;
+; *** Listing 2-2 ***
+;
+; Program to measure performance of code that takes less than
+; 54 ms to execute. (PZTEST.ASM)
+;
+; Link with PZTIMER.ASM (Listing 2-1). PZTEST.BAT (Listing 2-4)
+; can be used to assemble and link both files. Code to be
+; measured must be in the file TESTCODE; Listing 2-3 shows
+; a sample TESTCODE file.
+;
+; By Michael Abrash 4/26/89
+;
+mystack     segment     para stack 'STACK'
+        db  512 dup(?)
+mystack     ends
+;
+Code    segment     para public 'CODE'
+        assume      cs:Code, ds:Code
+        extrn   ZTimerOn:near, ZTimerOff:near, ZTimerReport:near
+Start   proc    near
+        push    cs
+        pop     ds          ;set DS to point to the code segment,
+                            ; so data as well as code can easily
+                            ; be included in TESTCODE
+;
+        include TESTCODE    ;code to be measured, including
+; calls to ZTimerOn and ZTimerOff
+;
+; Display the results.
+;
+        call    ZTimerReport
+;
+; Terminate the program.
+;
+        mov     ah,4ch
+        int     21h
+Start   endp
+Code    ends
+        end     Start
+```
 
 ## Listing 2-3
 
-
-**; \*\*\* Listing 2-3 \*\*\***
-
-**;**
-
-**; Measures the performance of 1000 loads of AL from**
-
-**; memory. (Use by renaming to TESTCODE, which is**
-
-**; included by PZTEST.ASM (Listing 2-2). PZTIME.BAT**
-
-**; (Listing 2-4) does this, along with all assembly**
-
-**; and linking.)**
-
-**;**
-
-**jmp Skip ;jump around defined data**
-
-**;**
-
-**MemVar db ?**
-
-**;**
-
-**Skip:**
-
-**;**
-
-**; Start timing.**
-
-**;**
-
-**call ZTimerOn**
-
-**;**
-
-**rept 1000**
-
-**mov al,[MemVar]**
-
-**endm**
-
-**;**
-
-**; Stop timing.**
-
-**;**
-
-**call ZTimerOff**
-
-
+```nasm
+;
+; *** Listing 2-3 ***
+;
+; Measures the performance of 1000 loads of AL from
+; memory. (Use by renaming to TESTCODE, which is
+; included by PZTEST.ASM (Listing 2-2). PZTIME.BAT
+; (Listing 2-4) does this, along with all assembly
+; and linking.)
+;
+    jmp     Skip ;jump around defined data
+;
+MemVar  db  ?
+;
+Skip:
+;
+; Start timing.
+;
+    call    ZTimerOn
+;
+    rept    1000
+    mov     al,[MemVar]
+    endm
+;
+; Stop timing.
+;
+    call    ZTimerOff
+```
 
 ## Listing 2-4
 
-
-**echo off**
-
-**rem**
-
-**rem \*\*\* Listing 2-4 \*\*\***
-
-**rem**
-
-**rem
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
-
-**rem \* Batch file PZTIME.BAT, which builds and runs the precision \***
-
-**rem \* Zen timer program PZTEST.EXE to time the code named as the \***
-
-**rem \* command-line parameter. Listing 2-1 must be named \***
-
-**rem \* PZTIMER.ASM, and Listing 2-2 must be named PZTEST.ASM. To \***
-
-**rem \* time the code in LST2-3, you'd type the DOS command: \***
-
-**rem \* \***
-
-**rem \* pztime lst2-3 \***
-
-**rem \* \***
-
-**rem \* Note that MASM and LINK must be in the current directory or
-\***
-
-**rem \* on the current path in order for this batch file to work. \***
-
-**rem \* \***
-
-**rem \* This batch file can be speeded up by assembling PZTIMER.ASM
-\***
-
-**rem \* once, then removing the lines: \***
-
-**rem \* \***
-
-**rem \* masm pztimer; \***
-
-**rem \* if errorlevel 1 goto errorend \***
-
-**rem \* \***
-
-**rem \* from this file. \***
-
-**rem \* \***
-
-**rem \* By Michael Abrash 4/26/89 \***
-
-**rem
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
-
-**rem**
-
-**rem Make sure a file to test was specified.**
-
-**rem**
-
-**if not x%1==x goto ckexist**
-
-**echo
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
-
-**echo \* Please specify a file to test. \***
-
-**echo
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
-
-**goto end**
-
-**rem**
-
-**rem Make sure the file exists.**
-
-**rem**
-
-**:ckexist**
-
-**if exist %1 goto docopy**
-
-**echo
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
-
-**echo \* The specified file, "%1," doesn't exist.**
-
-**echo
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
-
-**goto end**
-
-**rem**
-
-**rem copy the file to measure to TESTCODE.**
-
-**rem**
-
-**:docopy**
-
-**copy %1 testcode**
-
-**masm pztest;**
-
-**if errorlevel 1 goto errorend**
-
-**masm pztimer;**
-
-**if errorlevel 1 goto errorend**
-
-**link pztest+pztimer;**
-
-**if errorlevel 1 goto errorend**
-
-**pztest**
-
-**goto end**
-
-**:errorend**
-
-**echo
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
-
-**echo \* An error occurred while building the precision Zen timer. \***
-
-**echo
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
-
-**:end**
-
+```bat
+echo off
+rem
+rem *** Listing 2-4 ***
+rem
+rem ***************************************************************
+rem * Batch file PZTIME.BAT, which builds and runs the precision  *
+rem * Zen timer program PZTEST.EXE to time the code named as the  *
+rem * command-line parameter. Listing 2-1 must be named           *
+rem * PZTIMER.ASM, and Listing 2-2 must be named PZTEST.ASM. To   *
+rem * time the code in LST2-3, you'd type the DOS command:        *
+rem *                                                             *
+rem * pztime lst2-3                                               *
+rem *                                                             *
+rem * Note that MASM and LINK must be in the current directory or *
+rem * on the current path in order for this batch file to work.   *
+rem *                                                             *
+rem * This batch file can be speeded up by assembling PZTIMER.ASM *
+rem * once, then removing the lines:                              *
+rem *                                                             *
+rem * masm pztimer;                                               *
+rem * if errorlevel 1 goto errorend                               *
+rem *                                                             *
+rem * from this file.                                             *
+rem *                                                             *
+rem * By Michael Abrash 4/26/89                                   *
+rem ***************************************************************
+rem
+rem Make sure a file to test was specified.
+rem
+if not x%1==x goto ckexist
+echo ***************************************************************
+echo * Please specify a file to test.                              *
+echo ***************************************************************
+goto end
+rem
+rem Make sure the file exists.
+rem
+:ckexist
+if exist %1 goto docopy
+echo ***************************************************************
+echo * The specified file, "%1," doesn't exist.
+echo ***************************************************************
+goto end
+rem
+rem copy the file to measure to TESTCODE.
+rem
+:docopy
+copy %1 testcode
+masm pztest;
+if errorlevel 1 goto errorend
+masm pztimer;
+if errorlevel 1 goto errorend
+link pztest+pztimer;
+if errorlevel 1 goto errorend
+pztest
+goto end
+:errorend
+echo ***************************************************************
+echo * An error occurred while building the precision Zen timer.   *
+echo ***************************************************************
+:end
+```
 
 ## Listing 2-5
 
-
-**;**
-
-**; \*\*\* Listing 2-5 \*\*\***
-
-**;**
-
-**; The long-period Zen timer. (LZTIMER.ASM)**
-
-**; Uses the 8253 timer and the BIOS time-of-day count to time the**
-
-**; performance of code that takes less than an hour to execute.**
-
-**; Because interrupts are left on (in order to allow the timer**
-
-**; interrupt to be recognized), this is less accurate than the**
-
-**; precision Zen timer, so it is best used only to time code that
-takes**
-
-**; more than about 54 milliseconds to execute (code that the
-precision**
-
-**; Zen timer reports overflow on). Resolution is limited by the**
-
-**; occurrence of timer interrupts.**
-
-**;**
-
-**; By Michael Abrash 4/26/89**
-
-**;**
-
-**; Externally callable routines:**
-
-**;**
-
-**; ZTimerOn: Saves the BIOS time of day count and starts the**
-
-**; long-period Zen timer.**
-
-**;**
-
-**; ZTimerOff: Stops the long-period Zen timer and saves the timer**
-
-**; count and the BIOS time-of-day count.**
-
-**;**
-
-**; ZTimerReport: Prints the time that passed between starting and**
-
-**; stopping the timer.**
-
-**;**
-
-**; Note: If either more than an hour passes or midnight falls between**
-
-**; calls to ZTimerOn and ZTimerOff, an error is reported. For**
-
-**; timing code that takes more than a few minutes to execute,**
-
-**; either the DOS TIME command in a batch file before and after**
-
-**; execution of the code to time or the use of the DOS**
-
-**; time-of-day function in place of the long-period Zen timer is**
-
-**; more than adequate.**
-
-**;**
-
-**; Note: The PS/2 version is assembled by setting the symbol PS2 to
-1.**
-
-**; PS2 must be set to 1 on PS/2 computers because the PS/2's**
-
-**; timers are not compatible with an undocumented timer-stopping**
-
-**; feature of the 8253; the alternative timing approach that**
-
-**; must be used on PS/2 computers leaves a short window**
-
-**; during which the timer 0 count and the BIOS timer count may**
-
-**; not be synchronized. You should also set the PS2 symbol to**
-
-**; 1 if you're getting erratic or obviously incorrect results.**
-
-**;**
-
-**; Note: When PS2 is 0, the code relies on an undocumented 8253**
-
-**; feature to get more reliable readings. It is possible that**
-
-**; the 8253 (or whatever chip is emulating the 8253) may be put**
-
-**; into an undefined or incorrect state when this feature is**
-
-**; used.**
-
-**;**
-
-**;
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
-
-**; \* If your computer displays any hint of erratic behavior \***
-
-**; \* after the long-period Zen timer is used, such as the floppy \***
-
-**; \* drive failing to operate properly, reboot the system, set \***
-
-**; \* PS2 to 1 and leave it that way! \***
-
-**;
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
-
-**;**
-
-**; Note: Each block of code being timed should ideally be run several**
-
-**; times, with at least two similar readings required to**
-
-**; establish a true measurement, in order to eliminate any**
-
-**; variability caused by interrupts.**
-
-**;**
-
-**; Note: Interrupts must not be disabled for more than 54 ms at a**
-
-**; stretch during the timing interval. Because interrupts**
-
-**; are enabled, keys, mice, and other devices that generate**
-
-**; interrupts should not be used during the timing interval.**
-
-**;**
-
-**; Note: Any extra code running off the timer interrupt (such as**
-
-**; some memory-resident utilities) wilLincrease the time**
-
-**; measured by the Zen timer.**
-
-**;**
-
-**; Note: These routines can introduce inaccuracies of up to a few**
-
-**; tenths of a second into the system clock count for each**
-
-**; code section timed. Consequently, it's a good idea to**
-
-**; reboot at the conclusion of timing sessions. (The**
-
-**; battery-backed clock, if any, is not affected by the Zen**
-
-**; timer.)**
-
-**;**
-
-**; All registers and all flags are preserved by all routines.**
-
-**;**
-
-
-**Code segment word public 'CODE'**
-
-**assume cs:Code, ds:nothing**
-
-**public ZTimerOn, ZTimerOff, ZTimerReport**
-
-
-**;**
-
-**; Set PS2 to 0 to assemble for use on a fully 8253-compatible**
-
-**; system; when PS2 is 0, the readings are more reliable if the**
-
-**; computer supports the undocumented timer-stopping feature,**
-
-**; but may be badly off if that feature is not supported. In**
-
-**; fact, timer-stopping may interfere with your computer's**
-
-**; overall operation by putting the 8253 into an undefined or**
-
-**; incorrect state. Use with caution!!!**
-
-**;**
-
-**; Set PS2 to 1 to assemble for use on non-8253-compatible**
-
-**; systems, including PS/2 computers; when PS2 is 1, readings**
-
-**; may occasionally be off by 54 ms, but the code will work**
-
-**; properly on all systems.**
-
-**;**
-
-**; A setting of 1 is safer and will work on more systems,**
-
-**; while a setting of 0 produces more reliable results in systems**
-
-**; which support the undocumented timer-stopping feature of the**
-
-**; 8253. The choice is yours.**
-
-**;**
-
-**PS2 equ 1**
-
-**;**
-
-**; Base address of the 8253 timer chip.**
-
-**;**
-
-**BASE\_8253 equ 40h**
-
-**;**
-
-**; The address of the timer 0 count registers in the 8253.**
-
-**;**
-
-**TIMER\_0\_8253 equ BASE\_8253 + 0**
-
-**;**
-
-**; The address of the mode register in the 8253.**
-
-**;**
-
-**MODE\_8253 equ BASE\_8253 + 3**
-
-**;**
-
-**; The address of the BIOS timer count variable in the BIOS**
-
-**; data segment.**
-
-**;**
-
-**TIMER\_COUNT equ 46ch**
-
-**;**
-
-**; Macro to emulate a POPF instruction in order to fix the bug in
-some**
-
-**; 80286 chips which allows interrupts to occur during a POPF even
-when**
-
-**; interrupts remain disabled.**
-
-**;**
-
-**MPOPF macro**
-
-**local p1, p2**
-
-**jmp short p2**
-
-**p1: iret ;jump to pushed address & pop flags**
-
-**p2: push cs ;construct far return address to**
-
-**call p1 ; the next instruction**
-
-**endm**
-
-
-**;**
-
-**; Macro to delay briefly to ensure that enough time has elapsed**
-
-**; between successive I/O accesses so that the device being accessed**
-
-**; can respond to both accesses even on a very fast PC.**
-
-**;**
-
-**DELAY macro**
-
-**jmp $+2**
-
-**jmp $+2**
-
-**jmp $+2**
-
-**endm**
-
-
-**StartBIOSCountLow dw ? ;BIOS count low word at the**
-
-**; start of the timing period**
-
-**StartBIOSCountHigh dw ? ;BIOS count high word at the**
-
-**; start of the timing period**
-
-**EndBIOSCountLow dw ? ;BIOS count low word at the**
-
-**; end of the timing period**
-
-**EndBIOSCountHigh dw ? ;BIOS count high word at the**
-
-**; end of the timing period**
-
-**EndTimedCount dw ? ;timer 0 count at the end of**
-
-**; the timing period**
-
-**ReferenceCount dw ? ;number of counts required to**
-
-**; execute timer overhead code**
-
-**;**
-
-**; String printed to report results.**
-
-**;**
-
-**OutputStr label byte**
-
-**db 0dh, 0ah, 'Timed count: '**
-
-**TimedCountStr db 10 dup (?)**
-
-**db ' microseconds', 0dh, 0ah**
-
-**db '$'**
-
-**;**
-
-**; Temporary storage for timed count as it's divided down by powers**
-
-**; of ten when converting from doubleword binary to ASCII.**
-
-**;**
-
-**CurrentCountLow dw ?**
-
-**CurrentCountHigh dw ?**
-
-**;**
-
-**; Powers of ten table used to perform division by 10 when doing**
-
-**; doubleword conversion from binary to ASCII.**
-
-**;**
-
-**PowersOfTen label word**
-
-**dd 1**
-
-**dd 10**
-
-**dd 100**
-
-**dd 1000**
-
-**dd 10000**
-
-**dd 100000**
-
-**dd 1000000**
-
-**dd 10000000**
-
-**dd 100000000**
-
-**dd 1000000000**
-
-**PowersOfTenEnd label word**
-
-**;**
-
-**; String printed to report that the high word of the BIOS count**
-
-**; changed while timing (an hour elapsed or midnight was crossed),**
-
-**; and so the count is invalid and the test needs to be rerun.**
-
-**;**
-
-**TurnOverStr label byte**
-
-**db 0dh, 0ah**
-
-**db
-'\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*'**
-
-**db 0dh, 0ah**
-
-**db '\* Either midnight passed or an hour or more passed \*'**
-
-**db 0dh, 0ah**
-
-**db '\* while timing was in progress. If the former was \*'**
-
-**db 0dh, 0ah**
-
-**db '\* the case, please rerun the test; if the latter \*'**
-
-**db 0dh, 0ah**
-
-**db '\* was the case, the test code takes too long to \*'**
-
-**db 0dh, 0ah**
-
-**db '\* run to be timed by the long-period Zen timer. \*'**
-
-**db 0dh, 0ah**
-
-**db '\* Suggestions: use the DOS TIME command, the DOS \*'**
-
-**db 0dh, 0ah**
-
-**db '\* time function, or a watch. \*'**
-
-**db 0dh, 0ah**
-
-**db
-'\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*'**
-
-**db 0dh, 0ah**
-
-**db '$'**
-
-
-**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
-
-**;\* Routine called to start timing. \***
-
-**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
-
-
-**ZTimerOn proc near**
-
-
-**;**
-
-**; Save the context of the program being timed.**
-
-**;**
-
-**push ax**
-
-**pushf**
-
-**;**
-
-**; Set timer 0 of the 8253 to mode 2 (divide-by-N), to cause**
-
-**; linear counting rather than count-by-two counting. Also stops**
-
-**; timer 0 until the timer count is loaded, except on PS/2**
-
-**; computers.**
-
-**;**
-
-**mov al,00110100b ;mode 2**
-
-**out MODE\_8253,al**
-
-**;**
-
-**; Set the timer count to 0, so we know we won't get another**
-
-**; timer interrupt right away.**
-
-**; Note: this introduces an inaccuracy of up to 54 ms in the system**
-
-**; clock count each time it is executed.**
-
-**;**
-
-**DELAY**
-
-**sub al,al**
-
-**out TIMER\_0\_8253,al ;lsb**
-
-**DELAY**
-
-**out TIMER\_0\_8253,al ;msb**
-
-**;**
-
-**; In case interrupts are disabled, enable interrupts briefly to
-allow**
-
-**; the interrupt generated when switching from mode 3 to mode 2 to be**
-
-**; recognized. Interrupts must be enabled for at least 210 ns to
-allow**
-
-**; time for that interrupt to occur. Here, 10 jumps are used for the**
-
-**; delay to ensure that the delay time will be more than long enough**
-
-**; even on a very fast PC.**
-
-**;**
-
-**pushf**
-
-**sti**
-
-**rept 10**
-
-**jmp $+2**
-
-**endm**
-
-**MPOPF**
-
-**;**
-
-**; Store the timing start BIOS count.**
-
-**; (Since the timer count was just set to 0, the BIOS count will**
-
-**; stay the same for the next 54 ms, so we don't need to disable**
-
-**; interrupts in order to avoid getting a half-changed count.)**
-
-**;**
-
-**push ds**
-
-**sub ax,ax**
-
-**mov ds,ax**
-
-**mov ax,ds:[TIMER\_COUNT+2]**
-
-**mov cs:[StartBIOSCountHigh],ax**
-
-**mov ax,ds:[TIMER\_COUNT]**
-
-**mov cs:[StartBIOSCountLow],ax**
-
-**pop ds**
-
-**;**
-
-**; Set the timer count to 0 again to start the timing interval.**
-
-**;**
-
-**mov al,00110100b ;set up to load initial**
-
-**out MODE\_8253,al ; timer count**
-
-**DELAY**
-
-**sub al,al**
-
-**out TIMER\_0\_8253,al ;load count lsb**
-
-**DELAY**
-
-**out TIMER\_0\_8253,al ;load count msb**
-
-**;**
-
-**; Restore the context of the program being timed and return to it.**
-
-**;**
-
-**MPOPF**
-
-**pop ax**
-
-**ret**
-
-
-**ZTimerOn endp**
-
-
-**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
-
-**;\* Routine called to stop timing and get count. \***
-
-**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
-
-
-**ZTimerOff proc near**
-
-
-**;**
-
-**; Save the context of the program being timed.**
-
-**;**
-
-**pushf**
-
-**push ax**
-
-**push cx**
-
-**;**
-
-**; In case interrupts are disabled, enable interrupts briefly to
-allow**
-
-**; any pending timer interrupt to be handled. Interrupts must be**
-
-**; enabled for at least 210 ns to allow time for that interrupt to**
-
-**; occur. Here, 10 jumps are used for the delay to ensure that the**
-
-**; delay time will be more than long enough even on a very fast PC.**
-
-**;**
-
-**sti**
-
-**rept 10**
-
-**jmp $+2**
-
-**endm**
-
-
-**;**
-
-**; Latch the timer count.**
-
-**;**
-
-
-**if PS2**
-
-
-**mov al,00000000b**
-
-**out MODE\_8253,al ;latch timer 0 count**
-
-**;**
-
-**; This is where a one-instruction-long window exists on the PS/2.**
-
-**; The timer count and the BIOS count can lose synchronization;**
-
-**; since the timer keeps counting after it's latched, it can turn**
-
-**; over right after it's latched and cause the BIOS count to turn**
-
-**; over before interrupts are disabled, leaving us with the timer**
-
-**; count from before the timer turned over coupled with the BIOS**
-
-**; count from after the timer turned over. The result is a count**
-
-**; that's 54 ms too long.**
-
-**;**
-
-****
-
-**else**
-
-
-**;**
-
-**; Set timer 0 to mode 2 (divide-by-N), waiting for a 2-byte count**
-
-**; load, which stops timer 0 until the count is loaded. (Only works**
-
-**; on fully 8253-compatible chips.)**
-
-**;**
-
-**mov al,00110100b ;mode 2**
-
-**out MODE\_8253,al**
-
-**DELAY**
-
-**mov al,00000000b ;latch timer 0 count**
-
-**out MODE\_8253,al**
-
-
-**endif**
-
-
-**cli ;stop the BIOS count**
-
-**;**
-
-**; Read the BIOS count. (Since interrupts are disabled, the BIOS**
-
-**; count won't change.)**
-
-**;**
-
-**push ds**
-
-**sub ax,ax**
-
-**mov ds,ax**
-
-**mov ax,ds:[TIMER\_COUNT+2]**
-
-**mov cs:[EndBIOSCountHigh],ax**
-
-**mov ax,ds:[TIMER\_COUNT]**
-
-**mov cs:[EndBIOSCountLow],ax**
-
-**pop ds**
-
-**;**
-
-**; Read the timer count and save it.**
-
-**;**
-
-**in al,TIMER\_0\_8253 ;lsb**
-
-**DELAY**
-
-**mov ah,al**
-
-**in al,TIMER\_0\_8253 ;msb**
-
-**xchg ah,al**
-
-**neg ax ;convert from countdown**
-
-**; remaining to elapsed**
-
-**; count**
-
-**mov cs:[EndTimedCount],ax**
-
-**;**
-
-**; Restart timer 0, which is still waiting for an initial count**
-
-**; to be loaded.**
-
-**;**
-
-
-**ife PS2**
-
-
-**DELAY**
-
-**mov al,00110100b ;mode 2, waiting to load a**
-
-**; 2-byte count**
-
-**out MODE\_8253,al**
-
-**DELAY**
-
-**sub al,al**
-
-**out TIMER\_0\_8253,al ;lsb**
-
-**DELAY**
-
-**mov al,ah**
-
-**out TIMER\_0\_8253,al ;msb**
-
-**DELAY**
-
-
-**endif**
-
-
-**sti ;let the BIOS count continue**
-
-**;**
-
-**; Time a zero-length code fragment, to get a reference for how**
-
-**; much overhead this routine has. Time it 16 times and average it,**
-
-**; for accuracy, rounding the result.**
-
-**;**
-
-**mov cs:[ReferenceCount],0**
-
-**mov cx,16**
-
-**cli ;interrupts off to allow a**
-
-**; precise reference count**
-
-**RefLoop:**
-
-**call ReferenceZTimerOn**
-
-**call ReferenceZTimerOff**
-
-**loop RefLoop**
-
-**sti**
-
-**add cs:[ReferenceCount],8 ;total + (0.5 \* 16)**
-
-**mov cl,4**
-
-**shr cs:[ReferenceCount],cl ;(total) / 16 + 0.5**
-
-**;**
-
-**; Restore the context of the program being timed and return to it.**
-
-**;**
-
-**pop cx**
-
-**pop ax**
-
-**MPOPF**
-
-**ret**
-
-
-**ZTimerOff endp**
-
-
-**;**
-
-**; Called by ZTimerOff to start the timer for overhead measurements.**
-
-**;**
-
-
-**ReferenceZTimerOn proc near**
-
-**;**
-
-**; Save the context of the program being timed.**
-
-**;**
-
-**push ax**
-
-**pushf**
-
-**;**
-
-**; Set timer 0 of the 8253 to mode 2 (divide-by-N), to cause**
-
-**; linear counting rather than count-by-two counting.**
-
-**;**
-
-**mov al,00110100b ;mode 2**
-
-**out MODE\_8253,al**
-
-**;**
-
-**; Set the timer count to 0.**
-
-**;**
-
-**DELAY**
-
-**sub al,al**
-
-**out TIMER\_0\_8253,al ;lsb**
-
-**DELAY**
-
-**out TIMER\_0\_8253,al ;msb**
-
-**;**
-
-**; Restore the context of the program being timed and return to it.**
-
-**;**
-
-**MPOPF**
-
-**pop ax**
-
-**ret**
-
-
-**ReferenceZTimerOn endp**
-
-
-**;**
-
-**; Called by ZTimerOff to stop the timer and add the result to**
-
-**; ReferenceCount for overhead measurements. Doesn't need to look**
-
-**; at the BIOS count because timing a zero-length code fragment**
-
-**; isn't going to take anywhere near 54 ms.**
-
-**;**
-
-
-**ReferenceZTimerOff proc near**
-
-**;**
-
-**; Save the context of the program being timed.**
-
-**;**
-
-**pushf**
-
-**push ax**
-
-**push cx**
-
-
-**;**
-
-**; Match the interrupt-window delay in ZTimerOff.**
-
-**;**
-
-**sti**
-
-**rept 10**
-
-**jmp $+2**
-
-**endm**
-
-
-**mov al,00000000b**
-
-**out MODE\_8253,al ;latch timer**
-
-**;**
-
-**; Read the count and save it.**
-
-**;**
-
-**DELAY**
-
-**in al,TIMER\_0\_8253 ;lsb**
-
-**DELAY**
-
-**mov ah,al**
-
-**in al,TIMER\_0\_8253 ;msb**
-
-**xchg ah,al**
-
-**neg ax ;convert from countdown**
-
-**; remaining to elapsed**
-
-**; count**
-
-**add cs:[ReferenceCount],ax**
-
-**;**
-
-**; Restore the context and return.**
-
-**;**
-
-**pop cx**
-
-**pop ax**
-
-**MPOPF**
-
-**ret**
-
-
-**ReferenceZTimerOff endp**
-
-
-**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
-
-**;\* Routine called to report timing results. \***
-
-**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
-
-
-**ZTimerReport proc near**
-
-
-**pushf**
-
-**push ax**
-
-**push bx**
-
-**push cx**
-
-**push dx**
-
-**push si**
-
-**push di**
-
-**push ds**
-
-**;**
-
-**push cs ;DOS functions require that DS point**
-
-**pop ds ; to text to be displayed on the screen**
-
-**assume ds:Code**
-
-**;**
-
-**; See if midnight or more than an hour passed during timing. If so,**
-
-**; notify the user.**
-
-**;**
-
-**mov ax,[StartBIOSCountHigh]**
-
-**cmp ax,[EndBIOSCountHigh]**
-
-**jz CalcBIOSTime ;hour count didn't change,**
-
-**; so everything's fine**
-
-**inc ax**
-
-**cmp ax,[EndBIOSCountHigh]**
-
-**jnz TestTooLong ;midnight or two hour**
-
-**; boundaries passed, so the**
-
-**; results are no good**
-
-**mov ax,[EndBIOSCountLow]**
-
-**cmp ax,[StartBIOSCountLow]**
-
-**jb CalcBIOSTime ;a single hour boundary**
-
-**; passed-that's OK, so long as**
-
-**; the total time wasn't more**
-
-**; than an hour**
-
-
-**;**
-
-**; Over an hour elapsed or midnight passed during timing, which**
-
-**; renders the results invalid. Notify the user. This misses the**
-
-**; case where a multiple of 24 hours has passed, but we'll rely**
-
-**; on the perspicacity of the user to detect that case.**
-
-**;**
-
-**TestTooLong:**
-
-**mov ah,9**
-
-**mov dx,offset TurnOverStr**
-
-**int 21h**
-
-**jmp short ZTimerReportDone**
-
-**;**
-
-**; Convert the BIOS time to microseconds.**
-
-**;**
-
-**CalcBIOSTime:**
-
-**mov ax,[EndBIOSCountLow]**
-
-**sub ax,[StartBIOSCountLow]**
-
-**mov dx,54925 ;number of microseconds each**
-
-**; BIOS count represents**
-
-**mul dx**
-
-**mov bx,ax ;set aside BIOS count in**
-
-**mov cx,dx ; microseconds**
-
-**;**
-
-**; Convert timer count to microseconds.**
-
-**;**
-
-**mov ax,[EndTimedCount]**
-
-**mov si,8381**
-
-**mul si**
-
-**mov si,10000**
-
-**div si ;\* .8381 = \* 8381 / 10000**
-
-**;**
-
-**; Add timer and BIOS counts together to get an overall time in**
-
-**; microseconds.**
-
-**;**
-
-**add bx,ax**
-
-**adc cx,0**
-
-**;**
-
-**; Subtract the timer overhead and save the result.**
-
-**;**
-
-**mov ax,[ReferenceCount]**
-
-**mov si,8381 ;convert the reference count**
-
-**mul si ; to microseconds**
-
-**mov si,10000**
-
-**div si ;\* .8381 = \* 8381 / 10000**
-
-**sub bx,ax**
-
-**sbb cx,0**
-
-**mov [CurrentCountLow],bx**
-
-**mov [CurrentCountHigh],cx**
-
-**;**
-
-**; Convert the result to an ASCII string by trial subtractions of**
-
-**; powers of 10.**
-
-**;**
-
-**mov di,offset PowersOfTenEnd -offset PowersOfTen -4**
-
-**mov si,offset TimedCountStr**
-
-**CTSNextDigit:**
-
-**mov bl,'0'**
-
-**CTSLoop:**
-
-**mov ax,[CurrentCountLow]**
-
-**mov dx,[CurrentCountHigh]**
-
-**sub ax,PowersOfTen[di]**
-
-**sbb dx,PowersOfTen[di+2]**
-
-**jc CTSNextPowerDown**
-
-**inc bl**
-
-**mov [CurrentCountLow],ax**
-
-**mov [CurrentCountHigh],dx**
-
-**jmp CTSLoop**
-
-**CTSNextPowerDown:**
-
-**mov [si],bl**
-
-**inc si**
-
-**sub di,4**
-
-**jns CTSNextDigit**
-
-**;**
-
-**;**
-
-**; Print the results.**
-
-**;**
-
-**mov ah,9**
-
-**mov dx,offset OutputStr**
-
-**int 21h**
-
-**;**
-
-**ZTimerReportDone:**
-
-**pop ds**
-
-**pop di**
-
-**pop si**
-
-**pop dx**
-
-**pop cx**
-
-**pop bx**
-
-**pop ax**
-
-**MPOPF**
-
-**ret**
-
-
-**ZTimerReport endp**
-
-
-**Code ends**
-
-**End**
-
-
+```nasm
+;
+; *** Listing 2-5 ***
+;
+; The long-period Zen timer. (LZTIMER.ASM)
+; Uses the 8253 timer and the BIOS time-of-day count to time the
+; performance of code that takes less than an hour to execute.
+; Because interrupts are left on (in order to allow the timer
+; interrupt to be recognized), this is less accurate than the
+; precision Zen timer, so it is best used only to time code that takes
+; more than about 54 milliseconds to execute (code that the precision
+; Zen timer reports overflow on). Resolution is limited by the
+; occurrence of timer interrupts.
+;
+; By Michael Abrash 4/26/89
+;
+; Externally callable routines:
+;
+;   ZTimerOn: Saves the BIOS time of day count and starts the
+;       long-period Zen timer.
+;
+;   ZTimerOff: Stops the long-period Zen timer and saves the timer
+;       count and the BIOS time-of-day count.
+;
+;   ZTimerReport: Prints the time that passed between starting and
+;       stopping the timer.
+;
+; Note: If either more than an hour passes or midnight falls between
+;       calls to ZTimerOn and ZTimerOff, an error is reported. For
+;       timing code that takes more than a few minutes to execute,
+;       either the DOS TIME command in a batch file before and after
+;       execution of the code to time or the use of the DOS
+;       time-of-day function in place of the long-period Zen timer is
+;       more than adequate.
+;
+; Note: The PS/2 version is assembled by setting the symbol PS2 to 1.
+;       PS2 must be set to 1 on PS/2 computers because the PS/2's
+;       timers are not compatible with an undocumented timer-stopping
+;       feature of the 8253; the alternative timing approach that
+;       must be used on PS/2 computers leaves a short window
+;       during which the timer 0 count and the BIOS timer count may
+;       not be synchronized. You should also set the PS2 symbol to
+;       1 if you're getting erratic or obviously incorrect results.
+;
+; Note: When PS2 is 0, the code relies on an undocumented 8253
+;       feature to get more reliable readings. It is possible that
+;       the 8253 (or whatever chip is emulating the 8253) may be put
+;       into an undefined or incorrect state when this feature is
+;       used.
+;
+; ***************************************************************
+; * If your computer displays any hint of erratic behavior      *
+; * after the long-period Zen timer is used, such as the floppy *
+; * drive failing to operate properly, reboot the system, set   *
+; * PS2 to 1 and leave it that way!                             *
+; ***************************************************************
+;
+; Note: Each block of code being timed should ideally be run several
+;       times, with at least two similar readings required to
+;       establish a true measurement, in order to eliminate any
+;       variability caused by interrupts.
+;
+; Note: Interrupts must not be disabled for more than 54 ms at a
+;       stretch during the timing interval. Because interrupts
+;       are enabled, keys, mice, and other devices that generate
+;       interrupts should not be used during the timing interval.
+;
+; Note: Any extra code running off the timer interrupt (such as
+;       some memory-resident utilities) wilLincrease the time
+;       measured by the Zen timer.
+;
+; Note: These routines can introduce inaccuracies of up to a few
+;       tenths of a second into the system clock count for each
+;       code section timed. Consequently, it's a good idea to
+;       reboot at the conclusion of timing sessions. (The
+;       battery-backed clock, if any, is not affected by the Zen
+;       timer.)
+;
+; All registers and all flags are preserved by all routines.
+;
+
+Code    segment word    public 'CODE'
+        assume          cs:Code, ds:nothing
+        public ZTimerOn, ZTimerOff, ZTimerReport
+
+;
+; Set PS2 to 0 to assemble for use on a fully 8253-compatible
+; system; when PS2 is 0, the readings are more reliable if the
+; computer supports the undocumented timer-stopping feature,
+; but may be badly off if that feature is not supported. In
+; fact, timer-stopping may interfere with your computer's
+; overall operation by putting the 8253 into an undefined or
+; incorrect state. Use with caution!!!
+;
+; Set PS2 to 1 to assemble for use on non-8253-compatible
+; systems, including PS/2 computers; when PS2 is 1, readings
+; may occasionally be off by 54 ms, but the code will work
+; properly on all systems.
+;
+; A setting of 1 is safer and will work on more systems,
+; while a setting of 0 produces more reliable results in systems
+; which support the undocumented timer-stopping feature of the
+; 8253. The choice is yours.
+;
+PS2             equ     1
+;
+; Base address of the 8253 timer chip.
+;
+BASE_8253       equ     40h
+;
+; The address of the timer 0 count registers in the 8253.
+;
+TIMER_0_8253    equ     BASE_8253 + 0
+;
+; The address of the mode register in the 8253.
+;
+MODE_8253       equ     BASE_8253 + 3
+;
+; The address of the BIOS timer count variable in the BIOS
+; data segment.
+;
+TIMER_COUNT     equ     46ch
+;
+; Macro to emulate a POPF instruction in order to fix the bug in some
+; 80286 chips which allows interrupts to occur during a POPF even when
+; interrupts remain disabled.
+;
+MPOPF macro
+    local   p1, p2
+    jmp     short p2
+p1: iret                ;jump to pushed address & pop flags
+p2: push    cs          ;construct far return address to
+    call    p1          ; the next instruction
+    endm
+
+;
+; Macro to delay briefly to ensure that enough time has elapsed
+; between successive I/O accesses so that the device being accessed
+; can respond to both accesses even on a very fast PC.
+;
+DELAY macro
+    jmp     $+2
+    jmp     $+2
+    jmp     $+2
+    endm
+
+StartBIOSCountLow   dw  ?   ;BIOS count low word at the
+                            ; start of the timing period
+StartBIOSCountHigh  dw  ?   ;BIOS count high word at the
+                            ; start of the timing period
+EndBIOSCountLow     dw  ?   ;BIOS count low word at the
+                            ; end of the timing period
+EndBIOSCountHigh    dw  ?   ;BIOS count high word at the
+                            ; end of the timing period
+EndTimedCount       dw  ?   ;timer 0 count at the end of
+                            ; the timing period
+ReferenceCount      dw  ?   ;number of counts required to
+                            ; execute timer overhead code
+;
+; String printed to report results.
+;
+OutputStr   label   byte
+            db      0dh, 0ah, 'Timed count: '
+TimedCountStr       db  10 dup (?)
+            db      ' microseconds', 0dh, 0ah
+            db      '$'
+;
+; Temporary storage for timed count as it's divided down by powers
+; of ten when converting from doubleword binary to ASCII.
+;
+CurrentCountLow     dw  ?
+CurrentCountHigh    dw  ?
+;
+; Powers of ten table used to perform division by 10 when doing
+; doubleword conversion from binary to ASCII.
+;
+PowersOfTen     label   word
+    dd  1
+    dd  10
+    dd  100
+    dd  1000
+    dd  10000
+    dd  100000
+    dd  1000000
+    dd  10000000
+    dd  100000000
+    dd  1000000000
+PowersOfTenEnd  label   word
+;
+; String printed to report that the high word of the BIOS count
+; changed while timing (an hour elapsed or midnight was crossed),
+; and so the count is invalid and the test needs to be rerun.
+;
+TurnOverStr     label   byte
+    db  0dh, 0ah
+    db  '****************************************************'
+    db  0dh, 0ah
+    db  '* Either midnight passed or an hour or more passed *'
+    db  0dh, 0ah
+    db  '* while timing was in progress. If the former was  *'
+    db  0dh, 0ah
+    db  '* the case, please rerun the test; if the latter   *'
+    db  0dh, 0ah
+    db  '* was the case, the test code takes too long to    *'
+    db  0dh, 0ah
+    db  '* run to be timed by the long-period Zen timer.    *'
+    db  0dh, 0ah
+    db  '* Suggestions: use the DOS TIME command, the DOS   *'
+    db  0dh, 0ah
+    db  '* time function, or a watch.                       *'
+    db  0dh, 0ah
+    db  '****************************************************'
+    db  0dh, 0ah
+    db  '$'
+
+;********************************************************************
+;* Routine called to start timing.                                  *
+;********************************************************************
+
+ZTimerOn    proc    near
+
+;
+; Save the context of the program being timed.
+;
+    push    ax
+    pushf
+;
+; Set timer 0 of the 8253 to mode 2 (divide-by-N), to cause
+; linear counting rather than count-by-two counting. Also stops
+; timer 0 until the timer count is loaded, except on PS/2
+; computers.
+;
+    mov     al,00110100b        ;mode 2
+    out     MODE_8253,al
+;
+; Set the timer count to 0, so we know we won't get another
+; timer interrupt right away.
+; Note: this introduces an inaccuracy of up to 54 ms in the system
+; clock count each time it is executed.
+;
+    DELAY
+    sub     al,al
+    out     TIMER_0_8253,al     ;lsb
+    DELAY
+    out     TIMER_0_8253,al     ;msb
+;
+; In case interrupts are disabled, enable interrupts briefly to allow
+; the interrupt generated when switching from mode 3 to mode 2 to be
+; recognized. Interrupts must be enabled for at least 210 ns to allow
+; time for that interrupt to occur. Here, 10 jumps are used for the
+; delay to ensure that the delay time will be more than long enough
+; even on a very fast PC.
+;
+    pushf
+    sti
+    rept    10
+    jmp     $+2
+    endm
+    MPOPF
+;
+; Store the timing start BIOS count.
+; (Since the timer count was just set to 0, the BIOS count will
+; stay the same for the next 54 ms, so we don't need to disable
+; interrupts in order to avoid getting a half-changed count.)
+;
+    push    ds
+    sub     ax,ax
+    mov     ds,ax
+    mov     ax,ds:[TIMER_COUNT+2]
+    mov     cs:[StartBIOSCountHigh],ax
+    mov     ax,ds:[TIMER_COUNT]
+    mov     cs:[StartBIOSCountLow],ax
+    pop     ds
+;
+; Set the timer count to 0 again to start the timing interval.
+;
+    mov     al,00110100b        ;set up to load initial
+    out     MODE_8253,al        ; timer count
+    DELAY
+    sub     al,al
+    out     TIMER_0_8253,al     ;load count lsb
+    DELAY
+    out     TIMER_0_8253,al     ;load count msb
+;
+; Restore the context of the program being timed and return to it.
+;
+    MPOPF
+    pop     ax
+    ret
+
+ZTimerOn    endp
+
+;********************************************************************
+;* Routine called to stop timing and get count.                     *
+;********************************************************************
+
+ZTimerOff   proc    near
+
+;
+; Save the context of the program being timed.
+;
+    pushf
+    push    ax
+    push    cx
+;
+; In case interrupts are disabled, enable interrupts briefly to allow
+; any pending timer interrupt to be handled. Interrupts must be
+; enabled for at least 210 ns to allow time for that interrupt to
+; occur. Here, 10 jumps are used for the delay to ensure that the
+; delay time will be more than long enough even on a very fast PC.
+;
+    sti
+    rept    10
+    jmp     $+2
+    endm
+
+;
+; Latch the timer count.
+;
+
+if PS2
+
+    mov     al,00000000b
+    out     MODE_8253,al    ;latch timer 0 count
+;
+; This is where a one-instruction-long window exists on the PS/2.
+; The timer count and the BIOS count can lose synchronization;
+; since the timer keeps counting after it's latched, it can turn
+; over right after it's latched and cause the BIOS count to turn
+; over before interrupts are disabled, leaving us with the timer
+; count from before the timer turned over coupled with the BIOS
+; count from after the timer turned over. The result is a count
+; that's 54 ms too long.
+;
+
+else
+
+;
+; Set timer 0 to mode 2 (divide-by-N), waiting for a 2-byte count
+; load, which stops timer 0 until the count is loaded. (Only works
+; on fully 8253-compatible chips.)
+;
+    mov     al,00110100b    ;mode 2
+    out     MODE_8253,al
+    DELAY
+    mov     al,00000000b    ;latch timer 0 count
+    out     MODE_8253,al
+
+endif
+
+    cli                     ;stop the BIOS count
+;
+; Read the BIOS count. (Since interrupts are disabled, the BIOS
+; count won't change.)
+;
+    push    ds
+    sub     ax,ax
+    mov     ds,ax
+    mov     ax,ds:[TIMER_COUNT+2]
+    mov     cs:[EndBIOSCountHigh],ax
+    mov     ax,ds:[TIMER_COUNT]
+    mov     cs:[EndBIOSCountLow],ax
+    pop     ds
+;
+; Read the timer count and save it.
+;
+    in      al,TIMER_0_8253         ;lsb
+    DELAY
+    mov     ah,al
+    in      al,TIMER_0_8253         ;msb
+    xchg    ah,al
+    neg     ax                      ;convert from countdown
+                                    ; remaining to elapsed
+                                    ; count
+    mov     cs:[EndTimedCount],ax
+;
+; Restart timer 0, which is still waiting for an initial count
+; to be loaded.
+;
+
+ife PS2
+
+    DELAY
+    mov     al,00110100b    ;mode 2, waiting to load a
+                            ; 2-byte count
+    out     MODE_8253,al
+    DELAY
+    sub     al,al
+    out     TIMER_0_8253,al ;lsb
+    DELAY
+    mov     al,ah
+    out     TIMER_0_8253,al ;msb
+    DELAY
+
+endif
+
+    sti                     ;let the BIOS count continue
+;
+; Time a zero-length code fragment, to get a reference for how
+; much overhead this routine has. Time it 16 times and average it,
+; for accuracy, rounding the result.
+;
+    mov     cs:[ReferenceCount],0
+    mov     cx,16
+    cli                     ;interrupts off to allow a
+                            ; precise reference count
+RefLoop:
+    call    ReferenceZTimerOn
+    call    ReferenceZTimerOff
+    loop    RefLoop
+    sti
+    add     cs:[ReferenceCount],8   ;total + (0.5 * 16)
+    mov     cl,4
+    shr     cs:[ReferenceCount],cl  ;(total) / 16 + 0.5
+;
+; Restore the context of the program being timed and return to it.
+;
+    pop     cx
+    pop     ax
+    MPOPF
+    ret
+
+ZTimerOff   endp
+
+;
+; Called by ZTimerOff to start the timer for overhead measurements.
+;
+
+ReferenceZTimerOn   proc    near
+;
+; Save the context of the program being timed.
+;
+    push    ax
+    pushf
+;
+; Set timer 0 of the 8253 to mode 2 (divide-by-N), to cause
+; linear counting rather than count-by-two counting.
+;
+    mov     al,00110100b        ;mode 2
+    out     MODE_8253,al
+;
+; Set the timer count to 0.
+;
+    DELAY
+    sub     al,al
+    out     TIMER_0_8253,al     ;lsb
+    DELAY
+    out     TIMER_0_8253,al     ;msb
+;
+; Restore the context of the program being timed and return to it.
+;
+    MPOPF
+    pop     ax
+    ret
+
+ReferenceZTimerOn   endp
+
+;
+; Called by ZTimerOff to stop the timer and add the result to
+; ReferenceCount for overhead measurements. Doesn't need to look
+; at the BIOS count because timing a zero-length code fragment
+; isn't going to take anywhere near 54 ms.
+;
+
+ReferenceZTimerOff  proc    near
+;
+; Save the context of the program being timed.
+;
+    pushf
+    push    ax
+    push    cx
+
+;
+; Match the interrupt-window delay in ZTimerOff.
+;
+    sti
+    rept    10
+    jmp     $+2
+    endm
+
+    mov     al,00000000b
+    out     MODE_8253,al        ;latch timer
+;
+; Read the count and save it.
+;
+    DELAY
+    in      al,TIMER_0_8253     ;lsb
+    DELAY
+    mov     ah,al
+    in      al,TIMER_0_8253     ;msb
+    xchg    ah,al
+    neg     ax                  ;convert from countdown
+                                ; remaining to elapsed
+                                ; count
+    add     cs:[ReferenceCount],ax
+;
+; Restore the context and return.
+;
+    pop     cx
+    pop     ax
+    MPOPF
+    ret
+
+ReferenceZTimerOff  endp
+
+;********************************************************************
+;* Routine called to report timing results.                         *
+;********************************************************************
+
+ZTimerReport    proc    near
+
+    pushf
+    push    ax
+    push    bx
+    push    cx
+    push    dx
+    push    si
+    push    di
+    push    ds
+;
+    push    cs              ;DOS functions require that DS point
+    pop     ds              ; to text to be displayed on the screen
+    assume  ds:Code
+;
+; See if midnight or more than an hour passed during timing. If so,
+; notify the user.
+;
+    mov     ax,[StartBIOSCountHigh]
+    cmp     ax,[EndBIOSCountHigh]
+    jz      CalcBIOSTime                ;hour count didn't change,
+                                        ; so everything's fine
+    inc     ax
+    cmp     ax,[EndBIOSCountHigh]
+    jnz     TestTooLong                 ;midnight or two hour
+                                        ; boundaries passed, so the
+                                        ; results are no good
+    mov     ax,[EndBIOSCountLow]
+    cmp     ax,[StartBIOSCountLow]
+    jb      CalcBIOSTime                ;a single hour boundary
+                                        ; passed-that's OK, so long as
+                                        ; the total time wasn't more
+                                        ; than an hour
+
+;
+; Over an hour elapsed or midnight passed during timing, which
+; renders the results invalid. Notify the user. This misses the
+; case where a multiple of 24 hours has passed, but we'll rely
+; on the perspicacity of the user to detect that case.
+;
+TestTooLong:
+    mov     ah,9
+    mov     dx,offset TurnOverStr
+    int     21h
+    jmp     short ZTimerReportDone
+;
+; Convert the BIOS time to microseconds.
+;
+CalcBIOSTime:
+    mov     ax,[EndBIOSCountLow]
+    sub     ax,[StartBIOSCountLow]
+    mov     dx,54925                ;number of microseconds each
+                                    ; BIOS count represents
+    mul     dx
+    mov     bx,ax                   ;set aside BIOS count in
+    mov     cx,dx                   ; microseconds
+;
+; Convert timer count to microseconds.
+;
+    mov     ax,[EndTimedCount]
+    mov     si,8381
+    mul     si
+    mov     si,10000
+    div     si                      ;* .8381 = * 8381 / 10000
+;
+; Add timer and BIOS counts together to get an overall time in
+; microseconds.
+;
+    add     bx,ax
+    adc     cx,0
+;
+; Subtract the timer overhead and save the result.
+;
+    mov     ax,[ReferenceCount]
+    mov     si,8381                 ;convert the reference count
+    mul     si                      ; to microseconds
+    mov     si,10000
+    div     si                      ;* .8381 = * 8381 / 10000
+    sub     bx,ax
+    sbb     cx,0
+    mov     [CurrentCountLow],bx
+    mov     [CurrentCountHigh],cx
+;
+; Convert the result to an ASCII string by trial subtractions of
+; powers of 10.
+;
+    mov     di,offset PowersOfTenEnd -offset PowersOfTen -4
+    mov     si,offset TimedCountStr
+CTSNextDigit:
+    mov     bl,'0'
+CTSLoop:
+    mov     ax,[CurrentCountLow]
+    mov     dx,[CurrentCountHigh]
+    sub     ax,PowersOfTen[di]
+    sbb     dx,PowersOfTen[di+2]
+    jc      CTSNextPowerDown
+    inc     bl
+    mov     [CurrentCountLow],ax
+    mov     [CurrentCountHigh],dx
+    jmp     CTSLoop
+CTSNextPowerDown:
+    mov     [si],bl
+    inc     si
+    sub     di,4
+    jns     CTSNextDigit
+;
+;
+; Print the results.
+;
+    mov     ah,9
+    mov     dx,offset OutputStr
+    int     21h
+;
+ZTimerReportDone:
+    pop     ds
+    pop     di
+    pop     si
+    pop     dx
+    pop     cx
+    pop     bx
+    pop     ax
+    MPOPF
+    ret
+
+ZTimerReport    endp
+
+Code    ends
+        End
+```
 
 ## Listing 2-6
 
-
-**;**
-
-**; \*\*\* Listing 2-6 \*\*\***
-
-**;**
-
-**; Program to measure performance of code that takes longer than**
-
-**; 54 ms to execute. (LZTEST.ASM)**
-
-**;**
-
-**; Link with LZTIMER.ASM (Listing 2-5). LZTEST.BAT (Listing 2-7)**
-
-**; can be used to assemble and link both files. Code to be**
-
-**; measured must be in the file TESTCODE; Listing 2-8 shows**
-
-**; a sample TESTCODE file.**
-
-**;**
-
-**; By Michael Abrash 4/26/89**
-
-**;**
-
-**mystack segment para stack 'STACK'**
-
-**db 512 dup(?)**
-
-**mystack ends**
-
-**;**
-
-**Code segment para public 'CODE'**
-
-**assume cs:Code, ds:Code**
-
-**extrn ZTimerOn:near, ZTimerOff:near, ZTimerReport:near**
-
-**Start proc near**
-
-**push cs**
-
-**pop ds ;point DS to the code segment,**
-
-**; so data as well as code can easily**
-
-**; be included in TESTCODE**
-
-**;**
-
-**; Delay for 6-7 seconds, to let the Enter keystroke that started the**
-
-**; program come back up.**
-
-**;**
-
-**mov ah,2ch**
-
-**int 21h ;get the current time**
-
-**mov bh,dh ;set the current time aside**
-
-**DelayLoop:**
-
-**mov ah,2ch**
-
-**push bx ;preserve start time**
-
-**int 21h ;get time**
-
-**pop bx ;retrieve start time**
-
-**cmp dh,bh ;is the new seconds count less than**
-
-**; the start seconds count?**
-
-**jnb CheckDelayTime ;no**
-
-**add dh,60 ;yes, a minute must have turned over,**
-
-**; so add one minute**
-
-**CheckDelayTime:**
-
-**sub dh,bh ;get time that's passed**
-
-**cmp dh,7 ;has it been more than 6 seconds yet?**
-
-**jb DelayLoop ;not yet**
-
-**;**
-
-**include TESTCODE ;code to be measured, including calls**
-
-**; to ZTimerOn and ZTimerOff**
-
-**;**
-
-**; Display the results.**
-
-**;**
-
-**call ZTimerReport**
-
-**;**
-
-**; Terminate the program.**
-
-**;**
-
-**mov ah,4ch**
-
-**int 21h**
-
-**Start endp**
-
-**Code ends**
-
-**end Start**
-
-
+```nasm
+;
+; *** Listing 2-6 ***
+;
+; Program to measure performance of code that takes longer than
+; 54 ms to execute. (LZTEST.ASM)
+;
+; Link with LZTIMER.ASM (Listing 2-5). LZTEST.BAT (Listing 2-7)
+; can be used to assemble and link both files. Code to be
+; measured must be in the file TESTCODE; Listing 2-8 shows
+; a sample TESTCODE file.
+;
+; By Michael Abrash 4/26/89
+;
+mystack     segment     para stack 'STACK'
+        db  512 dup(?)
+mystack     ends
+;
+Code    segment     para public 'CODE'
+        assume      cs:Code, ds:Code
+        extrn   ZTimerOn:near, ZTimerOff:near, ZTimerReport:near
+Start   proc    near
+        push    cs
+        pop     ds      ;point DS to the code segment,
+                        ; so data as well as code can easily
+                        ; be included in TESTCODE
+;
+; Delay for 6-7 seconds, to let the Enter keystroke that started the
+; program come back up.
+;
+        mov     ah,2ch
+        int     21h             ;get the current time
+        mov     bh,dh           ;set the current time aside
+DelayLoop:
+        mov     ah,2ch
+        push    bx              ;preserve start time
+        int     21h             ;get time
+        pop     bx              ;retrieve start time
+        cmp     dh,bh           ;is the new seconds count less than
+                                ; the start seconds count?
+        jnb     CheckDelayTime  ;no
+        add     dh,60           ;yes, a minute must have turned over,
+                                ; so add one minute
+CheckDelayTime:
+        sub     dh,bh           ;get time that's passed
+        cmp     dh,7            ;has it been more than 6 seconds yet?
+        jb      DelayLoop       ;not yet
+;
+        include TESTCODE        ;code to be measured, including calls
+                                ; to ZTimerOn and ZTimerOff
+;
+; Display the results.
+;
+        call    ZTimerReport
+;
+; Terminate the program.
+;
+        mov     ah,4ch
+        int     21h
+Start   endp
+Code    ends
+        end Start
+```
 
 ## Listing 2-7
 
-
-**echo off**
-
-**rem**
-
-**rem \*\*\* Listing 2-7 \*\*\***
-
-**rem**
-
-**rem
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
-
-**rem \* Batch file LZTIME.BAT, which builds and runs the \***
-
-**rem \* long-period Zen timer program LZTEST.EXE to time the code \***
-
-**rem \* named as the command-line parameter. Listing 2-5 must be \***
-
-**rem \* named LZTIMER.ASM, and Listing 2-6 must be named \***
-
-**rem \* LZTEST.ASM. To time the code in LST2-8, you'd type the \***
-
-**rem \* DOS command: \***
-
-**rem \* \***
-
-**rem \* lztime lst2-8 \***
-
-**rem \* \***
-
-**rem \* Note that MASM and LINK must be in the current directory or
-\***
-
-**rem \* on the current path in order for this batch file to work. \***
-
-**rem \* \***
-
-**rem \* This batch file can be speeded up by assembling LZTIMER.ASM
-\***
-
-**rem \* once, then removing the lines: \***
-
-**rem \* \***
-
-**rem \* masm lztimer; \***
-
-**rem \* if errorlevel 1 goto errorend \***
-
-**rem \* \***
-
-**rem \* from this file. \***
-
-**rem \* \***
-
-**rem \* By Michael Abrash 4/26/89 \***
-
-**rem
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
-
-**rem**
-
-**rem Make sure a file to test was specified.**
-
-**rem**
-
-**if not x%1==x goto ckexist**
-
-**echo
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
-
-**echo \* Please specify a file to test. \***
-
-**echo
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
-
-**goto end**
-
-**rem**
-
-**rem Make sure the file exists.**
-
-**rem**
-
-**:ckexist**
-
-**if exist %1 goto docopy**
-
-**echo
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
-
-**echo \* The specified file, "%1," doesn't exist.**
-
-**echo
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
-
-**goto end**
-
-**rem**
-
-**rem copy the file to measure to TESTCODE.**
-
-**:docopy**
-
-**copy %1 testcode**
-
-**masm lztest;**
-
-**if errorlevel 1 goto errorend**
-
-**masm lztimer;**
-
-**if errorlevel 1 goto errorend**
-
-**link lztest+lztimer;**
-
-**if errorlevel 1 goto errorend**
-
-**lztest**
-
-**goto end**
-
-**:errorend**
-
-**echo
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
-
-**echo \* An error occurred while building the long-period Zen timer.
-\***
-
-**echo
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
-
-**:end**
-
+```bat
+echo off
+rem
+rem *** Listing 2-7 ***
+rem
+rem ***************************************************************
+rem * Batch file LZTIME.BAT, which builds and runs the            *
+rem * long-period Zen timer program LZTEST.EXE to time the code   *
+rem * named as the command-line parameter. Listing 2-5 must be    *
+rem * named LZTIMER.ASM, and Listing 2-6 must be named            *
+rem * LZTEST.ASM. To time the code in LST2-8, you'd type the      *
+rem * DOS command:                                                *
+rem *                                                             *
+rem * lztime lst2-8                                               *
+rem *                                                             *
+rem * Note that MASM and LINK must be in the current directory or *
+rem * on the current path in order for this batch file to work.   *
+rem *                                                             *
+rem * This batch file can be speeded up by assembling LZTIMER.ASM *
+rem * once, then removing the lines:                              *
+rem *                                                             *
+rem * masm lztimer;                                               *
+rem * if errorlevel 1 goto errorend                               *
+rem *                                                             *
+rem * from this file.                                             *
+rem *                                                             *
+rem * By Michael Abrash 4/26/89                                   *
+rem ***************************************************************
+rem
+rem Make sure a file to test was specified.
+rem
+if not x%1==x goto ckexist
+echo ***************************************************************
+echo * Please specify a file to test.                              *
+echo ***************************************************************
+goto end
+rem
+rem Make sure the file exists.
+rem
+:ckexist
+if exist %1 goto docopy
+echo ***************************************************************
+echo * The specified file, "%1," doesn't exist.
+echo ***************************************************************
+goto end
+rem
+rem copy the file to measure to TESTCODE.
+:docopy
+copy %1 testcode
+masm lztest;
+if errorlevel 1 goto errorend
+masm lztimer;
+if errorlevel 1 goto errorend
+link lztest+lztimer;
+if errorlevel 1 goto errorend
+lztest
+goto end
+:errorend
+echo ***************************************************************
+echo * An error occurred while building the long-period Zen timer. *
+echo ***************************************************************
+:end
+```
 
 ## Listing 2-8
 
-
-**;**
-
-**; \*\*\* Listing 2-8 \*\*\***
-
-**;**
-
-**; Measures the performance of 20000 loads of AL from**
-
-**; memory. (Use by renaming to TESTCODE, which is**
-
-**; included by LZTEST.ASM (Listing 2-6). LZTIME.BAT**
-
-**; (Listing 2-7) does this, along with all assembly**
-
-**; and linking.)**
-
-**;**
-
-**; Note: takes about 10 minutes to assemble on a PC with**
-
-**; MASM 5.0.**
-
-**;**
-
-**jmp Skip ;jump around defined data**
-
-**;**
-
-**MemVar db ?**
-
-**;**
-
-**Skip:**
-
-**;**
-
-**; Start timing.**
-
-**;**
-
-**call ZTimerOn**
-
-**;**
-
-**rept 20000**
-
-**mov al,[MemVar]**
-
-**endm**
-
-**;**
-
-**; Stop timing.**
-
-**;**
-
-**call ZTimerOff**
-
+```nasm
+;
+; *** Listing 2-8 ***
+;
+; Measures the performance of 20000 loads of AL from
+; memory. (Use by renaming to TESTCODE, which is
+; included by LZTEST.ASM (Listing 2-6). LZTIME.BAT
+; (Listing 2-7) does this, along with all assembly
+; and linking.)
+;
+; Note: takes about 10 minutes to assemble on a PC with
+;       MASM 5.0.
+;
+        jmp     Skip    ;jump around defined data
+;
+        MemVar  db  ?
+;
+Skip:
+;
+; Start timing.
+;
+        call    ZTimerOn
+;
+        rept    20000
+        mov     al,[MemVar]
+        endm
+;
+; Stop timing.
+;
+        call    ZTimerOff
+```
 
 ## Listing 3-1
 
 
-**;**
-
-**; \*\*\* Listing 3-1 \*\*\***
-
-**;**
-
-**; Times speed of memory access to Enhanced Graphics**
-
-**; Adapter graphics mode display memory at A000:0000.**
-
-**;**
-
-**mov ax,0010h**
-
-**int 10h ;select hi-res EGA graphics**
-
-**; mode 10 hex (AH=0 selects**
-
-**; BIOS set mode function,**
-
-**; with AL=mode to select)**
-
-**;**
-
-**mov ax,0a000h**
-
-**mov ds,ax**
-
-**mov es,ax ;move to & from same segment**
-
-**sub si,si ;move to & from same offset**
-
-**mov di,si**
-
-**mov cx,800h ;move 2K words**
-
-**cld**
-
-**call ZTimerOn**
-
-**rep movsw ;simply read each of the first**
-
-**; 2K words of the destination segment,**
-
-**; writing each byte immediately back**
-
-**; to the same address. No memory**
-
-**; locations are actually altered; this**
-
-**; is just to measure memory access**
-
-**; times**
-
-**call ZTimerOff**
-
-**;**
-
-**mov ax,0003h**
-
-**int 10h ;return to text mode**
-
-**;**
-
-
+```nasm
+;
+; *** Listing 3-1 ***
+;
+; Times speed of memory access to Enhanced Graphics
+; Adapter graphics mode display memory at A000:0000.
+;
+        mov     ax,0010h
+        int     10h         ;select hi-res EGA graphics
+                            ; mode 10 hex (AH=0 selects
+                            ; BIOS set mode function,
+                            ; with AL=mode to select)
+;
+        mov     ax,0a000h
+        mov     ds,ax
+        mov     es,ax       ;move to & from same segment
+        sub     si,si       ;move to & from same offset
+        mov     di,si
+        mov     cx,800h     ;move 2K words
+        cld
+        call    ZTimerOn
+        rep     movsw       ;simply read each of the first
+                            ; 2K words of the destination segment,
+                            ; writing each byte immediately back
+                            ; to the same address. No memory
+                            ; locations are actually altered; this
+                            ; is just to measure memory access
+                            ; times
+        call    ZTimerOff
+;
+        mov     ax,0003h
+        int     10h         ;return to text mode
+;
+```
 
 ## Listing 3-2
 
-
-**; \*\*\* Listing 3-2 \*\*\***
-
-**;**
-
-**; Times speed of memory access to normal system**
-
-**; memory.**
-
-**;**
-
-**mov ax,ds**
-
-**mov es,ax ;move to & from same segment**
-
-**sub si,si ;move to & from same offset**
-
-**mov di,si**
-
-**mov cx,800h ;move 2K words**
-
-**cld**
-
-**call ZTimerOn**
-
-**rep movsw ;simply read each of the first**
-
-**; 2K words of the destination segment,**
-
-**; writing each byte immediately back**
-
-**; to the same address. No memory**
-
-**; locations are actually altered; this**
-
-**; is just to measure memory access**
-
-**; times**
-
-**call ZTimerOff**
-
-
+```nasm
+;
+; *** Listing 3-2 ***
+;
+; Times speed of memory access to normal system
+; memory.
+;
+        mov     ax,ds
+        mov     es,ax       ;move to & from same segment
+        sub     si,si       ;move to & from same offset
+        mov     di,si
+        mov     cx,800h     ;move 2K words
+        cld
+        call    ZTimerOn
+        rep     movsw       ;simply read each of the first
+                            ; 2K words of the destination segment,
+                            ; writing each byte immediately back
+                            ; to the same address. No memory
+                            ; locations are actually altered; this
+                            ; is just to measure memory access
+                            ; times
+        call    ZTimerOff
+```
 
 ## Listing 4-1
 
-
-**;**
-
-**; \*\*\* Listing 4-1 \*\*\***
-
-**;**
-
-**; Measures the performance of a loop which uses a**
-
-**; byte-sized memory variable as the loop counter.**
-
-**;**
-
-**jmp Skip**
-
-**;**
-
-**Counter db 100**
-
-**;**
-
-**Skip:**
-
-**call ZTimerOn**
-
-**LoopTop:**
-
-**dec [Counter]**
-
-**jnz LoopTop**
-
-**call ZTimerOff**
-
-
+```nasm
+;
+; *** Listing 4-1 ***
+;
+; Measures the performance of a loop which uses a
+; byte-sized memory variable as the loop counter.
+;
+        jmp     Skip
+;
+Counter db      100
+;
+Skip:
+        call    ZTimerOn
+LoopTop:
+        dec     [Counter]
+        jnz     LoopTop
+        call    ZTimerOff
+```
 
 ## Listing 4-2
 
-
-**;**
-
-**; \*\*\* Listing 4-2 \*\*\***
-
-**;**
-
-**; Measures the performance of a loop which uses a**
-
-**; word-sized memory variable as the loop counter.**
-
-**;**
-
-**jmp Skip**
-
-**;**
-
-**Counter dw 100**
-
-**;**
-
-**Skip:**
-
-**call ZTimerOn**
-
-**LoopTop:**
-
-**dec [Counter]**
-
-**jnz LoopTop**
-
-**call ZTimerOff**
-
-
+```nasm
+;
+; *** Listing 4-2 ***
+;
+; Measures the performance of a loop which uses a
+; word-sized memory variable as the loop counter.
+;
+        jmp     Skip
+;
+Counter dw      100
+;
+Skip:
+        call    ZTimerOn
+LoopTop:
+        dec     [Counter]
+        jnz     LoopTop
+        call    ZTimerOff
+```
 
 ## Listing 4-3
 
-
-**;**
-
-**; \*\*\* Listing 4-3 \*\*\***
-
-**;**
-
-**; Measures the performance of reading 1000 words**
-
-**; from memory with 1000 word-sized accesses.**
-
-**;**
-
-**sub si,si**
-
-**mov cx,1000**
-
-**call ZTimerOn**
-
-**rep lodsw**
-
-**call ZTimerOff**
-
-
+```nasm
+;
+; *** Listing 4-3 ***
+;
+; Measures the performance of reading 1000 words
+; from memory with 1000 word-sized accesses.
+;
+        sub     si,si
+        mov     cx,1000
+        call    ZTimerOn
+        rep     lodsw
+        call    ZTimerOff
+```
 
 ## Listing 4-4
 
-
-**;**
-
-**; \*\*\* Listing 4-4 \*\*\***
-
-**;**
-
-**; Measures the performance of reading 1000 words**
-
-**; from memory with 2000 byte-sized accesses.**
-
-**;**
-
-**sub si,si**
-
-**mov cx,2000**
-
-**call ZTimerOn**
-
-**rep lodsb**
-
-**call ZTimerOff**
-
-
+```nasm
+;
+; *** Listing 4-4 ***
+;
+; Measures the performance of reading 1000 words
+; from memory with 2000 byte-sized accesses.
+;
+        sub     si,si
+        mov     cx,2000
+        call    ZTimerOn
+        rep     lodsb
+        call    ZTimerOff
+```
 
 ## Listing 4-5
 
-
-**;**
-
-**; \*\*\* Listing 4-5 \*\*\***
-
-**;**
-
-**; Measures the performance of 1000 SHR instructions**
-
-**; in a row. Since SHR executes in 2 cycles but is**
-
-**; 2 bytes long, the prefetch queue is always empty,**
-
-**; and prefetching time determines the overall**
-
-**; performance of the code.**
-
-**;**
-
-**call ZTimerOn**
-
-**rept 1000**
-
-**shr ax,1**
-
-**endm**
-
-**call ZTimerOff**
-
-
+```nasm
+;
+; *** Listing 4-5 ***
+;
+; Measures the performance of 1000 SHR instructions
+; in a row. Since SHR executes in 2 cycles but is
+; 2 bytes long, the prefetch queue is always empty,
+; and prefetching time determines the overall
+; performance of the code.
+;
+        call    ZTimerOn
+        rept    1000
+        shr     ax,1
+        endm
+        call    ZTimerOff
+```
 
 ## Listing 4-6
 
-
-**;**
-
-**; \*\*\* Listing 4-6 \*\*\***
-
-**;**
-
-**; Measures the performance of 1000 MUL/SHR instruction**
-
-**; pairs in a row. The lengthy execution time of MUL**
-
-**; should keep the prefetch queue from ever emptying.**
-
-**;**
-
-**mov cx,1000**
-
-**sub ax,ax**
-
-**call ZTimerOn**
-
-**rept 1000**
-
-**mul ax**
-
-**shr ax,1**
-
-**endm**
-
-**call ZTimerOff**
-
-
+```nasm
+;
+; *** Listing 4-6 ***
+;
+; Measures the performance of 1000 MUL/SHR instruction
+; pairs in a row. The lengthy execution time of MUL
+; should keep the prefetch queue from ever emptying.
+;
+        mov     cx,1000
+        sub     ax,ax
+        call    ZTimerOn
+        rept    1000
+        mul     ax
+        shr     ax,1
+        endm
+        call    ZTimerOff
+```
 
 ## Listing 4-7
 
-
-**;**
-
-**; \*\*\* Listing 4-7 \*\*\***
-
-**;**
-
-**; Measures the performance of repeated MOV AL,0 instructions,**
-
-**; which take 4 cycles each according to Intel's official**
-
-**; specifications.**
-
-**;**
-
-**sub ax,ax**
-
-**call ZTimerOn**
-
-**rept 1000**
-
-**mov al,0**
-
-**endm**
-
-**call ZTimerOff**
-
-
+```nasm
+;
+; *** Listing 4-7 ***
+;
+; Measures the performance of repeated MOV AL,0 instructions,
+; which take 4 cycles each according to Intel's official
+; specifications.
+;
+        sub     ax,ax
+        call    ZTimerOn
+        rept    1000
+        mov     al,0
+        endm
+        call    ZTimerOff
+```
 
 ## Listing 4-8
 
-
-**;**
-
-**; \*\*\* Listing 4-8 \*\*\***
-
-**;**
-
-**; Measures the performance of repeated SUB AL,ALinstructions,**
-
-**; which take 3 cycles each according to Intel's official**
-
-**; specifications.**
-
-**;**
-
-**sub ax,ax**
-
-**call ZTimerOn**
-
-**rept 1000**
-
-**sub al,al**
-
-**endm**
-
-**call ZTimerOff**
-
-
-
+```nasm
+;
+; *** Listing 4-8 ***
+;
+; Measures the performance of repeated SUB AL,ALinstructions,
+; which take 3 cycles each according to Intel's official
+; specifications.
+;
+        sub     ax,ax
+        call    ZTimerOn
+        rept    1000
+        sub     al,al
+        endm
+        call    ZTimerOff
+```
 
 ## Listing 4-9
 
-
-**;**
-
-**; \*\*\* Listing 4-9 \*\*\***
-
-**;**
-
-**; Measures the performance of repeated MULinstructions,**
-
-**; which allow the prefetch queue to be full at all times,**
-
-**; to demonstrate a case in which DRAM refresh has no impact**
-
-**; on code performance.**
-
-**;**
-
-**sub ax,ax**
-
-**call ZTimerOn**
-
-**rept 1000**
-
-**mul ax**
-
-**endm**
-
-**call ZTimerOff**
-
-
+```nasm
+;
+; *** Listing 4-9 ***
+;
+; Measures the performance of repeated MULinstructions,
+; which allow the prefetch queue to be full at all times,
+; to demonstrate a case in which DRAM refresh has no impact
+; on code performance.
+;
+        sub     ax,ax
+        call    ZTimerOn
+        rept    1000
+        mul     ax
+        endm
+        call    ZTimerOff
+```
 
 ## Listing 4-10
 
-
-**;**
-
-**; \*\*\* Listing 4-10 \*\*\***
-
-**;**
-
-**; Measures the performance of repeated SHR instructions,**
-
-**; which empty the prefetch queue, to demonstrate the**
-
-**; worst-case impact of DRAM refresh on code performance.**
-
-**;**
-
-**call ZTimerOn**
-
-**rept 1000**
-
-**shr ax,1**
-
-**endm**
-
-**call ZTimerOff**
-
-
+```nasm
+;
+; *** Listing 4-10 ***
+;
+; Measures the performance of repeated SHR instructions,
+; which empty the prefetch queue, to demonstrate the
+; worst-case impact of DRAM refresh on code performance.
+;
+        call    ZTimerOn
+        rept    1000
+        shr     ax,1
+        endm
+        call    ZTimerOff
+```
 
 ## Listing 4-11
 
-
-**;**
-
-**; \*\*\* Listing 4-11 \*\*\***
-
-**;**
-
-**; Times speed of memory access to Enhanced Graphics**
-
-**; Adapter graphics mode display memory at A000:0000.**
-
-**;**
-
-**mov ax,0010h**
-
-**int 10h ;select hi-res EGA graphics**
-
-**; mode 10 hex (AH=0 selects**
-
-**; BIOS set mode function,**
-
-**; with AL=mode to select)**
-
-**;**
-
-**mov ax,0a000h**
-
-**mov ds,ax**
-
-**mov es,ax ;move to & from same segment**
-
-**sub si,si ;move to & from same offset**
-
-**mov di,si**
-
-**mov cx,800h ;move 2K words**
-
-**cld**
-
-**call ZTimerOn**
-
-**rep movsw ;simply read each of the first**
-
-**; 2K words of the destination segment,**
-
-**; writing each byte immediately back**
-
-**; to the same address. No memory**
-
-**; locations are actually altered; this**
-
-**; is just to measure memory access**
-
-**; times**
-
-**call ZTimerOff**
-
-**;**
-
-**mov ax,0003h**
-
-**int 10h ;return to text mode**
-
-
+```nasm
+;
+; *** Listing 4-11 ***
+;
+; Times speed of memory access to Enhanced Graphics
+; Adapter graphics mode display memory at A000:0000.
+;
+        mov     ax,0010h
+        int     10h         ;select hi-res EGA graphics
+                            ; mode 10 hex (AH=0 selects
+                            ; BIOS set mode function,
+                            ; with AL=mode to select)
+;
+        mov     ax,0a000h
+        mov     ds,ax
+        mov     es,ax       ;move to & from same segment
+        sub     si,si       ;move to & from same offset
+        mov     di,si
+        mov     cx,800h     ;move 2K words
+        cld
+        call    ZTimerOn
+        rep     movsw       ;simply read each of the first
+                            ; 2K words of the destination segment,
+                            ; writing each byte immediately back
+                            ; to the same address. No memory
+                            ; locations are actually altered; this
+                            ; is just to measure memory access
+                            ; times
+        call    ZTimerOff
+;
+        mov     ax,0003h
+        int     10h         ;return to text mode
+```
 
 ## Listing 4-12
 
-
-**;**
-
-**; \*\*\* Listing 4-12 \*\*\***
-
-**;**
-
-**; Times speed of memory access to normal system**
-
-**; memory.**
-
-**;**
-
-**mov ax,ds**
-
-**mov es,ax ;move to & from same segment**
-
-**sub si,si ;move to & from same offset**
-
-**mov di,si**
-
-**mov cx,800h ;move 2K words**
-
-**cld**
-
-**call ZTimerOn**
-
-**rep movsw ;simply read each of the first**
-
-**; 2K words of the destination segment,**
-
-**; writing each byte immediately back**
-
-**; to the same address. No memory**
-
-**; locations are actually altered; this**
-
-**; is just to measure memory access**
-
-**; times**
-
-**call ZTimerOff**
-
+```nasm
+;
+; *** Listing 4-12 ***
+;
+; Times speed of memory access to normal system
+; memory.
+;
+        mov     ax,ds
+        mov     es,ax       ;move to & from same segment
+        sub     si,si       ;move to & from same offset
+        mov     di,si
+        mov     cx,800h     ;move 2K words
+        cld
+        call    ZTimerOn
+        rep     movsw       ;simply read each of the first
+                            ; 2K words of the destination segment,
+                            ; writing each byte immediately back
+                            ; to the same address. No memory
+                            ; locations are actually altered; this
+                            ; is just to measure memory access
+                            ; times
+        call    ZTimerOff
+```
 
 ## Listing 5-1
 
-
-**;**
-
-**; \*\*\* Listing 5-1 \*\*\***
-
-**;**
-
-**; Copies a byte via AH endlessly, for the purpose of**
-
-**; illustrating the complexity of a complete understanding**
-
-**; of even the simplest instruction sequence on the PC.**
-
-**;**
-
-**; Note: This program is an endless loop, and never exits!**
-
-**;**
-
-**; Compile and link as a standalone program; not intended**
-
-**; for use with the Zen timer.**
-
-**;**
-
-**mystack segment para stack 'STACK'**
-
-**db 512 dup(?)**
-
-**mystack ends**
-
-**;**
-
-**Code segment word public 'CODE'**
-
-**assume cs:Code, ds:Code**
-
-**Start proc near**
-
-**push cs**
-
-**pop ds**
-
-**jmp Skip**
-
-**;**
-
-**i db 1**
-
-**j db 0**
-
-**;**
-
-**Skip:**
-
-**rept 1000**
-
-**mov ah,ds:[i]**
-
-**mov ds:[j],ah**
-
-**endm**
-
-**jmp Skip**
-
-**Start endp**
-
-**Code ends**
-
-**end Start**
-
-
+```nasm
+;
+; *** Listing 5-1 ***
+;
+; Copies a byte via AH endlessly, for the purpose of
+; illustrating the complexity of a complete understanding
+; of even the simplest instruction sequence on the PC.
+;
+; Note: This program is an endless loop, and never exits!
+;
+; Compile and link as a standalone program; not intended
+; for use with the Zen timer.
+;
+mystack     segment     para stack 'STACK'
+        db  512 dup(?)
+mystack     ends
+;
+Code    segment word public 'CODE'
+        assume  cs:Code, ds:Code
+Start   proc    near
+        push    cs
+        pop     ds
+        jmp     Skip
+;
+i       db      1
+j       db      0
+;
+Skip:
+        rept    1000
+        mov     ah,ds:[i]
+        mov     ds:[j],ah
+        endm
+        jmp     Skip
+Start   endp
+Code    ends
+        end     Start
+```
 
 ## Listing 7-1
 
-
-**;**
-
-**; \*\*\* Listing 7-1 \*\*\***
-
-**;**
-
-**; Calculates the 16-bit sum of all bytes in a 64Kb block.**
-
-**;**
-
-**; Time with LZTIME.BAT, since this takes more than**
-
-**; 54 ms to run.**
-
-**;**
-
-**call ZTimerOn**
-
-**sub bx,bx ;we'll just sum the data segment**
-
-**sub cx,cx ;count 64K bytes**
-
-**mov ax,cx ;set initial sum to 0**
-
-**mov dh,ah ;set DH to 0 for summing later**
-
-**SumLoop:**
-
-**mov dl,[bx] ;get this byte**
-
-**add ax,dx ;add the byte to the sum**
-
-**inc bx ;point to the next byte**
-
-**loop SumLoop**
-
-**call ZTimerOff**
-
-
+```nasm
+;
+; *** Listing 7-1 ***
+;
+; Calculates the 16-bit sum of all bytes in a 64Kb block.
+;
+; Time with LZTIME.BAT, since this takes more than
+; 54 ms to run.
+;
+        call    ZTimerOn
+        sub     bx,bx       ;we'll just sum the data segment
+        sub     cx,cx       ;count 64K bytes
+        mov     ax,cx       ;set initial sum to 0
+        mov     dh,ah       ;set DH to 0 for summing later
+SumLoop:
+        mov     dl,[bx]     ;get this byte
+        add     ax,dx       ;add the byte to the sum
+        inc     bx          ;point to the next byte
+        loop    SumLoop
+        call    ZTimerOff
+```
 
 ## Listing 7-2
 
-
-**;**
-
-**; \*\*\* Listing 7-2 \*\*\***
-
-**;**
-
-**; Calculates the 16-bit sum of all bytes in a 128Kb block.**
-
-**;**
-
-**; Time with LZTIME.BAT, since this takes more than**
-
-**; 54 ms to run.**
-
-**;**
-
-**call ZTimerOn**
-
-**sub bx,bx ;we'll just sum the 128Kb starting**
-
-**; at DS:0**
-
-**sub cx,cx ;count 128K bytes with SI:CX**
-
-**mov si,2**
-
-**mov ax,cx ;set initial sum to 0**
-
-**mov dh,ah ;set DH to 0 for summing later**
-
-**SumLoop:**
-
-**mov dl,[bx] ;get this byte**
-
-**add ax,dx ;add the byte to the sum**
-
-**inc bx ;point to the next byte**
-
-**and bx,0fh ;time to advance the segment?**
-
-**jnz SumLoopEnd ;not yet**
-
-**mov di,ds ;advance the segment by 1; since BX**
-
-**inc di ; has just gone from 15 to 0, we've**
-
-**mov ds,di ; advanced 1 byte in all**
-
-**SumLoopEnd:**
-
-**loop SumLoop**
-
-**dec si**
-
-**jnz SumLoop**
-
-**call ZTimerOff**
-
-
+```nasm
+;
+; *** Listing 7-2 ***
+;
+; Calculates the 16-bit sum of all bytes in a 128Kb block.
+;
+; Time with LZTIME.BAT, since this takes more than
+; 54 ms to run.
+;
+        call    ZTimerOn
+        sub     bx,bx       ;we'll just sum the 128Kb starting
+                            ; at DS:0
+        sub     cx,cx       ;count 128K bytes with SI:CX
+        mov     si,2
+        mov     ax,cx       ;set initial sum to 0
+        mov     dh,ah       ;set DH to 0 for summing later
+SumLoop:
+        mov     dl,[bx]     ;get this byte
+        add     ax,dx       ;add the byte to the sum
+        inc     bx          ;point to the next byte
+        and     bx,0fh      ;time to advance the segment?
+        jnz     SumLoopEnd  ;not yet
+        mov     di,ds       ;advance the segment by 1; since BX
+        inc     di          ; has just gone from 15 to 0, we've
+        mov     ds,di       ; advanced 1 byte in all
+SumLoopEnd:
+        loop    SumLoop
+        dec     si
+        jnz     SumLoop
+        call    ZTimerOff
+```
 
 ## Listing 7-3
 
-
-**;**
-
-**; \*\*\* Listing 7-3 \*\*\***
-
-**;**
-
-**; Calculates the 16-bit sum of all bytes in a 128Kb block**
-
-**; using optimized code that takes advantage of the knowledge**
-
-**; that the first byte summed is at offset 0 in its segment.**
-
-**;**
-
-**; Time with LZTIME.BAT, since this takes more than**
-
-**; 54 ms to run.**
-
-**;**
-
-**call ZTimerOn**
-
-**sub bx,bx ;we'll just sum the 128Kb starting**
-
-**; at DS:0**
-
-**mov cx,2 ;count two 64Kb blocks**
-
-**mov ax,bx ;set initial sum to 0**
-
-**mov dh,ah ;set DH to 0 for summing later**
-
-**SumLoop:**
-
-**mov dl,[bx] ;get this byte**
-
-**add ax,dx ;add the byte to the sum**
-
-**inc bx ;point to the next byte**
-
-**jnz SumLoop ;go until we wrap at the end of a**
-
-**; 64Kb block**
-
-**mov si,ds**
-
-**add si,1000h ;advance the segment by 64K bytes**
-
-**mov ds,si**
-
-**loop SumLoop ;count down 64Kb blocks**
-
-**call ZTimerOff**
-
-
+```nasm
+;
+; *** Listing 7-3 ***
+;
+; Calculates the 16-bit sum of all bytes in a 128Kb block
+; using optimized code that takes advantage of the knowledge
+; that the first byte summed is at offset 0 in its segment.
+;
+; Time with LZTIME.BAT, since this takes more than
+; 54 ms to run.
+;
+        call    ZTimerOn
+        sub     bx,bx       ;we'll just sum the 128Kb starting
+                            ; at DS:0
+        mov     cx,2        ;count two 64Kb blocks
+        mov     ax,bx       ;set initial sum to 0
+        mov     dh,ah       ;set DH to 0 for summing later
+SumLoop:
+        mov     dl,[bx]     ;get this byte
+        add     ax,dx       ;add the byte to the sum
+        inc     bx          ;point to the next byte
+        jnz     SumLoop     ;go until we wrap at the end of a
+                            ; 64Kb block
+        mov     si,ds
+        add     si,1000h    ;advance the segment by 64K bytes
+        mov     ds,si
+        loop    SumLoop     ;count down 64Kb blocks
+        call    ZTimerOff
+```
 
 ## Listing 7-4
 
-
-**;**
-
-**; \*\*\* Listing 7-4 \*\*\***
-
-**;**
-
-**; Adds one far array to another far array as a high-level**
-
-**; language would, loading each far pointer with LES every**
-
-**; time it's needed.**
-
-**;**
-
-**jmp Skip**
-
-**;**
-
-**ARRAY\_LENGTH equ 1000**
-
-**Array1 db ARRAY\_LENGTH dup (1)**
-
-**Array2 db ARRAY\_LENGTH dup (2)**
-
-**;**
-
-**; Adds one byte-sized array to another byte-sized array.**
-
-**; C-callable.**
-
-**;**
-
-**; Input: parameters on stack as in AddArraysParms**
-
-**;**
-
-**; Output: none**
-
-**;**
-
-**; Registers altered: AL, BX, CX, ES**
-
-**;**
-
-**AddArraysParms struc**
-
-**dw ? ;pushed BP**
-
-**dw ? ;return address**
-
-**FarPtr1 dd ? ;pointer to array to be added to**
-
-**FarPtr2 dd ? ;pointer to array to add to the**
-
-**; other array**
-
-**AddArraysLength dw ? ;\# of bytes to add**
-
-**AddArraysParms ends**
-
-**;**
-
-**AddArrays proc near**
-
-**push bp ;save caller's BP**
-
-**mov bp,sp ;point to stack frame**
-
-**mov cx,[bp+AddArraysLength]**
-
-**;get the length to add**
-
-**AddArraysLoop:**
-
-**les bx,[bp+FarPtr2] ;point to the array to add**
-
-**; from**
-
-**inc word ptr [bp+FarPtr2]**
-
-**;point to the next byte**
-
-**; of the array to add from**
-
-**mov al,es:[bx] ;get the array element to**
-
-**; add**
-
-**les bx,[bp+FarPtr1] ;point to the array to add**
-
-**; to**
-
-**inc word ptr [bp+FarPtr1]**
-
-**;point to the next byte**
-
-**; of the array to add to**
-
-**add es:[bx],al ;add to the array**
-
-**loop AddArraysLoop**
-
-**pop bp ;restore caller's BP**
-
-**ret**
-
-**AddArrays endp**
-
-**;**
-
-**Skip:**
-
-**call ZTimerOn**
-
-**mov ax,ARRAY\_LENGTH**
-
-**push ax ;pass the length to add**
-
-**push ds ;pass segment of Array2**
-
-**mov ax,offset Array2**
-
-**push ax ;pass offset of Array2**
-
-**push ds ;pass segment of Array1**
-
-**mov ax,offset Array1**
-
-**push ax ;pass offset of Array1**
-
-**call AddArrays**
-
-**add sp,10 ;clear the parameters**
-
-**call ZTimerOff**
-
-
+```nasm
+;
+; *** Listing 7-4 ***
+;
+; Adds one far array to another far array as a high-level
+; language would, loading each far pointer with LES every
+; time it's needed.
+;
+        jmp     Skip
+;
+ARRAY_LENGTH    equ     1000
+Array1      db  ARRAY_LENGTH dup (1)
+Array2      db  ARRAY_LENGTH dup (2)
+;
+; Adds one byte-sized array to another byte-sized array.
+; C-callable.
+;
+; Input: parameters on stack as in AddArraysParms
+;
+; Output: none
+;
+; Registers altered: AL, BX, CX, ES
+;
+AddArraysParms  struc
+        dw  ?               ;pushed BP
+        dw  ?               ;return address
+FarPtr1 dd  ?               ;pointer to array to be added to
+FarPtr2 dd  ?               ;pointer to array to add to the
+; other array
+AddArraysLength dw      ?   ;# of bytes to add
+AddArraysParms  ends
+;
+AddArrays   proc    near
+        push    bp                          ;save caller's BP
+        mov     bp,sp                       ;point to stack frame
+        mov     cx,[bp+AddArraysLength]
+                                            ;get the length to add
+AddArraysLoop:
+        les     bx,[bp+FarPtr2]             ;point to the array to add
+                                            ; from
+        inc     word ptr [bp+FarPtr2]
+                                            ;point to the next byte
+                                            ; of the array to add from
+        mov     al,es:[bx]                  ;get the array element to
+                                            ; add
+        les     bx,[bp+FarPtr1]             ;point to the array to add
+                                            ; to
+        inc     word ptr [bp+FarPtr1]
+                                            ;point to the next byte
+                                            ; of the array to add to
+        add     es:[bx],al                  ;add to the array
+        loop    AddArraysLoop
+        pop     bp                          ;restore caller's BP
+        ret
+AddArrays   endp
+;
+Skip:
+        call    ZTimerOn
+        mov     ax,ARRAY_LENGTH
+        push    ax                  ;pass the length to add
+        push    ds                  ;pass segment of Array2
+        mov     ax,offset Array2
+        push    ax                  ;pass offset of Array2
+        push    ds                  ;pass segment of Array1
+        mov     ax,offset Array1
+        push    ax                  ;pass offset of Array1
+        call    AddArrays
+        add     sp,10               ;clear the parameters
+        call    ZTimerOff
+```
 
 ## Listing 7-5
 
-
-**;**
-
-**; \*\*\* Listing 7-5 \*\*\***
-
-**;**
-
-**; Adds one far array to another far array as only assembler**
-
-**; can, loading the two far pointers once and keeping them in**
-
-**; the registers during the entire loop for speed.**
-
-**;**
-
-**jmp Skip**
-
-**;**
-
-**ARRAY\_LENGTH equ 1000**
-
-**Array1 db ARRAY\_LENGTH dup (1)**
-
-**Array2 db ARRAY\_LENGTH dup (2)**
-
-**;**
-
-**; Adds one byte-sized array to another byte-sized array.**
-
-**; C-callable.**
-
-**;**
-
-**; Input: parameters on stack as in AddArraysParms**
-
-**;**
-
-**; Output: none**
-
-**;**
-
-**; Registers altered: AL, BX, CX, DX, ES**
-
-**;**
-
-**AddArraysParms struc**
-
-**dw ? ;pushed BP**
-
-**dw ? ;return address**
-
-**FarPtr1 dd ? ;pointer to array to be added to**
-
-**FarPtr2 dd ? ;pointer to array to add to the**
-
-**; other array**
-
-**AddArraysLength dw ? ;\# of bytes to add**
-
-**AddArraysParms ends**
-
-**;**
-
-**AddArrays proc near**
-
-**push bp ;save caller's BP**
-
-**mov bp,sp ;point to stack frame**
-
-**push si ;save registers used by many**
-
-**push di ; C compilers for register**
-
-**; variables**
-
-**mov cx,[bp+AddArraysLength]**
-
-**;get the length to add**
-
-**les si,[bp+FarPtr2] ;point to the array to add**
-
-**; from**
-
-**mov dx,es ;set aside the segment**
-
-**les bx,[bp+FarPtr1] ;point to the array to add**
-
-**; to**
-
-**mov di,es ;set aside the segment**
-
-**AddArraysLoop:**
-
-**mov es,dx ;point ES:SI to the next**
-
-**; byte of the array to add**
-
-**; from**
-
-**mov al,es:[si] ;get the array element to**
-
-**; add**
-
-**inc si ;point to the next byte of**
-
-**; the array to add from**
-
-**mov es,di ;point ES:BX to the next**
-
-**; byte of the array to add**
-
-**; to**
-
-**add es:[bx],al ;add to the array**
-
-**inc bx ;point to the next byte of**
-
-**; the array to add to**
-
-**loop AddArraysLoop**
-
-**pop di ;restore registers used by**
-
-**pop si ; many C compilers for**
-
-**; register variables**
-
-**pop bp ;restore caller's BP**
-
-**ret**
-
-**AddArrays endp**
-
-**;**
-
-**Skip:**
-
-**call ZTimerOn**
-
-**mov ax,ARRAY\_LENGTH**
-
-**push ax ;pass the length to add**
-
-**push ds ;pass segment of Array2**
-
-**mov ax,offset Array2**
-
-**push ax ;pass offset of Array2**
-
-**push ds ;pass segment of Array1**
-
-**mov ax,offset Array1**
-
-**push ax ;pass offset of Array1**
-
-**call AddArrays**
-
-**add sp,10 ;clear the parameters**
-
-**call ZTimerOff**
-
-
+```nasm
+;
+; *** Listing 7-5 ***
+;
+; Adds one far array to another far array as only assembler
+; can, loading the two far pointers once and keeping them in
+; the registers during the entire loop for speed.
+;
+        jmp     Skip
+;
+ARRAY_LENGTH    equ     1000
+Array1      db  ARRAY_LENGTH dup (1)
+Array2      db  ARRAY_LENGTH dup (2)
+;
+; Adds one byte-sized array to another byte-sized array.
+; C-callable.
+;
+; Input: parameters on stack as in AddArraysParms
+;
+; Output: none
+;
+; Registers altered: AL, BX, CX, DX, ES
+;
+AddArraysParms  struc
+        dw  ?               ;pushed BP
+        dw  ?               ;return address
+FarPtr1 dd  ?               ;pointer to array to be added to
+FarPtr2 dd  ?               ;pointer to array to add to the
+                            ; other array
+AddArraysLength     dw  ?   ;# of bytes to add
+AddArraysParms      ends
+;
+AddArrays   proc    near
+        push    bp                      ;save caller's BP
+        mov     bp,sp                   ;point to stack frame
+        push    si                      ;save registers used by many
+        push    di                      ; C compilers for register
+                                        ; variables
+        mov     cx,[bp+AddArraysLength]
+                                        ;get the length to add
+        les     si,[bp+FarPtr2]         ;point to the array to add
+                                        ; from
+        mov     dx,es                   ;set aside the segment
+        les     bx,[bp+FarPtr1]         ;point to the array to add
+                                        ; to
+        mov     di,es                   ;set aside the segment
+AddArraysLoop:
+        mov     es,dx                   ;point ES:SI to the next
+                                        ; byte of the array to add
+                                        ; from
+        mov     al,es:[si]              ;get the array element to
+                                        ; add
+        inc     si                      ;point to the next byte of
+                                        ; the array to add from
+        mov     es,di                   ;point ES:BX to the next
+                                        ; byte of the array to add
+                                        ; to
+        add     es:[bx],al              ;add to the array
+        inc     bx                      ;point to the next byte of
+                                        ; the array to add to
+        loop    AddArraysLoop
+        pop     di                      ;restore registers used by
+        pop     si                      ; many C compilers for
+                                        ; register variables
+        pop     bp                      ;restore caller's BP
+        ret
+        AddArrays   endp
+;
+Skip:
+        call    ZTimerOn
+        mov     ax,ARRAY_LENGTH
+        push    ax                  ;pass the length to add
+        push    ds                  ;pass segment of Array2
+        mov     ax,offset Array2
+        push    ax                  ;pass offset of Array2
+        push    ds                  ;pass segment of Array1
+        mov     ax,offset Array1
+        push    ax                  ;pass offset of Array1
+        call    AddArrays
+        add     sp,10               ;clear the parameters
+        call    ZTimerOff
+```
 
 ## Listing 7-6
 
