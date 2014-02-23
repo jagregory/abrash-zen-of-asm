@@ -36,7 +36,7 @@ All of which simply serves to reinforce the notion that the more we know about t
 
 Figure 6.1 shows the 8088's register set to be a mix of general and special-purpose registers. The 8088 offers only seven truly general-purpose
 
-![](images/fig6.1RT.png)
+![**Figure 6.1** The 8088's register set.](images/fig6.1RT.png)
 
 registers—AX, BX, CX, DX, SI, DI, and BP—a small set that seems even smaller because four of these registers double as memory-addressing registers and because the slow speed of memory assess dictates use of registers whenever possible. Only certain registers can be used for many functions; for example, only BX, BP, SI, and DI can be used to generate memory-addressing offsets, and then only in certain combinations. Likewise, only AX, BX, CX, and DX can be accessed as either as single 16-bit registers or paired 8-bit registers.
 
@@ -163,7 +163,7 @@ As we've discussed, in one sense the instruction pointer points to the next inst
 
 The flags register contains the nine bit-sized status flags of the 8088, as shown in Figure 6.2. Six of these flags—CF, PF, AF, ZF, SF, and OF, collectively known as the status flags—reflect the status of logical and arithmetic operations; two—IF and DF—control aspects of the 8088's operation; and one—TF—is used only by debugging software.
 
-![](images/fig6.2RT.png)
+![**Figure 6.2** The 8088's flags.](images/fig6.2RT.png)
 
 The flags are generally tested singly (or occasionally in pairs or even three at a time, as when testing signed operands); however, many arithmetic and logical instructions set all six status flags to indicate result statuses, and a few instructions work directly with all or half of the flags register at once. For example, `pushf`{.nasm} pushes the flags register onto the stack, and `popf`{.nasm} pops the word on top of the stack into the flags register. (We'll encounter an interesting complication with `popf`{.nasm} on the 80286 in Chapter 15.) In Chapter 8 we'll discuss `lahf`{.nasm} and `sahf`{.nasm}, which copy the lower byte of the flags register to and from the AH register. Interrupts, both software (via `int`{.nasm}) and hardware (via the INTR pin), push the flags register on the stack, followed by CS and IP; `iret`{.nasm} reverses the action of an interrupt, popping the three words on top of the stack into IP, CS, and the flags register.
 
