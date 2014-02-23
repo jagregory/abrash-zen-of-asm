@@ -13062,7 +13062,7 @@ Code    ends
 
 ## PZTEST
 
-; PZTEST
+```nasm
 ;
 ; *** Listing 2-2 ***
 ;
@@ -13076,33 +13076,33 @@ Code    ends
 ;
 ; By Michael Abrash 4/26/89
 ;
-mystack segment para stack 'STACK'
-db 512 dup(?)
-mystack ends
+mystack     segment     para stack 'STACK'
+        db  512 dup(?)
+mystack     ends
 ;
-Code segment para public 'CODE'
-assume cs:Code, ds:Code
-extrn ZTimerOn:near, ZTimerOff:near, ZTimerReport:near
-Start proc near
-push cs
-pop ds ;set DS to point to the code segment,
-; so data as well as code can easily
-; be included in TESTCODE
+Code    segment     para public 'CODE'
+        assume      cs:Code, ds:Code
+        extrn   ZTimerOn:near, ZTimerOff:near, ZTimerReport:near
+Start   proc    near
+        push    cs
+        pop     ds          ;set DS to point to the code segment,
+                            ; so data as well as code can easily
+                            ; be included in TESTCODE
 ;
-include TESTCODE ;code to be measured, including
+        include TESTCODE    ;code to be measured, including
 ; calls to ZTimerOn and ZTimerOff
 ;
 ; Display the results.
 ;
-call ZTimerReport
+        call    ZTimerReport
 ;
 ; Terminate the program.
 ;
-mov ah,4ch
-int 21h
-Start endp
-Code ends
-end Start
+        mov     ah,4ch
+        int     21h
+Start   endp
+Code    ends
+        end     Start
 ```
 
 ## PZTIME.BAT
