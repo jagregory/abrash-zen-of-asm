@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="285.333px" height="331.334px" viewBox="0 0 285.333 331.334" enable-background="new 0 0 285.333 331.334"
+	 xml:space="preserve">
+<rect x="7.283" y="8.588" fill="#FFFFFF" stroke="#000000" width="121.502" height="36"/>
+<text transform="matrix(1 0 0 1 24.6562 29.5879)" font-family="'HelveticaNeue'" font-size="12">Program Design</text>
+<rect x="7.283" y="148.667" fill="#FFFFFF" stroke="#000000" width="121.502" height="36"/>
+<text transform="matrix(1 0 0 1 13.8135 163.3672)"><tspan x="0" y="0" font-family="'HelveticaNeue'" font-size="12">Assembler source</tspan><tspan x="0" y="14.4" font-family="'HelveticaNeue'" font-size="12">code</tspan></text>
+<rect x="7.283" y="286.854" fill="#FFFFFF" stroke="#000000" width="121.502" height="36"/>
+<text transform="matrix(1 0 0 1 11.8135 301.5547)"><tspan x="0" y="0" font-family="'HelveticaNeue'" font-size="12">Executable machine-</tspan><tspan x="0" y="14.399" font-family="'HelveticaNeue'" font-size="12">language code</tspan></text>
+<path fill="#98D8E9" stroke="#000000" stroke-miterlimit="10" d="M278.394,103.171c0,6.627-5.372,12-12,12H114.025
+	c-6.627,0-12-5.373-12-12V85.826c0-6.627,5.373-12,12-12h152.368c6.628,0,12,5.373,12,12V103.171z"/>
+<text transform="matrix(1 0 0 1 114.833 90.501)"><tspan x="0" y="0" font-family="'HelveticaNeue'" font-size="12">Created by the programmer</tspan><tspan x="0" y="14.4" font-family="'HelveticaNeue'" font-size="12">(Transformation #1)</tspan></text>
+<path fill="#98D8E9" stroke="#000000" stroke-miterlimit="10" d="M278.394,258.652c0,6.627-5.373,12-12,12H114.025
+	c-6.627,0-12-5.373-12-12v-41.345c0-6.627,5.373-12,12-12h152.368c6.627,0,12,5.373,12,12V258.652z"/>
+<text transform="matrix(1 0 0 1 125.833 225.9814)"><tspan x="0" y="0" font-family="'HelveticaNeue'" font-size="12">Assembled directly to</tspan><tspan x="0" y="14.4" font-family="'HelveticaNeue'" font-size="12">machine language</tspan><tspan x="0" y="28.8" font-family="'HelveticaNeue'" font-size="12">(No transformation)</tspan></text>
+<g id="Arrow_2_">
+	<path fill="#FFFFFF" d="M70.001,137.001"/>
+	<g>
+		<g>
+			<polygon fill-rule="evenodd" clip-rule="evenodd" fill="#202020" points="69.078,132.952 64.988,132.952 70,139.049 
+				75.014,132.952 70.894,132.952 70.894,132.938 70.896,52.606 69.104,52.606 			"/>
+		</g>
+	</g>
+</g>
+<g id="Arrow_1_">
+	<path fill="#FFFFFF" d="M70.5,277.501"/>
+	<g>
+		<g>
+			<polygon fill-rule="evenodd" clip-rule="evenodd" fill="#202020" points="69.577,273.452 65.486,273.452 70.5,279.55 
+				75.512,273.452 71.393,273.452 71.393,273.438 71.396,193.106 69.604,193.106 			"/>
+		</g>
+	</g>
+</g>
+</svg>

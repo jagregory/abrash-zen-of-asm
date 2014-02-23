@@ -50,7 +50,7 @@ Do you remember the varying performances of `shr`{.nasm} in different contexts i
 
 There's just no way around it: *you must measure the performance of your code to know how fast it is.* Yes, I know—it would be awfully nice just to be able to look up instruction execution times and be done with it. That's not the way the 8088 works, though—and the odd architecture of the 8088 is what the Zen of assembler is all about.
 
-### Cycles in the Life of a Pc
+### Cycles in the Life of a PC
 
 Next, we're going to examine every detail of instruction execution on the PC over a period of 170 cycles. One reason for doing this is to convince any of you who may still harbor the notion that there must be some way to come up with hard-and-fast execution times that you're on a fool's quest. Another reason is to illustrate many of the concepts we've developed over the last two chapters.
 
