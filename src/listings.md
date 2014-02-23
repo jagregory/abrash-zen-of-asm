@@ -11847,25 +11847,25 @@ echo
 ;       more than adequate.
 ;
 ; Note: The PS/2 version is assembled by setting the symbol PS2 to 1.
-; PS2 must be set to 1 on PS/2 computers because the PS/2's
-; timers are not compatible with an undocumented timer-stopping
-; feature of the 8253; the alternative timing approach that
-; must be used on PS/2 computers leaves a short window
-; during which the timer 0 count and the BIOS timer count may
-; not be synchronized. You should also set the PS2 symbol to
-; 1 if you're getting erratic or obviously incorrect results.
-; When the PS/2 version is used, each block of code being timed
-; should be run several times, with at least two similar
-; readings required to establish a true measurement.
+;       PS2 must be set to 1 on PS/2 computers because the PS/2's
+;       timers are not compatible with an undocumented timer-stopping
+;       feature of the 8253; the alternative timing approach that
+;       must be used on PS/2 computers leaves a short window
+;       during which the timer 0 count and the BIOS timer count may
+;       not be synchronized. You should also set the PS2 symbol to
+;       1 if you're getting erratic or obviously incorrect results.
+;       When the PS/2 version is used, each block of code being timed
+;       should be run several times, with at least two similar
+;       readings required to establish a true measurement.
 ;
 ; Note: When PS2 is 0, the code relies on an undocumented 8253
-; feature. It is possible that the 8253 (or whatever chip
-; is emulating the 8253) may be put into an undefined or
-; incorrect state when this feature is used. If your computer
-; displays any hint of erratic behavior after the long-period
-; Zen timer is used, such as the floppy drive failing to
-; operate properly, reboot the system, set PS2 to 1 and
-; leave it that way.
+;       feature. It is possible that the 8253 (or whatever chip
+;       is emulating the 8253) may be put into an undefined or
+;       incorrect state when this feature is used. If your computer
+;       displays any hint of erratic behavior after the long-period
+;       Zen timer is used, such as the floppy drive failing to
+;       operate properly, reboot the system, set PS2 to 1 and
+;       leave it that way.
 ;
 ; Note: Interrupts must not be disabled for more than 54 ms at a
 ;       stretch during the timing interval. Because interrupts
@@ -11886,9 +11886,9 @@ echo
 ; All registers and all flags are preserved by all routines.
 ;
  
-Code segment word public 'CODE'
-assume cs:Code, ds:nothing
-public ZTimerOn, ZTimerOff, ZTimerReport
+Code    segment     word public 'CODE'
+        assume      cs:Code, ds:nothing
+        public ZTimerOn, ZTimerOff, ZTimerReport
  
 ;
 ; Set to 0 to assemble for use on a fully 8253-compatible
@@ -11897,7 +11897,7 @@ public ZTimerOn, ZTimerOff, ZTimerReport
 ; set to 0 on non-PS/2 computers unless you get inconsistent
 ; or inaccurate readings.
 ;
-PS2 equ 0
+PS2             equ     0
 ;
 ; Base address of the 8253 timer chip.
 ;
