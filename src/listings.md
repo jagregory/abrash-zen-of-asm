@@ -1998,14676 +1998,14676 @@ Skip:
 ## Listing 7-6
 
 
-**;**
+;
 
-**; \*\*\* Listing 7-6 \*\*\***
+; *** Listing 7-6 ***
 
-**;**
+;
 
-**; Adds one far array to another far array by temporarily**
+; Adds one far array to another far array by temporarily
 
-**; switching segments in order to allow the use of the most**
+; switching segments in order to allow the use of the most
 
-**; efficient possible instructions within the loop.**
+; efficient possible instructions within the loop.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ARRAY\_LENGTH equ 1000**
+ARRAY_LENGTH equ 1000
 
-**Array1 db ARRAY\_LENGTH dup (1)**
+Array1 db ARRAY_LENGTH dup (1)
 
-**Array2 db ARRAY\_LENGTH dup (2)**
+Array2 db ARRAY_LENGTH dup (2)
 
-**;**
+;
 
-**; Adds one byte-sized array to another byte-sized array.**
+; Adds one byte-sized array to another byte-sized array.
 
-**; C-callable.**
+; C-callable.
 
-**;**
+;
 
-**; Input: parameters on stack as in AddArraysParms**
+; Input: parameters on stack as in AddArraysParms
 
-**;**
+;
 
-**; Output: none**
+; Output: none
 
-**;**
+;
 
-**; Registers altered: AL, BX, CX, ES**
+; Registers altered: AL, BX, CX, ES
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**AddArraysParms struc**
+AddArraysParms struc
 
-**dw ? ;pushed BP**
+dw ? ;pushed BP
 
-**dw ? ;return address**
+dw ? ;return address
 
-**FarPtr1 dd ? ;pointer to array to be added to**
+FarPtr1 dd ? ;pointer to array to be added to
 
-**FarPtr2 dd ? ;pointer to array to add to the**
+FarPtr2 dd ? ;pointer to array to add to the
 
-**; other array**
+; other array
 
-**AddArraysLength dw ? ;\# of bytes to add**
+AddArraysLength dw ? ;\# of bytes to add
 
-**AddArraysParms ends**
+AddArraysParms ends
 
-**;**
+;
 
-**AddArrays proc near**
+AddArrays proc near
 
-**push bp ;save caller's BP**
+push bp ;save caller's BP
 
-**mov bp,sp ;point to stack frame**
+mov bp,sp ;point to stack frame
 
-**push si ;save register used by many**
+push si ;save register used by many
 
-**; C compilers for register**
+; C compilers for register
 
-**; variables**
+; variables
 
-**push ds ;save normal DS, since we're**
+push ds ;save normal DS, since we're
 
-**; going to switch data**
+; going to switch data
 
-**; segments for the duration**
+; segments for the duration
 
-**; of the loop**
+; of the loop
 
-**mov cx,[bp+AddArraysLength]**
+mov cx,[bp+AddArraysLength]
 
-**;get the length to add**
+;get the length to add
 
-**les bx,[bp+FarPtr1] ;point to the array to add**
+les bx,[bp+FarPtr1] ;point to the array to add
 
-**; to**
+; to
 
-**lds si,[bp+FarPtr2] ;point to the array to add**
+lds si,[bp+FarPtr2] ;point to the array to add
 
-**; from**
+; from
 
-**cld ;make LODSB increment SI**
+cld ;make LODSB increment SI
 
-**AddArraysLoop:**
+AddArraysLoop:
 
-**lodsb ;get the array element to**
+lodsb ;get the array element to
 
-**; add**
+; add
 
-**add es:[bx],al ;add to the other array**
+add es:[bx],al ;add to the other array
 
-**inc bx ;point to the next byte of**
+inc bx ;point to the next byte of
 
-**; the array to add to**
+; the array to add to
 
-**loop AddArraysLoop**
+loop AddArraysLoop
 
-**pop ds ;restore normal DS**
+pop ds ;restore normal DS
 
-**pop si ;restore register used by**
+pop si ;restore register used by
 
-**; many C compilers for**
+; many C compilers for
 
-**; register variables**
+; register variables
 
-**pop bp ;restore caller's BP**
+pop bp ;restore caller's BP
 
-**ret**
+ret
 
-**AddArrays endp**
+AddArrays endp
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov ax,ARRAY\_LENGTH**
+mov ax,ARRAY_LENGTH
 
-**push ax ;pass the length to add**
+push ax ;pass the length to add
 
-**push ds ;pass segment of Array2**
+push ds ;pass segment of Array2
 
-**mov ax,offset Array2**
+mov ax,offset Array2
 
-**push ax ;pass offset of Array2**
+push ax ;pass offset of Array2
 
-**push ds ;pass segment of Array1**
+push ds ;pass segment of Array1
 
-**mov ax,offset Array1**
+mov ax,offset Array1
 
-**push ax ;pass offset of Array1**
+push ax ;pass offset of Array1
 
-**call AddArrays**
+call AddArrays
 
-**add sp,10 ;clear the parameters**
+add sp,10 ;clear the parameters
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 7-7
 
 
-**;**
+;
 
-**; \*\*\* Listing 7-7 \*\*\***
+; *** Listing 7-7 ***
 
-**;**
+;
 
-**; Strips the high bit of every byte in a byte-sized array,**
+; Strips the high bit of every byte in a byte-sized array,
 
-**; using a segment override prefix.**
+; using a segment override prefix.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ARRAY\_LENGTH equ 1000**
+ARRAY_LENGTH equ 1000
 
-**TestArray db ARRAY\_LENGTH dup (0ffh)**
+TestArray db ARRAY_LENGTH dup (0ffh)
 
-**;**
+;
 
-**; Strips the high bit of every byte in a byte-sized array.**
+; Strips the high bit of every byte in a byte-sized array.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; CX = length of array**
+; CX = length of array
 
-**; ES:BX = pointer to start of array**
+; ES:BX = pointer to start of array
 
-**;**
+;
 
-**; Output: none**
+; Output: none
 
-**;**
+;
 
-**; Registers altered: AL, BX**
+; Registers altered: AL, BX
 
-**;**
+;
 
-**StripHighBits proc near**
+StripHighBits proc near
 
-**mov al,not 80h ;bit pattern for stripping**
+mov al,not 80h ;bit pattern for stripping
 
-**; high bits, loaded into a**
+; high bits, loaded into a
 
-**; register outside the loop**
+; register outside the loop
 
-**; so we can use fast**
+; so we can use fast
 
-**; register-to-memory ANDing**
+; register-to-memory ANDing
 
-**; inside the loop**
+; inside the loop
 
-**StripHighBitsLoop:**
+StripHighBitsLoop:
 
-**and es:[bx],al ;strip this byte's high bit**
+and es:[bx],al ;strip this byte's high bit
 
-**inc bx ;point to next byte**
+inc bx ;point to next byte
 
-**loop StripHighBitsLoop**
+loop StripHighBitsLoop
 
-**ret**
+ret
 
-**StripHighBits endp**
+StripHighBits endp
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov bx,seg TestArray**
+mov bx,seg TestArray
 
-**mov es,bx**
+mov es,bx
 
-**mov bx,offset TestArray ;point to array**
+mov bx,offset TestArray ;point to array
 
-**; which will have**
+; which will have
 
-**; high bits stripped**
+; high bits stripped
 
-**call StripHighBits ;strip the high bits**
+call StripHighBits ;strip the high bits
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 7-8
 
 
-**;**
+;
 
-**; \*\*\* Listing 7-8 \*\*\***
+; *** Listing 7-8 ***
 
-**;**
+;
 
-**; Strips the high bit of every byte in a byte-sized array**
+; Strips the high bit of every byte in a byte-sized array
 
-**; without using a segment override prefix.**
+; without using a segment override prefix.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ARRAY\_LENGTH equ 1000**
+ARRAY_LENGTH equ 1000
 
-**TestArray db ARRAY\_LENGTH dup (0ffh)**
+TestArray db ARRAY_LENGTH dup (0ffh)
 
-**;**
+;
 
-**; Strips the high bit of every byte in a byte-sized array.**
+; Strips the high bit of every byte in a byte-sized array.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; CX = length of array**
+; CX = length of array
 
-**; ES:BX = pointer to start of array**
+; ES:BX = pointer to start of array
 
-**;**
+;
 
-**; Output: none**
+; Output: none
 
-**;**
+;
 
-**; Registers altered: AL, BX**
+; Registers altered: AL, BX
 
-**;**
+;
 
-**StripHighBits proc near**
+StripHighBits proc near
 
-**push ds ;save normal DS**
+push ds ;save normal DS
 
-**mov ax,es ;point DS to the array's**
+mov ax,es ;point DS to the array's
 
-**mov ds,ax ; segment**
+mov ds,ax ; segment
 
-**mov al,not 80h ;bit pattern for stripping**
+mov al,not 80h ;bit pattern for stripping
 
-**; high bits, loaded into a**
+; high bits, loaded into a
 
-**; register outside the loop**
+; register outside the loop
 
-**; so we can use fast**
+; so we can use fast
 
-**; register-to-memory ANDing**
+; register-to-memory ANDing
 
-**; inside the loop**
+; inside the loop
 
-**StripHighBitsLoop:**
+StripHighBitsLoop:
 
-**and [bx],al ;strip this byte's high bit**
+and [bx],al ;strip this byte's high bit
 
-**inc bx ;point to next byte**
+inc bx ;point to next byte
 
-**loop StripHighBitsLoop**
+loop StripHighBitsLoop
 
-**pop ds ;restore normal DS**
+pop ds ;restore normal DS
 
-**ret**
+ret
 
-**StripHighBits endp**
+StripHighBits endp
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov bx,seg TestArray**
+mov bx,seg TestArray
 
-**mov es,bx**
+mov es,bx
 
-**mov bx,offset TestArray ;point to array**
+mov bx,offset TestArray ;point to array
 
-**; which will have**
+; which will have
 
-**; high bits stripped**
+; high bits stripped
 
-**call StripHighBits ;strip the high bits**
+call StripHighBits ;strip the high bits
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 7-9
 
 
-**;**
+;
 
-**; \*\*\* Listing 7-9 \*\*\***
+; *** Listing 7-9 ***
 
-**;**
+;
 
-**; Adds up the elements of a byte-sized array using**
+; Adds up the elements of a byte-sized array using
 
-**; base+index+displacement addressing inside the loop.**
+; base+index+displacement addressing inside the loop.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ARRAY\_LENGTH equ 1000**
+ARRAY_LENGTH equ 1000
 
-**TestArray db ARRAY\_LENGTH dup (1)**
+TestArray db ARRAY_LENGTH dup (1)
 
-**TEST\_START\_OFFSET equ 200 ;we'll add elements 200-299**
+TEST_START_OFFSET equ 200 ;we'll add elements 200-299
 
-**TEST\_LENGTH equ 100 ; of TestArray**
+TEST_LENGTH equ 100 ; of TestArray
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov bx,TEST\_START\_OFFSET**
+mov bx,TEST_START_OFFSET
 
-**;for base+index+displacement**
+;for base+index+displacement
 
-**sub si,si ; addressing**
+sub si,si ; addressing
 
-**sub ax,ax ;initialize sum**
+sub ax,ax ;initialize sum
 
-**sub dl,dl ;store 0 in DL so we can use**
+sub dl,dl ;store 0 in DL so we can use
 
-**; it for faster register-**
+; it for faster register-
 
-**; register adds in the loop**
+; register adds in the loop
 
-**mov cx,TEST\_LENGTH ;\# of bytes to add**
+mov cx,TEST_LENGTH ;\# of bytes to add
 
-**SumArrayLoop:**
+SumArrayLoop:
 
-**add al,[TestArray+bx+si] ;add in the next byte**
+add al,[TestArray+bx+si] ;add in the next byte
 
-**adc ah,dl ; to the 16-bit sum**
+adc ah,dl ; to the 16-bit sum
 
-**inc si ;point to next byte**
+inc si ;point to next byte
 
-**loop SumArrayLoop**
+loop SumArrayLoop
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 7-10
 
 
-**;**
+;
 
-**; \*\*\* Listing 7-10 \*\*\***
+; *** Listing 7-10 ***
 
-**;**
+;
 
-**; Adds up the elements of a byte-sized array using**
+; Adds up the elements of a byte-sized array using
 
-**; base+index addressing inside the loop.**
+; base+index addressing inside the loop.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ARRAY\_LENGTH equ 1000**
+ARRAY_LENGTH equ 1000
 
-**TestArray db ARRAY\_LENGTH dup (1)**
+TestArray db ARRAY_LENGTH dup (1)
 
-**TEST\_START\_OFFSET equ 200 ;we'll add elements 200-299**
+TEST_START_OFFSET equ 200 ;we'll add elements 200-299
 
-**TEST\_LENGTH equ 100 ; of TestArray**
+TEST_LENGTH equ 100 ; of TestArray
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov bx,offset TestArray+TEST\_START\_OFFSET**
+mov bx,offset TestArray+TEST_START_OFFSET
 
-**;build the array start**
+;build the array start
 
-**; offset right into the**
+; offset right into the
 
-**; base so we can use**
+; base so we can use
 
-**; base+index addressing,**
+; base+index addressing,
 
-**sub si,si ; with no displacement**
+sub si,si ; with no displacement
 
-**sub ax,ax ;initialize sum**
+sub ax,ax ;initialize sum
 
-**sub dl,dl ;store 0 in DL so we can use**
+sub dl,dl ;store 0 in DL so we can use
 
-**; it for faster register-**
+; it for faster register-
 
-**; register adds in the loop**
+; register adds in the loop
 
-**mov cx,TEST\_LENGTH ;\# of bytes to add**
+mov cx,TEST_LENGTH ;\# of bytes to add
 
-**SumArrayLoop:**
+SumArrayLoop:
 
-**add al,[bx+si] ;add in the next byte**
+add al,[bx+si] ;add in the next byte
 
-**adc ah,dl ; to the 16-bit sum**
+adc ah,dl ; to the 16-bit sum
 
-**inc si ;point to next byte**
+inc si ;point to next byte
 
-**loop SumArrayLoop**
+loop SumArrayLoop
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 7-11
 
 
-**;**
+;
 
-**; \*\*\* Listing 7-11 \*\*\***
+; *** Listing 7-11 ***
 
-**;**
+;
 
-**; Adds up the elements of a byte-sized array using**
+; Adds up the elements of a byte-sized array using
 
-**; base-only addressing inside the loop.**
+; base-only addressing inside the loop.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ARRAY\_LENGTH equ 1000**
+ARRAY_LENGTH equ 1000
 
-**TestArray db ARRAY\_LENGTH dup (1)**
+TestArray db ARRAY_LENGTH dup (1)
 
-**TEST\_START\_OFFSET equ 200 ;we'll add elements 200-299**
+TEST_START_OFFSET equ 200 ;we'll add elements 200-299
 
-**TEST\_LENGTH equ 100 ; of TestArray**
+TEST_LENGTH equ 100 ; of TestArray
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov bx,offset TestArray+TEST\_START\_OFFSET**
+mov bx,offset TestArray+TEST_START_OFFSET
 
-**;build the array start**
+;build the array start
 
-**; offset right into the**
+; offset right into the
 
-**; base so we can use**
+; base so we can use
 
-**; base addressing, with no**
+; base addressing, with no
 
-**; displacement**
+; displacement
 
-**sub ax,ax ;initialize sum**
+sub ax,ax ;initialize sum
 
-**sub dl,dl ;store 0 in DL so we can use**
+sub dl,dl ;store 0 in DL so we can use
 
-**; it for faster register-**
+; it for faster register-
 
-**; register adds in the loop**
+; register adds in the loop
 
-**mov cx,TEST\_LENGTH ;\# of bytes to add**
+mov cx,TEST_LENGTH ;\# of bytes to add
 
-**SumArrayLoop:**
+SumArrayLoop:
 
-**add al,[bx] ;add in the next byte**
+add al,[bx] ;add in the next byte
 
-**adc ah,dl ; to the 16-bit sum**
+adc ah,dl ; to the 16-bit sum
 
-**inc bx ;point to next byte**
+inc bx ;point to next byte
 
-**loop SumArrayLoop**
+loop SumArrayLoop
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 7-12
 
 
-**;**
+;
 
-**; \*\*\* Listing 7-12 \*\*\***
+; *** Listing 7-12 ***
 
-**;**
+;
 
-**; Adds up the elements of a byte-sized array using**
+; Adds up the elements of a byte-sized array using
 
-**; base-only addressing inside the loop, and using**
+; base-only addressing inside the loop, and using
 
-**; an immediate operand with ADC.**
+; an immediate operand with ADC.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ARRAY\_LENGTH equ 1000**
+ARRAY_LENGTH equ 1000
 
-**TestArray db ARRAY\_LENGTH dup (1)**
+TestArray db ARRAY_LENGTH dup (1)
 
-**TEST\_START\_OFFSET equ 200 ;we'll add elements 200-299**
+TEST_START_OFFSET equ 200 ;we'll add elements 200-299
 
-**TEST\_LENGTH equ 100 ; of TestArray**
+TEST_LENGTH equ 100 ; of TestArray
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov bx,offset TestArray+TEST\_START\_OFFSET**
+mov bx,offset TestArray+TEST_START_OFFSET
 
-**;build the array start**
+;build the array start
 
-**; offset right into the**
+; offset right into the
 
-**; base so we can use**
+; base so we can use
 
-**; base+index addressing,**
+; base+index addressing,
 
-**; with no displacement**
+; with no displacement
 
-**sub ax,ax ;initialize sum**
+sub ax,ax ;initialize sum
 
-**mov cx,TEST\_LENGTH ;\# of bytes to add**
+mov cx,TEST_LENGTH ;\# of bytes to add
 
-**SumArrayLoop:**
+SumArrayLoop:
 
-**add al,[bx] ;add in the next byte**
+add al,[bx] ;add in the next byte
 
-**adc ah,0 ; to the 16-bit sum**
+adc ah,0 ; to the 16-bit sum
 
-**inc bx ;point to next byte**
+inc bx ;point to next byte
 
-**loop SumArrayLoop**
+loop SumArrayLoop
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 7-13
 
 
-**;**
+;
 
-**; \*\*\* Listing 7-13 \*\*\***
+; *** Listing 7-13 ***
 
-**;**
+;
 
-**; Adds up the elements of a byte-sized array using**
+; Adds up the elements of a byte-sized array using
 
-**; base-only addressing inside the loop, and using**
+; base-only addressing inside the loop, and using
 
-**; a memory operand with ADC.**
+; a memory operand with ADC.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ARRAY\_LENGTH equ 1000**
+ARRAY_LENGTH equ 1000
 
-**TestArray db ARRAY\_LENGTH dup (1)**
+TestArray db ARRAY_LENGTH dup (1)
 
-**TEST\_START\_OFFSET equ 200 ;we'll add elements 200-299**
+TEST_START_OFFSET equ 200 ;we'll add elements 200-299
 
-**TEST\_LENGTH equ 100 ; of TestArray**
+TEST_LENGTH equ 100 ; of TestArray
 
-**MemZero db 0 ;the constant value 0**
+MemZero db 0 ;the constant value 0
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov bx,offset TestArray+TEST\_START\_OFFSET**
+mov bx,offset TestArray+TEST_START_OFFSET
 
-**;build the array start**
+;build the array start
 
-**; offset right into the**
+; offset right into the
 
-**; base so we can use**
+; base so we can use
 
-**; base+index addressing,**
+; base+index addressing,
 
-**; with no displacement**
+; with no displacement
 
-**sub ax,ax ;initialize sum**
+sub ax,ax ;initialize sum
 
-**mov cx,TEST\_LENGTH ;\# of bytes to add**
+mov cx,TEST_LENGTH ;\# of bytes to add
 
-**SumArrayLoop:**
+SumArrayLoop:
 
-**add al,[bx] ;add in the next byte**
+add al,[bx] ;add in the next byte
 
-**adc ah,[MemZero] ; to the 16-bit sum**
+adc ah,[MemZero] ; to the 16-bit sum
 
-**inc bx ;point to next byte**
+inc bx ;point to next byte
 
-**loop SumArrayLoop**
+loop SumArrayLoop
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 7-14
 
 
-**;**
+;
 
-**; \*\*\* Listing 7-14 \*\*\***
+; *** Listing 7-14 ***
 
-**;**
+;
 
-**; Performs bit-doubling of a byte in AL to a word in AX**
+; Performs bit-doubling of a byte in AL to a word in AX
 
-**; by using doubled shifts, one from each of two source**
+; by using doubled shifts, one from each of two source
 
-**; registers. This approach avoids branching and is very**
+; registers. This approach avoids branching and is very
 
-**; fast according to officiaLinstruction timings, but is**
+; fast according to officiaLinstruction timings, but is
 
-**; actually quite slow due to instruction prefetching.**
+; actually quite slow due to instruction prefetching.
 
-**;**
+;
 
-**; (Based on an approach used in "Optimizing for Speed,"**
+; (Based on an approach used in "Optimizing for Speed,"
 
-**; by Michael Hoyt, Programmer's Journal 4.2, March, 1986.)**
+; by Michael Hoyt, Programmer's Journal 4.2, March, 1986.)
 
-**;**
+;
 
-**; Macro to double each bit in a byte.**
+; Macro to double each bit in a byte.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; AL = byte to bit-double**
+; AL = byte to bit-double
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; AX = bit-doubled word**
+; AX = bit-doubled word
 
-**;**
+;
 
-**; Registers altered: AX, BX**
+; Registers altered: AX, BX
 
-**;**
+;
 
-**DOUBLE\_BYTE macro**
+DOUBLE_BYTE macro
 
-**mov ah,al ;put the byte to double in two**
+mov ah,al ;put the byte to double in two
 
-**; registers**
+; registers
 
-**mov bx,ax**
+mov bx,ax
 
-**rept 8**
+rept 8
 
-**shr bl,1 ;get the next bit to double**
+shr bl,1 ;get the next bit to double
 
-**rcr ax,1 ;move it into the msb...**
+rcr ax,1 ;move it into the msb...
 
-**shr bh,1 ;...then get the bit again...**
+shr bh,1 ;...then get the bit again...
 
-**rcr ax,1 ;...and replicate it**
+rcr ax,1 ;...and replicate it
 
-**endm**
+endm
 
-**endm**
+endm
 
-**;**
+;
 
-**call ZTimerOn**
+call ZTimerOn
 
-**BYTE\_TO\_DOUBLE=0**
+BYTE_TO_DOUBLE=0
 
-**rept 100**
+rept 100
 
-**mov al,BYTE\_TO\_DOUBLE**
+mov al,BYTE_TO_DOUBLE
 
-**DOUBLE\_BYTE**
+DOUBLE_BYTE
 
-**BYTE\_TO\_DOUBLE=BYTE\_TO\_DOUBLE+1**
+BYTE_TO_DOUBLE=BYTE_TO_DOUBLE+1
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 7-15
 
 
-**;**
+;
 
-**; \*\*\* Listing 7-15 \*\*\***
+; *** Listing 7-15 ***
 
-**;**
+;
 
-**; Performs very fast bit-doubling of a byte in AL to a**
+; Performs very fast bit-doubling of a byte in AL to a
 
-**; word in AX by using a look-up table.**
+; word in AX by using a look-up table.
 
-**; This approach avoids both branching and the severe**
+; This approach avoids both branching and the severe
 
-**; instruction-fetching penalty of the shift-based approach.**
+; instruction-fetching penalty of the shift-based approach.
 
-**;**
+;
 
-**; Macro to double each bit in a byte.**
+; Macro to double each bit in a byte.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; AL = byte to bit-double**
+; AL = byte to bit-double
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; AX = bit-doubled word**
+; AX = bit-doubled word
 
-**;**
+;
 
-**; Registers altered: AX, BX**
+; Registers altered: AX, BX
 
-**;**
+;
 
-**DOUBLE\_BYTE macro**
+DOUBLE_BYTE macro
 
-**mov bl,al ;move the byte to look up to BL,**
+mov bl,al ;move the byte to look up to BL,
 
-**sub bh,bh ; make a word out of the value,**
+sub bh,bh ; make a word out of the value,
 
-**shl bx,1 ; and double the value so we can**
+shl bx,1 ; and double the value so we can
 
-**; use it as a pointer into the**
+; use it as a pointer into the
 
-**; table of word-sized doubled byte**
+; table of word-sized doubled byte
 
-**; values**
+; values
 
-**mov ax,[DoubledByteTable+bx]**
+mov ax,[DoubledByteTable+bx]
 
-**;look up the doubled byte value**
+;look up the doubled byte value
 
-**endm**
+endm
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**DOUBLED\_VALUE=0**
+DOUBLED_VALUE=0
 
-**DoubledByteTable label word**
+DoubledByteTable label word
 
-**dw 00000h,00003h,0000ch,0000fh,00030h,00033h,0003ch,0003fh**
+dw 00000h,00003h,0000ch,0000fh,00030h,00033h,0003ch,0003fh
 
-**dw 000c0h,000c3h,000cch,000cfh,000f0h,000f3h,000fch,000ffh**
+dw 000c0h,000c3h,000cch,000cfh,000f0h,000f3h,000fch,000ffh
 
-**dw 00300h,00303h,0030ch,0030fh,00330h,00333h,0033ch,0033fh**
+dw 00300h,00303h,0030ch,0030fh,00330h,00333h,0033ch,0033fh
 
-**dw 003c0h,003c3h,003cch,003cfh,003f0h,003f3h,003fch,003ffh**
+dw 003c0h,003c3h,003cch,003cfh,003f0h,003f3h,003fch,003ffh
 
-**dw 00c00h,00c03h,00c0ch,00c0fh,00c30h,00c33h,00c3ch,00c3fh**
+dw 00c00h,00c03h,00c0ch,00c0fh,00c30h,00c33h,00c3ch,00c3fh
 
-**dw 00cc0h,00cc3h,00ccch,00ccfh,00cf0h,00cf3h,00cfch,00cffh**
+dw 00cc0h,00cc3h,00ccch,00ccfh,00cf0h,00cf3h,00cfch,00cffh
 
-**dw 00f00h,00f03h,00f0ch,00f0fh,00f30h,00f33h,00f3ch,00f3fh**
+dw 00f00h,00f03h,00f0ch,00f0fh,00f30h,00f33h,00f3ch,00f3fh
 
-**dw 00fc0h,00fc3h,00fcch,00fcfh,00ff0h,00ff3h,00ffch,00fffh**
+dw 00fc0h,00fc3h,00fcch,00fcfh,00ff0h,00ff3h,00ffch,00fffh
 
-**;**
+;
 
-**dw 03000h,03003h,0300ch,0300fh,03030h,03033h,0303ch,0303fh**
+dw 03000h,03003h,0300ch,0300fh,03030h,03033h,0303ch,0303fh
 
-**dw 030c0h,030c3h,030cch,030cfh,030f0h,030f3h,030fch,030ffh**
+dw 030c0h,030c3h,030cch,030cfh,030f0h,030f3h,030fch,030ffh
 
-**dw 03300h,03303h,0330ch,0330fh,03330h,03333h,0333ch,0333fh**
+dw 03300h,03303h,0330ch,0330fh,03330h,03333h,0333ch,0333fh
 
-**dw 033c0h,033c3h,033cch,033cfh,033f0h,033f3h,033fch,033ffh**
+dw 033c0h,033c3h,033cch,033cfh,033f0h,033f3h,033fch,033ffh
 
-**dw 03c00h,03c03h,03c0ch,03c0fh,03c30h,03c33h,03c3ch,03c3fh**
+dw 03c00h,03c03h,03c0ch,03c0fh,03c30h,03c33h,03c3ch,03c3fh
 
-**dw 03cc0h,03cc3h,03ccch,03ccfh,03cf0h,03cf3h,03cfch,03cffh**
+dw 03cc0h,03cc3h,03ccch,03ccfh,03cf0h,03cf3h,03cfch,03cffh
 
-**dw 03f00h,03f03h,03f0ch,03f0fh,03f30h,03f33h,03f3ch,03f3fh**
+dw 03f00h,03f03h,03f0ch,03f0fh,03f30h,03f33h,03f3ch,03f3fh
 
-**dw 03fc0h,03fc3h,03fcch,03fcfh,03ff0h,03ff3h,03ffch,03fffh**
+dw 03fc0h,03fc3h,03fcch,03fcfh,03ff0h,03ff3h,03ffch,03fffh
 
-**;**
+;
 
-**dw 0c000h,0c003h,0c00ch,0c00fh,0c030h,0c033h,0c03ch,0c03fh**
+dw 0c000h,0c003h,0c00ch,0c00fh,0c030h,0c033h,0c03ch,0c03fh
 
-**dw 0c0c0h,0c0c3h,0c0cch,0c0cfh,0c0f0h,0c0f3h,0c0fch,0c0ffh**
+dw 0c0c0h,0c0c3h,0c0cch,0c0cfh,0c0f0h,0c0f3h,0c0fch,0c0ffh
 
-**dw 0c300h,0c303h,0c30ch,0c30fh,0c330h,0c333h,0c33ch,0c33fh**
+dw 0c300h,0c303h,0c30ch,0c30fh,0c330h,0c333h,0c33ch,0c33fh
 
-**dw 0c3c0h,0c3c3h,0c3cch,0c3cfh,0c3f0h,0c3f3h,0c3fch,0c3ffh**
+dw 0c3c0h,0c3c3h,0c3cch,0c3cfh,0c3f0h,0c3f3h,0c3fch,0c3ffh
 
-**dw 0cc00h,0cc03h,0cc0ch,0cc0fh,0cc30h,0cc33h,0cc3ch,0cc3fh**
+dw 0cc00h,0cc03h,0cc0ch,0cc0fh,0cc30h,0cc33h,0cc3ch,0cc3fh
 
-**dw 0ccc0h,0ccc3h,0cccch,0cccfh,0ccf0h,0ccf3h,0ccfch,0ccffh**
+dw 0ccc0h,0ccc3h,0cccch,0cccfh,0ccf0h,0ccf3h,0ccfch,0ccffh
 
-**dw 0cf00h,0cf03h,0cf0ch,0cf0fh,0cf30h,0cf33h,0cf3ch,0cf3fh**
+dw 0cf00h,0cf03h,0cf0ch,0cf0fh,0cf30h,0cf33h,0cf3ch,0cf3fh
 
-**dw 0cfc0h,0cfc3h,0cfcch,0cfcfh,0cff0h,0cff3h,0cffch,0cfffh**
+dw 0cfc0h,0cfc3h,0cfcch,0cfcfh,0cff0h,0cff3h,0cffch,0cfffh
 
-**;**
+;
 
-**dw 0f000h,0f003h,0f00ch,0f00fh,0f030h,0f033h,0f03ch,0f03fh**
+dw 0f000h,0f003h,0f00ch,0f00fh,0f030h,0f033h,0f03ch,0f03fh
 
-**dw 0f0c0h,0f0c3h,0f0cch,0f0cfh,0f0f0h,0f0f3h,0f0fch,0f0ffh**
+dw 0f0c0h,0f0c3h,0f0cch,0f0cfh,0f0f0h,0f0f3h,0f0fch,0f0ffh
 
-**dw 0f300h,0f303h,0f30ch,0f30fh,0f330h,0f333h,0f33ch,0f33fh**
+dw 0f300h,0f303h,0f30ch,0f30fh,0f330h,0f333h,0f33ch,0f33fh
 
-**dw 0f3c0h,0f3c3h,0f3cch,0f3cfh,0f3f0h,0f3f3h,0f3fch,0f3ffh**
+dw 0f3c0h,0f3c3h,0f3cch,0f3cfh,0f3f0h,0f3f3h,0f3fch,0f3ffh
 
-**dw 0fc00h,0fc03h,0fc0ch,0fc0fh,0fc30h,0fc33h,0fc3ch,0fc3fh**
+dw 0fc00h,0fc03h,0fc0ch,0fc0fh,0fc30h,0fc33h,0fc3ch,0fc3fh
 
-**dw 0fcc0h,0fcc3h,0fccch,0fccfh,0fcf0h,0fcf3h,0fcfch,0fcffh**
+dw 0fcc0h,0fcc3h,0fccch,0fccfh,0fcf0h,0fcf3h,0fcfch,0fcffh
 
-**dw 0ff00h,0ff03h,0ff0ch,0ff0fh,0ff30h,0ff33h,0ff3ch,0ff3fh**
+dw 0ff00h,0ff03h,0ff0ch,0ff0fh,0ff30h,0ff33h,0ff3ch,0ff3fh
 
-**dw 0ffc0h,0ffc3h,0ffcch,0ffcfh,0fff0h,0fff3h,0fffch,0ffffh**
+dw 0ffc0h,0ffc3h,0ffcch,0ffcfh,0fff0h,0fff3h,0fffch,0ffffh
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**BYTE\_TO\_DOUBLE=0**
+BYTE_TO_DOUBLE=0
 
-**rept 100**
+rept 100
 
-**mov al,BYTE\_TO\_DOUBLE**
+mov al,BYTE_TO_DOUBLE
 
-**DOUBLE\_BYTE**
+DOUBLE_BYTE
 
-**BYTE\_TO\_DOUBLE=BYTE\_TO\_DOUBLE+1**
+BYTE_TO_DOUBLE=BYTE_TO_DOUBLE+1
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 7-16
 
 
-**;**
+;
 
-**; \*\*\* Listing 7-16 \*\*\***
+; *** Listing 7-16 ***
 
-**;**
+;
 
-**; Performs fast, compact bit-doubling of a byte in AL**
+; Performs fast, compact bit-doubling of a byte in AL
 
-**; to a word in AX by using two nibble look-ups rather**
+; to a word in AX by using two nibble look-ups rather
 
-**; than a byte look-up.**
+; than a byte look-up.
 
-**;**
+;
 
-**; Macro to double each bit in a byte.**
+; Macro to double each bit in a byte.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; AL = byte to bit-double**
+; AL = byte to bit-double
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; AX = bit-doubled word**
+; AX = bit-doubled word
 
-**;**
+;
 
-**; Registers altered: AX, BX, CL**
+; Registers altered: AX, BX, CL
 
-**;**
+;
 
-**DOUBLE\_BYTE macro**
+DOUBLE_BYTE macro
 
-**mov bl,al ;move the byte to look up to BL**
+mov bl,al ;move the byte to look up to BL
 
-**sub bh,bh ; and make a word out of the value**
+sub bh,bh ; and make a word out of the value
 
-**mov cl,4 ;make a look-up pointer out of the**
+mov cl,4 ;make a look-up pointer out of the
 
-**shr bx,cl ; upper nibble of the byte**
+shr bx,cl ; upper nibble of the byte
 
-**mov ah,[DoubledNibbleTable+bx]**
+mov ah,[DoubledNibbleTable+bx]
 
-**;look up the doubled upper nibble**
+;look up the doubled upper nibble
 
-**mov bl,al ;get the byte to look up again,**
+mov bl,al ;get the byte to look up again,
 
-**and bl,0fh ; and make a pointer out of the**
+and bl,0fh ; and make a pointer out of the
 
-**; lower nibble this time**
+; lower nibble this time
 
-**mov al,[DoubledNibbleTable+bx]**
+mov al,[DoubledNibbleTable+bx]
 
-**;look up the doubled lower nibble**
+;look up the doubled lower nibble
 
-**endm**
+endm
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**DOUBLED\_VALUE=0**
+DOUBLED_VALUE=0
 
-**DoubledNibbleTable label byte**
+DoubledNibbleTable label byte
 
-**db 000h, 003h, 00ch, 00fh**
+db 000h, 003h, 00ch, 00fh
 
-**db 030h, 033h, 03ch, 03fh**
+db 030h, 033h, 03ch, 03fh
 
-**db 0c0h, 0c3h, 0cch, 0cfh**
+db 0c0h, 0c3h, 0cch, 0cfh
 
-**db 0f0h, 0f3h, 0fch, 0ffh**
+db 0f0h, 0f3h, 0fch, 0ffh
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**BYTE\_TO\_DOUBLE=0**
+BYTE_TO_DOUBLE=0
 
-**rept 100**
+rept 100
 
-**mov al,BYTE\_TO\_DOUBLE**
+mov al,BYTE_TO_DOUBLE
 
-**DOUBLE\_BYTE**
+DOUBLE_BYTE
 
-**BYTE\_TO\_DOUBLE=BYTE\_TO\_DOUBLE+1**
+BYTE_TO_DOUBLE=BYTE_TO_DOUBLE+1
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 7-17
 
 
-**;**
+;
 
-**; \*\*\* Listing 7-17 \*\*\***
+; *** Listing 7-17 ***
 
-**;**
+;
 
-**; Performs fast, compact bit-doubling of a byte in AL**
+; Performs fast, compact bit-doubling of a byte in AL
 
-**; to a word in AX by using two nibble look-ups. Overall**
+; to a word in AX by using two nibble look-ups. Overall
 
-**; code length and performance are improved by**
+; code length and performance are improved by
 
-**; using base indexed addressing (bx+si) rather than base**
+; using base indexed addressing (bx+si) rather than base
 
-**; direct addressing (bx+DoubleNibbleTable). Even though**
+; direct addressing (bx+DoubleNibbleTable). Even though
 
-**; an additional 3-byte MOV instruction is required to load**
+; an additional 3-byte MOV instruction is required to load
 
-**; SI with the offset of DoubleNibbleTable, each access to**
+; SI with the offset of DoubleNibbleTable, each access to
 
-**; DoubleNibbleTable is 2 bytes shorter thanks to the**
+; DoubleNibbleTable is 2 bytes shorter thanks to the
 
-**; elimination of mod-reg-rm displacements.**
+; elimination of mod-reg-rm displacements.
 
-**;**
+;
 
-**; Macro to double each bit in a byte.**
+; Macro to double each bit in a byte.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; AL = byte to bit-double**
+; AL = byte to bit-double
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; AX = bit-doubled word**
+; AX = bit-doubled word
 
-**;**
+;
 
-**; Registers altered: AX, BX, CL, SI**
+; Registers altered: AX, BX, CL, SI
 
-**;**
+;
 
-**DOUBLE\_BYTE macro**
+DOUBLE_BYTE macro
 
-**mov bl,al ;move the byte to look up to BL**
+mov bl,al ;move the byte to look up to BL
 
-**sub bh,bh ; and make a word out of the value**
+sub bh,bh ; and make a word out of the value
 
-**mov cl,4 ;make a look-up pointer out of the**
+mov cl,4 ;make a look-up pointer out of the
 
-**shr bx,cl ; upper nibble of the byte**
+shr bx,cl ; upper nibble of the byte
 
-**mov si,offset DoubledNibbleTable**
+mov si,offset DoubledNibbleTable
 
-**mov ah,[si+bx]**
+mov ah,[si+bx]
 
-**;look up the doubled upper nibble**
+;look up the doubled upper nibble
 
-**mov bl,al ;get the byte to look up again,**
+mov bl,al ;get the byte to look up again,
 
-**and bl,0fh ; and make a pointer out of the**
+and bl,0fh ; and make a pointer out of the
 
-**; lower nibble this time**
+; lower nibble this time
 
-**mov al,[si+bx]**
+mov al,[si+bx]
 
-**;look up the doubled lower nibble**
+;look up the doubled lower nibble
 
-**endm**
+endm
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**DOUBLED\_VALUE=0**
+DOUBLED_VALUE=0
 
-**DoubledNibbleTable label byte**
+DoubledNibbleTable label byte
 
-**db 000h, 003h, 00ch, 00fh**
+db 000h, 003h, 00ch, 00fh
 
-**db 030h, 033h, 03ch, 03fh**
+db 030h, 033h, 03ch, 03fh
 
-**db 0c0h, 0c3h, 0cch, 0cfh**
+db 0c0h, 0c3h, 0cch, 0cfh
 
-**db 0f0h, 0f3h, 0fch, 0ffh**
+db 0f0h, 0f3h, 0fch, 0ffh
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**BYTE\_TO\_DOUBLE=0**
+BYTE_TO_DOUBLE=0
 
-**rept 100**
+rept 100
 
-**mov al,BYTE\_TO\_DOUBLE**
+mov al,BYTE_TO_DOUBLE
 
-**DOUBLE\_BYTE**
+DOUBLE_BYTE
 
-**BYTE\_TO\_DOUBLE=BYTE\_TO\_DOUBLE+1**
+BYTE_TO_DOUBLE=BYTE_TO_DOUBLE+1
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 7-18
 
 
-**;**
+;
 
-**; \*\*\* Listing 7-18 \*\*\***
+; *** Listing 7-18 ***
 
-**;**
+;
 
-**; Performs fast, compact bit-doubling of a byte in AL**
+; Performs fast, compact bit-doubling of a byte in AL
 
-**; to a word in AX by using two nibble look-ups. Overall**
+; to a word in AX by using two nibble look-ups. Overall
 
-**; code length and performance are improved by**
+; code length and performance are improved by
 
-**; using XLAT to look up the nibbles.**
+; using XLAT to look up the nibbles.
 
-**;**
+;
 
-**; Macro to double each bit in a byte.**
+; Macro to double each bit in a byte.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; AL = byte to bit-double**
+; AL = byte to bit-double
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; AX = bit-doubled word**
+; AX = bit-doubled word
 
-**;**
+;
 
-**; Registers altered: AX, BX, CL**
+; Registers altered: AX, BX, CL
 
-**;**
+;
 
-**DOUBLE\_BYTE macro**
+DOUBLE_BYTE macro
 
-**mov ah,al ;set aside the byte to look up**
+mov ah,al ;set aside the byte to look up
 
-**mov cl,4 ;make a look-up pointer out of the**
+mov cl,4 ;make a look-up pointer out of the
 
-**shr al,cl ; upper nibble of the byte (XLAT**
+shr al,cl ; upper nibble of the byte (XLAT
 
-**; uses AL as an index pointer)**
+; uses AL as an index pointer)
 
-**mov bx,offset DoubledNibbleTable**
+mov bx,offset DoubledNibbleTable
 
-**;XLAT uses BX as a base pointer**
+;XLAT uses BX as a base pointer
 
-**xlat ;look up the doubled value of the**
+xlat ;look up the doubled value of the
 
-**; upper nibble**
+; upper nibble
 
-**xchg ah,al ;store the doubled upper nibble in AH**
+xchg ah,al ;store the doubled upper nibble in AH
 
-**; and get back the value to double**
+; and get back the value to double
 
-**and al,0fh ;make a look-up pointer out of the**
+and al,0fh ;make a look-up pointer out of the
 
-**; lower nibble of the byte**
+; lower nibble of the byte
 
-**xlat ;look up the doubled value of the**
+xlat ;look up the doubled value of the
 
-**; lower nibble of the byte**
+; lower nibble of the byte
 
-**endm**
+endm
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**DOUBLED\_VALUE=0**
+DOUBLED_VALUE=0
 
-**DoubledNibbleTable label byte**
+DoubledNibbleTable label byte
 
-**db 000h, 003h, 00ch, 00fh**
+db 000h, 003h, 00ch, 00fh
 
-**db 030h, 033h, 03ch, 03fh**
+db 030h, 033h, 03ch, 03fh
 
-**db 0c0h, 0c3h, 0cch, 0cfh**
+db 0c0h, 0c3h, 0cch, 0cfh
 
-**db 0f0h, 0f3h, 0fch, 0ffh**
+db 0f0h, 0f3h, 0fch, 0ffh
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**BYTE\_TO\_DOUBLE=0**
+BYTE_TO_DOUBLE=0
 
-**rept 100**
+rept 100
 
-**mov al,BYTE\_TO\_DOUBLE**
+mov al,BYTE_TO_DOUBLE
 
-**DOUBLE\_BYTE**
+DOUBLE_BYTE
 
-**BYTE\_TO\_DOUBLE=BYTE\_TO\_DOUBLE+1**
+BYTE_TO_DOUBLE=BYTE_TO_DOUBLE+1
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 7-19
 
 
-**;**
+;
 
-**; \*\*\* Listing 7-19 \*\*\***
+; *** Listing 7-19 ***
 
-**;**
+;
 
-**; Measures the performance of multiplying by 80 with**
+; Measures the performance of multiplying by 80 with
 
-**; the MULinstruction**
+; the MULinstruction
 
-**;**
+;
 
-**sub ax,ax**
+sub ax,ax
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rept 1000**
+rept 1000
 
-**mov ax,10 ;so we have a constant value to**
+mov ax,10 ;so we have a constant value to
 
-**; multiply by**
+; multiply by
 
-**mov dx,80 ;amount to multiply by**
+mov dx,80 ;amount to multiply by
 
-**mul dx**
+mul dx
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 7-20
 
 
-**;**
+;
 
-**; \*\*\* Listing 7-20 \*\*\***
+; *** Listing 7-20 ***
 
-**;**
+;
 
-**; Measures the performance of multiplying by 80 with**
+; Measures the performance of multiplying by 80 with
 
-**; shifts and adds.**
+; shifts and adds.
 
-**;**
+;
 
-**sub ax,ax**
+sub ax,ax
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rept 1000**
+rept 1000
 
-**mov ax,10 ;so we have a constant value to**
+mov ax,10 ;so we have a constant value to
 
-**; multiply by**
+; multiply by
 
-**mov cl,4**
+mov cl,4
 
-**shl ax,cl ;times 16**
+shl ax,cl ;times 16
 
-**mov cx,ax ;set aside times 16**
+mov cx,ax ;set aside times 16
 
-**shl ax,1 ;times 32**
+shl ax,1 ;times 32
 
-**shl ax,1 ;times 64**
+shl ax,1 ;times 64
 
-**add ax,cx ;times 80 (times 64 + times 16)**
+add ax,cx ;times 80 (times 64 + times 16)
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 7-21
 
 
-**;**
+;
 
-**; \*\*\* Listing 7-21 \*\*\***
+; *** Listing 7-21 ***
 
-**;**
+;
 
-**; Measures the performance of multiplying by 80 with**
+; Measures the performance of multiplying by 80 with
 
-**; a table look-up.**
+; a table look-up.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**; Table of multiples of 80, covering the range 80 times 0**
+; Table of multiples of 80, covering the range 80 times 0
 
-**; to 80 times 479.**
+; to 80 times 479.
 
-**;**
+;
 
-**Times80Table label word**
+Times80Table label word
 
-**TIMES\_80\_SUM=0**
+TIMES_80_SUM=0
 
-**rept 480**
+rept 480
 
-**dw TIMES\_80\_SUM**
+dw TIMES_80_SUM
 
-**TIMES\_80\_SUM=TIMES\_80\_SUM+80**
+TIMES_80_SUM=TIMES_80_SUM+80
 
-**endm**
+endm
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**sub ax,ax**
+sub ax,ax
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rept 1000**
+rept 1000
 
-**mov ax,10 ;so we have a constant value to**
+mov ax,10 ;so we have a constant value to
 
-**; multiply by**
+; multiply by
 
-**mov bx,ax ;put the factor where we can use it**
+mov bx,ax ;put the factor where we can use it
 
-**; for a table look-up**
+; for a table look-up
 
-**shl bx,1 ;times 2 for use as an index in a**
+shl bx,1 ;times 2 for use as an index in a
 
-**; word-sized look-up table**
+; word-sized look-up table
 
-**mov ax,[Times80Table+bx]**
+mov ax,[Times80Table+bx]
 
-**;look up the answer**
+;look up the answer
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 8-1
 
 
-**;**
+;
 
-**; \*\*\* Listing 8-1 \*\*\***
+; *** Listing 8-1 ***
 
-**;**
+;
 
-**; Copies a byte via AH, with memory addressed with**
+; Copies a byte via AH, with memory addressed with
 
-**; mod-reg-rm direct addressing.**
+; mod-reg-rm direct addressing.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**SourceValue db 1**
+SourceValue db 1
 
-**DestValue db 0**
+DestValue db 0
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rept 1000**
+rept 1000
 
-**mov ah,[SourceValue]**
+mov ah,[SourceValue]
 
-**mov [DestValue],ah**
+mov [DestValue],ah
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 8-2
 
 
-**;**
+;
 
-**; \*\*\* Listing 8-2 \*\*\***
+; *** Listing 8-2 ***
 
-**;**
+;
 
-**; Copies a byte via AL, with memory addressed with**
+; Copies a byte via AL, with memory addressed with
 
-**; accumulator-specific direct addressing.**
+; accumulator-specific direct addressing.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**SourceValue db 1**
+SourceValue db 1
 
-**DestValue db 0**
+DestValue db 0
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rept 1000**
+rept 1000
 
-**mov al,[SourceValue]**
+mov al,[SourceValue]
 
-**mov [DestValue],al**
+mov [DestValue],al
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 8-3
 
 
-**;**
+;
 
-**; \*\*\* Listing 8-3 \*\*\***
+; *** Listing 8-3 ***
 
-**;**
+;
 
-**; Tests the zero/non-zero status of a variable via**
+; Tests the zero/non-zero status of a variable via
 
-**; the direct-addressing mod-reg-rm form of CMP.**
+; the direct-addressing mod-reg-rm form of CMP.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**TestValue dw ?**
+TestValue dw ?
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rept 1000**
+rept 1000
 
-**cmp [TestValue],0**
+cmp [TestValue],0
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 8-4
 
 
-**;**
+;
 
-**; \*\*\* Listing 8-4 \*\*\***
+; *** Listing 8-4 ***
 
-**;**
+;
 
-**; Tests the zero/non-zero status of a variable via**
+; Tests the zero/non-zero status of a variable via
 
-**; the accumulator-specific form of MOV followed by a**
+; the accumulator-specific form of MOV followed by a
 
-**; register-register AND.**
+; register-register AND.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**TestValue dw ?**
+TestValue dw ?
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rept 1000**
+rept 1000
 
-**mov ax,[TestValue]**
+mov ax,[TestValue]
 
-**and ax,ax**
+and ax,ax
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 8-5
 
 
-**;**
+;
 
-**; \*\*\* Listing 8-5 \*\*\***
+; *** Listing 8-5 ***
 
-**;**
+;
 
-**; Initializes a variable to 1 by setting AX to 1, then**
+; Initializes a variable to 1 by setting AX to 1, then
 
-**; using the accumulator-specific form of MOV to store**
+; using the accumulator-specific form of MOV to store
 
-**; that value to a direct-addressed operand.**
+; that value to a direct-addressed operand.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**InitialValue dw ?**
+InitialValue dw ?
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rept 1000**
+rept 1000
 
-**mov ax,1**
+mov ax,1
 
-**mov [InitialValue],ax**
+mov [InitialValue],ax
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 8-6
 
 
-**;**
+;
 
-**; \*\*\* Listing 8-6 \*\*\***
+; *** Listing 8-6 ***
 
-**;**
+;
 
-**; Initializes a variable to 1 via the direct-addressing**
+; Initializes a variable to 1 via the direct-addressing
 
-**; mod-reg-rm form of MOV.**
+; mod-reg-rm form of MOV.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**InitialValue dw ?**
+InitialValue dw ?
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rept 1000**
+rept 1000
 
-**mov [InitialValue],1**
+mov [InitialValue],1
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 8-7
 
 
-**;**
+;
 
-**; \*\*\* Listing 8-7 \*\*\***
+; *** Listing 8-7 ***
 
-**;**
+;
 
-**; Initializes a variable to 0 via a register-register SUB,**
+; Initializes a variable to 0 via a register-register SUB,
 
-**; followed by the accumulator-specific form of MOV to a**
+; followed by the accumulator-specific form of MOV to a
 
-**; direct-addressed operand.**
+; direct-addressed operand.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**InitialValue dw ?**
+InitialValue dw ?
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rept 1000**
+rept 1000
 
-**sub ax,ax**
+sub ax,ax
 
-**mov [InitialValue],ax**
+mov [InitialValue],ax
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 8-8
 
 
-**;**
+;
 
-**; \*\*\* Listing 8-8 \*\*\***
+; *** Listing 8-8 ***
 
-**;**
+;
 
-**; The accumulator-specific immediate-addressing form of CMP.**
+; The accumulator-specific immediate-addressing form of CMP.
 
-**;**
+;
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rept 1000**
+rept 1000
 
-**cmp al,1**
+cmp al,1
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 8-9
 
 
-**;**
+;
 
-**; \*\*\* Listing 8-9 \*\*\***
+; *** Listing 8-9 ***
 
-**;**
+;
 
-**; The mod-reg-rm immediate-addressing form of CMP with a**
+; The mod-reg-rm immediate-addressing form of CMP with a
 
-**; register as the destination operand.**
+; register as the destination operand.
 
-**;**
+;
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rept 1000**
+rept 1000
 
-**cmp bl,1**
+cmp bl,1
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 8-10
 
 
-**;**
+;
 
-**; \*\*\* Listing 8-10 \*\*\***
+; *** Listing 8-10 ***
 
-**;**
+;
 
-**; Sets the BIOS equipment flag to select an 80-column**
+; Sets the BIOS equipment flag to select an 80-column
 
-**; color monitor.**
+; color monitor.
 
-**; Uses mod-reg-rm AND and OR instructions.**
+; Uses mod-reg-rm AND and OR instructions.
 
-**;**
+;
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rept 1000**
+rept 1000
 
-**sub ax,ax**
+sub ax,ax
 
-**mov es,ax ;point ES to the segment at 0**
+mov es,ax ;point ES to the segment at 0
 
-**and byte ptr es:[410h],not 30h**
+and byte ptr es:[410h],not 30h
 
-**;mask off the adapter bits**
+;mask off the adapter bits
 
-**or byte ptr es:[410h],20h**
+or byte ptr es:[410h],20h
 
-**;set the adapter bits to select**
+;set the adapter bits to select
 
-**; 80-column color**
+; 80-column color
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 8-11
 
 
-**;**
+;
 
-**; \*\*\* Listing 8-11 \*\*\***
+; *** Listing 8-11 ***
 
-**;**
+;
 
-**; Sets the BIOS equipment flag to select an 80-column**
+; Sets the BIOS equipment flag to select an 80-column
 
-**; color monitor.**
+; color monitor.
 
-**; Uses accumulator-specific MOV, AND, and OR instructions.**
+; Uses accumulator-specific MOV, AND, and OR instructions.
 
-**;**
+;
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rept 1000**
+rept 1000
 
-**sub ax,ax**
+sub ax,ax
 
-**mov es,ax ;point ES to the segment at 0**
+mov es,ax ;point ES to the segment at 0
 
-**mov al,es:[410h] ;get the equipment flag**
+mov al,es:[410h] ;get the equipment flag
 
-**and al,not 30h ;mask off the adapter bits**
+and al,not 30h ;mask off the adapter bits
 
-**or al,20h ;set the adapter bits to select**
+or al,20h ;set the adapter bits to select
 
-**; 80-column color**
+; 80-column color
 
-**mov es:[410h],al ;set the new equipment flag**
+mov es:[410h],al ;set the new equipment flag
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 8-12
 
 
-**;**
+;
 
-**; \*\*\* Listing 8-12 \*\*\***
+; *** Listing 8-12 ***
 
-**;**
+;
 
-**; Adds together bytes from two arrays, subtracts a byte from**
+; Adds together bytes from two arrays, subtracts a byte from
 
-**; another array from the sum, and stores the result in a fourth**
+; another array from the sum, and stores the result in a fourth
 
-**; array, for all elements in the arrays.**
+; array, for all elements in the arrays.
 
-**; Uses the AX-specific form of XCHG.**
+; Uses the AX-specific form of XCHG.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ARRAY\_LENGTH equ 1000**
+ARRAY_LENGTH equ 1000
 
-**Array1 db ARRAY\_LENGTH dup (3)**
+Array1 db ARRAY_LENGTH dup (3)
 
-**Array2 db ARRAY\_LENGTH dup (2)**
+Array2 db ARRAY_LENGTH dup (2)
 
-**Array3 db ARRAY\_LENGTH dup (1)**
+Array3 db ARRAY_LENGTH dup (1)
 
-**Array4 db ARRAY\_LENGTH dup (?)**
+Array4 db ARRAY_LENGTH dup (?)
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**mov ax,offset Array1 ;set up array pointers**
+mov ax,offset Array1 ;set up array pointers
 
-**mov bx,offset Array2**
+mov bx,offset Array2
 
-**mov si,offset Array3**
+mov si,offset Array3
 
-**mov di,offset Array4**
+mov di,offset Array4
 
-**mov cx,ARRAY\_LENGTH**
+mov cx,ARRAY_LENGTH
 
-**call ZTimerOn**
+call ZTimerOn
 
-**ProcessingLoop:**
+ProcessingLoop:
 
-**xchg ax,bx ;point BX to Array1,**
+xchg ax,bx ;point BX to Array1,
 
-**; point AX to Array2**
+; point AX to Array2
 
-**mov dl,[bx] ;get next byte from Array1**
+mov dl,[bx] ;get next byte from Array1
 
-**xchg ax,bx ;point BX to Array2,**
+xchg ax,bx ;point BX to Array2,
 
-**; point AX to Array1**
+; point AX to Array1
 
-**add dl,[bx] ;add Array2 element to Array1**
+add dl,[bx] ;add Array2 element to Array1
 
-**sub dl,[si] ;subtract Array3 element**
+sub dl,[si] ;subtract Array3 element
 
-**mov [di],dl ;store result in Array4**
+mov [di],dl ;store result in Array4
 
-**inc ax ;point to next element of each array**
+inc ax ;point to next element of each array
 
-**inc bx**
+inc bx
 
-**inc si**
+inc si
 
-**inc di**
+inc di
 
-**loop ProcessingLoop ;do the next element**
+loop ProcessingLoop ;do the next element
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 8-13
 
 
-**;**
+;
 
-**; \*\*\* Listing 8-13 \*\*\***
+; *** Listing 8-13 ***
 
-**;**
+;
 
-**; Adds together bytes from two arrays, subtracts a byte from**
+; Adds together bytes from two arrays, subtracts a byte from
 
-**; another array from the sum, and stores the result in a fourth**
+; another array from the sum, and stores the result in a fourth
 
-**; array, for all elements in the arrays.**
+; array, for all elements in the arrays.
 
-**; Uses the mod-reg-rm form of XCHG.**
+; Uses the mod-reg-rm form of XCHG.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ARRAY\_LENGTH equ 1000**
+ARRAY_LENGTH equ 1000
 
-**Array1 db ARRAY\_LENGTH dup (3)**
+Array1 db ARRAY_LENGTH dup (3)
 
-**Array2 db ARRAY\_LENGTH dup (2)**
+Array2 db ARRAY_LENGTH dup (2)
 
-**Array3 db ARRAY\_LENGTH dup (1)**
+Array3 db ARRAY_LENGTH dup (1)
 
-**Array4 db ARRAY\_LENGTH dup (?)**
+Array4 db ARRAY_LENGTH dup (?)
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**mov dx,offset Array1**
+mov dx,offset Array1
 
-**mov bx,offset Array2**
+mov bx,offset Array2
 
-**mov si,offset Array3**
+mov si,offset Array3
 
-**mov di,offset Array4**
+mov di,offset Array4
 
-**mov cx,ARRAY\_LENGTH**
+mov cx,ARRAY_LENGTH
 
-**call ZTimerOn**
+call ZTimerOn
 
-**ProcessingLoop:**
+ProcessingLoop:
 
-**xchg dx,bx ;point BX to Array1,**
+xchg dx,bx ;point BX to Array1,
 
-**; point DX to Array2**
+; point DX to Array2
 
-**mov al,[bx] ;get next byte from Array1**
+mov al,[bx] ;get next byte from Array1
 
-**xchg dx,bx ;point BX to Array2,**
+xchg dx,bx ;point BX to Array2,
 
-**; point DX to Array1**
+; point DX to Array1
 
-**add al,[bx] ;add Array2 element to Array1**
+add al,[bx] ;add Array2 element to Array1
 
-**sub al,[si] ;subtract Array3 element**
+sub al,[si] ;subtract Array3 element
 
-**mov [di],al ;store result in Array4**
+mov [di],al ;store result in Array4
 
-**inc dx ;point to next element of each array**
+inc dx ;point to next element of each array
 
-**inc bx**
+inc bx
 
-**inc si**
+inc si
 
-**inc di**
+inc di
 
-**loop ProcessingLoop ;do the next element**
+loop ProcessingLoop ;do the next element
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 8-14
 
 
-**;**
+;
 
-**; \*\*\* Listing 8-14 \*\*\***
+; *** Listing 8-14 ***
 
-**;**
+;
 
-**; Adds AL to each element in an array until the result**
+; Adds AL to each element in an array until the result
 
-**; of an addition exceeds 7Fh.**
+; of an addition exceeds 7Fh.
 
-**; Uses PUSHF and POPF.**
+; Uses PUSHF and POPF.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**Data db 999 dup (0),7fh**
+Data db 999 dup (0),7fh
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**mov bx,offset Data**
+mov bx,offset Data
 
-**mov al,2 ;we'll add 2 to each array element**
+mov al,2 ;we'll add 2 to each array element
 
-**call ZTimerOn**
+call ZTimerOn
 
-**AddLoop:**
+AddLoop:
 
-**add [bx],al ;add the value to this element**
+add [bx],al ;add the value to this element
 
-**pushf ;save the sign flag**
+pushf ;save the sign flag
 
-**inc bx ;point to the next array element**
+inc bx ;point to the next array element
 
-**popf ;get back the sign flag**
+popf ;get back the sign flag
 
-**jns AddLoop ;do the next element, if any**
+jns AddLoop ;do the next element, if any
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 8-15
 
 
-**;**
+;
 
-**; \*\*\* Listing 8-15 \*\*\***
+; *** Listing 8-15 ***
 
-**;**
+;
 
-**; Adds AL to each element in an array until the result**
+; Adds AL to each element in an array until the result
 
-**; of an addition exceeds 7Fh.**
+; of an addition exceeds 7Fh.
 
-**; Uses LAHF and SAHF.**
+; Uses LAHF and SAHF.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**Data db 999 dup (0),7fh**
+Data db 999 dup (0),7fh
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**mov bx,offset Data**
+mov bx,offset Data
 
-**mov al,2 ;we'll add 2 to each array element**
+mov al,2 ;we'll add 2 to each array element
 
-**call ZTimerOn**
+call ZTimerOn
 
-**AddLoop:**
+AddLoop:
 
-**add [bx],al ;add the value to this element**
+add [bx],al ;add the value to this element
 
-**lahf ;save the sign flag**
+lahf ;save the sign flag
 
-**inc bx ;point to the next array element**
+inc bx ;point to the next array element
 
-**sahf ;get back the sign flag**
+sahf ;get back the sign flag
 
-**jns AddLoop ;do the next element, if any**
+jns AddLoop ;do the next element, if any
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 8-16
 
 
-**;**
+;
 
-**; \*\*\* Listing 8-16 \*\*\***
+; *** Listing 8-16 ***
 
-**;**
+;
 
-**; Adds AL to each element in an array until the result**
+; Adds AL to each element in an array until the result
 
-**; of an addition exceeds 7Fh.**
+; of an addition exceeds 7Fh.
 
-**; Uses two jumps in the loop, with a finaLiNC to adjust**
+; Uses two jumps in the loop, with a finaLiNC to adjust
 
-**; BX for the last addition.**
+; BX for the last addition.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**Data db 999 dup (0),7fh**
+Data db 999 dup (0),7fh
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**mov bx,offset Data**
+mov bx,offset Data
 
-**mov al,2 ;we'll add 2 to each array element**
+mov al,2 ;we'll add 2 to each array element
 
-**call ZTimerOn**
+call ZTimerOn
 
-**AddLoop:**
+AddLoop:
 
-**add [bx],al ;add the value to this element**
+add [bx],al ;add the value to this element
 
-**js EndAddLoop ;done if Sign flag set**
+js EndAddLoop ;done if Sign flag set
 
-**inc bx ;point to the next array element**
+inc bx ;point to the next array element
 
-**jmp AddLoop ;do the next element**
+jmp AddLoop ;do the next element
 
-**EndAddLoop:**
+EndAddLoop:
 
-**inc bx ;adjust BX for the final addition**
+inc bx ;adjust BX for the final addition
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 8-17
 
 
-**;**
+;
 
-**; \*\*\* Listing 8-17 \*\*\***
+; *** Listing 8-17 ***
 
-**;**
+;
 
-**; Adds AL to each element in an array until the result**
+; Adds AL to each element in an array until the result
 
-**; of an addition exceeds 7Fh.**
+; of an addition exceeds 7Fh.
 
-**; Uses one jump in the loop, with a predecrement before**
+; Uses one jump in the loop, with a predecrement before
 
-**; the loop, an INC before the ADD in the loop, and a final**
+; the loop, an INC before the ADD in the loop, and a final
 
-**; INC to adjust BX for the last addition.**
+; INC to adjust BX for the last addition.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**Data db 999 dup (0),7fh**
+Data db 999 dup (0),7fh
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**mov bx,offset Data**
+mov bx,offset Data
 
-**mov al,2 ;we'll add 2 to each array element**
+mov al,2 ;we'll add 2 to each array element
 
-**call ZTimerOn**
+call ZTimerOn
 
-**dec bx ;compensate for the initiaLiNC**
+dec bx ;compensate for the initiaLiNC
 
-**AddLoop:**
+AddLoop:
 
-**inc bx ;point to the next array element**
+inc bx ;point to the next array element
 
-**add [bx],al ;add the value to this element**
+add [bx],al ;add the value to this element
 
-**jns AddLoop ;do the next element, if any**
+jns AddLoop ;do the next element, if any
 
-**EndAddLoop:**
+EndAddLoop:
 
-**inc bx ;adjust BX for the final addition**
+inc bx ;adjust BX for the final addition
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 9-1
 
 
-**;**
+;
 
-**; \*\*\* Listing 9-1 \*\*\***
+; *** Listing 9-1 ***
 
-**;**
+;
 
-**; An example of initializing multiple memory variables**
+; An example of initializing multiple memory variables
 
-**; to the same value by placing the value in a register,**
+; to the same value by placing the value in a register,
 
-**; then storing the register to each of the variables.**
+; then storing the register to each of the variables.
 
-**; This avoids the overhead that's incurred when using**
+; This avoids the overhead that's incurred when using
 
-**; immediate operands.**
+; immediate operands.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**MemVar1 dw ?**
+MemVar1 dw ?
 
-**MemVar2 dw ?**
+MemVar2 dw ?
 
-**MemVar3 dw ?**
+MemVar3 dw ?
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rept 1000**
+rept 1000
 
-**mov ax,0ffffh ;place the initial value in**
+mov ax,0ffffh ;place the initial value in
 
-**; AX**
+; AX
 
-**mov [MemVar1],ax ;store AX to each memory**
+mov [MemVar1],ax ;store AX to each memory
 
-**mov [MemVar2],ax ; variable to be initialized**
+mov [MemVar2],ax ; variable to be initialized
 
-**mov [MemVar3],ax**
+mov [MemVar3],ax
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 9-2
 
 
-**;**
+;
 
-**; \*\*\* Listing 9-2 \*\*\***
+; *** Listing 9-2 ***
 
-**;**
+;
 
-**; An example of initializing multiple memory variables**
+; An example of initializing multiple memory variables
 
-**; to the same value by making the value an immediate**
+; to the same value by making the value an immediate
 
-**; operand to each instruction. Immediate operands**
+; operand to each instruction. Immediate operands
 
-**; increase instruction size by 1 to 2 bytes, and preclude**
+; increase instruction size by 1 to 2 bytes, and preclude
 
-**; use of the accumulator-specific direct-addressing**
+; use of the accumulator-specific direct-addressing
 
-**; form of MOV.**
+; form of MOV.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**MemVar1 dw ?**
+MemVar1 dw ?
 
-**MemVar2 dw ?**
+MemVar2 dw ?
 
-**MemVar3 dw ?**
+MemVar3 dw ?
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rept 1000**
+rept 1000
 
-**mov [MemVar1],0ffffh ;store 0ffffh to each memory**
+mov [MemVar1],0ffffh ;store 0ffffh to each memory
 
-**mov [MemVar2],0ffffh ; variable as an immediate**
+mov [MemVar2],0ffffh ; variable as an immediate
 
-**mov [MemVar3],0ffffh ; operand**
+mov [MemVar3],0ffffh ; operand
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 9-3
 
 
-**;**
+;
 
-**; \*\*\* Listing 9-3 \*\*\***
+; *** Listing 9-3 ***
 
-**;**
+;
 
-**; An example of using AND reg,reg to test for the**
+; An example of using AND reg,reg to test for the
 
-**; zero/non-zero status of a register. This is faster**
+; zero/non-zero status of a register. This is faster
 
-**; (and usually shorter) than CMP reg,0.**
+; (and usually shorter) than CMP reg,0.
 
-**;**
+;
 
-**sub dx,dx ;set DX to 0, so we don't jump**
+sub dx,dx ;set DX to 0, so we don't jump
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rept 1000**
+rept 1000
 
-**and dx,dx ;is DX 0?**
+and dx,dx ;is DX 0?
 
-**jnz $+2 ;just jumps to the next line if**
+jnz $+2 ;just jumps to the next line if
 
-**; Z is not set (never jumps)**
+; Z is not set (never jumps)
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 9-4
 
 
-**;**
+;
 
-**; \*\*\* Listing 9-4 \*\*\***
+; *** Listing 9-4 ***
 
-**;**
+;
 
-**; An example of using CMP reg,0 to test for the**
+; An example of using CMP reg,0 to test for the
 
-**; zero/non-zero status of a register.**
+; zero/non-zero status of a register.
 
-**;**
+;
 
-**sub dx,dx ;set DX to 0, so we don't jump**
+sub dx,dx ;set DX to 0, so we don't jump
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rept 1000**
+rept 1000
 
-**cmp dx,0 ;is DX 0?**
+cmp dx,0 ;is DX 0?
 
-**jnz $+2 ;just jumps to the next line if**
+jnz $+2 ;just jumps to the next line if
 
-**; Z is not set (never jumps)**
+; Z is not set (never jumps)
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 9-5
 
 
-**;**
+;
 
-**; \*\*\* Listing 9-5 \*\*\***
+; *** Listing 9-5 ***
 
-**;**
+;
 
-**; An example of performing a switch statement with just a**
+; An example of performing a switch statement with just a
 
-**; few cases, all consecutive, by using CMP to test for each**
+; few cases, all consecutive, by using CMP to test for each
 
-**; of the cases.**
+; of the cases.
 
-**;**
+;
 
-**; Macro to perform switch statement. This must be a macro**
+; Macro to perform switch statement. This must be a macro
 
-**; rather than code inside the REPT block because MASM**
+; rather than code inside the REPT block because MASM
 
-**; doesn't handle LOCAL declarations properly inside REPT**
+; doesn't handle LOCAL declarations properly inside REPT
 
-**; blocks, but it does handle them properly inside macros.**
+; blocks, but it does handle them properly inside macros.
 
-**;**
+;
 
-**HANDLE\_SWITCH macro**
+HANDLE_SWITCH macro
 
-**local ValueWas1, ValueWas2, ValueWas3, ValueWas4**
+local ValueWas1, ValueWas2, ValueWas3, ValueWas4
 
-**cmp cx,1**
+cmp cx,1
 
-**jz ValueWas1**
+jz ValueWas1
 
-**cmp cx,2**
+cmp cx,2
 
-**jz ValueWas2**
+jz ValueWas2
 
-**cmp cx,3**
+cmp cx,3
 
-**jz ValueWas3**
+jz ValueWas3
 
-**cmp cx,4**
+cmp cx,4
 
-**jz ValueWas4**
+jz ValueWas4
 
-**; <none of the above\>**
+; <none of the above\>
 
-**ValueWas1:**
+ValueWas1:
 
-**ValueWas2:**
+ValueWas2:
 
-**ValueWas3:**
+ValueWas3:
 
-**ValueWas4:**
+ValueWas4:
 
-**endm**
+endm
 
-**;**
+;
 
-**call ZTimerOn**
+call ZTimerOn
 
-**TEST\_VALUE = 1**
+TEST_VALUE = 1
 
-**rept 1000**
+rept 1000
 
-**mov cx,TEST\_VALUE ;set the test value**
+mov cx,TEST_VALUE ;set the test value
 
-**HANDLE\_SWITCH ;perform the switch test**
+HANDLE_SWITCH ;perform the switch test
 
-**TEST\_VALUE = (TEST\_VALUE MOD 5)+1 ;cycle the test value from**
+TEST_VALUE = (TEST_VALUE MOD 5)+1 ;cycle the test value from
 
-**; 1 to 4**
+; 1 to 4
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 9-6
 
 
-**;**
+;
 
-**; \*\*\* Listing 9-6 \*\*\***
+; *** Listing 9-6 ***
 
-**;**
+;
 
-**; An example of performing a switch statement with just a**
+; An example of performing a switch statement with just a
 
-**; few cases, all consecutive, by using DEC to test for each**
+; few cases, all consecutive, by using DEC to test for each
 
-**; of the cases.**
+; of the cases.
 
-**;**
+;
 
-**; Macro to perform switch statement. This must be a macro**
+; Macro to perform switch statement. This must be a macro
 
-**; rather than code inside the REPT block because MASM**
+; rather than code inside the REPT block because MASM
 
-**; doesn't handle LOCAL declarations properly inside REPT**
+; doesn't handle LOCAL declarations properly inside REPT
 
-**; blocks, but it does handle them properly inside macros.**
+; blocks, but it does handle them properly inside macros.
 
-**;**
+;
 
-**HANDLE\_SWITCH macro**
+HANDLE_SWITCH macro
 
-**local ValueWas1, ValueWas2, ValueWas3, ValueWas4**
+local ValueWas1, ValueWas2, ValueWas3, ValueWas4
 
-**dec cx**
+dec cx
 
-**jz ValueWas1**
+jz ValueWas1
 
-**dec cx**
+dec cx
 
-**jz ValueWas2**
+jz ValueWas2
 
-**dec cx**
+dec cx
 
-**jz ValueWas3**
+jz ValueWas3
 
-**dec cx**
+dec cx
 
-**jz ValueWas4**
+jz ValueWas4
 
-**; <none of the above\>**
+; <none of the above\>
 
-**ValueWas1:**
+ValueWas1:
 
-**ValueWas2:**
+ValueWas2:
 
-**ValueWas3:**
+ValueWas3:
 
-**ValueWas4:**
+ValueWas4:
 
-**endm**
+endm
 
-**;**
+;
 
-**call ZTimerOn**
+call ZTimerOn
 
-**TEST\_VALUE = 1**
+TEST_VALUE = 1
 
-**rept 1000**
+rept 1000
 
-**mov cx,TEST\_VALUE ;set the test value**
+mov cx,TEST_VALUE ;set the test value
 
-**HANDLE\_SWITCH ;perform the switch test**
+HANDLE_SWITCH ;perform the switch test
 
-**TEST\_VALUE = (TEST\_VALUE MOD 5)+1 ;cycle the test value from**
+TEST_VALUE = (TEST_VALUE MOD 5)+1 ;cycle the test value from
 
-**; 0 to 3**
+; 0 to 3
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 9-7
 
 
-**;**
+;
 
-**; \*\*\* Listing 9-7 \*\*\***
+; *** Listing 9-7 ***
 
-**;**
+;
 
-**; Times the performance of a 16-bit register DEC.**
+; Times the performance of a 16-bit register DEC.
 
-**;**
+;
 
-**mov dx,1000**
+mov dx,1000
 
-**call ZTimerOn**
+call ZTimerOn
 
-**TestLoop:**
+TestLoop:
 
-**dec dx ;16-bit register DEC**
+dec dx ;16-bit register DEC
 
-**; (1 byte long, uses 16-bit-**
+; (1 byte long, uses 16-bit-
 
-**; register-specific form of DEC)**
+; register-specific form of DEC)
 
-**jnz TestLoop**
+jnz TestLoop
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 9-8
 
 
-**;**
+;
 
-**; \*\*\* Listing 9-8 \*\*\***
+; *** Listing 9-8 ***
 
-**;**
+;
 
-**; Times the performance of a 16-bit subtraction**
+; Times the performance of a 16-bit subtraction
 
-**; of an immediate value of 1.**
+; of an immediate value of 1.
 
-**;**
+;
 
-**mov dx,1000**
+mov dx,1000
 
-**call ZTimerOn**
+call ZTimerOn
 
-**TestLoop:**
+TestLoop:
 
-**sub dx,1 ;decrement DX by subtracting 1 from**
+sub dx,1 ;decrement DX by subtracting 1 from
 
-**; it (3 bytes long, uses sign-**
+; it (3 bytes long, uses sign-
 
-**; extended mod-reg-rm form of SUB)**
+; extended mod-reg-rm form of SUB)
 
-**jnz TestLoop**
+jnz TestLoop
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 9-9
 
 
-**;**
+;
 
-**; \*\*\* Listing 9-9 \*\*\***
+; *** Listing 9-9 ***
 
-**;**
+;
 
-**; Times the performance of two 16-bit register DEC**
+; Times the performance of two 16-bit register DEC
 
-**; instructions.**
+; instructions.
 
-**;**
+;
 
-**mov dx,2000**
+mov dx,2000
 
-**call ZTimerOn**
+call ZTimerOn
 
-**TestLoop:**
+TestLoop:
 
-**dec dx ;subtract 2 from DX by decrementing**
+dec dx ;subtract 2 from DX by decrementing
 
-**dec dx ; it twice (2 bytes long, uses**
+dec dx ; it twice (2 bytes long, uses
 
-**; 2 16-bit-register-specific DECs)**
+; 2 16-bit-register-specific DECs)
 
-**jnz TestLoop**
+jnz TestLoop
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 9-10
 
 
-**;**
+;
 
-**; \*\*\* Listing 9-10 \*\*\***
+; *** Listing 9-10 ***
 
-**;**
+;
 
-**; Times the performance of an 8-bit register DEC.**
+; Times the performance of an 8-bit register DEC.
 
-**;**
+;
 
-**mov dl,100**
+mov dl,100
 
-**call ZTimerOn**
+call ZTimerOn
 
-**TestLoop:**
+TestLoop:
 
-**dec dl ;8-bit register DEC**
+dec dl ;8-bit register DEC
 
-**; (2 bytes long, uses mod-reg-rm**
+; (2 bytes long, uses mod-reg-rm
 
-**; form of DEC)**
+; form of DEC)
 
-**jnz TestLoop**
+jnz TestLoop
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 9-11
 
 
-**;**
+;
 
-**; \*\*\* Listing 9-11 \*\*\***
+; *** Listing 9-11 ***
 
-**;**
+;
 
-**; Illustrates the use of the efficient word-sized INC to**
+; Illustrates the use of the efficient word-sized INC to
 
-**; increment a byte-sized register, taking advantage of the**
+; increment a byte-sized register, taking advantage of the
 
-**; knowledge that AL never counts past 0FFh to wrap to 0 and**
+; knowledge that AL never counts past 0FFh to wrap to 0 and
 
-**; so AH will never affected by the INC.**
+; so AH will never affected by the INC.
 
-**;**
+;
 
-**; Note: This is a sample code fragment, and is not intended**
+; Note: This is a sample code fragment, and is not intended
 
-**; to either be run under the Zen timer or assembled as a**
+; to either be run under the Zen timer or assembled as a
 
-**; standalone program.**
+; standalone program.
 
-**;**
+;
 
-**sub al,al ;count up from 0**
+sub al,al ;count up from 0
 
-**TestLoop:**
+TestLoop:
 
-**inc ax ;AL will never turn over, so AH**
+inc ax ;AL will never turn over, so AH
 
-**; will never be affected**
+; will never be affected
 
-**cmp al,8 ;count up to 8**
+cmp al,8 ;count up to 8
 
-**jbe TestLoop**
+jbe TestLoop
 
 
 
 ## Listing 9-12
 
 
-**;**
+;
 
-**; \*\*\* Listing 9-12 \*\*\***
+; *** Listing 9-12 ***
 
-**;**
+;
 
-**; Illustrates the use of a word-sized DEC for the outer**
+; Illustrates the use of a word-sized DEC for the outer
 
-**; loop, taking advantage of the knowledge that the counter**
+; loop, taking advantage of the knowledge that the counter
 
-**; for the inner loop is always 0 when the outer loop is**
+; for the inner loop is always 0 when the outer loop is
 
-**; counted down. This code uses no registers other than**
+; counted down. This code uses no registers other than
 
-**; CX, and would be used when registers are in such short**
+; CX, and would be used when registers are in such short
 
-**; supply that no other registers are available. Otherwise,**
+; supply that no other registers are available. Otherwise,
 
-**; word-sized DECs would be used for both loops. (Ideally,**
+; word-sized DECs would be used for both loops. (Ideally,
 
-**; a LOOP would also be used instead of DEC CX/JNZ.)**
+; a LOOP would also be used instead of DEC CX/JNZ.)
 
-**;**
+;
 
-**; Note: This is a sample code fragment, and is not intended**
+; Note: This is a sample code fragment, and is not intended
 
-**; to either be run under the Zen timer or assembled as a**
+; to either be run under the Zen timer or assembled as a
 
-**; standalone program.**
+; standalone program.
 
-**;**
+;
 
-**mov cl,5 ;outer loop is performed 5 times**
+mov cl,5 ;outer loop is performed 5 times
 
-**OuterLoop:**
+OuterLoop:
 
-**mov ch,10 ;inner loop is performed 10 times**
+mov ch,10 ;inner loop is performed 10 times
 
-**; each time through the outer loop**
+; each time through the outer loop
 
-**InnerLoop:**
+InnerLoop:
 
-**;<<<working code goes here\>\>\>**
+;<<<working code goes here\>\>\>
 
-**dec ch ;count down inner loop**
+dec ch ;count down inner loop
 
-**jnz InnerLoop**
+jnz InnerLoop
 
-**dec cx ;CH is always 0 at this point, so**
+dec cx ;CH is always 0 at this point, so
 
-**; we can use the shorter & faster**
+; we can use the shorter & faster
 
-**; word DEC to count down CL**
+; word DEC to count down CL
 
-**jnz OuterLoop**
+jnz OuterLoop
 
 
 
 ## Listing 9-13
 
 
-**;**
+;
 
-**; \*\*\* Listing 9-13 \*\*\***
+; *** Listing 9-13 ***
 
-**;**
+;
 
-**; Adds together two 64-bit memory variables, taking**
+; Adds together two 64-bit memory variables, taking
 
-**; advantage of the fact that neither INC nor LOOP affects**
+; advantage of the fact that neither INC nor LOOP affects
 
-**; the Carry flag.**
+; the Carry flag.
 
-**;**
+;
 
-**; Note: This is a sample code fragment, and is not intended**
+; Note: This is a sample code fragment, and is not intended
 
-**; to either be run under the Zen timer or assembled as a**
+; to either be run under the Zen timer or assembled as a
 
-**; standalone program.**
+; standalone program.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**MemVar1 db 2, 0, 0, 0, 0, 0, 0, 0**
+MemVar1 db 2, 0, 0, 0, 0, 0, 0, 0
 
-**MEM\_VAR\_LEN equ ($-MemVar1)**
+MEM_VAR_LEN equ ($-MemVar1)
 
-**MemVar2 db 0feh, 0ffh, 0ffh, 0ffh, 0, 0, 0, 0**
+MemVar2 db 0feh, 0ffh, 0ffh, 0ffh, 0, 0, 0, 0
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**mov si,offset MemVar1 ;set up memory variable**
+mov si,offset MemVar1 ;set up memory variable
 
-**mov di,offset MemVar2 ; pointers**
+mov di,offset MemVar2 ; pointers
 
-**mov ax,[si] ;add the first words**
+mov ax,[si] ;add the first words
 
-**add [di],ax ; together**
+add [di],ax ; together
 
-**mov cx,(MEM\_VAR\_LEN/2)-1**
+mov cx,(MEM_VAR_LEN/2)-1
 
-**;we'll add together the**
+;we'll add together the
 
-**; remaining 3 words in**
+; remaining 3 words in
 
-**; each variable**
+; each variable
 
-**AdditionLoop:**
+AdditionLoop:
 
-**inc si**
+inc si
 
-**inc si ;point to next word**
+inc si ;point to next word
 
-**inc di ; (doesn't affect Carry**
+inc di ; (doesn't affect Carry
 
-**inc di ; flag)**
+inc di ; flag)
 
-**mov ax,[si] ;add the next words**
+mov ax,[si] ;add the next words
 
-**adc [di],ax ; together-C flag still set**
+adc [di],ax ; together-C flag still set
 
-**; from last addition**
+; from last addition
 
-**loop AdditionLoop ;add the next word of each**
+loop AdditionLoop ;add the next word of each
 
-**; variable together**
+; variable together
 
 
 
 ## Listing 9-14
 
 
-**;**
+;
 
-**; \*\*\* Listing 9-14 \*\*\***
+; *** Listing 9-14 ***
 
-**;**
+;
 
-**; An illustration of the use of CBW to convert an**
+; An illustration of the use of CBW to convert an
 
-**; array of unsigned byte values between 0 and 7Fh to an**
+; array of unsigned byte values between 0 and 7Fh to an
 
-**; array of unsigned words. Note that this would not work**
+; array of unsigned words. Note that this would not work
 
-**; if Array1 contained values greater than 7Fh.**
+; if Array1 contained values greater than 7Fh.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ARRAY\_LENGTH equ 1000**
+ARRAY_LENGTH equ 1000
 
-**;**
+;
 
-**Array1 label byte**
+Array1 label byte
 
-**ARRAY\_VALUE=0**
+ARRAY_VALUE=0
 
-**rept ARRAY\_LENGTH**
+rept ARRAY_LENGTH
 
-**db ARRAY\_VALUE**
+db ARRAY_VALUE
 
-**ARRAY\_VALUE=(ARRAY\_VALUE+1) and 07fh**
+ARRAY_VALUE=(ARRAY_VALUE+1) and 07fh
 
-**;cycle source array byte**
+;cycle source array byte
 
-**; values from 0-7Fh**
+; values from 0-7Fh
 
-**endm**
+endm
 
-**;**
+;
 
-**Array2 dw ARRAY\_LENGTH dup (?)**
+Array2 dw ARRAY_LENGTH dup (?)
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**mov si,offset Array1 ;set up array pointers**
+mov si,offset Array1 ;set up array pointers
 
-**mov di,offset Array2**
+mov di,offset Array2
 
-**mov ax,ds**
+mov ax,ds
 
-**mov es,ax ;copy to & from same segment**
+mov es,ax ;copy to & from same segment
 
-**cld ;make string instructions**
+cld ;make string instructions
 
-**; increment pointers**
+; increment pointers
 
-**mov cx,ARRAY\_LENGTH**
+mov cx,ARRAY_LENGTH
 
-**call ZTimerOn**
+call ZTimerOn
 
-**ProcessingLoop:**
+ProcessingLoop:
 
-**lodsb ;get the next element**
+lodsb ;get the next element
 
-**cbw ;make it a word**
+cbw ;make it a word
 
-**stosw ;save the word value**
+stosw ;save the word value
 
-**loop ProcessingLoop ;do the next element**
+loop ProcessingLoop ;do the next element
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 9-15
 
 
-**;**
+;
 
-**; \*\*\* Listing 9-15 \*\*\***
+; *** Listing 9-15 ***
 
-**;**
+;
 
-**; An illustration of the use of SUB AH,AH to convert an**
+; An illustration of the use of SUB AH,AH to convert an
 
-**; array of unsigned byte values between 0 and 7Fh to an**
+; array of unsigned byte values between 0 and 7Fh to an
 
-**; array of words. Note that this would work even if Array1**
+; array of words. Note that this would work even if Array1
 
-**; contained values greater than 7Fh.**
+; contained values greater than 7Fh.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ARRAY\_LENGTH equ 1000**
+ARRAY_LENGTH equ 1000
 
-**;**
+;
 
-**Array1 label byte**
+Array1 label byte
 
-**ARRAY\_VALUE=0**
+ARRAY_VALUE=0
 
-**rept ARRAY\_LENGTH**
+rept ARRAY_LENGTH
 
-**db ARRAY\_VALUE**
+db ARRAY_VALUE
 
-**ARRAY\_VALUE=(ARRAY\_VALUE+1) and 07fh**
+ARRAY_VALUE=(ARRAY_VALUE+1) and 07fh
 
-**;cycle source array byte**
+;cycle source array byte
 
-**; values from 0-7Fh**
+; values from 0-7Fh
 
-**endm**
+endm
 
-**;**
+;
 
-**Array2 dw ARRAY\_LENGTH dup (?)**
+Array2 dw ARRAY_LENGTH dup (?)
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**mov si,offset Array1 ;set up array pointers**
+mov si,offset Array1 ;set up array pointers
 
-**mov di,offset Array2**
+mov di,offset Array2
 
-**mov ax,ds**
+mov ax,ds
 
-**mov es,ax ;copy to & from same segment**
+mov es,ax ;copy to & from same segment
 
-**cld ;make string instructions**
+cld ;make string instructions
 
-**; increment pointers**
+; increment pointers
 
-**mov cx,ARRAY\_LENGTH**
+mov cx,ARRAY_LENGTH
 
-**call ZTimerOn**
+call ZTimerOn
 
-**ProcessingLoop:**
+ProcessingLoop:
 
-**lodsb ;get the next element**
+lodsb ;get the next element
 
-**sub ah,ah ;make it a word**
+sub ah,ah ;make it a word
 
-**stosw ;save the word value**
+stosw ;save the word value
 
-**loop ProcessingLoop ;do the next element**
+loop ProcessingLoop ;do the next element
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 9-16
 
 
-**;**
+;
 
 
-**;**
+;
 
-**; \*\*\* Listing 9-16 \*\*\***
+; *** Listing 9-16 ***
 
-**;**
+;
 
-**; An illustration of the use of SUB AH,AH outside the**
+; An illustration of the use of SUB AH,AH outside the
 
-**; processing loop to convert an array of byte values**
+; processing loop to convert an array of byte values
 
-**; between 0 and 7Fh to an array of words. AH never changes**
+; between 0 and 7Fh to an array of words. AH never changes
 
-**; from one pass through the loop to the next, so there's no**
+; from one pass through the loop to the next, so there's no
 
-**; need to continually set AH to 0.**
+; need to continually set AH to 0.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ARRAY\_LENGTH equ 1000**
+ARRAY_LENGTH equ 1000
 
-**;**
+;
 
-**Array1 label byte**
+Array1 label byte
 
-**ARRAY\_VALUE=0**
+ARRAY_VALUE=0
 
-**rept ARRAY\_LENGTH**
+rept ARRAY_LENGTH
 
-**db ARRAY\_VALUE**
+db ARRAY_VALUE
 
-**ARRAY\_VALUE=(ARRAY\_VALUE+1) and 07fh**
+ARRAY_VALUE=(ARRAY_VALUE+1) and 07fh
 
-**;cycle source array byte**
+;cycle source array byte
 
-**; values from 0-7Fh**
+; values from 0-7Fh
 
-**endm**
+endm
 
-**;**
+;
 
-**Array2 dw ARRAY\_LENGTH dup (?)**
+Array2 dw ARRAY_LENGTH dup (?)
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**mov si,offset Array1 ;set up array pointers**
+mov si,offset Array1 ;set up array pointers
 
-**mov di,offset Array2**
+mov di,offset Array2
 
-**mov ax,ds**
+mov ax,ds
 
-**mov es,ax ;copy to & from same segment**
+mov es,ax ;copy to & from same segment
 
-**cld ;make string instructions**
+cld ;make string instructions
 
-**; increment pointers**
+; increment pointers
 
-**mov cx,ARRAY\_LENGTH**
+mov cx,ARRAY_LENGTH
 
-**sub ah,ah ;set up to make each byte**
+sub ah,ah ;set up to make each byte
 
-**; read into AL a word in AX**
+; read into AL a word in AX
 
-**; automatically**
+; automatically
 
-**call ZTimerOn**
+call ZTimerOn
 
-**ProcessingLoop:**
+ProcessingLoop:
 
-**lodsb ;get the next element**
+lodsb ;get the next element
 
-**stosw ;save the word value**
+stosw ;save the word value
 
-**loop ProcessingLoop ;do the next element**
+loop ProcessingLoop ;do the next element
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 9-17
 
 
-**;**
+;
 
-**; \*\*\* Listing 9-17 \*\*\***
+; *** Listing 9-17 ***
 
-**;**
+;
 
-**; Supports the use of CX to store a loop count and CL**
+; Supports the use of CX to store a loop count and CL
 
-**; to store a shift count by pushing and popping the loop**
+; to store a shift count by pushing and popping the loop
 
-**; count around the use of the shift count.**
+; count around the use of the shift count.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ARRAY\_LENGTH equ 1000**
+ARRAY_LENGTH equ 1000
 
-**Array1 db ARRAY\_LENGTH dup (3)**
+Array1 db ARRAY_LENGTH dup (3)
 
-**Array2 db ARRAY\_LENGTH dup (2)**
+Array2 db ARRAY_LENGTH dup (2)
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**mov si,offset Array1 ;point to the source array**
+mov si,offset Array1 ;point to the source array
 
-**mov di,offset Array2 ;point to the dest array**
+mov di,offset Array2 ;point to the dest array
 
-**mov ax,ds**
+mov ax,ds
 
-**mov es,ax ;copy to & from same segment**
+mov es,ax ;copy to & from same segment
 
-**mov cx,ARRAY\_LENGTH ;the loop count**
+mov cx,ARRAY_LENGTH ;the loop count
 
-**mov dl,2 ;the shift count**
+mov dl,2 ;the shift count
 
-**call ZTimerOn**
+call ZTimerOn
 
-**ProcessingLoop:**
+ProcessingLoop:
 
-**lodsb ;get the next byte**
+lodsb ;get the next byte
 
-**push cx ;save the loop count**
+push cx ;save the loop count
 
-**mov cl,dl ;get the shift count into CL**
+mov cl,dl ;get the shift count into CL
 
-**shl al,cl ;shift the byte**
+shl al,cl ;shift the byte
 
-**pop cx ;get back the loop count**
+pop cx ;get back the loop count
 
-**stosb ;save the modified byte**
+stosb ;save the modified byte
 
-**loop ProcessingLoop**
+loop ProcessingLoop
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 9-18
 
 
-**;**
+;
 
-**; \*\*\* Listing 9-18 \*\*\***
+; *** Listing 9-18 ***
 
-**;**
+;
 
-**; Supports the use of CX to store a loop count and CL**
+; Supports the use of CX to store a loop count and CL
 
-**; to store a shift count by using XCHG to swap the**
+; to store a shift count by using XCHG to swap the
 
-**; contents of CL as needed.**
+; contents of CL as needed.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ARRAY\_LENGTH equ 1000**
+ARRAY_LENGTH equ 1000
 
-**Array1 db ARRAY\_LENGTH dup (3)**
+Array1 db ARRAY_LENGTH dup (3)
 
-**Array2 db ARRAY\_LENGTH dup (2)**
+Array2 db ARRAY_LENGTH dup (2)
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**mov si,offset Array1 ;point to the source array**
+mov si,offset Array1 ;point to the source array
 
-**mov di,offset Array2 ;point to the dest array**
+mov di,offset Array2 ;point to the dest array
 
-**mov ax,ds**
+mov ax,ds
 
-**mov es,ax ;copy to & from same segment**
+mov es,ax ;copy to & from same segment
 
-**mov cx,ARRAY\_LENGTH ;the loop count**
+mov cx,ARRAY_LENGTH ;the loop count
 
-**mov dl,2 ;the shift count**
+mov dl,2 ;the shift count
 
-**call ZTimerOn**
+call ZTimerOn
 
-**ProcessingLoop:**
+ProcessingLoop:
 
-**lodsb ;get the next byte**
+lodsb ;get the next byte
 
-**xchg cl,dl ;get the shift count into CL**
+xchg cl,dl ;get the shift count into CL
 
-**; and save the low byte of**
+; and save the low byte of
 
-**; the loop count in DL**
+; the loop count in DL
 
-**shl al,cl ;shift the byte**
+shl al,cl ;shift the byte
 
-**xchg cl,dl ;put the shift count back**
+xchg cl,dl ;put the shift count back
 
-**; into DL and restore the**
+; into DL and restore the
 
-**; low byte of the loop count**
+; low byte of the loop count
 
-**; to CL**
+; to CL
 
-**stosb ;save the modified byte**
+stosb ;save the modified byte
 
-**loop ProcessingLoop**
+loop ProcessingLoop
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 9-19
 
 
-**;**
+;
 
-**; \*\*\* Listing 9-19 \*\*\***
+; *** Listing 9-19 ***
 
-**;**
+;
 
-**; Times the performance of SUB with a register as the**
+; Times the performance of SUB with a register as the
 
-**; destination operand and memory as the source operand.**
+; destination operand and memory as the source operand.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**Dest db 0**
+Dest db 0
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rept 1000**
+rept 1000
 
-**sub al,[Dest] ;subtract [Dest] from AL**
+sub al,[Dest] ;subtract [Dest] from AL
 
-**; Only 1 memory access**
+; Only 1 memory access
 
-**; is performed**
+; is performed
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 9-20
 
 
-**;**
+;
 
-**; \*\*\* Listing 9-20 \*\*\***
+; *** Listing 9-20 ***
 
-**;**
+;
 
-**; Times the performance of SUB with memory as the**
+; Times the performance of SUB with memory as the
 
-**; destination operand and a register as the source operand.**
+; destination operand and a register as the source operand.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**Dest db 0**
+Dest db 0
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rept 1000**
+rept 1000
 
-**sub [Dest],al ;subtract AL from [Dest]**
+sub [Dest],al ;subtract AL from [Dest]
 
-**; Two memory accesses are**
+; Two memory accesses are
 
-**; performed**
+; performed
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 9-21
 
 
-**;**
+;
 
-**; \*\*\* Listing 9-21 \*\*\***
+; *** Listing 9-21 ***
 
-**;**
+;
 
-**; Times shifts performed by shifting CL times.**
+; Times shifts performed by shifting CL times.
 
-**;**
+;
 
-**BITS\_TO\_SHIFT equ 1**
+BITS_TO_SHIFT equ 1
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rept 100**
+rept 100
 
-**mov cl,BITS\_TO\_SHIFT**
+mov cl,BITS_TO_SHIFT
 
-**shl ax,cl**
+shl ax,cl
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 9-22
 
 
-**;**
+;
 
-**; \*\*\* Listing 9-22 \*\*\***
+; *** Listing 9-22 ***
 
-**;**
+;
 
-**; Times shifts performed by using multiple 1-bit shift**
+; Times shifts performed by using multiple 1-bit shift
 
-**; instructions.**
+; instructions.
 
-**;**
+;
 
-**BITS\_TO\_SHIFT equ 1**
+BITS_TO_SHIFT equ 1
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rept 100**
+rept 100
 
-**rept BITS\_TO\_SHIFT**
+rept BITS_TO_SHIFT
 
-**shl ax,1**
+shl ax,1
 
-**endm**
+endm
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 9-23
 
 
-**;**
+;
 
-**; \*\*\* Listing 9-23 \*\*\***
+; *** Listing 9-23 ***
 
-**;**
+;
 
-**; Performs bit-doubling of a byte in AL to a word in AX**
+; Performs bit-doubling of a byte in AL to a word in AX
 
-**; by using SAR. This is not as fast as bit-doubling with**
+; by using SAR. This is not as fast as bit-doubling with
 
-**; a look-up table, but it is faster than any other**
+; a look-up table, but it is faster than any other
 
-**; shift-based approach.**
+; shift-based approach.
 
-**; (Conceived by Dan Illowsky.)**
+; (Conceived by Dan Illowsky.)
 
-**;**
+;
 
-**DOUBLE\_BYTE macro**
+DOUBLE_BYTE macro
 
-**mov bl,al**
+mov bl,al
 
-**rept 8**
+rept 8
 
-**shr bl,1 ;get the next bit to double**
+shr bl,1 ;get the next bit to double
 
-**rcr ax,1 ;move it into the msb...**
+rcr ax,1 ;move it into the msb...
 
-**sar ax,1 ;...and replicate it**
+sar ax,1 ;...and replicate it
 
-**endm**
+endm
 
-**endm**
+endm
 
-**;**
+;
 
-**call ZTimerOn**
+call ZTimerOn
 
-**BYTE\_TO\_DOUBLE=0**
+BYTE_TO_DOUBLE=0
 
-**rept 100**
+rept 100
 
-**mov al,BYTE\_TO\_DOUBLE**
+mov al,BYTE_TO_DOUBLE
 
-**DOUBLE\_BYTE**
+DOUBLE_BYTE
 
-**BYTE\_TO\_DOUBLE=(BYTE\_TO\_DOUBLE+1) and 0ffH**
+BYTE_TO_DOUBLE=(BYTE_TO_DOUBLE+1) and 0ffH
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 9-24
 
 
-**;**
+;
 
-**; \*\*\* Listing 9-24 \*\*\***
+; *** Listing 9-24 ***
 
-**;**
+;
 
-**; Performs binary-to-ASCII conversion of a byte value**
+; Performs binary-to-ASCII conversion of a byte value
 
-**; by using AAM.**
+; by using AAM.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ResultString db 3 dup (?)**
+ResultString db 3 dup (?)
 
-**ResultStringEnd label byte**
+ResultStringEnd label byte
 
-**db 0 ;a zero to mark the string end**
+db 0 ;a zero to mark the string end
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**BYTE\_VALUE=0**
+BYTE_VALUE=0
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rept 100**
+rept 100
 
-**std ;make STOSB decrement DI**
+std ;make STOSB decrement DI
 
-**mov ax,ds**
+mov ax,ds
 
-**mov es,ax ;for STOSB**
+mov es,ax ;for STOSB
 
-**mov bl,'0' ;used for converting to ASCII**
+mov bl,'0' ;used for converting to ASCII
 
-**mov di,offset ResultStringEnd-1**
+mov di,offset ResultStringEnd-1
 
-**mov al,BYTE\_VALUE**
+mov al,BYTE_VALUE
 
-**aam ;put least significant decimal**
+aam ;put least significant decimal
 
-**; digit of BYTE\_VALUE in AL,**
+; digit of BYTE_VALUE in AL,
 
-**; other digits in AH**
+; other digits in AH
 
-**add al,bl ;make it an ASCII digit**
+add al,bl ;make it an ASCII digit
 
-**stosb ;save least significant digit**
+stosb ;save least significant digit
 
-**mov al,ah**
+mov al,ah
 
-**aam ;put middle decimal digit in AL**
+aam ;put middle decimal digit in AL
 
-**add al,bl ;make it an ASCII digit**
+add al,bl ;make it an ASCII digit
 
-**stosb ;save middle digit**
+stosb ;save middle digit
 
-**;most significant decimal**
+;most significant decimal
 
-**; digit is in AH**
+; digit is in AH
 
-**add ah,bl ;make it an ASCII digit**
+add ah,bl ;make it an ASCII digit
 
-**mov [di],ah ;save most significant digit**
+mov [di],ah ;save most significant digit
 
-**BYTE\_VALUE=BYTE\_VALUE+1**
+BYTE_VALUE=BYTE_VALUE+1
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 9-25
 
 
-**;**
+;
 
-**; \*\*\* Listing 9-25 \*\*\***
+; *** Listing 9-25 ***
 
-**;**
+;
 
-**; Performs binary-to-ASCII conversion of a byte value**
+; Performs binary-to-ASCII conversion of a byte value
 
-**; by using DIV.**
+; by using DIV.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ResultString db 3 dup (?)**
+ResultString db 3 dup (?)
 
-**ResultStringEnd label byte**
+ResultStringEnd label byte
 
-**db 0 ;a zero to mark the string end**
+db 0 ;a zero to mark the string end
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**BYTE\_VALUE=0**
+BYTE_VALUE=0
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rept 100**
+rept 100
 
-**mov cx,(10 shl 8)+'0'**
+mov cx,(10 shl 8)+'0'
 
-**;CL='0', used for converting to ASCII**
+;CL='0', used for converting to ASCII
 
-**; CH=10, used for dividing by 10**
+; CH=10, used for dividing by 10
 
-**mov di,offset ResultString**
+mov di,offset ResultString
 
-**mov al,BYTE\_VALUE**
+mov al,BYTE_VALUE
 
-**sub ah,ah ;prepare 16-bit dividend**
+sub ah,ah ;prepare 16-bit dividend
 
-**div ch ;put least significant decimal**
+div ch ;put least significant decimal
 
-**; digit of BYTE\_VALUE in AH,**
+; digit of BYTE_VALUE in AH,
 
-**; other digits in AL**
+; other digits in AL
 
-**add ah,cl ;make it an ASCII digit**
+add ah,cl ;make it an ASCII digit
 
-**mov [di+2],ah ;save least significant digit**
+mov [di+2],ah ;save least significant digit
 
-**sub ah,ah ;prepare 16-bit dividend**
+sub ah,ah ;prepare 16-bit dividend
 
-**div ch ;put middle decimal digit in AL**
+div ch ;put middle decimal digit in AL
 
-**add ah,cl ;make it an ASCII digit**
+add ah,cl ;make it an ASCII digit
 
-**mov [di+1],ah ;save middle ASCII decimal digit**
+mov [di+1],ah ;save middle ASCII decimal digit
 
-**;most significant decimal**
+;most significant decimal
 
-**; digit is in AL**
+; digit is in AL
 
-**add al,cl ;make it an ASCII digit**
+add al,cl ;make it an ASCII digit
 
-**mov [di],al ;save most significant digit**
+mov [di],al ;save most significant digit
 
-**BYTE\_VALUE=BYTE\_VALUE+1**
+BYTE_VALUE=BYTE_VALUE+1
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 9-26
 
 
-**;**
+;
 
-**; \*\*\* Listing 9-26 \*\*\***
+; *** Listing 9-26 ***
 
-**;**
+;
 
-**; Performs addition of the ASCII decimal value "00001"**
+; Performs addition of the ASCII decimal value "00001"
 
-**; to an ASCII decimal count variable.**
+; to an ASCII decimal count variable.
 
-**;**
+;
 
-**DECIMAL\_INCREMENT macro**
+DECIMAL_INCREMENT macro
 
-**local DigitLoop**
+local DigitLoop
 
-**std ;we'll work from least-significant**
+std ;we'll work from least-significant
 
-**; to most-significant**
+; to most-significant
 
-**mov si,offset ASCIIOne+VALUE\_LENGTH-1**
+mov si,offset ASCIIOne+VALUE_LENGTH-1
 
-**mov di,offset Count+VALUE\_LENGTH-1**
+mov di,offset Count+VALUE_LENGTH-1
 
-**mov ax,ds**
+mov ax,ds
 
-**mov es,ax ;ES:DI points to Count for STOSB**
+mov es,ax ;ES:DI points to Count for STOSB
 
-**mov cx,VALUE\_LENGTH**
+mov cx,VALUE_LENGTH
 
-**clc ;there's no carry into the least-**
+clc ;there's no carry into the least-
 
-**; significant digit**
+; significant digit
 
-**DigitLoop:**
+DigitLoop:
 
-**lodsb ;get the next increment digit**
+lodsb ;get the next increment digit
 
-**adc al,[di] ;add it to the next Count digit**
+adc al,[di] ;add it to the next Count digit
 
-**aaa ;adjust to an unpacked BCD digit**
+aaa ;adjust to an unpacked BCD digit
 
-**lahf ;save the carry, in case we just**
+lahf ;save the carry, in case we just
 
-**; turned over 9**
+; turned over 9
 
-**add al,'0' ;make it an ASCII digit**
+add al,'0' ;make it an ASCII digit
 
-**stosb**
+stosb
 
-**sahf ;get back the carry for the next adc**
+sahf ;get back the carry for the next adc
 
-**loop DigitLoop**
+loop DigitLoop
 
-**endm**
+endm
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**Count db '00000'**
+Count db '00000'
 
-**VALUE\_LENGTH equ $-Count**
+VALUE_LENGTH equ $-Count
 
-**ASCIIOne db '00001'**
+ASCIIOne db '00001'
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rept 100**
+rept 100
 
-**DECIMAL\_INCREMENT**
+DECIMAL_INCREMENT
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 10-1
 
 
-**;**
+;
 
-**; \*\*\* Listing 10-1 \*\*\***
+; *** Listing 10-1 ***
 
-**;**
+;
 
-**; Loads each byte in a 1000-byte array into AL, using**
+; Loads each byte in a 1000-byte array into AL, using
 
-**; MOV and INC.**
+; MOV and INC.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ARRAY\_LENGTH equ 1000**
+ARRAY_LENGTH equ 1000
 
-**ByteArray db ARRAY\_LENGTH dup (0)**
+ByteArray db ARRAY_LENGTH dup (0)
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov si,offset ByteArray**
+mov si,offset ByteArray
 
-**;point to the start of the array**
+;point to the start of the array
 
-**rept ARRAY\_LENGTH**
+rept ARRAY_LENGTH
 
-**mov al,[si] ;get this array byte**
+mov al,[si] ;get this array byte
 
-**inc si ;point to the next byte in the array**
+inc si ;point to the next byte in the array
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 10-2
 
 
-**;**
+;
 
-**; \*\*\* Listing 10-2 \*\*\***
+; *** Listing 10-2 ***
 
-**;**
+;
 
-**; Loads each byte in a 1000-byte array into AL, using**
+; Loads each byte in a 1000-byte array into AL, using
 
-**; LODSB.**
+; LODSB.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ARRAY\_LENGTH equ 1000**
+ARRAY_LENGTH equ 1000
 
-**ByteArray db ARRAY\_LENGTH dup (0)**
+ByteArray db ARRAY_LENGTH dup (0)
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov si,offset ByteArray**
+mov si,offset ByteArray
 
-**;point to the start of the array**
+;point to the start of the array
 
-**cld ;make LODSB increment SI**
+cld ;make LODSB increment SI
 
-**rept ARRAY\_LENGTH**
+rept ARRAY_LENGTH
 
-**lodsb ;get this array byte & point to the**
+lodsb ;get this array byte & point to the
 
-**; next byte in the array**
+; next byte in the array
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 10-3
 
 
-**;**
+;
 
-**; \*\*\* Listing 10-3 \*\*\***
+; *** Listing 10-3 ***
 
-**;**
+;
 
-**; Loads a byte into AL 1000 times via MOV, with no**
+; Loads a byte into AL 1000 times via MOV, with no
 
-**; INC performed.**
+; INC performed.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ARRAY\_LENGTH equ 1000**
+ARRAY_LENGTH equ 1000
 
-**ByteArray db ARRAY\_LENGTH dup (0)**
+ByteArray db ARRAY_LENGTH dup (0)
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov si,offset ByteArray**
+mov si,offset ByteArray
 
-**;point to the start of the array**
+;point to the start of the array
 
-**rept ARRAY\_LENGTH**
+rept ARRAY_LENGTH
 
-**mov al,[si] ;get this array byte but don't point**
+mov al,[si] ;get this array byte but don't point
 
-**; to the next byte in the array**
+; to the next byte in the array
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 10-4
 
 
-**;**
+;
 
-**; \*\*\* Listing 10-4 \*\*\***
+; *** Listing 10-4 ***
 
-**;**
+;
 
-**; Searches a word-sized array for the first element**
+; Searches a word-sized array for the first element
 
-**; greater than 10,000, using non-string instructions.**
+; greater than 10,000, using non-string instructions.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**WordArray dw 1000 dup (0), 10001**
+WordArray dw 1000 dup (0), 10001
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov di,offset WordArray-2**
+mov di,offset WordArray-2
 
-**;start 1 word early so the**
+;start 1 word early so the
 
-**; first preincrement points**
+; first preincrement points
 
-**; to the first element**
+; to the first element
 
-**mov ax,10000 ;value we'll compare with**
+mov ax,10000 ;value we'll compare with
 
-**SearchLoop:**
+SearchLoop:
 
-**inc di ;point to the next element**
+inc di ;point to the next element
 
-**inc di**
+inc di
 
-**cmp ax,[di] ;compare the next element**
+cmp ax,[di] ;compare the next element
 
-**; to 10,000**
+; to 10,000
 
-**jae SearchLoop ;if not greater than 10,000,**
+jae SearchLoop ;if not greater than 10,000,
 
-**; do the next element**
+; do the next element
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 10-5
 
 
-**;**
+;
 
-**; \*\*\* Listing 10-5 \*\*\***
+; *** Listing 10-5 ***
 
-**;**
+;
 
-**; Searches a word-sized array for the first element**
+; Searches a word-sized array for the first element
 
-**; greater than 10,000, using SCASW.**
+; greater than 10,000, using SCASW.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**WordArray dw 1000 dup (0), 10001**
+WordArray dw 1000 dup (0), 10001
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov di,seg WordArray**
+mov di,seg WordArray
 
-**mov es,di ;SCASW always uses ES:SI as a**
+mov es,di ;SCASW always uses ES:SI as a
 
-**; memory pointer**
+; memory pointer
 
-**mov di,offset WordArray**
+mov di,offset WordArray
 
-**mov ax,10000 ;value we'll compare with**
+mov ax,10000 ;value we'll compare with
 
-**cld ;make SCASW add 2 to DI after**
+cld ;make SCASW add 2 to DI after
 
-**; each execution**
+; each execution
 
-**SearchLoop:**
+SearchLoop:
 
-**scasw ;compare the next element to 10,000**
+scasw ;compare the next element to 10,000
 
-**jae SearchLoop ;if not greater than 10,000, do**
+jae SearchLoop ;if not greater than 10,000, do
 
-**; the next element**
+; the next element
 
-**dec di ;point back to the matching word**
+dec di ;point back to the matching word
 
-**dec di**
+dec di
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 10-6
 
 
-**;**
+;
 
-**; \*\*\* Listing 10-6 \*\*\***
+; *** Listing 10-6 ***
 
-**;**
+;
 
-**; Searches a word-sized array for the first element**
+; Searches a word-sized array for the first element
 
-**; greater than 10,000, using LODSW & CMP.**
+; greater than 10,000, using LODSW & CMP.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**WordArray dw 1000 dup (0), 10001**
+WordArray dw 1000 dup (0), 10001
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov si,offset WordArray**
+mov si,offset WordArray
 
-**;array to search**
+;array to search
 
-**mov dx,10000 ;value we'll compare with**
+mov dx,10000 ;value we'll compare with
 
-**cld ;make LODSW add 2 to SI after each**
+cld ;make LODSW add 2 to SI after each
 
-**; execution**
+; execution
 
-**SearchLoop:**
+SearchLoop:
 
-**lodsw ;get the next element**
+lodsw ;get the next element
 
-**cmp dx,ax ;compare the element to 10,000**
+cmp dx,ax ;compare the element to 10,000
 
-**jae SearchLoop ;if not greater than 10,000, do**
+jae SearchLoop ;if not greater than 10,000, do
 
-**; the next element**
+; the next element
 
-**dec di ;point back to the matching word**
+dec di ;point back to the matching word
 
-**dec di**
+dec di
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 10-7
 
 
-**;**
+;
 
-**; \*\*\* Listing 10-7 \*\*\***
+; *** Listing 10-7 ***
 
-**;**
+;
 
-**; Initializes a 1000-word array using a loop and**
+; Initializes a 1000-word array using a loop and
 
-**; non-string instructions.**
+; non-string instructions.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ARRAY\_LENGTH equ 1000**
+ARRAY_LENGTH equ 1000
 
-**WordArray dw ARRAY\_LENGTH dup (?)**
+WordArray dw ARRAY_LENGTH dup (?)
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov di,offset WordArray**
+mov di,offset WordArray
 
-**;point to array to fill**
+;point to array to fill
 
-**sub ax,ax ;we'll fill with the value zero**
+sub ax,ax ;we'll fill with the value zero
 
-**mov cx,ARRAY\_LENGTH ;\# of words to fill**
+mov cx,ARRAY_LENGTH ;\# of words to fill
 
-**ZeroLoop:**
+ZeroLoop:
 
-**mov [di],ax ;zero one word**
+mov [di],ax ;zero one word
 
-**inc di ;point to the next word**
+inc di ;point to the next word
 
-**inc di**
+inc di
 
-**loop ZeroLoop**
+loop ZeroLoop
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 10-8
 
 
-**;**
+;
 
-**; \*\*\* Listing 10-8 \*\*\***
+; *** Listing 10-8 ***
 
-**;**
+;
 
-**; Initializes a 1000-word array using a single**
+; Initializes a 1000-word array using a single
 
-**; repeated STOSW.**
+; repeated STOSW.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ARRAY\_LENGTH equ 1000**
+ARRAY_LENGTH equ 1000
 
-**WordArray dw ARRAY\_LENGTH dup (?)**
+WordArray dw ARRAY_LENGTH dup (?)
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov di,seg WordArray**
+mov di,seg WordArray
 
-**mov es,di**
+mov es,di
 
-**mov di,offset WordArray**
+mov di,offset WordArray
 
-**;point ES:DI to the array to**
+;point ES:DI to the array to
 
-**; fill, since STOSW must**
+; fill, since STOSW must
 
-**; use that segment:offset combo**
+; use that segment:offset combo
 
-**; as a memory pointer**
+; as a memory pointer
 
-**sub ax,ax ;we'll fill with the value zero**
+sub ax,ax ;we'll fill with the value zero
 
-**mov cx,ARRAY\_LENGTH ;\# of words to fill**
+mov cx,ARRAY_LENGTH ;\# of words to fill
 
-**cld ;make STOSW add 2 to DI after each**
+cld ;make STOSW add 2 to DI after each
 
-**; execution**
+; execution
 
-**rep stosw ;fill the array**
+rep stosw ;fill the array
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 10-9
 
 
-**;**
+;
 
-**; \*\*\* Listing 10-9 \*\*\***
+; *** Listing 10-9 ***
 
-**;**
+;
 
-**; Sets every element of a 1000-byte array to 1 by**
+; Sets every element of a 1000-byte array to 1 by
 
-**; repeating STOSB 1000 times.**
+; repeating STOSB 1000 times.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ARRAY\_LENGTH equ 1000**
+ARRAY_LENGTH equ 1000
 
-**ByteArray db ARRAY\_LENGTH dup (?)**
+ByteArray db ARRAY_LENGTH dup (?)
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov di,seg ByteArray**
+mov di,seg ByteArray
 
-**mov es,di ;point ES:DI to the array to fill**
+mov es,di ;point ES:DI to the array to fill
 
-**mov di,offset ByteArray**
+mov di,offset ByteArray
 
-**mov al,1 ;we'll fill with the value 1**
+mov al,1 ;we'll fill with the value 1
 
-**mov cx,ARRAY\_LENGTH ;\# of bytes to fill**
+mov cx,ARRAY_LENGTH ;\# of bytes to fill
 
-**cld ;make STOSB increment DI after**
+cld ;make STOSB increment DI after
 
-**; each execution**
+; each execution
 
-**rep stosb ;initialize the array**
+rep stosb ;initialize the array
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 10-10
 
 
-**;**
+;
 
-**; \*\*\* Listing 10-10 \*\*\***
+; *** Listing 10-10 ***
 
-**;**
+;
 
-**; Sets every element of a 1000-byte array to 1 by**
+; Sets every element of a 1000-byte array to 1 by
 
-**; repeating STOSW 500 times.**
+; repeating STOSW 500 times.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ARRAY\_LENGTH equ 1000**
+ARRAY_LENGTH equ 1000
 
-**WordArray db ARRAY\_LENGTH dup (?)**
+WordArray db ARRAY_LENGTH dup (?)
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov di,seg WordArray**
+mov di,seg WordArray
 
-**mov es,di ;point ES:DI to the array to fill**
+mov es,di ;point ES:DI to the array to fill
 
-**mov di,offset WordArray**
+mov di,offset WordArray
 
-**mov ax,(1 shl 8) + 1**
+mov ax,(1 shl 8) + 1
 
-**;fill each byte with the value 1**
+;fill each byte with the value 1
 
-**mov cx,ARRAY\_LENGTH/2 ;\# of words to fill**
+mov cx,ARRAY_LENGTH/2 ;\# of words to fill
 
-**cld ;make STOSW add 2 to DI on each**
+cld ;make STOSW add 2 to DI on each
 
-**; execution**
+; execution
 
-**rep stosw ;fill a word at a time**
+rep stosw ;fill a word at a time
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 10-11
 
 
-**;**
+;
 
-**; \*\*\* Listing 10-11 \*\*\***
+; *** Listing 10-11 ***
 
-**;**
+;
 
-**; Clears a 1000-byte block of memory via BlockClear,**
+; Clears a 1000-byte block of memory via BlockClear,
 
-**; which handles blocks between 0 and 64K-1 bytes in**
+; which handles blocks between 0 and 64K-1 bytes in
 
-**; length.**
+; length.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ARRAY\_LENGTH equ 1000**
+ARRAY_LENGTH equ 1000
 
-**ByteArray db ARRAY\_LENGTH dup (?)**
+ByteArray db ARRAY_LENGTH dup (?)
 
-**;**
+;
 
-**; Clears a block of memory CX bytes in length. A value**
+; Clears a block of memory CX bytes in length. A value
 
-**; of 0 means "clear zero bytes," so the maximum length**
+; of 0 means "clear zero bytes," so the maximum length
 
-**; that can be cleared is 64K-1 bytes and the minimum**
+; that can be cleared is 64K-1 bytes and the minimum
 
-**; length is 0 bytes.**
+; length is 0 bytes.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; CX = number of bytes to clear**
+; CX = number of bytes to clear
 
-**; ES:DI = start of block to clear**
+; ES:DI = start of block to clear
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; none**
+; none
 
-**;**
+;
 
-**; Registers altered: AL, CX, DI**
+; Registers altered: AL, CX, DI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**BlockClear:**
+BlockClear:
 
-**sub al,al ;fill with zero**
+sub al,al ;fill with zero
 
-**cld ;make STOSB move DI up**
+cld ;make STOSB move DI up
 
-**rep stosb ;clear the block**
+rep stosb ;clear the block
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov di,seg ByteArray**
+mov di,seg ByteArray
 
-**mov es,di ;point ES:DI to the array to clear**
+mov es,di ;point ES:DI to the array to clear
 
-**mov di,offset ByteArray**
+mov di,offset ByteArray
 
-**mov cx,ARRAY\_LENGTH ;\# of bytes to clear**
+mov cx,ARRAY_LENGTH ;\# of bytes to clear
 
-**call BlockClear ;clear the array**
+call BlockClear ;clear the array
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 10-12
 
 
-**;**
+;
 
-**; \*\*\* Listing 10-12 \*\*\***
+; *** Listing 10-12 ***
 
-**;**
+;
 
-**; Clears a 1000-byte block of memory via BlockClear64,**
+; Clears a 1000-byte block of memory via BlockClear64,
 
-**; which handles blocks between 1 and 64K bytes in**
+; which handles blocks between 1 and 64K bytes in
 
-**; length. BlockClear64 gains the ability to handle**
+; length. BlockClear64 gains the ability to handle
 
-**; 64K blocks by using STOSW rather than STOSB to**
+; 64K blocks by using STOSW rather than STOSB to
 
-**; the greatest possible extent, getting a performance**
+; the greatest possible extent, getting a performance
 
-**; boost in the process.**
+; boost in the process.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ARRAY\_LENGTH equ 1000**
+ARRAY_LENGTH equ 1000
 
-**ByteArray db ARRAY\_LENGTH dup (?)**
+ByteArray db ARRAY_LENGTH dup (?)
 
-**;**
+;
 
-**; Clears a block of memory CX bytes in length. A value**
+; Clears a block of memory CX bytes in length. A value
 
-**; of 0 means "clear 64K bytes," so the maximum length**
+; of 0 means "clear 64K bytes," so the maximum length
 
-**; that can be cleared is 64K bytes and the minimum length**
+; that can be cleared is 64K bytes and the minimum length
 
-**; is 1 byte.**
+; is 1 byte.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; CX = number of bytes to clear**
+; CX = number of bytes to clear
 
-**; ES:DI = start of block to clear**
+; ES:DI = start of block to clear
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; none**
+; none
 
-**;**
+;
 
-**; Registers altered: AX, CX, DI**
+; Registers altered: AX, CX, DI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**BlockClear64:**
+BlockClear64:
 
-**sub ax,ax ;fill with zero a word at a time**
+sub ax,ax ;fill with zero a word at a time
 
-**stc ;assume the count is zero-setting**
+stc ;assume the count is zero-setting
 
-**; the Carry flag will give us 8000h**
+; the Carry flag will give us 8000h
 
-**; after the RCR**
+; after the RCR
 
-**jcxz DoClear ;the count is zero**
+jcxz DoClear ;the count is zero
 
-**clc ;it's not zero**
+clc ;it's not zero
 
-**DoClear:**
+DoClear:
 
-**rcr cx,1 ;divide by 2, copying the odd-byte**
+rcr cx,1 ;divide by 2, copying the odd-byte
 
-**; status to the Carry flag and**
+; status to the Carry flag and
 
-**; shifting a 1 into bit 15 if and**
+; shifting a 1 into bit 15 if and
 
-**; only if the count is zero**
+; only if the count is zero
 
-**cld ;make STOSW move DI up**
+cld ;make STOSW move DI up
 
-**rep stosw ;clear the block**
+rep stosw ;clear the block
 
-**jnc ClearDone**
+jnc ClearDone
 
-**;the Carry status is still left over**
+;the Carry status is still left over
 
-**; from the RCR. If we had an even \#**
+; from the RCR. If we had an even \#
 
-**; of bytes, we're done**
+; of bytes, we're done
 
-**stosb ;clear the odd byte**
+stosb ;clear the odd byte
 
-**ClearDone:**
+ClearDone:
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov di,seg ByteArray**
+mov di,seg ByteArray
 
-**mov es,di ;point ES:DI to the array to clear**
+mov es,di ;point ES:DI to the array to clear
 
-**mov di,offset ByteArray**
+mov di,offset ByteArray
 
-**mov cx,ARRAY\_LENGTH ;\# of bytes to clear**
+mov cx,ARRAY_LENGTH ;\# of bytes to clear
 
-**call BlockClear64 ;clear the array**
+call BlockClear64 ;clear the array
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 10-13
 
 
-**;**
+;
 
-**; \*\*\* Listing 10-13 \*\*\***
+; *** Listing 10-13 ***
 
-**;**
+;
 
-**; Clears a 1000-byte block of memory via BlockClearW,**
+; Clears a 1000-byte block of memory via BlockClearW,
 
-**; which handles blocks between 0 and 64K-1 bytes in**
+; which handles blocks between 0 and 64K-1 bytes in
 
-**; length. BlockClearW uses STOSW rather than STOSB to**
+; length. BlockClearW uses STOSW rather than STOSB to
 
-**; the greatest possible extent in order to improve**
+; the greatest possible extent in order to improve
 
-**; performance.**
+; performance.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ARRAY\_LENGTH equ 1000**
+ARRAY_LENGTH equ 1000
 
-**ByteArray db ARRAY\_LENGTH dup (?)**
+ByteArray db ARRAY_LENGTH dup (?)
 
-**;**
+;
 
-**; Clears a block of memory CX bytes in length. A value**
+; Clears a block of memory CX bytes in length. A value
 
-**; of 0 means "clear zero bytes," so the maximum length**
+; of 0 means "clear zero bytes," so the maximum length
 
-**; that can be cleared is 64K-1 bytes and the minimum**
+; that can be cleared is 64K-1 bytes and the minimum
 
-**; length is 0 bytes.**
+; length is 0 bytes.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; CX = number of bytes to clear**
+; CX = number of bytes to clear
 
-**; ES:DI = start of block to clear**
+; ES:DI = start of block to clear
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; none**
+; none
 
-**;**
+;
 
-**; Registers altered: AX, CX, DI**
+; Registers altered: AX, CX, DI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**BlockClearW:**
+BlockClearW:
 
-**sub ax,ax ;we'll fill with the value 0**
+sub ax,ax ;we'll fill with the value 0
 
-**shr cx,1 ;divide by 2, copying the odd-byte**
+shr cx,1 ;divide by 2, copying the odd-byte
 
-**; status to the Carry flag**
+; status to the Carry flag
 
-**cld ;make STOSW move DI up**
+cld ;make STOSW move DI up
 
-**rep stosw ;clear the block**
+rep stosw ;clear the block
 
-**jnc ClearDone**
+jnc ClearDone
 
-**;the Carry status is still left over**
+;the Carry status is still left over
 
-**; from the SHR. If we had an even \#**
+; from the SHR. If we had an even \#
 
-**; of bytes, we're done**
+; of bytes, we're done
 
-**stosb ;clear the odd byte**
+stosb ;clear the odd byte
 
-**ClearDone:**
+ClearDone:
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov di,seg ByteArray**
+mov di,seg ByteArray
 
-**mov es,di ;point ES:DI to the array to clear**
+mov es,di ;point ES:DI to the array to clear
 
-**mov di,offset ByteArray**
+mov di,offset ByteArray
 
-**mov cx,ARRAY\_LENGTH ;\# of bytes to clear**
+mov cx,ARRAY_LENGTH ;\# of bytes to clear
 
-**call BlockClearW ;clear the array**
+call BlockClearW ;clear the array
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 10-14
 
 
-**;**
+;
 
-**; \*\*\* Listing 10-14 \*\*\***
+; *** Listing 10-14 ***
 
-**;**
+;
 
-**; Generates the 8-bit checksum of a 1000-byte array**
+; Generates the 8-bit checksum of a 1000-byte array
 
-**; using LODS with an ES: override.**
+; using LODS with an ES: override.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**FarSeg segment para**
+FarSeg segment para
 
-**ARRAY\_LENGTH equ 1000**
+ARRAY_LENGTH equ 1000
 
-**ByteArray db ARRAY\_LENGTH dup (0)**
+ByteArray db ARRAY_LENGTH dup (0)
 
-**FarSeg ends**
+FarSeg ends
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov si,seg ByteArray**
+mov si,seg ByteArray
 
-**mov es,si ;point ES:SI to the array to**
+mov es,si ;point ES:SI to the array to
 
-**; checksum**
+; checksum
 
-**mov si,offset ByteArray**
+mov si,offset ByteArray
 
-**mov cx,ARRAY\_LENGTH ;\# of bytes to checksum**
+mov cx,ARRAY_LENGTH ;\# of bytes to checksum
 
-**sub ah,ah ;zero the checksum counter**
+sub ah,ah ;zero the checksum counter
 
-**cld ;make LODS move the pointer up**
+cld ;make LODS move the pointer up
 
-**ChecksumLoop:**
+ChecksumLoop:
 
-**lods byte ptr es:[si]**
+lods byte ptr es:[si]
 
-**;get the next byte to checksum**
+;get the next byte to checksum
 
-**add ah,al ;add the byte into the checksum**
+add ah,al ;add the byte into the checksum
 
-**loop ChecksumLoop**
+loop ChecksumLoop
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 10-15
 
 
-**;**
+;
 
-**; \*\*\* Listing 10-15 \*\*\***
+; *** Listing 10-15 ***
 
-**;**
+;
 
-**; Generates the 8-bit checksum of a 1000-byte array**
+; Generates the 8-bit checksum of a 1000-byte array
 
-**; using LODS without a segment override, by setting**
+; using LODS without a segment override, by setting
 
-**; DS up to point to the far segment for the duration**
+; DS up to point to the far segment for the duration
 
-**; of the loop.**
+; of the loop.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**FarSeg segment para**
+FarSeg segment para
 
-**ARRAY\_LENGTH equ 1000**
+ARRAY_LENGTH equ 1000
 
-**ByteArray db ARRAY\_LENGTH dup (0)**
+ByteArray db ARRAY_LENGTH dup (0)
 
-**FarSeg ends**
+FarSeg ends
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**push ds ;preserve the normal DS setting**
+push ds ;preserve the normal DS setting
 
-**mov si,seg ByteArray**
+mov si,seg ByteArray
 
-**mov ds,si ;point DS to the far segment for**
+mov ds,si ;point DS to the far segment for
 
-**; the duration of the loop-we**
+; the duration of the loop-we
 
-**; won't need the normal DS setting**
+; won't need the normal DS setting
 
-**; until the loop is done**
+; until the loop is done
 
-**mov si,offset ByteArray**
+mov si,offset ByteArray
 
-**mov cx,ARRAY\_LENGTH**
+mov cx,ARRAY_LENGTH
 
-**sub ah,ah ;zero the checksum counter**
+sub ah,ah ;zero the checksum counter
 
-**cld ;make LODSB move the pointer up**
+cld ;make LODSB move the pointer up
 
-**ChecksumLoop:**
+ChecksumLoop:
 
-**lodsb ;get the next byte to checksum**
+lodsb ;get the next byte to checksum
 
-**add ah,al ;add the byte into the checksum**
+add ah,al ;add the byte into the checksum
 
-**loop ChecksumLoop**
+loop ChecksumLoop
 
-**pop ds ;retrieve the normal DS setting**
+pop ds ;retrieve the normal DS setting
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 10-16
 
 
-**;**
+;
 
-**; \*\*\* Listing 10-16 \*\*\***
+; *** Listing 10-16 ***
 
-**;**
+;
 
-**; Reads a single byte stored in a far segment by**
+; Reads a single byte stored in a far segment by
 
-**; using a segment override prefix.**
+; using a segment override prefix.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**FarSeg segment para**
+FarSeg segment para
 
-**MemVar db 0 ;this variable resides in a**
+MemVar db 0 ;this variable resides in a
 
-**; far segment**
+; far segment
 
-**FarSeg ends**
+FarSeg ends
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rept 100**
+rept 100
 
-**mov si,seg MemVar**
+mov si,seg MemVar
 
-**mov es,si**
+mov es,si
 
-**mov si,offset MemVar ;point ES:SI to MemVar**
+mov si,offset MemVar ;point ES:SI to MemVar
 
-**lods byte ptr es:[si] ;read MemVar**
+lods byte ptr es:[si] ;read MemVar
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 10-17
 
 
-**;**
+;
 
-**; \*\*\* Listing 10-17 \*\*\***
+; *** Listing 10-17 ***
 
-**;**
+;
 
-**; Reads a single byte stored in a far segment by**
+; Reads a single byte stored in a far segment by
 
-**; temporarily pointing DS to the far segment.**
+; temporarily pointing DS to the far segment.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**FarSeg segment para**
+FarSeg segment para
 
-**MemVar db 0 ;this variable resides in a**
+MemVar db 0 ;this variable resides in a
 
-**; far segment**
+; far segment
 
-**FarSeg ends**
+FarSeg ends
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rept 100**
+rept 100
 
-**push ds ;preserve the normal data segment**
+push ds ;preserve the normal data segment
 
-**mov si,seg MemVar**
+mov si,seg MemVar
 
-**mov ds,si**
+mov ds,si
 
-**mov si,offset MemVar ;point DS:SI to MemVar**
+mov si,offset MemVar ;point DS:SI to MemVar
 
-**lodsb ;read MemVar**
+lodsb ;read MemVar
 
-**pop ds ;retrieve the normal data segment**
+pop ds ;retrieve the normal data segment
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 10-18
 
 
-**;**
+;
 
-**; \*\*\* Listing 10-18 \*\*\***
+; *** Listing 10-18 ***
 
-**;**
+;
 
-**; Reads a single byte stored in a far segment by**
+; Reads a single byte stored in a far segment by
 
-**; using a segment override prefix. Loads ES just**
+; using a segment override prefix. Loads ES just
 
-**; once and then leaves ES set to point to the far**
+; once and then leaves ES set to point to the far
 
-**; segment at all times.**
+; segment at all times.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**FarSeg segment para**
+FarSeg segment para
 
-**MemVar db 0 ;this variable resides in a**
+MemVar db 0 ;this variable resides in a
 
-**; far segment**
+; far segment
 
-**FarSeg ends**
+FarSeg ends
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov si,seg MemVar**
+mov si,seg MemVar
 
-**mov es,si ;point ES to the far segment for**
+mov es,si ;point ES to the far segment for
 
-**; the remainder of the test**
+; the remainder of the test
 
-**rept 100**
+rept 100
 
-**mov si,offset MemVar ;point ES:SI to MemVar**
+mov si,offset MemVar ;point ES:SI to MemVar
 
-**lods byte ptr es:[si] ;read MemVar**
+lods byte ptr es:[si] ;read MemVar
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 10-19
 
 
-**;**
+;
 
-**; \*\*\* Listing 10-19 \*\*\***
+; *** Listing 10-19 ***
 
-**;**
+;
 
-**; Generates the 8-bit checksum of a 1000-byte array**
+; Generates the 8-bit checksum of a 1000-byte array
 
-**; by loading both segment and offset from a far**
+; by loading both segment and offset from a far
 
-**; pointer each time through the loop and without**
+; pointer each time through the loop and without
 
-**; using string instructions, as the code generated**
+; using string instructions, as the code generated
 
-**; by a typical high-level language compiler would.**
+; by a typical high-level language compiler would.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**FarSeg segment para**
+FarSeg segment para
 
-**ARRAY\_LENGTH equ 1000**
+ARRAY_LENGTH equ 1000
 
-**ByteArray db ARRAY\_LENGTH dup (0)**
+ByteArray db ARRAY_LENGTH dup (0)
 
-**;this array resides in a**
+;this array resides in a
 
-**; far segment**
+; far segment
 
-**FarSeg ends**
+FarSeg ends
 
-**;**
+;
 
-**FarPtr dd ByteArray ;a far pointer to the array**
+FarPtr dd ByteArray ;a far pointer to the array
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov cx,ARRAY\_LENGTH ;\# of bytes to checksum**
+mov cx,ARRAY_LENGTH ;\# of bytes to checksum
 
-**sub ah,ah ;zero the checksum counter**
+sub ah,ah ;zero the checksum counter
 
-**ChecksumLoop:**
+ChecksumLoop:
 
-**les bx,[FarPtr] ;load both segment and**
+les bx,[FarPtr] ;load both segment and
 
-**; offset from the far**
+; offset from the far
 
-**; pointer**
+; pointer
 
-**inc word ptr [FarPtr]**
+inc word ptr [FarPtr]
 
-**;advance the offset portion**
+;advance the offset portion
 
-**; of the far pointer**
+; of the far pointer
 
-**add ah,es:[bx] ;add the next byte to the**
+add ah,es:[bx] ;add the next byte to the
 
-**; checksum**
+; checksum
 
-**loop ChecksumLoop**
+loop ChecksumLoop
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 11-1
 
 
-**;**
+;
 
-**; \*\*\* Listing 11-1 \*\*\***
+; *** Listing 11-1 ***
 
-**;**
+;
 
-**; Copies a string to another string, converting all**
+; Copies a string to another string, converting all
 
-**; characters to uppercase in the process, using a loop**
+; characters to uppercase in the process, using a loop
 
-**; containing LODSB and STOSB.**
+; containing LODSB and STOSB.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**SourceString label word**
+SourceString label word
 
-**db 'This space intentionally left not blank',0**
+db 'This space intentionally left not blank',0
 
-**DestString db 100 dup (?)**
+DestString db 100 dup (?)
 
-**;**
+;
 
-**; Copies one zero-terminated string to another string,**
+; Copies one zero-terminated string to another string,
 
-**; converting all characters to uppercase.**
+; converting all characters to uppercase.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; DS:SI = start of source string**
+; DS:SI = start of source string
 
-**; ES:DI = start of destination string**
+; ES:DI = start of destination string
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; none**
+; none
 
-**;**
+;
 
-**; Registers altered: AL, BX, SI, DI**
+; Registers altered: AL, BX, SI, DI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Does not handle strings that are longer than 64K**
+; Note: Does not handle strings that are longer than 64K
 
-**; bytes or cross segment boundaries. Does not handle**
+; bytes or cross segment boundaries. Does not handle
 
-**; overlapping strings.**
+; overlapping strings.
 
-**;**
+;
 
-**CopyStringUpper:**
+CopyStringUpper:
 
-**mov bl,'a' ;set up for fast register-register**
+mov bl,'a' ;set up for fast register-register
 
-**mov bh,'z' ; comparisons**
+mov bh,'z' ; comparisons
 
-**cld**
+cld
 
-**StringUpperLoop:**
+StringUpperLoop:
 
-**lodsb ;get the next character and**
+lodsb ;get the next character and
 
-**; point to the following character**
+; point to the following character
 
-**cmp al,bl ;below 'a'?**
+cmp al,bl ;below 'a'?
 
-**jb IsUpper ;yes, not lowercase**
+jb IsUpper ;yes, not lowercase
 
-**cmp al,bh ;above 'z'?**
+cmp al,bh ;above 'z'?
 
-**ja IsUpper ;yes, not lowercase**
+ja IsUpper ;yes, not lowercase
 
-**and al,not 20h ;is lowercase-make uppercase**
+and al,not 20h ;is lowercase-make uppercase
 
-**IsUpper:**
+IsUpper:
 
-**stosb ;put the uppercase character into**
+stosb ;put the uppercase character into
 
-**; the new string and point to the**
+; the new string and point to the
 
-**; following character**
+; following character
 
-**and al,al ;is this the zero that marks the**
+and al,al ;is this the zero that marks the
 
-**; end of the string?**
+; end of the string?
 
-**jnz StringUpperLoop ;no, do the next character**
+jnz StringUpperLoop ;no, do the next character
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov si,offset SourceString ;point DS:SI to the**
+mov si,offset SourceString ;point DS:SI to the
 
-**; string to copy from**
+; string to copy from
 
-**mov di,seg DestString**
+mov di,seg DestString
 
-**mov es,di ;point ES:DI to the**
+mov es,di ;point ES:DI to the
 
-**mov di,offset DestString ; string to copy to**
+mov di,offset DestString ; string to copy to
 
-**call CopyStringUpper ;copy & convert to**
+call CopyStringUpper ;copy & convert to
 
-**; uppercase**
+; uppercase
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 11-2
 
 
-**;**
+;
 
-**; \*\*\* Listing 11-2 \*\*\***
+; *** Listing 11-2 ***
 
-**;**
+;
 
-**; Copies a string to another string, converting all**
+; Copies a string to another string, converting all
 
-**; characters to uppercase in the process, using a loop**
+; characters to uppercase in the process, using a loop
 
-**; containing non-string instructions.**
+; containing non-string instructions.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**SourceString label word**
+SourceString label word
 
-**db 'This space intentionally left not blank',0**
+db 'This space intentionally left not blank',0
 
-**DestString db 100 dup (?)**
+DestString db 100 dup (?)
 
-**;**
+;
 
-**; Copies one zero-terminated string to another string,**
+; Copies one zero-terminated string to another string,
 
-**; converting all characters to uppercase.**
+; converting all characters to uppercase.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; DS:SI = start of source string**
+; DS:SI = start of source string
 
-**; ES:DI = start of destination string**
+; ES:DI = start of destination string
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; none**
+; none
 
-**;**
+;
 
-**; Registers altered: AL, BX, SI, DI**
+; Registers altered: AL, BX, SI, DI
 
-**;**
+;
 
-**; Note: Does not handle strings that are longer than 64K**
+; Note: Does not handle strings that are longer than 64K
 
-**; bytes or cross segment boundaries.**
+; bytes or cross segment boundaries.
 
-**;**
+;
 
-**CopyStringUpper:**
+CopyStringUpper:
 
-**mov bl,'a' ;set up for fast register-register**
+mov bl,'a' ;set up for fast register-register
 
-**mov bh,'z' ; comparisons**
+mov bh,'z' ; comparisons
 
-**StringUpperLoop:**
+StringUpperLoop:
 
-**mov al,[si] ;get the next character**
+mov al,[si] ;get the next character
 
-**inc si ;point to the following character**
+inc si ;point to the following character
 
-**cmp al,bl ;below 'a'?**
+cmp al,bl ;below 'a'?
 
-**jb IsUpper ;yes, not lowercase**
+jb IsUpper ;yes, not lowercase
 
-**cmp al,bh ;above 'z'?**
+cmp al,bh ;above 'z'?
 
-**ja IsUpper ;yes, not lowercase**
+ja IsUpper ;yes, not lowercase
 
-**and al,not 20h ;is lowercase-make uppercase**
+and al,not 20h ;is lowercase-make uppercase
 
-**IsUpper:**
+IsUpper:
 
-**mov es:[di],al ;put the uppercase character into**
+mov es:[di],al ;put the uppercase character into
 
-**; the new string**
+; the new string
 
-**inc di ;point to the following character**
+inc di ;point to the following character
 
-**and al,al ;is this the zero that marks the**
+and al,al ;is this the zero that marks the
 
-**; end of the string?**
+; end of the string?
 
-**jnz StringUpperLoop ;no, do the next character**
+jnz StringUpperLoop ;no, do the next character
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov si,offset SourceString ;point DS:SI to the**
+mov si,offset SourceString ;point DS:SI to the
 
-**; string to copy from**
+; string to copy from
 
-**mov di,seg DestString**
+mov di,seg DestString
 
-**mov es,di ;point ES:DI to the**
+mov es,di ;point ES:DI to the
 
-**mov di,offset DestString ; string to copy to**
+mov di,offset DestString ; string to copy to
 
-**call CopyStringUpper ;copy & convert to**
+call CopyStringUpper ;copy & convert to
 
-**; uppercase**
+; uppercase
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 11-3
 
 
-**;**
+;
 
-**; \*\*\* Listing 11-3 \*\*\***
+; *** Listing 11-3 ***
 
-**;**
+;
 
-**; Converts all characters in a string to uppercase,**
+; Converts all characters in a string to uppercase,
 
-**; using a loop containing LODSB and STOSB and using**
+; using a loop containing LODSB and STOSB and using
 
-**; two pointers.**
+; two pointers.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**SourceString label word**
+SourceString label word
 
-**db 'This space intentionally left not blank',0**
+db 'This space intentionally left not blank',0
 
-**;**
+;
 
-**; Copies one zero-terminated string to another string,**
+; Copies one zero-terminated string to another string,
 
-**; converting all characters to uppercase.**
+; converting all characters to uppercase.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; DS:SI = start of source string**
+; DS:SI = start of source string
 
-**; ES:DI = start of destination string**
+; ES:DI = start of destination string
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; none**
+; none
 
-**;**
+;
 
-**; Registers altered: AL, BX, SI, DI**
+; Registers altered: AL, BX, SI, DI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Does not handle strings that are longer than 64K**
+; Note: Does not handle strings that are longer than 64K
 
-**; bytes or cross segment boundaries.**
+; bytes or cross segment boundaries.
 
-**;**
+;
 
-**CopyStringUpper:**
+CopyStringUpper:
 
-**mov bl,'a' ;set up for fast register-register**
+mov bl,'a' ;set up for fast register-register
 
-**mov bh,'z' ; comparisons**
+mov bh,'z' ; comparisons
 
-**cld**
+cld
 
-**StringUpperLoop:**
+StringUpperLoop:
 
-**lodsb ;get the next character and**
+lodsb ;get the next character and
 
-**; point to the following character**
+; point to the following character
 
-**cmp al,bl ;below 'a'?**
+cmp al,bl ;below 'a'?
 
-**jb IsUpper ;yes, not lowercase**
+jb IsUpper ;yes, not lowercase
 
-**cmp al,bh ;above 'z'?**
+cmp al,bh ;above 'z'?
 
-**ja IsUpper ;yes, not lowercase**
+ja IsUpper ;yes, not lowercase
 
-**and al,not 20h ;is lowercase-make uppercase**
+and al,not 20h ;is lowercase-make uppercase
 
-**IsUpper:**
+IsUpper:
 
-**stosb ;put the uppercase character into**
+stosb ;put the uppercase character into
 
-**; the new string and point to the**
+; the new string and point to the
 
-**; following character**
+; following character
 
-**and al,al ;is this the zero that marks the**
+and al,al ;is this the zero that marks the
 
-**; end of the string?**
+; end of the string?
 
-**jnz StringUpperLoop ;no, do the next character**
+jnz StringUpperLoop ;no, do the next character
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov si,offset SourceString ;point DS:SI to the**
+mov si,offset SourceString ;point DS:SI to the
 
-**; string to convert**
+; string to convert
 
-**mov di,ds**
+mov di,ds
 
-**mov es,di ;point ES:DI to the**
+mov es,di ;point ES:DI to the
 
-**mov di,si ; same string**
+mov di,si ; same string
 
-**call CopyStringUpper ;convert to**
+call CopyStringUpper ;convert to
 
-**; uppercase in place**
+; uppercase in place
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 11-4
 
 
-**;**
+;
 
-**; \*\*\* Listing 11-4 \*\*\***
+; *** Listing 11-4 ***
 
-**;**
+;
 
-**; Converts all characters in a string to uppercase,**
+; Converts all characters in a string to uppercase,
 
-**; using a loop containing non-string instructions**
+; using a loop containing non-string instructions
 
-**; and using only one pointer.**
+; and using only one pointer.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**SourceString label word**
+SourceString label word
 
-**db 'This space intentionally left not blank',0**
+db 'This space intentionally left not blank',0
 
-**;**
+;
 
-**; Converts a string to uppercase.**
+; Converts a string to uppercase.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; DS:SI = start of string**
+; DS:SI = start of string
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; none**
+; none
 
-**;**
+;
 
-**; Registers altered: AL, BX, SI**
+; Registers altered: AL, BX, SI
 
-**;**
+;
 
-**; Note: Does not handle strings that are longer than 64K**
+; Note: Does not handle strings that are longer than 64K
 
-**; bytes or cross segment boundaries.**
+; bytes or cross segment boundaries.
 
-**;**
+;
 
-**StringToUpper:**
+StringToUpper:
 
-**mov bl,'a' ;set up for fast register-register**
+mov bl,'a' ;set up for fast register-register
 
-**mov bh,'z' ; comparisons**
+mov bh,'z' ; comparisons
 
-**StringToUpperLoop:**
+StringToUpperLoop:
 
-**mov al,[si] ;get the next character**
+mov al,[si] ;get the next character
 
-**cmp al,bl ;below 'a'?**
+cmp al,bl ;below 'a'?
 
-**jb IsUpper ;yes, not lowercase**
+jb IsUpper ;yes, not lowercase
 
-**cmp al,bh ;above 'z'?**
+cmp al,bh ;above 'z'?
 
-**ja IsUpper ;yes, not lowercase**
+ja IsUpper ;yes, not lowercase
 
-**and al,not 20h ;is lowercase-make uppercase**
+and al,not 20h ;is lowercase-make uppercase
 
-**IsUpper:**
+IsUpper:
 
-**mov [si],al ;put the uppercase character back**
+mov [si],al ;put the uppercase character back
 
-**inc si ; into the string and point to the**
+inc si ; into the string and point to the
 
-**; following character**
+; following character
 
-**and al,al ;is this the zero that marks the**
+and al,al ;is this the zero that marks the
 
-**; end of the string?**
+; end of the string?
 
-**jnz StringToUpperLoop ;no, do the next character**
+jnz StringToUpperLoop ;no, do the next character
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov si,offset SourceString ;point to the string**
+mov si,offset SourceString ;point to the string
 
-**; to convert**
+; to convert
 
-**call StringToUpper ;convert it to**
+call StringToUpper ;convert it to
 
-**; uppercase**
+; uppercase
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 11-5
 
 
-**; \*\*\* Listing 11-5 \*\*\***
+; *** Listing 11-5 ***
 
-**;**
+;
 
-**; Sets the high bit of every element in a byte**
+; Sets the high bit of every element in a byte
 
-**; array using LODSB and STOSB.**
+; array using LODSB and STOSB.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**;**
+;
 
-**ARRAY\_LENGTH equ 1000**
+ARRAY_LENGTH equ 1000
 
-**ByteArray db ARRAY\_LENGTH dup (?)**
+ByteArray db ARRAY_LENGTH dup (?)
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov si,offset ByteArray ;point to the array**
+mov si,offset ByteArray ;point to the array
 
-**mov di,ds ; as both source and**
+mov di,ds ; as both source and
 
-**mov es,di ; destination**
+mov es,di ; destination
 
-**mov di,si**
+mov di,si
 
-**mov cx,ARRAY\_LENGTH**
+mov cx,ARRAY_LENGTH
 
-**mov ah,80h ;bit pattern to OR**
+mov ah,80h ;bit pattern to OR
 
-**cld**
+cld
 
-**SetHighBitLoop:**
+SetHighBitLoop:
 
-**lodsb ;get the next byte**
+lodsb ;get the next byte
 
-**or al,ah ;set the high bit**
+or al,ah ;set the high bit
 
-**stosb ;save the byte**
+stosb ;save the byte
 
-**loop SetHighBitLoop**
+loop SetHighBitLoop
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 11-6
 
 
-**; \*\*\* Listing 11-6 \*\*\***
+; *** Listing 11-6 ***
 
-**;**
+;
 
-**; Sets the high bit of every element in a byte**
+; Sets the high bit of every element in a byte
 
-**; array by ORing directly to memory.**
+; array by ORing directly to memory.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**;**
+;
 
-**ARRAY\_LENGTH equ 1000**
+ARRAY_LENGTH equ 1000
 
-**ByteArray db ARRAY\_LENGTH dup (?)**
+ByteArray db ARRAY_LENGTH dup (?)
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov si,offset ByteArray ;point to the array**
+mov si,offset ByteArray ;point to the array
 
-**mov cx,ARRAY\_LENGTH**
+mov cx,ARRAY_LENGTH
 
-**mov al,80h ;bit pattern to OR**
+mov al,80h ;bit pattern to OR
 
-**SetHighBitLoop:**
+SetHighBitLoop:
 
-**or [si],al ;set the high bit**
+or [si],al ;set the high bit
 
-**inc si ;point to the next**
+inc si ;point to the next
 
-**; byte**
+; byte
 
-**loop SetHighBitLoop**
+loop SetHighBitLoop
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 11-7
 
 
-**;**
+;
 
-**; \*\*\* Listing 11-7 \*\*\***
+; *** Listing 11-7 ***
 
-**;**
+;
 
-**; Copies overlapping blocks of memory with MOVS.**
+; Copies overlapping blocks of memory with MOVS.
 
-**; To the greatest possible extent, the copy is**
+; To the greatest possible extent, the copy is
 
-**; performed a word at a time.**
+; performed a word at a time.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**TEST\_LENGTH1 equ 501 ;sample copy length \#1**
+TEST_LENGTH1 equ 501 ;sample copy length \#1
 
-**TEST\_LENGTH2 equ 1499 ;sample copy length \#2**
+TEST_LENGTH2 equ 1499 ;sample copy length \#2
 
-**TestArray db 1500 dup (0)**
+TestArray db 1500 dup (0)
 
-**;**
+;
 
-**; Copies a block of memory CX bytes in length. A value**
+; Copies a block of memory CX bytes in length. A value
 
-**; of 0 means "copy zero bytes," since it wouldn't make**
+; of 0 means "copy zero bytes," since it wouldn't make
 
-**; much sense to copy one 64K block to another 64K block**
+; much sense to copy one 64K block to another 64K block
 
-**; in the same segment, so the maximum length that can**
+; in the same segment, so the maximum length that can
 
-**; be copied is 64K-1 bytes and the minimum length**
+; be copied is 64K-1 bytes and the minimum length
 
-**; is 0 bytes. Note that both blocks must be in DS. Note**
+; is 0 bytes. Note that both blocks must be in DS. Note
 
-**; also that overlap handling is not guaranteed if either**
+; also that overlap handling is not guaranteed if either
 
-**; block wraps at the end of the segment.**
+; block wraps at the end of the segment.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; CX = number of bytes to clear**
+; CX = number of bytes to clear
 
-**; DS:SI = start of block to copy**
+; DS:SI = start of block to copy
 
-**; DS:DI = start of destination block**
+; DS:DI = start of destination block
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; none**
+; none
 
-**;**
+;
 
-**; Registers altered: CX, DX, SI, DI, ES**
+; Registers altered: CX, DX, SI, DI, ES
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**BlockCopyWithOverlap:**
+BlockCopyWithOverlap:
 
-**mov dx,ds ;source and destination are in the**
+mov dx,ds ;source and destination are in the
 
-**mov es,dx ; same segment**
+mov es,dx ; same segment
 
-**cmp si,di ;which way do the blocks overlap, if**
+cmp si,di ;which way do the blocks overlap, if
 
-**; they do overlap?**
+; they do overlap?
 
-**jae LowToHigh**
+jae LowToHigh
 
-**;source is not below destination, so**
+;source is not below destination, so
 
-**; we can copy from low to high**
+; we can copy from low to high
 
 
-**;source is below destination, so we**
+;source is below destination, so we
 
-**; must copy from high to low**
+; must copy from high to low
 
-**add si,cx ;point to the end of the source**
+add si,cx ;point to the end of the source
 
-**dec si ; block**
+dec si ; block
 
-**add di,cx ;point to the end of the destination**
+add di,cx ;point to the end of the destination
 
-**dec di ; block**
+dec di ; block
 
-**std ;copy from high addresses to low**
+std ;copy from high addresses to low
 
-**shr cx,1 ;divide by 2, copying the odd-byte**
+shr cx,1 ;divide by 2, copying the odd-byte
 
-**; status to the Carry flag**
+; status to the Carry flag
 
-**jnc CopyWordHighToLow ;no odd byte to copy**
+jnc CopyWordHighToLow ;no odd byte to copy
 
-**movsb ;copy the odd byte**
+movsb ;copy the odd byte
 
-**CopyWordHighToLow:**
+CopyWordHighToLow:
 
-**dec si ;point one word lower in memory, not**
+dec si ;point one word lower in memory, not
 
-**dec di ; one byte**
+dec di ; one byte
 
-**rep movsw ;move the rest of the block**
+rep movsw ;move the rest of the block
 
-**cld**
+cld
 
-**ret**
+ret
 
-**;**
+;
 
-**LowToHigh:**
+LowToHigh:
 
-**cld ;copy from low addresses to high**
+cld ;copy from low addresses to high
 
-**shr cx,1 ;divide by 2, copying the odd-byte**
+shr cx,1 ;divide by 2, copying the odd-byte
 
-**; status to the Carry flag**
+; status to the Carry flag
 
-**jnc CopyWordLowToHigh ;no odd byte to copy**
+jnc CopyWordLowToHigh ;no odd byte to copy
 
-**movsb ;copy the odd byte**
+movsb ;copy the odd byte
 
-**CopyWordLowToHigh:**
+CopyWordLowToHigh:
 
-**rep movsw ;move the rest of the block**
+rep movsw ;move the rest of the block
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**;**
+;
 
-**; First run the case where the destination overlaps & is**
+; First run the case where the destination overlaps & is
 
-**; higher in memory.**
+; higher in memory.
 
-**;**
+;
 
-**mov si,offset TestArray**
+mov si,offset TestArray
 
-**mov di,offset TestArray+1**
+mov di,offset TestArray+1
 
-**mov cx,TEST\_LENGTH1**
+mov cx,TEST_LENGTH1
 
-**call BlockCopyWithOverlap**
+call BlockCopyWithOverlap
 
-**;**
+;
 
-**; Now run the case where the destination overlaps & is**
+; Now run the case where the destination overlaps & is
 
-**; lower in memory.**
+; lower in memory.
 
-**;**
+;
 
-**mov si,offset TestArray+1**
+mov si,offset TestArray+1
 
-**mov di,offset TestArray**
+mov di,offset TestArray
 
-**mov cx,TEST\_LENGTH2**
+mov cx,TEST_LENGTH2
 
-**call BlockCopyWithOverlap**
+call BlockCopyWithOverlap
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 11-8
 
 
-**;**
+;
 
-**; \*\*\* Listing 11-8 \*\*\***
+; *** Listing 11-8 ***
 
-**;**
+;
 
-**; Copies overlapping blocks of memory with**
+; Copies overlapping blocks of memory with
 
-**; non-string instructions. To the greatest possible**
+; non-string instructions. To the greatest possible
 
-**; extent, the copy is performed a word at a time.**
+; extent, the copy is performed a word at a time.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**TEST\_LENGTH1 equ 501 ;sample copy length \#1**
+TEST_LENGTH1 equ 501 ;sample copy length \#1
 
-**TEST\_LENGTH2 equ 1499 ;sample copy length \#2**
+TEST_LENGTH2 equ 1499 ;sample copy length \#2
 
-**TestArray db 1500 dup (0)**
+TestArray db 1500 dup (0)
 
-**;**
+;
 
-**; Copies a block of memory CX bytes in length. A value**
+; Copies a block of memory CX bytes in length. A value
 
-**; of 0 means "copy zero bytes," since it wouldn't make**
+; of 0 means "copy zero bytes," since it wouldn't make
 
-**; much sense to copy one 64K block to another 64K block**
+; much sense to copy one 64K block to another 64K block
 
-**; in the same segment, so the maximum length that can**
+; in the same segment, so the maximum length that can
 
-**; be copied is 64K-1 bytes and the minimum length**
+; be copied is 64K-1 bytes and the minimum length
 
-**; is 0 bytes. Note that both blocks must be in DS. Note**
+; is 0 bytes. Note that both blocks must be in DS. Note
 
-**; also that overlap handling is not guaranteed if either**
+; also that overlap handling is not guaranteed if either
 
-**; block wraps at the end of the segment.**
+; block wraps at the end of the segment.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; CX = number of bytes to clear**
+; CX = number of bytes to clear
 
-**; DS:SI = start of block to copy**
+; DS:SI = start of block to copy
 
-**; DS:DI = start of destination block**
+; DS:DI = start of destination block
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; none**
+; none
 
-**;**
+;
 
-**; Registers altered: AX, CX, DX, SI, DI**
+; Registers altered: AX, CX, DX, SI, DI
 
-**;**
+;
 
-**BlockCopyWithOverlap:**
+BlockCopyWithOverlap:
 
-**jcxz BlockCopyWithOverlapDone**
+jcxz BlockCopyWithOverlapDone
 
-**;guard against zero block size,**
+;guard against zero block size,
 
-**; since LOOP will execute 64K times**
+; since LOOP will execute 64K times
 
-**; when started with CX=0**
+; when started with CX=0
 
-**mov dx,2 ;amount by which to adjust the**
+mov dx,2 ;amount by which to adjust the
 
-**; pointers in the word-copy loop**
+; pointers in the word-copy loop
 
-**cmp si,di ;which way do the blocks overlap, if**
+cmp si,di ;which way do the blocks overlap, if
 
-**; they do overlap?**
+; they do overlap?
 
-**jae LowToHigh**
+jae LowToHigh
 
-**;source is not below destination, so**
+;source is not below destination, so
 
-**; we can copy from low to high**
+; we can copy from low to high
 
 
-**;source is below destination, so we**
+;source is below destination, so we
 
-**; must copy from high to low**
+; must copy from high to low
 
-**add si,cx ;point to the end of the source**
+add si,cx ;point to the end of the source
 
-**dec si ; block**
+dec si ; block
 
-**add di,cx ;point to the end of the destination**
+add di,cx ;point to the end of the destination
 
-**dec di ; block**
+dec di ; block
 
-**shr cx,1 ;divide by 2, copying the odd-byte**
+shr cx,1 ;divide by 2, copying the odd-byte
 
-**; status to the Carry flag**
+; status to the Carry flag
 
-**jnc CopyWordHighToLow ;no odd byte to copy**
+jnc CopyWordHighToLow ;no odd byte to copy
 
-**mov al,[si] ;copy the odd byte**
+mov al,[si] ;copy the odd byte
 
-**mov [di],al**
+mov [di],al
 
-**dec si ;advance both pointers**
+dec si ;advance both pointers
 
-**dec di**
+dec di
 
-**CopyWordHighToLow:**
+CopyWordHighToLow:
 
-**dec si ;point one word lower in memory, not**
+dec si ;point one word lower in memory, not
 
-**dec di ; one byte**
+dec di ; one byte
 
-**HighToLowCopyLoop:**
+HighToLowCopyLoop:
 
-**mov ax,[si] ;copy a word**
+mov ax,[si] ;copy a word
 
-**mov [di],ax**
+mov [di],ax
 
-**sub si,dx ;advance both pointers 1 word**
+sub si,dx ;advance both pointers 1 word
 
-**sub di,dx**
+sub di,dx
 
-**loop HighToLowCopyLoop**
+loop HighToLowCopyLoop
 
-**ret**
+ret
 
-**;**
+;
 
-**LowToHigh:**
+LowToHigh:
 
-**shr cx,1 ;divide by 2, copying the odd-byte**
+shr cx,1 ;divide by 2, copying the odd-byte
 
-**; status to the Carry flag**
+; status to the Carry flag
 
-**jnc LowToHighCopyLoop ;no odd byte to copy**
+jnc LowToHighCopyLoop ;no odd byte to copy
 
-**mov al,[si] ;copy the odd byte**
+mov al,[si] ;copy the odd byte
 
-**mov [di],al**
+mov [di],al
 
-**inc si ;advance both pointers**
+inc si ;advance both pointers
 
-**inc di**
+inc di
 
-**LowToHighCopyLoop:**
+LowToHighCopyLoop:
 
-**mov ax,[si] ;copy a word**
+mov ax,[si] ;copy a word
 
-**mov [di],ax**
+mov [di],ax
 
-**add si,dx ;advance both pointers 1 word**
+add si,dx ;advance both pointers 1 word
 
-**add di,dx**
+add di,dx
 
-**loop LowToHighCopyLoop**
+loop LowToHighCopyLoop
 
-**BlockCopyWithOverlapDone:**
+BlockCopyWithOverlapDone:
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**;**
+;
 
-**; First run the case where the destination overlaps & is**
+; First run the case where the destination overlaps & is
 
-**; higher in memory.**
+; higher in memory.
 
-**;**
+;
 
-**mov si,offset TestArray**
+mov si,offset TestArray
 
-**mov di,offset TestArray+1**
+mov di,offset TestArray+1
 
-**mov cx,TEST\_LENGTH1**
+mov cx,TEST_LENGTH1
 
-**call BlockCopyWithOverlap**
+call BlockCopyWithOverlap
 
-**;**
+;
 
-**; Now run the case where the destination overlaps & is**
+; Now run the case where the destination overlaps & is
 
-**; lower in memory.**
+; lower in memory.
 
-**;**
+;
 
-**mov si,offset TestArray+1**
+mov si,offset TestArray+1
 
-**mov di,offset TestArray**
+mov di,offset TestArray
 
-**mov cx,TEST\_LENGTH2**
+mov cx,TEST_LENGTH2
 
-**call BlockCopyWithOverlap**
+call BlockCopyWithOverlap
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 11-9
 
 
-**;**
+;
 
-**; \*\*\* Listing 11-9 \*\*\***
+; *** Listing 11-9 ***
 
-**;**
+;
 
-**; Counts the number of times the letter 'A'**
+; Counts the number of times the letter 'A'
 
-**; appears in a byte-sized array, using non-string**
+; appears in a byte-sized array, using non-string
 
-**; instructions.**
+; instructions.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ByteArray label byte**
+ByteArray label byte
 
-**db 'ARRAY CONTAINING THE LETTER ''A'' 4 TIMES'**
+db 'ARRAY CONTAINING THE LETTER ''A'' 4 TIMES'
 
-**ARRAY\_LENGTH equ ($-ByteArray)**
+ARRAY_LENGTH equ ($-ByteArray)
 
-**;**
+;
 
-**; Counts the number of occurrences of the specified byte**
+; Counts the number of occurrences of the specified byte
 
-**; in the specified byte-sized array.**
+; in the specified byte-sized array.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; AL = byte of which to count occurrences**
+; AL = byte of which to count occurrences
 
-**; CX = array length (0 means 64K)**
+; CX = array length (0 means 64K)
 
-**; DS:DI = array to count byte occurrences in**
+; DS:DI = array to count byte occurrences in
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; DX = number of occurrences of the specified byte**
+; DX = number of occurrences of the specified byte
 
-**;**
+;
 
-**; Registers altered: CX, DX, DI**
+; Registers altered: CX, DX, DI
 
-**;**
+;
 
-**; Note: Does not handle arrays that are longer than 64K**
+; Note: Does not handle arrays that are longer than 64K
 
-**; bytes or cross segment boundaries.**
+; bytes or cross segment boundaries.
 
-**;**
+;
 
-**ByteCount:**
+ByteCount:
 
-**sub dx,dx ;set occurrence counter to 0**
+sub dx,dx ;set occurrence counter to 0
 
-**dec di ;compensate for the initial**
+dec di ;compensate for the initial
 
-**; upcoming INC DI**
+; upcoming INC DI
 
-**and cx,cx ;64K long?**
+and cx,cx ;64K long?
 
-**jnz ByteCountLoop ;no**
+jnz ByteCountLoop ;no
 
-**dec cx ;yes, so handle first byte**
+dec cx ;yes, so handle first byte
 
-**; specially, since JCXZ will**
+; specially, since JCXZ will
 
-**; otherwise conclude that**
+; otherwise conclude that
 
-**; we're done right away**
+; we're done right away
 
-**inc di ;point to first byte**
+inc di ;point to first byte
 
-**cmp [di],al ;is this byte the value**
+cmp [di],al ;is this byte the value
 
-**; we're looking for?**
+; we're looking for?
 
-**jz ByteCountCountOccurrence**
+jz ByteCountCountOccurrence
 
-**;yes, so count it**
+;yes, so count it
 
-**ByteCountLoop:**
+ByteCountLoop:
 
-**jcxz ByteCountDone ;done if we've checked all**
+jcxz ByteCountDone ;done if we've checked all
 
-**; the bytes in the array**
+; the bytes in the array
 
-**dec cx ;count off the byte we're**
+dec cx ;count off the byte we're
 
-**; about to check**
+; about to check
 
-**inc di ;point to the next byte to**
+inc di ;point to the next byte to
 
-**; check**
+; check
 
-**cmp [di],al ;see if this byte contains**
+cmp [di],al ;see if this byte contains
 
-**; the value we're counting**
+; the value we're counting
 
-**jnz ByteCountLoop ;no match**
+jnz ByteCountLoop ;no match
 
-**ByteCountCountOccurrence:**
+ByteCountCountOccurrence:
 
-**inc dx ;count this occurrence**
+inc dx ;count this occurrence
 
-**jmp ByteCountLoop ;check the next byte, if any**
+jmp ByteCountLoop ;check the next byte, if any
 
-**ByteCountDone:**
+ByteCountDone:
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov al,'A' ;byte of which we want a**
+mov al,'A' ;byte of which we want a
 
-**; count of occurrences**
+; count of occurrences
 
-**mov di,offset ByteArray**
+mov di,offset ByteArray
 
-**;array we want a count for**
+;array we want a count for
 
-**mov cx,ARRAY\_LENGTH ;\# of bytes to check**
+mov cx,ARRAY_LENGTH ;\# of bytes to check
 
-**call ByteCount ;get the count**
+call ByteCount ;get the count
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 11-10
 
 
-**;**
+;
 
-**; \*\*\* Listing 11-10 \*\*\***
+; *** Listing 11-10 ***
 
-**;**
+;
 
-**; Counts the number of times the letter 'A'**
+; Counts the number of times the letter 'A'
 
-**; appears in a byte-sized array, using REPNZ SCASB.**
+; appears in a byte-sized array, using REPNZ SCASB.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ByteArray label byte**
+ByteArray label byte
 
-**db 'ARRAY CONTAINING THE LETTER ''A'' 4 TIMES'**
+db 'ARRAY CONTAINING THE LETTER ''A'' 4 TIMES'
 
-**ARRAY\_LENGTH equ ($-ByteArray)**
+ARRAY_LENGTH equ ($-ByteArray)
 
-**;**
+;
 
-**; Counts the number of occurrences of the specified byte**
+; Counts the number of occurrences of the specified byte
 
-**; in the specified byte-sized array.**
+; in the specified byte-sized array.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; AL = byte of which to count occurrences**
+; AL = byte of which to count occurrences
 
-**; CX = array length (0 means 64K)**
+; CX = array length (0 means 64K)
 
-**; DS:DI = array to count byte occurrences in**
+; DS:DI = array to count byte occurrences in
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; DX = number of occurrences of the specified byte**
+; DX = number of occurrences of the specified byte
 
-**;**
+;
 
-**; Registers altered: CX, DX, DI, ES**
+; Registers altered: CX, DX, DI, ES
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Does not handle arrays that are longer than 64K**
+; Note: Does not handle arrays that are longer than 64K
 
-**; bytes or cross segment boundaries. Does not handle**
+; bytes or cross segment boundaries. Does not handle
 
-**; overlapping strings.**
+; overlapping strings.
 
-**;**
+;
 
-**ByteCount:**
+ByteCount:
 
-**push ds**
+push ds
 
-**pop es ;SCAS uses ES:DI**
+pop es ;SCAS uses ES:DI
 
-**sub dx,dx ;set occurrence counter to 0**
+sub dx,dx ;set occurrence counter to 0
 
-**cld**
+cld
 
-**and cx,cx ;64K long?**
+and cx,cx ;64K long?
 
-**jnz ByteCountLoop ;no**
+jnz ByteCountLoop ;no
 
-**dec cx ;yes, so handle first byte**
+dec cx ;yes, so handle first byte
 
-**; specially, since JCXZ will**
+; specially, since JCXZ will
 
-**; otherwise conclude that**
+; otherwise conclude that
 
-**; we're done right away**
+; we're done right away
 
-**scasb ;is first byte a match?**
+scasb ;is first byte a match?
 
-**jz ByteCountCountOccurrence**
+jz ByteCountCountOccurrence
 
-**;yes, so count it**
+;yes, so count it
 
-**ByteCountLoop:**
+ByteCountLoop:
 
-**jcxz ByteCountDone ;if there's nothing left to**
+jcxz ByteCountDone ;if there's nothing left to
 
-**; search, we're done**
+; search, we're done
 
-**repnz scasb ;search for the next byte**
+repnz scasb ;search for the next byte
 
-**; occurrence or the end of**
+; occurrence or the end of
 
-**; the array**
+; the array
 
-**jnz ByteCountDone ;no match**
+jnz ByteCountDone ;no match
 
-**ByteCountCountOccurrence:**
+ByteCountCountOccurrence:
 
-**inc dx ;count this occurrence**
+inc dx ;count this occurrence
 
-**jmp ByteCountLoop ;check the next byte, if any**
+jmp ByteCountLoop ;check the next byte, if any
 
-**ByteCountDone:**
+ByteCountDone:
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov al,'A' ;byte of which we want a**
+mov al,'A' ;byte of which we want a
 
-**; count of occurrences**
+; count of occurrences
 
-**mov di,offset ByteArray**
+mov di,offset ByteArray
 
-**;array we want a count for**
+;array we want a count for
 
-**mov cx,ARRAY\_LENGTH ;\# of bytes to check**
+mov cx,ARRAY_LENGTH ;\# of bytes to check
 
-**call ByteCount ;get the count**
+call ByteCount ;get the count
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 11-11
 
 
-**;**
+;
 
-**; \*\*\* Listing 11-11 \*\*\***
+; *** Listing 11-11 ***
 
-**;**
+;
 
-**; Finds the first occurrence of the letter 'z' in**
+; Finds the first occurrence of the letter 'z' in
 
-**; a zero-terminated string, using LODSB.**
+; a zero-terminated string, using LODSB.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**TestString label byte**
+TestString label byte
 
-**db 'This is a test string that is '**
+db 'This is a test string that is '
 
-**db 'z'**
+db 'z'
 
-**db 'terminated with a zero byte...',0**
+db 'terminated with a zero byte...',0
 
-**;**
+;
 
-**; Finds the first occurrence of the specified byte in the**
+; Finds the first occurrence of the specified byte in the
 
-**; specified zero-terminated string.**
+; specified zero-terminated string.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; AL = byte to find**
+; AL = byte to find
 
-**; DS:SI = zero-terminated string to search**
+; DS:SI = zero-terminated string to search
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; SI = pointer to first occurrence of byte in string,**
+; SI = pointer to first occurrence of byte in string,
 
-**; or 0 if the byte wasn't found**
+; or 0 if the byte wasn't found
 
-**;**
+;
 
-**; Registers altered: AX, SI**
+; Registers altered: AX, SI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Do not pass a string that starts at offset 0 (SI=0),**
+; Note: Do not pass a string that starts at offset 0 (SI=0),
 
-**; since a match on the first byte and failure to find**
+; since a match on the first byte and failure to find
 
-**; the byte would be indistinguishable.**
+; the byte would be indistinguishable.
 
-**;**
+;
 
-**; Note: Does not handle strings that are longer than 64K**
+; Note: Does not handle strings that are longer than 64K
 
-**; bytes or cross segment boundaries.**
+; bytes or cross segment boundaries.
 
-**;**
+;
 
-**FindCharInString:**
+FindCharInString:
 
-**mov ah,al ;we'll need AL since that's the**
+mov ah,al ;we'll need AL since that's the
 
-**; only register LODSB can use**
+; only register LODSB can use
 
-**cld**
+cld
 
-**FindCharInStringLoop:**
+FindCharInStringLoop:
 
-**lodsb ;get the next string byte**
+lodsb ;get the next string byte
 
-**cmp al,ah ;is this the byte we're**
+cmp al,ah ;is this the byte we're
 
-**; looking for?**
+; looking for?
 
-**jz FindCharInStringDone**
+jz FindCharInStringDone
 
-**;yes, so we're done**
+;yes, so we're done
 
-**and al,al ;is this the terminating zero?**
+and al,al ;is this the terminating zero?
 
-**jnz FindCharInStringLoop**
+jnz FindCharInStringLoop
 
-**;no, so check the next byte**
+;no, so check the next byte
 
-**sub si,si ;we didn't find a match, so return**
+sub si,si ;we didn't find a match, so return
 
-**; 0 in SI**
+; 0 in SI
 
-**ret**
+ret
 
-**FindCharInStringDone:**
+FindCharInStringDone:
 
-**dec si ;point back to the matching byte**
+dec si ;point back to the matching byte
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov al,'z' ;byte value to find**
+mov al,'z' ;byte value to find
 
-**mov si,offset TestString**
+mov si,offset TestString
 
-**;string to search**
+;string to search
 
-**call FindCharInString ;search for the byte**
+call FindCharInString ;search for the byte
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 11-12
 
 
-**;**
+;
 
-**; \*\*\* Listing 11-12 \*\*\***
+; *** Listing 11-12 ***
 
-**;**
+;
 
-**; Finds the first occurrence of the letter 'z' in**
+; Finds the first occurrence of the letter 'z' in
 
-**; a zero-terminated string, using REPNZ SCASB in a**
+; a zero-terminated string, using REPNZ SCASB in a
 
-**; double-search approach, first finding the terminating**
+; double-search approach, first finding the terminating
 
-**; zero to determine the string length, and then searching**
+; zero to determine the string length, and then searching
 
-**; for the desired byte.**
+; for the desired byte.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**TestString label byte**
+TestString label byte
 
-**db 'This is a test string that is '**
+db 'This is a test string that is '
 
-**db 'z'**
+db 'z'
 
-**db 'terminated with a zero byte...',0**
+db 'terminated with a zero byte...',0
 
-**;**
+;
 
-**; Finds the first occurrence of the specified byte in the**
+; Finds the first occurrence of the specified byte in the
 
-**; specified zero-terminated string.**
+; specified zero-terminated string.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; AL = byte to find**
+; AL = byte to find
 
-**; DS:SI = zero-terminated string to search**
+; DS:SI = zero-terminated string to search
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; SI = pointer to first occurrence of byte in string,**
+; SI = pointer to first occurrence of byte in string,
 
-**; or 0 if the byte wasn't found**
+; or 0 if the byte wasn't found
 
-**;**
+;
 
-**; Registers altered: AH, CX, SI, DI, ES**
+; Registers altered: AH, CX, SI, DI, ES
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Do not pass a string that starts at offset 0 (SI=0),**
+; Note: Do not pass a string that starts at offset 0 (SI=0),
 
-**; since a match on the first byte and failure to find**
+; since a match on the first byte and failure to find
 
-**; the byte would be indistinguishable.**
+; the byte would be indistinguishable.
 
-**;**
+;
 
-**; Note: If the search value is 0, will not find the**
+; Note: If the search value is 0, will not find the
 
-**; terminating zero in a string that is exactly 64K**
+; terminating zero in a string that is exactly 64K
 
-**; bytes long. Does not handle strings that are longer**
+; bytes long. Does not handle strings that are longer
 
-**; than 64K bytes or cross segment boundaries.**
+; than 64K bytes or cross segment boundaries.
 
-**;**
+;
 
-**FindCharInString:**
+FindCharInString:
 
-**mov ah,al ;set aside the byte to be found**
+mov ah,al ;set aside the byte to be found
 
-**sub al,al ;we'll search for zero**
+sub al,al ;we'll search for zero
 
-**push ds**
+push ds
 
-**pop es**
+pop es
 
-**mov di,si ;SCAS uses ES:DI**
+mov di,si ;SCAS uses ES:DI
 
-**mov cx,0ffffh ;long enough to handle any string**
+mov cx,0ffffh ;long enough to handle any string
 
-**; up to 64K-1 bytes in length, and**
+; up to 64K-1 bytes in length, and
 
-**; will handle 64K case except when**
+; will handle 64K case except when
 
-**; the search value is the terminating**
+; the search value is the terminating
 
-**; zero**
+; zero
 
-**cld**
+cld
 
-**repnz scasb ;find the terminating zero**
+repnz scasb ;find the terminating zero
 
-**not cx ;length of string in bytes, including**
+not cx ;length of string in bytes, including
 
-**; the terminating zero except in the**
+; the terminating zero except in the
 
-**; case of a string that's exactly 64K**
+; case of a string that's exactly 64K
 
-**; long including the terminating zero**
+; long including the terminating zero
 
-**mov al,ah ;get back the byte to be found**
+mov al,ah ;get back the byte to be found
 
-**mov di,si ;point to the start of the string again**
+mov di,si ;point to the start of the string again
 
-**repnz scasb ;search for the byte of interest**
+repnz scasb ;search for the byte of interest
 
-**jnz FindCharInStringNotFound**
+jnz FindCharInStringNotFound
 
-**;the byte isn't present in the string**
+;the byte isn't present in the string
 
-**dec di ;we've found the desired value. Point**
+dec di ;we've found the desired value. Point
 
-**; back to the matching location**
+; back to the matching location
 
-**mov si,di ;return the pointer in SI**
+mov si,di ;return the pointer in SI
 
-**ret**
+ret
 
-**FindCharInStringNotFound:**
+FindCharInStringNotFound:
 
-**sub si,si ;return a 0 pointer indicating that**
+sub si,si ;return a 0 pointer indicating that
 
-**; no match was found**
+; no match was found
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov al,'z' ;byte value to find**
+mov al,'z' ;byte value to find
 
-**mov si,offset TestString**
+mov si,offset TestString
 
-**;string to search**
+;string to search
 
-**call FindCharInString ;search for the byte**
+call FindCharInString ;search for the byte
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 11-13
 
 
-**;**
+;
 
-**; \*\*\* Listing 11-13 \*\*\***
+; *** Listing 11-13 ***
 
-**;**
+;
 
-**; Finds the first occurrence of the letter 'z' in**
+; Finds the first occurrence of the letter 'z' in
 
-**; a zero-terminated string, using non-string instructions.**
+; a zero-terminated string, using non-string instructions.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**TestString label byte**
+TestString label byte
 
-**db 'This is a test string that is '**
+db 'This is a test string that is '
 
-**db 'z'**
+db 'z'
 
-**db 'terminated with a zero byte...',0**
+db 'terminated with a zero byte...',0
 
-**;**
+;
 
-**; Finds the first occurrence of the specified byte in the**
+; Finds the first occurrence of the specified byte in the
 
-**; specified zero-terminated string.**
+; specified zero-terminated string.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; AL = byte to find**
+; AL = byte to find
 
-**; DS:SI = zero-terminated string to search**
+; DS:SI = zero-terminated string to search
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; SI = pointer to first occurrence of byte in string,**
+; SI = pointer to first occurrence of byte in string,
 
-**; or 0 if the byte wasn't found**
+; or 0 if the byte wasn't found
 
-**;**
+;
 
-**; Registers altered: AH, SI**
+; Registers altered: AH, SI
 
-**;**
+;
 
-**; Note: Do not pass a string that starts at offset 0 (SI=0),**
+; Note: Do not pass a string that starts at offset 0 (SI=0),
 
-**; since a match on the first byte and failure to find**
+; since a match on the first byte and failure to find
 
-**; the byte would be indistinguishable.**
+; the byte would be indistinguishable.
 
-**;**
+;
 
-**; Note: Does not handle strings that are longer than 64K**
+; Note: Does not handle strings that are longer than 64K
 
-**; bytes or cross segment boundaries.**
+; bytes or cross segment boundaries.
 
-**;**
+;
 
-**FindCharInString:**
+FindCharInString:
 
-**FindCharInStringLoop:**
+FindCharInStringLoop:
 
-**mov ah,[si] ;get the next string byte**
+mov ah,[si] ;get the next string byte
 
-**cmp ah,al ;is this the byte we're**
+cmp ah,al ;is this the byte we're
 
-**; looking for?**
+; looking for?
 
-**jz FindCharInStringDone**
+jz FindCharInStringDone
 
-**;yes, so we're done**
+;yes, so we're done
 
-**inc si ;point to the following byte**
+inc si ;point to the following byte
 
-**and ah,ah ;is this the terminating zero?**
+and ah,ah ;is this the terminating zero?
 
-**jnz FindCharInStringLoop**
+jnz FindCharInStringLoop
 
-**;no, so check the next byte**
+;no, so check the next byte
 
-**sub si,si ;we didn't find a match, so return**
+sub si,si ;we didn't find a match, so return
 
-**; 0 in SI**
+; 0 in SI
 
-**FindCharInStringDone:**
+FindCharInStringDone:
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov al,'z' ;byte value to find**
+mov al,'z' ;byte value to find
 
-**mov si,offset TestString**
+mov si,offset TestString
 
-**;string to search**
+;string to search
 
-**call FindCharInString ;search for the byte**
+call FindCharInString ;search for the byte
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 11-14
 
 
-**; \*\*\* Listing 11-14 \*\*\***
+; *** Listing 11-14 ***
 
-**;**
+;
 
-**; Finds the first occurrence of the letter 'z' in**
+; Finds the first occurrence of the letter 'z' in
 
-**; a zero-terminated string, using LODSW and checking**
+; a zero-terminated string, using LODSW and checking
 
-**; 2 bytes per read.**
+; 2 bytes per read.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**TestString label byte**
+TestString label byte
 
-**db 'This is a test string that is '**
+db 'This is a test string that is '
 
-**db 'z'**
+db 'z'
 
-**db 'terminated with a zero byte...',0**
+db 'terminated with a zero byte...',0
 
-**;**
+;
 
-**; Finds the first occurrence of the specified byte in the**
+; Finds the first occurrence of the specified byte in the
 
-**; specified zero-terminated string.**
+; specified zero-terminated string.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; AL = byte to find**
+; AL = byte to find
 
-**; DS:SI = zero-terminated string to search**
+; DS:SI = zero-terminated string to search
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; SI = pointer to first occurrence of byte in string,**
+; SI = pointer to first occurrence of byte in string,
 
-**; or 0 if the byte wasn't found**
+; or 0 if the byte wasn't found
 
-**;**
+;
 
-**; Registers altered: AX, BL, SI**
+; Registers altered: AX, BL, SI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Do not pass a string that starts at offset 0 (SI=0),**
+; Note: Do not pass a string that starts at offset 0 (SI=0),
 
-**; since a match on the first byte and failure to find**
+; since a match on the first byte and failure to find
 
-**; the byte would be indistinguishable.**
+; the byte would be indistinguishable.
 
-**;**
+;
 
-**; Note: Does not handle strings that are longer than 64K**
+; Note: Does not handle strings that are longer than 64K
 
-**; bytes or cross segment boundaries.**
+; bytes or cross segment boundaries.
 
-**;**
+;
 
-**FindCharInString:**
+FindCharInString:
 
-**mov bl,al ;we'll need AX since that's the**
+mov bl,al ;we'll need AX since that's the
 
-**; only register LODSW can use**
+; only register LODSW can use
 
-**cld**
+cld
 
-**FindCharInStringLoop:**
+FindCharInStringLoop:
 
-**lodsw ;get the next 2 string bytes**
+lodsw ;get the next 2 string bytes
 
-**cmp al,bl ;is the first byte the byte we're**
+cmp al,bl ;is the first byte the byte we're
 
-**; looking for?**
+; looking for?
 
-**jz FindCharInStringDoneAdjust**
+jz FindCharInStringDoneAdjust
 
-**;yes, so we're done after we adjust**
+;yes, so we're done after we adjust
 
-**; back to the first byte of the word**
+; back to the first byte of the word
 
-**and al,al ;is the first byte the terminating**
+and al,al ;is the first byte the terminating
 
-**; zero?**
+; zero?
 
-**jz FindCharInStringNoMatch ;yes, no match**
+jz FindCharInStringNoMatch ;yes, no match
 
-**cmp ah,bl ;is the second byte the byte we're**
+cmp ah,bl ;is the second byte the byte we're
 
-**; looking for?**
+; looking for?
 
-**jz FindCharInStringDone**
+jz FindCharInStringDone
 
-**;yes, so we're done**
+;yes, so we're done
 
-**and ah,ah ;is the second byte the terminating**
+and ah,ah ;is the second byte the terminating
 
-**; zero?**
+; zero?
 
-**jnz FindCharInStringLoop**
+jnz FindCharInStringLoop
 
-**;no, so check the next 2 bytes**
+;no, so check the next 2 bytes
 
-**FindCharInStringNoMatch:**
+FindCharInStringNoMatch:
 
-**sub si,si ;we didn't find a match, so return**
+sub si,si ;we didn't find a match, so return
 
-**; 0 in SI**
+; 0 in SI
 
-**ret**
+ret
 
-**FindCharInStringDoneAdjust:**
+FindCharInStringDoneAdjust:
 
-**dec si ;adjust to the first byte of the**
+dec si ;adjust to the first byte of the
 
-**; word we just read**
+; word we just read
 
-**FindCharInStringDone:**
+FindCharInStringDone:
 
-**dec si ;point back to the matching byte**
+dec si ;point back to the matching byte
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov al,'z' ;byte value to find**
+mov al,'z' ;byte value to find
 
-**mov si,offset TestString**
+mov si,offset TestString
 
-**;string to search**
+;string to search
 
-**call FindCharInString ;search for the byte**
+call FindCharInString ;search for the byte
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 11-15
 
 
-**;**
+;
 
-**; \*\*\* Listing 11-15 \*\*\***
+; *** Listing 11-15 ***
 
-**;**
+;
 
-**; Finds the last non-blank character in a string, using**
+; Finds the last non-blank character in a string, using
 
-**; LODSW and checking 2 bytes per read.**
+; LODSW and checking 2 bytes per read.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**TestString label byte**
+TestString label byte
 
-**db 'This is a test string with blanks....'**
+db 'This is a test string with blanks....'
 
-**db ' ',0**
+db ' ',0
 
-**;**
+;
 
-**; Finds the last non-blank character in the specified**
+; Finds the last non-blank character in the specified
 
-**; zero-terminated string.**
+; zero-terminated string.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; DS:SI = zero-terminated string to search**
+; DS:SI = zero-terminated string to search
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; SI = pointer to last non-blank character in string,**
+; SI = pointer to last non-blank character in string,
 
-**; or 0 if there are no non-blank characters in**
+; or 0 if there are no non-blank characters in
 
-**; the string**
+; the string
 
-**;**
+;
 
-**; Registers altered: AX, BL, DX, SI**
+; Registers altered: AX, BL, DX, SI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Do not pass a string that starts at offset 0 (SI=0),**
+; Note: Do not pass a string that starts at offset 0 (SI=0),
 
-**; since a return pointer to the first byte and failure**
+; since a return pointer to the first byte and failure
 
-**; to find a non-blank character would be**
+; to find a non-blank character would be
 
-**; indistinguishable.**
+; indistinguishable.
 
-**;**
+;
 
-**; Note: Does not handle strings that are longer than 64K**
+; Note: Does not handle strings that are longer than 64K
 
-**; bytes or cross segment boundaries.**
+; bytes or cross segment boundaries.
 
-**;**
+;
 
-**FindLastNonBlankInString:**
+FindLastNonBlankInString:
 
-**mov dx,1 ;so far we haven't found a non-blank**
+mov dx,1 ;so far we haven't found a non-blank
 
-**; character**
+; character
 
-**mov bl,' ' ;put our search character, the space**
+mov bl,' ' ;put our search character, the space
 
-**; character, in a register for speed**
+; character, in a register for speed
 
-**cld**
+cld
 
-**FindLastNonBlankInStringLoop:**
+FindLastNonBlankInStringLoop:
 
-**lodsw ;get the next 2 string bytes**
+lodsw ;get the next 2 string bytes
 
-**and al,al ;is the first byte the terminating**
+and al,al ;is the first byte the terminating
 
-**; zero?**
+; zero?
 
-**jz FindLastNonBlankInStringDone**
+jz FindLastNonBlankInStringDone
 
-**;yes, we're done**
+;yes, we're done
 
-**cmp al,bl ;is the second byte a space?**
+cmp al,bl ;is the second byte a space?
 
-**jz FindLastNonBlankInStringNextChar**
+jz FindLastNonBlankInStringNextChar
 
-**;yes, so check the next character**
+;yes, so check the next character
 
-**mov dx,si ;remember where the non-blank was**
+mov dx,si ;remember where the non-blank was
 
-**dec dx ;adjust back to first byte of word**
+dec dx ;adjust back to first byte of word
 
-**FindLastNonBlankInStringNextChar:**
+FindLastNonBlankInStringNextChar:
 
-**and ah,ah ;is the second byte the terminating**
+and ah,ah ;is the second byte the terminating
 
-**; zero?**
+; zero?
 
-**jz FindLastNonBlankInStringDone**
+jz FindLastNonBlankInStringDone
 
-**;yes, we're done**
+;yes, we're done
 
-**cmp ah,bl ;is the second byte a space?**
+cmp ah,bl ;is the second byte a space?
 
-**jz FindLastNonBlankInStringLoop**
+jz FindLastNonBlankInStringLoop
 
-**;yes, so check the next 2 bytes**
+;yes, so check the next 2 bytes
 
-**mov dx,si ;remember where the non-blank was**
+mov dx,si ;remember where the non-blank was
 
-**jmp FindLastNonBlankInStringLoop**
+jmp FindLastNonBlankInStringLoop
 
-**;check the next 2 bytes**
+;check the next 2 bytes
 
-**FindLastNonBlankInStringDone:**
+FindLastNonBlankInStringDone:
 
-**dec dx ;point back to the last non-blank**
+dec dx ;point back to the last non-blank
 
-**; character, correcting for the**
+; character, correcting for the
 
-**; 1-byte overrun of LODSW**
+; 1-byte overrun of LODSW
 
-**mov si,dx ;return pointer to last non-blank**
+mov si,dx ;return pointer to last non-blank
 
-**; character in SI**
+; character in SI
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov si,offset TestString ;string to search**
+mov si,offset TestString ;string to search
 
-**call FindLastNonBlankInString ;search for the byte**
+call FindLastNonBlankInString ;search for the byte
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 11-16
 
 
-**;**
+;
 
-**; \*\*\* Listing 11-16 \*\*\***
+; *** Listing 11-16 ***
 
-**;**
+;
 
-**; Finds the last non-blank character in a string, using**
+; Finds the last non-blank character in a string, using
 
-**; REPNZ SCASB to find the end of the string and then using**
+; REPNZ SCASB to find the end of the string and then using
 
-**; REPZ SCASW from the end of the string to find the last**
+; REPZ SCASW from the end of the string to find the last
 
-**; non-blank character.**
+; non-blank character.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**TestString label byte**
+TestString label byte
 
-**db 'This is a test string with blanks....'**
+db 'This is a test string with blanks....'
 
-**db ' ',0**
+db ' ',0
 
-**;**
+;
 
-**; Finds the last non-blank character in the specified**
+; Finds the last non-blank character in the specified
 
-**; zero-terminated string.**
+; zero-terminated string.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; DS:SI = zero-terminated string to search**
+; DS:SI = zero-terminated string to search
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; SI = pointer to last non-blank character in string,**
+; SI = pointer to last non-blank character in string,
 
-**; or 0 if there are no non-blank characters in**
+; or 0 if there are no non-blank characters in
 
-**; the string**
+; the string
 
-**;**
+;
 
-**; Registers altered: AX, CX, SI, DI, ES**
+; Registers altered: AX, CX, SI, DI, ES
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Do not pass a string that starts at offset 0 (SI=0),**
+; Note: Do not pass a string that starts at offset 0 (SI=0),
 
-**; since a return pointer to the first byte and failure**
+; since a return pointer to the first byte and failure
 
-**; to find a non-blank character would be**
+; to find a non-blank character would be
 
-**; indistinguishable.**
+; indistinguishable.
 
-**;**
+;
 
-**; Note: If there is no terminating zero in the first 64K-1**
+; Note: If there is no terminating zero in the first 64K-1
 
-**; bytes of the string, it is assumed without checking**
+; bytes of the string, it is assumed without checking
 
-**; that byte \#64K-1 (the 1 byte in the segment that**
+; that byte \#64K-1 (the 1 byte in the segment that
 
-**; wasn't checked) is the terminating zero.**
+; wasn't checked) is the terminating zero.
 
-**;**
+;
 
-**; Note: Does not handle strings that are longer than 64K**
+; Note: Does not handle strings that are longer than 64K
 
-**; bytes or cross segment boundaries.**
+; bytes or cross segment boundaries.
 
-**;**
+;
 
-**FindLastNonBlankInString:**
+FindLastNonBlankInString:
 
-**push ds**
+push ds
 
-**pop es**
+pop es
 
-**mov di,si ;SCAS uses ES:DI**
+mov di,si ;SCAS uses ES:DI
 
-**sub al,al ;first we'll search for the**
+sub al,al ;first we'll search for the
 
-**; terminating zero**
+; terminating zero
 
-**mov cx,0ffffh ;we'll search the longest possible**
+mov cx,0ffffh ;we'll search the longest possible
 
-**; string**
+; string
 
-**cld**
+cld
 
-**repnz scasb ;find the terminating zero**
+repnz scasb ;find the terminating zero
 
-**dec di ;point back to the zero**
+dec di ;point back to the zero
 
-**cmp [di],al ;make sure this is a zero.**
+cmp [di],al ;make sure this is a zero.
 
-**; (Remember, ES=DS)**
+; (Remember, ES=DS)
 
-**jnz FindLastNonBlankInStringSearchBack**
+jnz FindLastNonBlankInStringSearchBack
 
-**; not a zero. The string must be**
+; not a zero. The string must be
 
-**; exactly 64K bytes long, so we've**
+; exactly 64K bytes long, so we've
 
-**; come up 1 byte short of the zero**
+; come up 1 byte short of the zero
 
-**; that we're assuming is at byte**
+; that we're assuming is at byte
 
-**; 64K-1. That means we're already**
+; 64K-1. That means we're already
 
-**; pointing to the byte before the**
+; pointing to the byte before the
 
-**; zero**
+; zero
 
-**dec di ;point to the byte before the zero**
+dec di ;point to the byte before the zero
 
-**inc cx ;don't count the terminating zero**
+inc cx ;don't count the terminating zero
 
-**; as one of the characters we've**
+; as one of the characters we've
 
-**; searched through (and have to**
+; searched through (and have to
 
-**; search back through)**
+; search back through)
 
-**FindLastNonBlankInStringSearchBack:**
+FindLastNonBlankInStringSearchBack:
 
-**std ;we'll search backward**
+std ;we'll search backward
 
-**not cx ;length of string, not including**
+not cx ;length of string, not including
 
-**; the terminating zero**
+; the terminating zero
 
-**mov ax,2020h ;now we're looking for a space**
+mov ax,2020h ;now we're looking for a space
 
-**shr cx,1 ;divide by 2 to get a word count**
+shr cx,1 ;divide by 2 to get a word count
 
-**jnc FindLastNonBlankInStringWord**
+jnc FindLastNonBlankInStringWord
 
-**scasb ;see if the odd byte is the last**
+scasb ;see if the odd byte is the last
 
-**; non-blank character**
+; non-blank character
 
-**jnz FindLastNonBlankInStringFound**
+jnz FindLastNonBlankInStringFound
 
-**;it is, so we're done**
+;it is, so we're done
 
-**FindLastNonBlankInStringWord:**
+FindLastNonBlankInStringWord:
 
-**jcxz FindLastNonBlankInStringNoMatch**
+jcxz FindLastNonBlankInStringNoMatch
 
-**;if there's nothing left to check,**
+;if there's nothing left to check,
 
-**; there are no non-blank characters**
+; there are no non-blank characters
 
-**dec di ;point back to the start of the**
+dec di ;point back to the start of the
 
-**; next word, not byte**
+; next word, not byte
 
-**repz scasw ;find the first non-blank character**
+repz scasw ;find the first non-blank character
 
-**jz FindLastNonBlankInStringNoMatch**
+jz FindLastNonBlankInStringNoMatch
 
-**;there is no non-blank character in**
+;there is no non-blank character in
 
-**; this string**
+; this string
 
-**inc di ;undo 1 byte of SCASW's overrun, so**
+inc di ;undo 1 byte of SCASW's overrun, so
 
-**; this looks like SCASB's overrun**
+; this looks like SCASB's overrun
 
-**cmp [di+2],al ;which of the 2 bytes we just**
+cmp [di+2],al ;which of the 2 bytes we just
 
-**; checked was the last non-blank**
+; checked was the last non-blank
 
-**; character?**
+; character?
 
-**jz FindLastNonBlankInStringFound**
+jz FindLastNonBlankInStringFound
 
-**inc di ;the byte at the higher address was**
+inc di ;the byte at the higher address was
 
-**; the last non-blank character, so**
+; the last non-blank character, so
 
-**; adjust by 1 byte**
+; adjust by 1 byte
 
-**FindLastNonBlankInStringFound:**
+FindLastNonBlankInStringFound:
 
-**inc di ;point to the non-blank character**
+inc di ;point to the non-blank character
 
-**; we just found, correcting for**
+; we just found, correcting for
 
-**; overrun of SCASB running from high**
+; overrun of SCASB running from high
 
-**; addresses to low**
+; addresses to low
 
-**mov si,di ;return pointer to the last**
+mov si,di ;return pointer to the last
 
-**; non-blank in SI**
+; non-blank in SI
 
-**cld**
+cld
 
-**ret**
+ret
 
-**FindLastNonBlankInStringNoMatch:**
+FindLastNonBlankInStringNoMatch:
 
-**sub si,si ;return that we didn't find a**
+sub si,si ;return that we didn't find a
 
-**; non-blank character**
+; non-blank character
 
-**cld**
+cld
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov si,offset TestString ;string to search**
+mov si,offset TestString ;string to search
 
-**call FindLastNonBlankInString ;search for the**
+call FindLastNonBlankInString ;search for the
 
-**; last non-blank**
+; last non-blank
 
-**; character**
+; character
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 11-17
 
 
-**;**
+;
 
-**; \*\*\* Listing 11-17 \*\*\***
+; *** Listing 11-17 ***
 
-**;**
+;
 
-**; Demonstrates the calculation of the offset of the word**
+; Demonstrates the calculation of the offset of the word
 
-**; matching a keystroke in a look-up table when SCASW is**
+; matching a keystroke in a look-up table when SCASW is
 
-**; used, where the 2-byte overrun of SCASW must be**
+; used, where the 2-byte overrun of SCASW must be
 
-**; compensated for. The offset in the look-up table is used**
+; compensated for. The offset in the look-up table is used
 
-**; to look up the corresponding address in a second table;**
+; to look up the corresponding address in a second table;
 
-**; that address is then jumped to in order to handle the**
+; that address is then jumped to in order to handle the
 
-**; keystroke.**
+; keystroke.
 
-**;**
+;
 
-**; This is a standalone program, not to be used with PZTIME**
+; This is a standalone program, not to be used with PZTIME
 
-**; but rather assembled, linked, and run by itself.**
+; but rather assembled, linked, and run by itself.
 
-**;**
+;
 
-**stack segment para stack 'STACK'**
+stack segment para stack 'STACK'
 
-**db 512 dup (?)**
+db 512 dup (?)
 
-**stack ends**
+stack ends
 
-**;**
+;
 
-**code segment para public 'CODE'**
+code segment para public 'CODE'
 
-**assume cs:code, ds:nothing**
+assume cs:code, ds:nothing
 
-**;**
+;
 
-**; Main loop, which simply calls VectorOnKey until one of the**
+; Main loop, which simply calls VectorOnKey until one of the
 
-**; key handlers ends the program.**
+; key handlers ends the program.
 
-**;**
+;
 
-**start proc near**
+start proc near
 
-**call VectorOnKey**
+call VectorOnKey
 
-**jmp start**
+jmp start
 
-**start endp**
+start endp
 
-**;**
+;
 
-**; Gets the next 16-bit key code from the BIOS, looks it up**
+; Gets the next 16-bit key code from the BIOS, looks it up
 
-**; in KeyLookUpTable, and jumps to the corresponding routine**
+; in KeyLookUpTable, and jumps to the corresponding routine
 
-**; according to KeyJumpTable. When the jumped-to routine**
+; according to KeyJumpTable. When the jumped-to routine
 
-**; returns, is will return to the code that called**
+; returns, is will return to the code that called
 
-**; VectorOnKey. Ignores the key if the key code is not in the**
+; VectorOnKey. Ignores the key if the key code is not in the
 
-**; look-up table.**
+; look-up table.
 
-**;**
+;
 
-**; Input: none**
+; Input: none
 
-**;**
+;
 
-**; Output: none**
+; Output: none
 
-**;**
+;
 
-**; Registers altered: AX, CX, DI, ES**
+; Registers altered: AX, CX, DI, ES
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Table of 16-bit key codes this routine handles.**
+; Table of 16-bit key codes this routine handles.
 
-**;**
+;
 
-**KeyLookUpTable label word**
+KeyLookUpTable label word
 
-**dw 0011bh ;Esc to exit**
+dw 0011bh ;Esc to exit
 
-**dw 01c0dh ;Enter to beep**
+dw 01c0dh ;Enter to beep
 
-**;\*\*\* Additional key codes go here \*\*\***
+;*** Additional key codes go here ***
 
-**KEY\_LOOK\_UP\_TABLE\_LENGTH\_IN\_WORDS equ (($-KeyLookUpTable)/2)**
+KEY_LOOK_UP_TABLE_LENGTH_IN_WORDS equ (($-KeyLookUpTable)/2)
 
-**;**
+;
 
-**; Table of addresses to jump to when corresponding key codes**
+; Table of addresses to jump to when corresponding key codes
 
-**; in KeyLookUpTable are found.**
+; in KeyLookUpTable are found.
 
-**;**
+;
 
-**KeyJumpTable label word**
+KeyJumpTable label word
 
-**dw EscHandler**
+dw EscHandler
 
-**dw EnterHandler**
+dw EnterHandler
 
-**;\*\*\* Additional addresses go here \*\*\***
+;*** Additional addresses go here ***
 
-**;**
+;
 
-**VectorOnKey proc near**
+VectorOnKey proc near
 
-**WaitKeyLoop:**
+WaitKeyLoop:
 
-**mov ah,1 ;BIOS key status function**
+mov ah,1 ;BIOS key status function
 
-**int 16h ;invoke BIOS to see if**
+int 16h ;invoke BIOS to see if
 
-**; a key is pending**
+; a key is pending
 
-**jz WaitKeyLoop ;wait until key comes along**
+jz WaitKeyLoop ;wait until key comes along
 
-**sub ah,ah ;BIOS get key function**
+sub ah,ah ;BIOS get key function
 
-**int 16h ;invoke BIOS to get the key**
+int 16h ;invoke BIOS to get the key
 
-**push cs**
+push cs
 
-**pop es**
+pop es
 
-**mov di,offset KeyLookUpTable**
+mov di,offset KeyLookUpTable
 
-**;point ES:DI to the table of keys**
+;point ES:DI to the table of keys
 
-**; we handle, which is in the same**
+; we handle, which is in the same
 
-**; segment as this code**
+; segment as this code
 
-**mov cx,KEY\_LOOK\_UP\_TABLE\_LENGTH\_IN\_WORDS**
+mov cx,KEY_LOOK_UP_TABLE_LENGTH_IN_WORDS
 
-**;\# of words to scan**
+;\# of words to scan
 
-**cld**
+cld
 
-**repnz scasw ;look up the key**
+repnz scasw ;look up the key
 
-**jnz WaitKeyLoop ;it's not in the table, so**
+jnz WaitKeyLoop ;it's not in the table, so
 
-**; ignore it**
+; ignore it
 
-**jmp cs:[KeyJumpTable+di-2-offset KeyLookUpTable]**
+jmp cs:[KeyJumpTable+di-2-offset KeyLookUpTable]
 
-**;jump to the routine for this key**
+;jump to the routine for this key
 
-**; Note that:**
+; Note that:
 
-**; DI-2-offset KeyLookUpTable**
+; DI-2-offset KeyLookUpTable
 
-**; is the offset in KeyLookUpTable of**
+; is the offset in KeyLookUpTable of
 
-**; the key we found, with the -2**
+; the key we found, with the -2
 
-**; needed to compensate for the**
+; needed to compensate for the
 
-**; 2-byte (1-word) overrun of SCASW**
+; 2-byte (1-word) overrun of SCASW
 
-**VectorOnKey endp**
+VectorOnKey endp
 
-**;**
+;
 
-**; Code to handle Esc (ends the program).**
+; Code to handle Esc (ends the program).
 
-**;**
+;
 
-**EscHandler proc near**
+EscHandler proc near
 
-**mov ah,4ch ;DOS terminate program function**
+mov ah,4ch ;DOS terminate program function
 
-**int 21h ;exit program**
+int 21h ;exit program
 
-**EscHandler endp**
+EscHandler endp
 
-**;**
+;
 
-**; Code to handle Enter (beeps the speaker).**
+; Code to handle Enter (beeps the speaker).
 
-**;**
+;
 
-**EnterHandler proc near**
+EnterHandler proc near
 
-**mov ax,0e07h ;AH=0E is BIOS print character**
+mov ax,0e07h ;AH=0E is BIOS print character
 
-**; function, AL=7 is bell (beep)**
+; function, AL=7 is bell (beep)
 
-**; character**
+; character
 
-**int 10h ;tell BIOS to beep the speaker**
+int 10h ;tell BIOS to beep the speaker
 
-**ret**
+ret
 
-**EnterHandler endp**
+EnterHandler endp
 
-**;**
+;
 
-**code ends**
+code ends
 
-**end start**
+end start
 
 
 
 ## Listing 11-18
 
 
-**;**
+;
 
-**; \*\*\* Listing 11-18 \*\*\***
+; *** Listing 11-18 ***
 
-**;**
+;
 
-**; Demonstrates the calculation of the element number in a**
+; Demonstrates the calculation of the element number in a
 
-**; look-up table of a byte matching the ASCII value of a**
+; look-up table of a byte matching the ASCII value of a
 
-**; keystroke when SCASB is used, where the 1-count**
+; keystroke when SCASB is used, where the 1-count
 
-**; overrun of SCASB must be compensated for. The element**
+; overrun of SCASB must be compensated for. The element
 
-**; number in the look-up table is used to look up the**
+; number in the look-up table is used to look up the
 
-**; corresponding address in a second table; that address is**
+; corresponding address in a second table; that address is
 
-**; then jumped to in order to handle the keystroke.**
+; then jumped to in order to handle the keystroke.
 
-**;**
+;
 
-**; This is a standalone program, not to be used with PZTIME**
+; This is a standalone program, not to be used with PZTIME
 
-**; but rather assembled, linked, and run by itself.**
+; but rather assembled, linked, and run by itself.
 
-**;**
+;
 
-**stack segment para stack 'STACK'**
+stack segment para stack 'STACK'
 
-**db 512 dup (?)**
+db 512 dup (?)
 
-**stack ends**
+stack ends
 
-**;**
+;
 
-**code segment para public 'CODE'**
+code segment para public 'CODE'
 
-**assume cs:code, ds:nothing**
+assume cs:code, ds:nothing
 
-**;**
+;
 
-**; Main loop, which simply calls VectorOnASCIIKey until one**
+; Main loop, which simply calls VectorOnASCIIKey until one
 
-**; of the key handlers ends the program.**
+; of the key handlers ends the program.
 
-**;**
+;
 
-**start proc near**
+start proc near
 
-**call VectorOnASCIIKey**
+call VectorOnASCIIKey
 
-**jmp start**
+jmp start
 
-**start endp**
+start endp
 
-**;**
+;
 
-**; Gets the next 16-bit key code from the BIOS, looks up just**
+; Gets the next 16-bit key code from the BIOS, looks up just
 
-**; the 8-bit ASCII portion in ASCIIKeyLookUpTable, and jumps**
+; the 8-bit ASCII portion in ASCIIKeyLookUpTable, and jumps
 
-**; to the corresponding routine according to**
+; to the corresponding routine according to
 
-**; ASCIIKeyJumpTable. When the jumped-to routine returns, it**
+; ASCIIKeyJumpTable. When the jumped-to routine returns, it
 
-**; will return directly to the code that called**
+; will return directly to the code that called
 
-**; VectorOnASCIIKey. Ignores the key if the key code is not**
+; VectorOnASCIIKey. Ignores the key if the key code is not
 
-**; in the look-up table.**
+; in the look-up table.
 
-**;**
+;
 
-**; Input: none**
+; Input: none
 
-**;**
+;
 
-**; Output: none**
+; Output: none
 
-**;**
+;
 
-**; Registers altered: AX, CX, DI, ES**
+; Registers altered: AX, CX, DI, ES
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Table of 8-bit ASCII codes this routine handles.**
+; Table of 8-bit ASCII codes this routine handles.
 
-**;**
+;
 
-**ASCIIKeyLookUpTable label word**
+ASCIIKeyLookUpTable label word
 
-**db 02h ;Ctrl-B to beep**
+db 02h ;Ctrl-B to beep
 
-**db 18h ;Ctrl-X to exit**
+db 18h ;Ctrl-X to exit
 
-**;\*\*\* Additional ASCII codes go here \*\*\***
+;*** Additional ASCII codes go here ***
 
-**ASCII\_KEY\_LOOK\_UP\_TABLE\_LENGTH equ ($-ASCIIKeyLookUpTable)**
+ASCII_KEY_LOOK_UP_TABLE_LENGTH equ ($-ASCIIKeyLookUpTable)
 
-**;**
+;
 
-**; Table of addresses to jump to when corresponding key codes**
+; Table of addresses to jump to when corresponding key codes
 
-**; in ASCIIKeyLookUpTable are found.**
+; in ASCIIKeyLookUpTable are found.
 
-**;**
+;
 
-**ASCIIKeyJumpTable label word**
+ASCIIKeyJumpTable label word
 
-**dw Beep**
+dw Beep
 
-**dw Exit**
+dw Exit
 
-**;\*\*\* Additional addresses go here \*\*\***
+;*** Additional addresses go here ***
 
-**;**
+;
 
-**VectorOnASCIIKey proc near**
+VectorOnASCIIKey proc near
 
-**WaitASCIIKeyLoop:**
+WaitASCIIKeyLoop:
 
-**mov ah,1 ;BIOS key status function**
+mov ah,1 ;BIOS key status function
 
-**int 16h ;invoke BIOS to see if**
+int 16h ;invoke BIOS to see if
 
-**; a key is pending**
+; a key is pending
 
-**jz WaitASCIIKeyLoop ;wait until key comes along**
+jz WaitASCIIKeyLoop ;wait until key comes along
 
-**sub ah,ah ;BIOS get key function**
+sub ah,ah ;BIOS get key function
 
-**int 16h ;invoke BIOS to get the key**
+int 16h ;invoke BIOS to get the key
 
-**push cs**
+push cs
 
-**pop es**
+pop es
 
-**mov di,offset ASCIIKeyLookUpTable**
+mov di,offset ASCIIKeyLookUpTable
 
-**;point ES:DI to the table of keys**
+;point ES:DI to the table of keys
 
-**; we handle, which is in the same**
+; we handle, which is in the same
 
-**; segment as this code**
+; segment as this code
 
-**mov cx,ASCII\_KEY\_LOOK\_UP\_TABLE\_LENGTH**
+mov cx,ASCII_KEY_LOOK_UP_TABLE_LENGTH
 
-**;\# of bytes to scan**
+;\# of bytes to scan
 
-**cld**
+cld
 
-**repnz scasb ;look up the key**
+repnz scasb ;look up the key
 
-**jnz WaitASCIIKeyLoop ;it's not in the table, so**
+jnz WaitASCIIKeyLoop ;it's not in the table, so
 
-**; ignore it**
+; ignore it
 
-**mov di,ASCII\_KEY\_LOOK\_UP\_TABLE\_LENGTH-1**
+mov di,ASCII_KEY_LOOK_UP_TABLE_LENGTH-1
 
-**sub di,cx ;calculate the \# of the element we**
+sub di,cx ;calculate the \# of the element we
 
-**; found in ASCIIKeyLookUpTable.**
+; found in ASCIIKeyLookUpTable.
 
-**; The -1 is needed to compensate for**
+; The -1 is needed to compensate for
 
-**; the 1-count overrun of SCAS**
+; the 1-count overrun of SCAS
 
-**shl di,1 ;multiply by 2 in order to perform**
+shl di,1 ;multiply by 2 in order to perform
 
-**; the look-up in word-sized**
+; the look-up in word-sized
 
-**; ASCIIKeyJumpTable**
+; ASCIIKeyJumpTable
 
-**jmp cs:[ASCIIKeyJumpTable+di]**
+jmp cs:[ASCIIKeyJumpTable+di]
 
-**;jump to the routine for this key**
+;jump to the routine for this key
 
-**VectorOnASCIIKey endp**
+VectorOnASCIIKey endp
 
-**;**
+;
 
-**; Code to handle Ctrl-X (ends the program).**
+; Code to handle Ctrl-X (ends the program).
 
-**;**
+;
 
-**Exit proc near**
+Exit proc near
 
-**mov ah,4ch ;DOS terminate program function**
+mov ah,4ch ;DOS terminate program function
 
-**int 21h ;exit program**
+int 21h ;exit program
 
-**Exit endp**
+Exit endp
 
-**;**
+;
 
-**; Code to handle Ctrl-B (beeps the speaker).**
+; Code to handle Ctrl-B (beeps the speaker).
 
-**;**
+;
 
-**Beep proc near**
+Beep proc near
 
-**mov ax,0e07h ;AH=0E is BIOS print character**
+mov ax,0e07h ;AH=0E is BIOS print character
 
-**; function, AL=7 is bell (beep)**
+; function, AL=7 is bell (beep)
 
-**; character**
+; character
 
-**int 10h ;tell BIOS to beep the speaker**
+int 10h ;tell BIOS to beep the speaker
 
-**ret**
+ret
 
-**Beep endp**
+Beep endp
 
-**;**
+;
 
-**code ends**
+code ends
 
-**end start**
+end start
 
 
 
 ## Listing 11-19
 
 
-**;**
+;
 
-**; \*\*\* Listing 11-19 \*\*\***
+; *** Listing 11-19 ***
 
-**;**
+;
 
-**; Tests whether several characters are in the set**
+; Tests whether several characters are in the set
 
-**; {A,Z,3,!} by using REPNZ SCASB.**
+; {A,Z,3,!} by using REPNZ SCASB.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**; List of characters in the set.**
+; List of characters in the set.
 
-**;**
+;
 
-**TestSet db "AZ3!"**
+TestSet db "AZ3!"
 
-**TEST\_SET\_LENGTH equ ($-TestSet)**
+TEST_SET_LENGTH equ ($-TestSet)
 
-**;**
+;
 
-**; Determines whether a given character is in TestSet.**
+; Determines whether a given character is in TestSet.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; AL = character to check for inclusion in TestSet**
+; AL = character to check for inclusion in TestSet
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; Z if character is in TestSet, NZ otherwise**
+; Z if character is in TestSet, NZ otherwise
 
-**;**
+;
 
-**; Registers altered: DI, ES**
+; Registers altered: DI, ES
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**CheckTestSetInclusion:**
+CheckTestSetInclusion:
 
-**push ds**
+push ds
 
-**pop es**
+pop es
 
-**mov di,offset TestSet**
+mov di,offset TestSet
 
-**;point ES:DI to the set in which to**
+;point ES:DI to the set in which to
 
-**; check inclusion**
+; check inclusion
 
-**mov cx,TEST\_SET\_LENGTH**
+mov cx,TEST_SET_LENGTH
 
-**;\# of characters in TestSet**
+;\# of characters in TestSet
 
-**cld**
+cld
 
-**repnz scasb ;search the set for this character**
+repnz scasb ;search the set for this character
 
-**ret ;the success status is already in**
+ret ;the success status is already in
 
-**; the Zero flag**
+; the Zero flag
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov al,'A'**
+mov al,'A'
 
-**call CheckTestSetInclusion ;check 'A'**
+call CheckTestSetInclusion ;check 'A'
 
-**mov al,'Z'**
+mov al,'Z'
 
-**call CheckTestSetInclusion ;check 'Z'**
+call CheckTestSetInclusion ;check 'Z'
 
-**mov al,'3'**
+mov al,'3'
 
-**call CheckTestSetInclusion ;check '3'**
+call CheckTestSetInclusion ;check '3'
 
-**mov al,'!'**
+mov al,'!'
 
-**call CheckTestSetInclusion ;check '!'**
+call CheckTestSetInclusion ;check '!'
 
-**mov al,' '**
+mov al,' '
 
-**call CheckTestSetInclusion ;check space, so**
+call CheckTestSetInclusion ;check space, so
 
-**; we get a failed**
+; we get a failed
 
-**; search**
+; search
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 11-20
 
 
-**;**
+;
 
-**; \*\*\* Listing 11-20 \*\*\***
+; *** Listing 11-20 ***
 
-**;**
+;
 
-**; Tests whether several characters are in the set**
+; Tests whether several characters are in the set
 
-**; {A,Z,3,!} by using the compare-and-jump approach.**
+; {A,Z,3,!} by using the compare-and-jump approach.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**; Determines whether a given character is in the set**
+; Determines whether a given character is in the set
 
-**; {A,Z,3,!}.**
+; {A,Z,3,!}.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; AL = character to check for inclusion in the set**
+; AL = character to check for inclusion in the set
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; Z if character is in TestSet, NZ otherwise**
+; Z if character is in TestSet, NZ otherwise
 
-**;**
+;
 
-**; Registers altered: none**
+; Registers altered: none
 
-**;**
+;
 
-**CheckTestSetInclusion:**
+CheckTestSetInclusion:
 
-**cmp al,'A' ;is it 'A'?**
+cmp al,'A' ;is it 'A'?
 
-**jz CheckTestSetInclusionDone ;yes, we're done**
+jz CheckTestSetInclusionDone ;yes, we're done
 
-**cmp al,'Z' ;is it 'Z'?**
+cmp al,'Z' ;is it 'Z'?
 
-**jz CheckTestSetInclusionDone ;yes, we're done**
+jz CheckTestSetInclusionDone ;yes, we're done
 
-**cmp al,'3' ;is it '3'?**
+cmp al,'3' ;is it '3'?
 
-**jz CheckTestSetInclusionDone ;yes, we're done**
+jz CheckTestSetInclusionDone ;yes, we're done
 
-**cmp al,'!' ;is it '!'?**
+cmp al,'!' ;is it '!'?
 
-**CheckTestSetInclusionDone:**
+CheckTestSetInclusionDone:
 
-**ret ;the success status is already in**
+ret ;the success status is already in
 
-**; the Zero flag**
+; the Zero flag
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov al,'A'**
+mov al,'A'
 
-**call CheckTestSetInclusion ;check 'A'**
+call CheckTestSetInclusion ;check 'A'
 
-**mov al,'Z'**
+mov al,'Z'
 
-**call CheckTestSetInclusion ;check 'Z'**
+call CheckTestSetInclusion ;check 'Z'
 
-**mov al,'3'**
+mov al,'3'
 
-**call CheckTestSetInclusion ;check '3'**
+call CheckTestSetInclusion ;check '3'
 
-**mov al,'!'**
+mov al,'!'
 
-**call CheckTestSetInclusion ;check '!'**
+call CheckTestSetInclusion ;check '!'
 
-**mov al,' '**
+mov al,' '
 
-**call CheckTestSetInclusion ;check space, so**
+call CheckTestSetInclusion ;check space, so
 
-**; we get a failed**
+; we get a failed
 
-**; search**
+; search
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 11-21
 
 
-**;**
+;
 
-**; \*\*\* Listing 11-21 \*\*\***
+; *** Listing 11-21 ***
 
-**;**
+;
 
-**; Compares two word-sized arrays of equal length to see**
+; Compares two word-sized arrays of equal length to see
 
-**; whether they differ, and if so where, using REPZ CMPSW.**
+; whether they differ, and if so where, using REPZ CMPSW.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**WordArray1 dw 100 dup (1), 0, 99 dup (2)**
+WordArray1 dw 100 dup (1), 0, 99 dup (2)
 
-**ARRAY\_LENGTH\_IN\_WORDS equ (($-WordArray1)/2)**
+ARRAY_LENGTH_IN_WORDS equ (($-WordArray1)/2)
 
-**WordArray2 dw 100 dup (1), 100 dup (2)**
+WordArray2 dw 100 dup (1), 100 dup (2)
 
-**;**
+;
 
-**; Returns pointers to the first locations at which two**
+; Returns pointers to the first locations at which two
 
-**; word-sized arrays of equal length differ, or zero if**
+; word-sized arrays of equal length differ, or zero if
 
-**; they're identical.**
+; they're identical.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; CX = length of the arrays (they must be of equal**
+; CX = length of the arrays (they must be of equal
 
-**; length)**
+; length)
 
-**; DS:SI = the first array to compare**
+; DS:SI = the first array to compare
 
-**; ES:DI = the second array to compare**
+; ES:DI = the second array to compare
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; DS:SI = pointer to the first differing location in**
+; DS:SI = pointer to the first differing location in
 
-**; the first array if there is a difference,**
+; the first array if there is a difference,
 
-**; or SI=0 if the arrays are identical**
+; or SI=0 if the arrays are identical
 
-**; ES:DI = pointer to the first differing location in**
+; ES:DI = pointer to the first differing location in
 
-**; the second array if there is a difference,**
+; the second array if there is a difference,
 
-**; or DI=0 if the arrays are identical**
+; or DI=0 if the arrays are identical
 
-**;**
+;
 
-**; Registers altered: SI, DI**
+; Registers altered: SI, DI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Does not handle arrays that are longer than 32K**
+; Note: Does not handle arrays that are longer than 32K
 
-**; words or cross segment boundaries.**
+; words or cross segment boundaries.
 
-**;**
+;
 
-**FindFirstDifference:**
+FindFirstDifference:
 
-**cld**
+cld
 
-**jcxz FindFirstDifferenceSame**
+jcxz FindFirstDifferenceSame
 
-**;if there's nothing to**
+;if there's nothing to
 
-**; check, we'll consider the**
+; check, we'll consider the
 
-**; arrays to be the same.**
+; arrays to be the same.
 
-**; (If we let REPZ CMPSW**
+; (If we let REPZ CMPSW
 
-**; execute with CX=0, we**
+; execute with CX=0, we
 
-**; may get a false match**
+; may get a false match
 
-**; because CMPSW repeated**
+; because CMPSW repeated
 
-**; zero times doesn't alter**
+; zero times doesn't alter
 
-**; the flags)**
+; the flags)
 
-**repz cmpsw ;compare the arrays**
+repz cmpsw ;compare the arrays
 
-**jz FindFirstDifferenceSame ;they're identical**
+jz FindFirstDifferenceSame ;they're identical
 
-**dec si ;the arrays differ, so**
+dec si ;the arrays differ, so
 
-**dec si ; point back to first**
+dec si ; point back to first
 
-**dec di ; difference in both arrays**
+dec di ; difference in both arrays
 
-**dec di**
+dec di
 
-**ret**
+ret
 
-**FindFirstDifferenceSame:**
+FindFirstDifferenceSame:
 
-**sub si,si ;indicate that the strings**
+sub si,si ;indicate that the strings
 
-**mov di,si ; are identical**
+mov di,si ; are identical
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov si,offset WordArray1 ;point to the two**
+mov si,offset WordArray1 ;point to the two
 
-**mov di,ds ; arrays to be**
+mov di,ds ; arrays to be
 
-**mov es,di ; compared**
+mov es,di ; compared
 
-**mov di,offset WordArray2**
+mov di,offset WordArray2
 
-**mov cx,ARRAY\_LENGTH\_IN\_WORDS**
+mov cx,ARRAY_LENGTH_IN_WORDS
 
-**;\# of words to check**
+;\# of words to check
 
-**call FindFirstDifference ;see if they differ**
+call FindFirstDifference ;see if they differ
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 11-22
 
 
-**;**
+;
 
 
-**;**
+;
 
-**; \*\*\* Listing 11-22 \*\*\***
+; *** Listing 11-22 ***
 
-**;**
+;
 
-**; Compares two word-sized arrays of equal length to see**
+; Compares two word-sized arrays of equal length to see
 
-**; whether they differ, and if so where, using LODSW and**
+; whether they differ, and if so where, using LODSW and
 
-**; SCASW.**
+; SCASW.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**WordArray1 dw 100 dup (1), 0, 99 dup (2)**
+WordArray1 dw 100 dup (1), 0, 99 dup (2)
 
-**ARRAY\_LENGTH\_IN\_WORDS equ (($-WordArray1)/2)**
+ARRAY_LENGTH_IN_WORDS equ (($-WordArray1)/2)
 
-**WordArray2 dw 100 dup (1), 100 dup (2)**
+WordArray2 dw 100 dup (1), 100 dup (2)
 
-**;**
+;
 
-**; Returns pointers to the first locations at which two**
+; Returns pointers to the first locations at which two
 
-**; word-sized arrays of equal length differ, or zero if**
+; word-sized arrays of equal length differ, or zero if
 
-**; they're identical.**
+; they're identical.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; CX = length of the arrays (they must be of equal**
+; CX = length of the arrays (they must be of equal
 
-**; length)**
+; length)
 
-**; DS:SI = the first array to compare**
+; DS:SI = the first array to compare
 
-**; ES:DI = the second array to compare**
+; ES:DI = the second array to compare
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; DS:SI = pointer to the first differing location in**
+; DS:SI = pointer to the first differing location in
 
-**; the first array if there is a difference,**
+; the first array if there is a difference,
 
-**; or SI=0 if the arrays are identical**
+; or SI=0 if the arrays are identical
 
-**; ES:DI = pointer to the first differing location in**
+; ES:DI = pointer to the first differing location in
 
-**; the second array if there is a difference,**
+; the second array if there is a difference,
 
-**; or DI=0 if the arrays are identical**
+; or DI=0 if the arrays are identical
 
-**;**
+;
 
-**; Registers altered: AX, SI, DI**
+; Registers altered: AX, SI, DI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Does not handle arrays that are longer than 32K**
+; Note: Does not handle arrays that are longer than 32K
 
-**; words or cross segment boundaries.**
+; words or cross segment boundaries.
 
-**;**
+;
 
-**FindFirstDifference:**
+FindFirstDifference:
 
-**cld**
+cld
 
-**jcxz FindFirstDifferenceSame**
+jcxz FindFirstDifferenceSame
 
-**;if there's nothing to**
+;if there's nothing to
 
-**; check, we'll consider the**
+; check, we'll consider the
 
-**; arrays to be the same.**
+; arrays to be the same.
 
-**; (If we let LOOP**
+; (If we let LOOP
 
-**; execute with CX=0, we'll**
+; execute with CX=0, we'll
 
-**; get 64 K repetitions)**
+; get 64 K repetitions)
 
-**FindFirstDifferenceLoop:**
+FindFirstDifferenceLoop:
 
-**lodsw**
+lodsw
 
-**scasw ;compare the next two words**
+scasw ;compare the next two words
 
-**jnz FindFirstDifferenceFound**
+jnz FindFirstDifferenceFound
 
-**;the arrays differ**
+;the arrays differ
 
-**loop FindFirstDifferenceLoop**
+loop FindFirstDifferenceLoop
 
-**;the arrays are the**
+;the arrays are the
 
-**; same so far**
+; same so far
 
-**FindFirstDifferenceSame:**
+FindFirstDifferenceSame:
 
-**sub si,si ;indicate that the strings**
+sub si,si ;indicate that the strings
 
-**mov di,si ; are identical**
+mov di,si ; are identical
 
-**ret**
+ret
 
-**FindFirstDifferenceFound:**
+FindFirstDifferenceFound:
 
-**dec si ;the arrays differ, so**
+dec si ;the arrays differ, so
 
-**dec si ; point back to first**
+dec si ; point back to first
 
-**dec di ; difference in both arrays**
+dec di ; difference in both arrays
 
-**dec di**
+dec di
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov si,offset WordArray1 ;point to the two**
+mov si,offset WordArray1 ;point to the two
 
-**mov di,ds ; arrays to be**
+mov di,ds ; arrays to be
 
-**mov es,di ; compared**
+mov es,di ; compared
 
-**mov di,offset WordArray2**
+mov di,offset WordArray2
 
-**mov cx,ARRAY\_LENGTH\_IN\_WORDS**
+mov cx,ARRAY_LENGTH_IN_WORDS
 
-**;\# of words to check**
+;\# of words to check
 
-**call FindFirstDifference ;see if they differ**
+call FindFirstDifference ;see if they differ
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 11-23
 
 
-**;**
+;
 
-**; \*\*\* Listing 11-23 \*\*\***
+; *** Listing 11-23 ***
 
-**;**
+;
 
-**; Compares two word-sized arrays of equal length to see**
+; Compares two word-sized arrays of equal length to see
 
-**; whether they differ, and if so, where, using non-string**
+; whether they differ, and if so, where, using non-string
 
-**; instructions.**
+; instructions.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**WordArray1 dw 100 dup (1), 0, 99 dup (2)**
+WordArray1 dw 100 dup (1), 0, 99 dup (2)
 
-**ARRAY\_LENGTH\_IN\_WORDS equ (($-WordArray1)/2)**
+ARRAY_LENGTH_IN_WORDS equ (($-WordArray1)/2)
 
-**WordArray2 dw 100 dup (1), 100 dup (2)**
+WordArray2 dw 100 dup (1), 100 dup (2)
 
-**;**
+;
 
-**; Returns pointers to the first locations at which two**
+; Returns pointers to the first locations at which two
 
-**; word-sized arrays of equal length differ, or zero if**
+; word-sized arrays of equal length differ, or zero if
 
-**; they're identical.**
+; they're identical.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; CX = length of the arrays (they must be of equal**
+; CX = length of the arrays (they must be of equal
 
-**; length)**
+; length)
 
-**; DS:SI = the first array to compare**
+; DS:SI = the first array to compare
 
-**; ES:DI = the second array to compare**
+; ES:DI = the second array to compare
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; DS:SI = pointer to the first differing location in**
+; DS:SI = pointer to the first differing location in
 
-**; the first array if there is a difference,**
+; the first array if there is a difference,
 
-**; or SI=0 if the arrays are identical**
+; or SI=0 if the arrays are identical
 
-**; ES:DI = pointer to the first differing location in**
+; ES:DI = pointer to the first differing location in
 
-**; the second array if there is a difference,**
+; the second array if there is a difference,
 
-**; or DI=0 if the arrays are identical**
+; or DI=0 if the arrays are identical
 
-**;**
+;
 
-**; Registers altered: AX, SI, DI**
+; Registers altered: AX, SI, DI
 
-**;**
+;
 
-**; Note: Does not handle arrays that are longer than 32K**
+; Note: Does not handle arrays that are longer than 32K
 
-**; words or cross segment boundaries.**
+; words or cross segment boundaries.
 
-**;**
+;
 
-**FindFirstDifference:**
+FindFirstDifference:
 
-**jcxz FindFirstDifferenceSame**
+jcxz FindFirstDifferenceSame
 
-**;if there's nothing to**
+;if there's nothing to
 
-**; check, we'll consider the**
+; check, we'll consider the
 
-**; arrays to be the same**
+; arrays to be the same
 
-**FindFirstDifferenceLoop:**
+FindFirstDifferenceLoop:
 
-**mov ax,[si]**
+mov ax,[si]
 
-**cmp es:[di],ax ;compare the next two words**
+cmp es:[di],ax ;compare the next two words
 
-**jnz FindFirstDifferenceFound ;the arrays differ**
+jnz FindFirstDifferenceFound ;the arrays differ
 
-**inc si**
+inc si
 
-**inc si ;point to the next words to**
+inc si ;point to the next words to
 
-**inc di ; compare**
+inc di ; compare
 
-**inc di**
+inc di
 
-**loop FindFirstDifferenceLoop ;the arrays are the**
+loop FindFirstDifferenceLoop ;the arrays are the
 
-**; same so far**
+; same so far
 
-**FindFirstDifferenceSame:**
+FindFirstDifferenceSame:
 
-**sub si,si ;indicate that the strings**
+sub si,si ;indicate that the strings
 
-**mov di,si ; are identical**
+mov di,si ; are identical
 
-**FindFirstDifferenceFound:**
+FindFirstDifferenceFound:
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov si,offset WordArray1 ;point to the two**
+mov si,offset WordArray1 ;point to the two
 
-**mov di,ds ; arrays to be**
+mov di,ds ; arrays to be
 
-**mov es,di ; compared**
+mov es,di ; compared
 
-**mov di,offset WordArray2**
+mov di,offset WordArray2
 
-**mov cx,ARRAY\_LENGTH\_IN\_WORDS**
+mov cx,ARRAY_LENGTH_IN_WORDS
 
-**;\# of words to check**
+;\# of words to check
 
-**call FindFirstDifference ;see if they differ**
+call FindFirstDifference ;see if they differ
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 11-24
 
 
-**;**
+;
 
-**; \*\*\* Listing 11-24 \*\*\***
+; *** Listing 11-24 ***
 
-**;**
+;
 
-**; Determines whether two zero-terminated strings differ, and**
+; Determines whether two zero-terminated strings differ, and
 
-**; if so where, using REP SCASB to find the terminating zero**
+; if so where, using REP SCASB to find the terminating zero
 
-**; to determine one string length, and then using REPZ CMPSW**
+; to determine one string length, and then using REPZ CMPSW
 
-**; to compare the strings.**
+; to compare the strings.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**TestString1 label byte**
+TestString1 label byte
 
-**db 'This is a test string that is '**
+db 'This is a test string that is '
 
-**db 'z'**
+db 'z'
 
-**db 'terminated with a zero byte...',0**
+db 'terminated with a zero byte...',0
 
-**TestString2 label byte**
+TestString2 label byte
 
-**db 'This is a test string that is '**
+db 'This is a test string that is '
 
-**db 'a'**
+db 'a'
 
-**db 'terminated with a zero byte...',0**
+db 'terminated with a zero byte...',0
 
-**;**
+;
 
-**; Compares two zero-terminated strings.**
+; Compares two zero-terminated strings.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; DS:SI = first zero-terminated string**
+; DS:SI = first zero-terminated string
 
-**; ES:DI = second zero-terminated string**
+; ES:DI = second zero-terminated string
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; DS:SI = pointer to first differing location in**
+; DS:SI = pointer to first differing location in
 
-**; first string, or 0 if the byte wasn't found**
+; first string, or 0 if the byte wasn't found
 
-**; ES:DI = pointer to first differing location in**
+; ES:DI = pointer to first differing location in
 
-**; second string, or 0 if the byte wasn't found**
+; second string, or 0 if the byte wasn't found
 
-**;**
+;
 
-**; Registers altered: AL, CX, DX, SI, DI**
+; Registers altered: AL, CX, DX, SI, DI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Does not handle strings that are longer than 64K**
+; Note: Does not handle strings that are longer than 64K
 
-**; bytes or cross segment boundaries.**
+; bytes or cross segment boundaries.
 
-**;**
+;
 
-**; Note: If there is no terminating zero in the first 64K-1**
+; Note: If there is no terminating zero in the first 64K-1
 
-**; bytes of a string, the string is treated as if byte**
+; bytes of a string, the string is treated as if byte
 
-**; 64K is a zero without checking, since if it isn't**
+; 64K is a zero without checking, since if it isn't
 
-**; the string isn't zero-terminated at all.**
+; the string isn't zero-terminated at all.
 
-**;**
+;
 
-**CompareStrings:**
+CompareStrings:
 
-**mov dx,di ;set aside the start of the second**
+mov dx,di ;set aside the start of the second
 
-**; string**
+; string
 
-**sub al,al ;we'll search for zero in the second**
+sub al,al ;we'll search for zero in the second
 
-**; string to see how long it is**
+; string to see how long it is
 
-**mov cx,0ffffh ;long enough to handle any string**
+mov cx,0ffffh ;long enough to handle any string
 
-**; up to 64K-1 bytes in length. Any**
+; up to 64K-1 bytes in length. Any
 
-**; longer string will be treated as**
+; longer string will be treated as
 
-**; if byte 64K is zero**
+; if byte 64K is zero
 
-**cld**
+cld
 
-**repnz scasb ;find the terminating zero**
+repnz scasb ;find the terminating zero
 
-**not cx ;length of string in bytes, including**
+not cx ;length of string in bytes, including
 
-**; the terminating zero except in the**
+; the terminating zero except in the
 
-**; case of a string that's exactly 64K**
+; case of a string that's exactly 64K
 
-**; long including the terminating zero**
+; long including the terminating zero
 
-**mov di,dx ;get back the start of the second**
+mov di,dx ;get back the start of the second
 
-**; string**
+; string
 
-**shr cx,1 ;get count in words**
+shr cx,1 ;get count in words
 
-**jnc CompareStringsWord**
+jnc CompareStringsWord
 
-**;if there's no odd byte, go directly**
+;if there's no odd byte, go directly
 
-**; to comparing a word at a time**
+; to comparing a word at a time
 
-**cmpsb ;compare the odd bytes of the**
+cmpsb ;compare the odd bytes of the
 
-**; strings**
+; strings
 
-**jnz CompareStringsDifferentByte**
+jnz CompareStringsDifferentByte
 
-**;we've already found a difference**
+;we've already found a difference
 
-**CompareStringsWord:**
+CompareStringsWord:
 
-**;there's no need to guard against**
+;there's no need to guard against
 
-**; CX=0 here, since we know that if**
+; CX=0 here, since we know that if
 
-**; CX=0 here, the preceding CMPSB**
+; CX=0 here, the preceding CMPSB
 
-**; must have successfully compared**
+; must have successfully compared
 
-**; the terminating zero bytes of the**
+; the terminating zero bytes of the
 
-**; strings (which are the only bytes**
+; strings (which are the only bytes
 
-**; of the strings), and the Zero flag**
+; of the strings), and the Zero flag
 
-**; setting of 1 from CMPSB will be**
+; setting of 1 from CMPSB will be
 
-**; preserved by REPZ CMPSW if CX=0,**
+; preserved by REPZ CMPSW if CX=0,
 
-**; resulting in the correct**
+; resulting in the correct
 
-**; conclusion that the strings are**
+; conclusion that the strings are
 
-**; identical**
+; identical
 
-**repz cmpsw ;compare the rest of the strings a**
+repz cmpsw ;compare the rest of the strings a
 
-**; word at a time for speed**
+; word at a time for speed
 
-**jnz CompareStringsDifferent ;they're not the same**
+jnz CompareStringsDifferent ;they're not the same
 
-**sub si,si ;return 0 pointers indicating that**
+sub si,si ;return 0 pointers indicating that
 
-**mov di,si ; the strings are identical**
+mov di,si ; the strings are identical
 
-**ret**
+ret
 
-**CompareStringsDifferent:**
+CompareStringsDifferent:
 
-**;the strings are different, so we**
+;the strings are different, so we
 
-**; have to figure which byte in the**
+; have to figure which byte in the
 
-**; word just compared was the first**
+; word just compared was the first
 
-**; difference**
+; difference
 
-**dec si ;point back to the second byte of**
+dec si ;point back to the second byte of
 
-**dec di ; the differing word in each string**
+dec di ; the differing word in each string
 
-**dec si ;point back to the differing byte in**
+dec si ;point back to the differing byte in
 
-**dec di ; each string**
+dec di ; each string
 
-**lodsb**
+lodsb
 
-**scasb ;compare that first byte again**
+scasb ;compare that first byte again
 
-**jz CompareStringsDone**
+jz CompareStringsDone
 
-**;if the first bytes are the same,**
+;if the first bytes are the same,
 
-**; then it must have been the second**
+; then it must have been the second
 
-**; bytes that differed. That's where**
+; bytes that differed. That's where
 
-**; we're pointing, so we're done**
+; we're pointing, so we're done
 
-**CompareStringsDifferentByte:**
+CompareStringsDifferentByte:
 
-**dec si ;the first bytes differed, so point**
+dec si ;the first bytes differed, so point
 
-**dec di ; back to them**
+dec di ; back to them
 
-**CompareStringsDone:**
+CompareStringsDone:
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov si,offset TestString1 ;point to one string**
+mov si,offset TestString1 ;point to one string
 
-**mov di,seg TestString2**
+mov di,seg TestString2
 
-**mov es,di**
+mov es,di
 
-**mov di,offset TestString2 ;point to other string**
+mov di,offset TestString2 ;point to other string
 
-**call CompareStrings ;and compare the strings**
+call CompareStrings ;and compare the strings
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 11-25
 
 
-**;**
+;
 
-**; \*\*\* Listing 11-25 \*\*\***
+; *** Listing 11-25 ***
 
-**;**
+;
 
-**; Determines whether two zero-terminated strings differ, and**
+; Determines whether two zero-terminated strings differ, and
 
-**; if so where, using LODS/SCAS.**
+; if so where, using LODS/SCAS.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**TestString1 label byte**
+TestString1 label byte
 
-**db 'This is a test string that is '**
+db 'This is a test string that is '
 
-**db 'z'**
+db 'z'
 
-**db 'terminated with a zero byte...',0**
+db 'terminated with a zero byte...',0
 
-**TestString2 label byte**
+TestString2 label byte
 
-**db 'This is a test string that is '**
+db 'This is a test string that is '
 
-**db 'a'**
+db 'a'
 
-**db 'terminated with a zero byte...',0**
+db 'terminated with a zero byte...',0
 
-**;**
+;
 
-**; Compares two zero-terminated strings.**
+; Compares two zero-terminated strings.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; DS:SI = first zero-terminated string**
+; DS:SI = first zero-terminated string
 
-**; ES:DI = second zero-terminated string**
+; ES:DI = second zero-terminated string
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; DS:SI = pointer to first differing location in**
+; DS:SI = pointer to first differing location in
 
-**; first string, or 0 if the byte wasn't found**
+; first string, or 0 if the byte wasn't found
 
-**; ES:DI = pointer to first differing location in**
+; ES:DI = pointer to first differing location in
 
-**; second string, or 0 if the byte wasn't found**
+; second string, or 0 if the byte wasn't found
 
-**;**
+;
 
-**; Registers altered: AX, SI, DI**
+; Registers altered: AX, SI, DI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Does not handle strings that are longer than 64K**
+; Note: Does not handle strings that are longer than 64K
 
-**; bytes or cross segment boundaries.**
+; bytes or cross segment boundaries.
 
-**;**
+;
 
-**CompareStrings:**
+CompareStrings:
 
-**cld**
+cld
 
-**CompareStringsLoop:**
+CompareStringsLoop:
 
-**lodsw ;get the next 2 bytes**
+lodsw ;get the next 2 bytes
 
-**and al,al ;is the first byte the terminating**
+and al,al ;is the first byte the terminating
 
-**; zero?**
+; zero?
 
-**jz CompareStringsFinalByte**
+jz CompareStringsFinalByte
 
-**;yes, so there's only one byte left**
+;yes, so there's only one byte left
 
-**; to check**
+; to check
 
-**scasw ;compare this word**
+scasw ;compare this word
 
-**jnz CompareStringsDifferent ;the strings differ**
+jnz CompareStringsDifferent ;the strings differ
 
-**and ah,ah ;is the second byte the terminating**
+and ah,ah ;is the second byte the terminating
 
-**; zero?**
+; zero?
 
-**jnz CompareStringsLoop ;no, continue comparing**
+jnz CompareStringsLoop ;no, continue comparing
 
-**;the strings are the same**
+;the strings are the same
 
-**CompareStringsSame:**
+CompareStringsSame:
 
-**sub si,si ;return 0 pointers indicating that**
+sub si,si ;return 0 pointers indicating that
 
-**mov di,si ; the strings are identical**
+mov di,si ; the strings are identical
 
-**ret**
+ret
 
-**CompareStringsFinalByte:**
+CompareStringsFinalByte:
 
-**scasb ;does the terminating zero match in**
+scasb ;does the terminating zero match in
 
-**; the 2 strings?**
+; the 2 strings?
 
-**jz CompareStringsSame ;yes, the strings match**
+jz CompareStringsSame ;yes, the strings match
 
-**dec si ;point back to the differing byte**
+dec si ;point back to the differing byte
 
-**dec di ; in each string**
+dec di ; in each string
 
-**ret**
+ret
 
-**CompareStringsDifferent:**
+CompareStringsDifferent:
 
-**;the strings are different, so we**
+;the strings are different, so we
 
-**; have to figure which byte in the**
+; have to figure which byte in the
 
-**; word just compared was the first**
+; word just compared was the first
 
-**; difference**
+; difference
 
-**dec si**
+dec si
 
-**dec si ;point back to the first byte of the**
+dec si ;point back to the first byte of the
 
-**dec di ; differing word in each string**
+dec di ; differing word in each string
 
-**dec di**
+dec di
 
-**lodsb**
+lodsb
 
-**scasb ;compare that first byte again**
+scasb ;compare that first byte again
 
-**jz CompareStringsDone**
+jz CompareStringsDone
 
-**;if the first bytes are the same,**
+;if the first bytes are the same,
 
-**; then it must have been the second**
+; then it must have been the second
 
-**; bytes that differed. That's where**
+; bytes that differed. That's where
 
-**; we're pointing, so we're done**
+; we're pointing, so we're done
 
-**dec si ;the first bytes differed, so point**
+dec si ;the first bytes differed, so point
 
-**dec di ; back to them**
+dec di ; back to them
 
-**CompareStringsDone:**
+CompareStringsDone:
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov si,offset TestString1 ;point to one string**
+mov si,offset TestString1 ;point to one string
 
-**mov di,seg TestString2**
+mov di,seg TestString2
 
-**mov es,di**
+mov es,di
 
-**mov di,offset TestString2 ;point to other string**
+mov di,offset TestString2 ;point to other string
 
-**call CompareStrings ;and compare the strings**
+call CompareStrings ;and compare the strings
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 11-26
 
 
-**;**
+;
 
-**; \*\*\* Listing 11-26 \*\*\***
+; *** Listing 11-26 ***
 
-**;**
+;
 
-**; Determines whether two zero-terminated strings differ**
+; Determines whether two zero-terminated strings differ
 
-**; ignoring case-only differences, and if so where, using**
+; ignoring case-only differences, and if so where, using
 
-**; LODS.**
+; LODS.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**TestString1 label byte**
+TestString1 label byte
 
-**db 'THIS IS A TEST STRING THAT IS '**
+db 'THIS IS A TEST STRING THAT IS '
 
-**db 'Z'**
+db 'Z'
 
-**db 'TERMINATED WITH A ZERO BYTE...',0**
+db 'TERMINATED WITH A ZERO BYTE...',0
 
-**TestString2 label byte**
+TestString2 label byte
 
-**db 'This is a test string that is '**
+db 'This is a test string that is '
 
-**db 'a'**
+db 'a'
 
-**db 'terminated with a zero byte...',0**
+db 'terminated with a zero byte...',0
 
-**;**
+;
 
-**; Macro to convert the specified register to uppercase if**
+; Macro to convert the specified register to uppercase if
 
-**; it is lowercase.**
+; it is lowercase.
 
-**;**
+;
 
-**TO\_UPPER macro REGISTER**
+TO_UPPER macro REGISTER
 
-**local NotLower**
+local NotLower
 
-**cmp REGISTER,ch ;below 'a'?**
+cmp REGISTER,ch ;below 'a'?
 
-**jb NotLower ;yes, not lowercase**
+jb NotLower ;yes, not lowercase
 
-**cmp REGISTER,cl ;above 'z'?**
+cmp REGISTER,cl ;above 'z'?
 
-**ja NotLower ;yes, not lowercase**
+ja NotLower ;yes, not lowercase
 
-**and REGISTER,bl ;lowercase-convert to uppercase**
+and REGISTER,bl ;lowercase-convert to uppercase
 
-**NotLower:**
+NotLower:
 
-**endm**
+endm
 
-**;**
+;
 
-**; Compares two zero-terminated strings, ignoring differences**
+; Compares two zero-terminated strings, ignoring differences
 
-**; that are only uppercase/lowercase differences.**
+; that are only uppercase/lowercase differences.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; DS:SI = first zero-terminated string**
+; DS:SI = first zero-terminated string
 
-**; ES:DI = second zero-terminated string**
+; ES:DI = second zero-terminated string
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; DS:SI = pointer to first case-insensitive differing**
+; DS:SI = pointer to first case-insensitive differing
 
-**; location in first string, or 0 if the byte**
+; location in first string, or 0 if the byte
 
-**; wasn't found**
+; wasn't found
 
-**; ES:DI = pointer to first case-insensitive differing**
+; ES:DI = pointer to first case-insensitive differing
 
-**; location in second string, or 0 if the byte**
+; location in second string, or 0 if the byte
 
-**; wasn't found**
+; wasn't found
 
-**;**
+;
 
-**; Registers altered: AX, BL, CX, DX, SI, DI**
+; Registers altered: AX, BL, CX, DX, SI, DI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Does not handle strings that are longer than 64K**
+; Note: Does not handle strings that are longer than 64K
 
-**; bytes or cross segment boundaries.**
+; bytes or cross segment boundaries.
 
-**;**
+;
 
-**CompareStringsNoCase:**
+CompareStringsNoCase:
 
-**cld**
+cld
 
-**mov cx,'az' ;for fast register-register**
+mov cx,'az' ;for fast register-register
 
-**; comparison in the loop**
+; comparison in the loop
 
-**mov bl,not 20h ;for fast conversion to**
+mov bl,not 20h ;for fast conversion to
 
-**; uppercase in the loop**
+; uppercase in the loop
 
-**CompareStringsLoop:**
+CompareStringsLoop:
 
-**lodsw ;get the next 2 bytes**
+lodsw ;get the next 2 bytes
 
-**mov dx,es:[di] ; from each string**
+mov dx,es:[di] ; from each string
 
-**inc di ;point to the next word in the**
+inc di ;point to the next word in the
 
-**inc di ; second string**
+inc di ; second string
 
-**TO\_UPPER al ;convert the first byte from each**
+TO_UPPER al ;convert the first byte from each
 
-**TO\_UPPER dl ; string to uppercase**
+TO_UPPER dl ; string to uppercase
 
-**cmp al,dl ;do the first bytes match?**
+cmp al,dl ;do the first bytes match?
 
-**jnz CompareStringsDifferent1 ;the strings differ**
+jnz CompareStringsDifferent1 ;the strings differ
 
-**and al,al ;is the first byte the terminating**
+and al,al ;is the first byte the terminating
 
-**; zero?**
+; zero?
 
-**jz CompareStringsSame**
+jz CompareStringsSame
 
-**;yes, we're done with a match**
+;yes, we're done with a match
 
-**TO\_UPPER ah ;convert the second byte from each**
+TO_UPPER ah ;convert the second byte from each
 
-**TO\_UPPER dh ; string to uppercase**
+TO_UPPER dh ; string to uppercase
 
-**cmp ah,dh ;do the second bytes match?**
+cmp ah,dh ;do the second bytes match?
 
-**jnz CompareStringsDifferent ;the strings differ**
+jnz CompareStringsDifferent ;the strings differ
 
-**and ah,ah ;is the second byte the terminating**
+and ah,ah ;is the second byte the terminating
 
-**; zero?**
+; zero?
 
-**jnz CompareStringsLoop**
+jnz CompareStringsLoop
 
-**;no, do the next 2 bytes**
+;no, do the next 2 bytes
 
-**CompareStringsSame:**
+CompareStringsSame:
 
-**sub si,si ;return 0 pointers indicating that**
+sub si,si ;return 0 pointers indicating that
 
-**mov di,si ; the strings are identical**
+mov di,si ; the strings are identical
 
-**ret**
+ret
 
-**CompareStringsDifferent1:**
+CompareStringsDifferent1:
 
-**dec si ;point back to the second byte of**
+dec si ;point back to the second byte of
 
-**dec di ; the word we just compared**
+dec di ; the word we just compared
 
-**CompareStringsDifferent:**
+CompareStringsDifferent:
 
-**dec si ;point back to the first byte of the**
+dec si ;point back to the first byte of the
 
-**dec di ; word we just compared**
+dec di ; word we just compared
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov si,offset TestString1 ;point to one string**
+mov si,offset TestString1 ;point to one string
 
-**mov di,seg TestString2**
+mov di,seg TestString2
 
-**mov es,di**
+mov es,di
 
-**mov di,offset TestString2 ;point to other string**
+mov di,offset TestString2 ;point to other string
 
-**call CompareStringsNoCase ;and compare the**
+call CompareStringsNoCase ;and compare the
 
-**; strings without**
+; strings without
 
-**; regard for case**
+; regard for case
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 11-27
 
 
-**;**
+;
 
-**; \*\*\* Listing 11-27 \*\*\***
+; *** Listing 11-27 ***
 
-**;**
+;
 
-**; Determines whether two zero-terminated strings differ**
+; Determines whether two zero-terminated strings differ
 
-**; ignoring case-only differences, and if so where, using**
+; ignoring case-only differences, and if so where, using
 
-**; LODS, with an XLAT-based table look-up to convert to**
+; LODS, with an XLAT-based table look-up to convert to
 
-**; uppercase.**
+; uppercase.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**TestString1 label byte**
+TestString1 label byte
 
-**db 'THIS IS A TEST STRING THAT IS '**
+db 'THIS IS A TEST STRING THAT IS '
 
-**db 'Z'**
+db 'Z'
 
-**db 'TERMINATED WITH A ZERO BYTE...',0**
+db 'TERMINATED WITH A ZERO BYTE...',0
 
-**TestString2 label byte**
+TestString2 label byte
 
-**db 'This is a test string that is '**
+db 'This is a test string that is '
 
-**db 'a'**
+db 'a'
 
-**db 'terminated with a zero byte...',0**
+db 'terminated with a zero byte...',0
 
-**;**
+;
 
-**; Table of conversions between characters and their**
+; Table of conversions between characters and their
 
-**; uppercase equivalents. (Could be just 128 bytes long if**
+; uppercase equivalents. (Could be just 128 bytes long if
 
-**; only 7-bit ASCII characters are used.)**
+; only 7-bit ASCII characters are used.)
 
-**;**
+;
 
-**ToUpperTable label word**
+ToUpperTable label word
 
-**CHAR=0**
+CHAR=0
 
-**rept 256**
+rept 256
 
-**if (CHAR lt 'a') or (CHAR gt 'z')**
+if (CHAR lt 'a') or (CHAR gt 'z')
 
-**db CHAR ;not a lowercase character**
+db CHAR ;not a lowercase character
 
-**else**
+else
 
-**db CHAR and not 20h**
+db CHAR and not 20h
 
-**;convert in the range 'a'-'z' to**
+;convert in the range 'a'-'z' to
 
-**; uppercase**
+; uppercase
 
-**endif**
+endif
 
-**CHAR=CHAR+1**
+CHAR=CHAR+1
 
-**endm**
+endm
 
-**;**
+;
 
-**; Compares two zero-terminated strings, ignoring differences**
+; Compares two zero-terminated strings, ignoring differences
 
-**; that are only uppercase/lowercase differences.**
+; that are only uppercase/lowercase differences.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; DS:SI = first zero-terminated string**
+; DS:SI = first zero-terminated string
 
-**; ES:DI = second zero-terminated string**
+; ES:DI = second zero-terminated string
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; DS:SI = pointer to first case-insensitive differing**
+; DS:SI = pointer to first case-insensitive differing
 
-**; location in first string, or 0 if the byte**
+; location in first string, or 0 if the byte
 
-**; wasn't found**
+; wasn't found
 
-**; ES:DI = pointer to first case-insensitive differing**
+; ES:DI = pointer to first case-insensitive differing
 
-**; location in second string, or 0 if the byte**
+; location in second string, or 0 if the byte
 
-**; wasn't found**
+; wasn't found
 
-**;**
+;
 
-**; Registers altered: AX, BX, DX, SI, DI**
+; Registers altered: AX, BX, DX, SI, DI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Does not handle strings that are longer than 64K**
+; Note: Does not handle strings that are longer than 64K
 
-**; bytes or cross segment boundaries.**
+; bytes or cross segment boundaries.
 
-**;**
+;
 
-**CompareStringsNoCase:**
+CompareStringsNoCase:
 
-**cld**
+cld
 
-**mov bx,offset ToUpperTable**
+mov bx,offset ToUpperTable
 
-**CompareStringsLoop:**
+CompareStringsLoop:
 
-**lodsw ;get the next 2 bytes**
+lodsw ;get the next 2 bytes
 
-**mov dx,es:[di] ; from each string**
+mov dx,es:[di] ; from each string
 
-**inc di ;point to the next word in the**
+inc di ;point to the next word in the
 
-**inc di ; second string**
+inc di ; second string
 
-**xlat ;convert the first byte in the**
+xlat ;convert the first byte in the
 
-**; first string to uppercase**
+; first string to uppercase
 
-**xchg dl,al ;set aside the first byte &**
+xchg dl,al ;set aside the first byte &
 
-**xlat ; convert the first byte in the**
+xlat ; convert the first byte in the
 
-**; second string to uppercase**
+; second string to uppercase
 
-**cmp al,dl ;do the first bytes match?**
+cmp al,dl ;do the first bytes match?
 
-**jnz CompareStringsDifferent1 ;the strings differ**
+jnz CompareStringsDifferent1 ;the strings differ
 
-**and al,al ;is this the terminating zero?**
+and al,al ;is this the terminating zero?
 
-**jz CompareStringsSame**
+jz CompareStringsSame
 
-**;yes, we're done, with a match**
+;yes, we're done, with a match
 
-**mov al,ah**
+mov al,ah
 
-**xlat ;convert the second byte from the**
+xlat ;convert the second byte from the
 
-**; first string to uppercase**
+; first string to uppercase
 
-**xchg dh,al ;set aside the second byte &**
+xchg dh,al ;set aside the second byte &
 
-**xlat ; convert the second byte from the**
+xlat ; convert the second byte from the
 
-**; second string to uppercase**
+; second string to uppercase
 
-**cmp al,dh ;do the second bytes match?**
+cmp al,dh ;do the second bytes match?
 
-**jnz CompareStringsDifferent ;the strings differ**
+jnz CompareStringsDifferent ;the strings differ
 
-**and ah,ah ;is this the terminating zero?**
+and ah,ah ;is this the terminating zero?
 
-**jnz CompareStringsLoop**
+jnz CompareStringsLoop
 
-**;no, do the next 2 bytes**
+;no, do the next 2 bytes
 
-**CompareStringsSame:**
+CompareStringsSame:
 
-**sub si,si ;return 0 pointers indicating that**
+sub si,si ;return 0 pointers indicating that
 
-**mov di,si ; the strings are identical**
+mov di,si ; the strings are identical
 
-**ret**
+ret
 
-**CompareStringsDifferent1:**
+CompareStringsDifferent1:
 
-**dec si ;point back to the second byte of**
+dec si ;point back to the second byte of
 
-**dec di ; the word we just compared**
+dec di ; the word we just compared
 
-**CompareStringsDifferent:**
+CompareStringsDifferent:
 
-**dec si ;point back to the first byte of the**
+dec si ;point back to the first byte of the
 
-**dec di ; word we just compared**
+dec di ; word we just compared
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov si,offset TestString1 ;point to one string**
+mov si,offset TestString1 ;point to one string
 
-**mov di,seg TestString2**
+mov di,seg TestString2
 
-**mov es,di**
+mov es,di
 
-**mov di,offset TestString2 ;point to other string**
+mov di,offset TestString2 ;point to other string
 
-**call CompareStringsNoCase ;and compare the**
+call CompareStringsNoCase ;and compare the
 
-**; strings without**
+; strings without
 
-**; regard for case**
+; regard for case
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 11-28
 
 
-**;**
+;
 
-**; \*\*\* Listing 11-28 \*\*\***
+; *** Listing 11-28 ***
 
-**;**
+;
 
-**; Searches a text buffer for a sequence of bytes by checking**
+; Searches a text buffer for a sequence of bytes by checking
 
-**; for the sequence with CMPS starting at each byte of the**
+; for the sequence with CMPS starting at each byte of the
 
-**; buffer that potentially could start the sequence.**
+; buffer that potentially could start the sequence.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**; Text buffer that we'll search.**
+; Text buffer that we'll search.
 
-**;**
+;
 
-**TextBuffer label byte**
+TextBuffer label byte
 
-**db 'This is a sample text buffer, suitable '**
+db 'This is a sample text buffer, suitable '
 
-**db 'for a searching text of any sort... '**
+db 'for a searching text of any sort... '
 
-**db 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 '**
+db 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 '
 
-**db 'End of text... '**
+db 'End of text... '
 
-**TEXT\_BUFFER\_LENGTH equ ($-TextBuffer)**
+TEXT_BUFFER_LENGTH equ ($-TextBuffer)
 
-**;**
+;
 
-**; Sequence of bytes that we'll search for.**
+; Sequence of bytes that we'll search for.
 
-**;**
+;
 
-**SearchSequence label byte**
+SearchSequence label byte
 
-**db 'text...'**
+db 'text...'
 
-**SEARCH\_SEQUENCE\_LENGTH equ ($-SearchSequence)**
+SEARCH_SEQUENCE_LENGTH equ ($-SearchSequence)
 
-**;**
+;
 
-**; Searches a buffer for the first occurrence of a specified**
+; Searches a buffer for the first occurrence of a specified
 
-**; sequence of bytes.**
+; sequence of bytes.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; CX = length of sequence of bytes to search for**
+; CX = length of sequence of bytes to search for
 
-**; DX = length of buffer to search in**
+; DX = length of buffer to search in
 
-**; DS:SI = start of sequence of bytes to search for**
+; DS:SI = start of sequence of bytes to search for
 
-**; ES:DI = start of buffer to search**
+; ES:DI = start of buffer to search
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; ES:DI = pointer to start of first occurrence of**
+; ES:DI = pointer to start of first occurrence of
 
-**; desired sequence of bytes in the buffer, or**
+; desired sequence of bytes in the buffer, or
 
-**; 0:0 if the sequence wasn't found**
+; 0:0 if the sequence wasn't found
 
-**;**
+;
 
-**; Registers altered: AX, BX, CX, DX, SI, DI, BP**
+; Registers altered: AX, BX, CX, DX, SI, DI, BP
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Does not handle search sequences or text buffers**
+; Note: Does not handle search sequences or text buffers
 
-**; that are longer than 64K bytes or cross segment**
+; that are longer than 64K bytes or cross segment
 
-**; boundaries.**
+; boundaries.
 
-**;**
+;
 
-**; Note: Assumes non-zero length of search sequence (CX \> 0),**
+; Note: Assumes non-zero length of search sequence (CX \> 0),
 
-**; and search sequence shorter than 64K (CX <= 0ffffh).**
+; and search sequence shorter than 64K (CX <= 0ffffh).
 
-**;**
+;
 
-**; Note: Assumes buffer is longer than search sequence**
+; Note: Assumes buffer is longer than search sequence
 
-**; (DX \> CX). Zero length of buffer is taken to mean**
+; (DX \> CX). Zero length of buffer is taken to mean
 
-**; that the buffer is 64K bytes long.**
+; that the buffer is 64K bytes long.
 
-**;**
+;
 
-**FindSequence:**
+FindSequence:
 
-**cld**
+cld
 
-**mov bp,si ;set aside the sequence start**
+mov bp,si ;set aside the sequence start
 
-**; offset**
+; offset
 
-**mov ax,di ;set aside the buffer start offset**
+mov ax,di ;set aside the buffer start offset
 
-**mov bx,cx ;set aside the sequence length**
+mov bx,cx ;set aside the sequence length
 
-**sub dx,cx ;difference between buffer and**
+sub dx,cx ;difference between buffer and
 
-**; search sequence lengths**
+; search sequence lengths
 
-**inc dx ;\# of possible sequence start bytes**
+inc dx ;\# of possible sequence start bytes
 
-**; to check in the buffer**
+; to check in the buffer
 
-**FindSequenceLoop:**
+FindSequenceLoop:
 
-**mov cx,bx ;sequence length**
+mov cx,bx ;sequence length
 
-**shr cx,1 ;convert to word for faster search**
+shr cx,1 ;convert to word for faster search
 
-**jnc FindSequenceWord ;do word search if no odd**
+jnc FindSequenceWord ;do word search if no odd
 
-**; byte**
+; byte
 
-**cmpsb ;compare the odd byte**
+cmpsb ;compare the odd byte
 
-**jnz FindSequenceNoMatch ;odd byte doesn't match,**
+jnz FindSequenceNoMatch ;odd byte doesn't match,
 
-**; so we havent' found the**
+; so we havent' found the
 
-**; search sequence here**
+; search sequence here
 
-**FindSequenceWord:**
+FindSequenceWord:
 
-**jcxz FindSequenceFound**
+jcxz FindSequenceFound
 
-**;since we're guaranteed to**
+;since we're guaranteed to
 
-**; have a non-zero length,**
+; have a non-zero length,
 
-**; the sequence must be 1**
+; the sequence must be 1
 
-**; byte long and we've**
+; byte long and we've
 
-**; already found that it**
+; already found that it
 
-**; matched**
+; matched
 
-**repz cmpsw ;check the rest of the**
+repz cmpsw ;check the rest of the
 
-**; sequence a word at a time**
+; sequence a word at a time
 
-**; for speed**
+; for speed
 
-**jz FindSequenceFound ;it's a match**
+jz FindSequenceFound ;it's a match
 
-**FindSequenceNoMatch:**
+FindSequenceNoMatch:
 
-**mov si,bp ;point to the start of the search**
+mov si,bp ;point to the start of the search
 
-**; sequence again**
+; sequence again
 
-**inc ax ;advance to the next buffer start**
+inc ax ;advance to the next buffer start
 
-**; search location**
+; search location
 
-**mov di,ax ;point DI to the next buffer start**
+mov di,ax ;point DI to the next buffer start
 
-**; search location**
+; search location
 
-**dec dx ;count down the remaining bytes to**
+dec dx ;count down the remaining bytes to
 
-**; search in the buffer**
+; search in the buffer
 
-**jnz FindSequenceLoop**
+jnz FindSequenceLoop
 
-**sub di,di ;return 0 pointer indicating that**
+sub di,di ;return 0 pointer indicating that
 
-**mov es,di ; the sequence was not found**
+mov es,di ; the sequence was not found
 
-**ret**
+ret
 
-**FindSequenceFound:**
+FindSequenceFound:
 
-**mov di,ax ;point to the buffer location at**
+mov di,ax ;point to the buffer location at
 
-**; which the first occurrence of the**
+; which the first occurrence of the
 
-**; sequence was found**
+; sequence was found
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov si,offset SearchSequence**
+mov si,offset SearchSequence
 
-**;point to search sequence**
+;point to search sequence
 
-**mov cx,SEARCH\_SEQUENCE\_LENGTH**
+mov cx,SEARCH_SEQUENCE_LENGTH
 
-**;length of search sequence**
+;length of search sequence
 
-**mov di,seg TextBuffer**
+mov di,seg TextBuffer
 
-**mov es,di**
+mov es,di
 
-**mov di,offset TextBuffer**
+mov di,offset TextBuffer
 
-**;point to buffer to search**
+;point to buffer to search
 
-**mov dx,TEXT\_BUFFER\_LENGTH**
+mov dx,TEXT_BUFFER_LENGTH
 
-**;length of buffer to search**
+;length of buffer to search
 
-**call FindSequence ;search for the sequence**
+call FindSequence ;search for the sequence
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 11-29
 
 
-**;**
+;
 
-**; \*\*\* Listing 11-29 \*\*\***
+; *** Listing 11-29 ***
 
-**;**
+;
 
-**; Searches a text buffer for a sequence of bytes by using**
+; Searches a text buffer for a sequence of bytes by using
 
-**; REPNZ SCASB to identify bytes in the buffer that**
+; REPNZ SCASB to identify bytes in the buffer that
 
-**; potentially could start the sequence and then checking**
+; potentially could start the sequence and then checking
 
-**; only starting at those qualified bytes for a match with**
+; only starting at those qualified bytes for a match with
 
-**; the sequence by way of REPZ CMPS.**
+; the sequence by way of REPZ CMPS.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**; Text buffer that we'll search.**
+; Text buffer that we'll search.
 
-**;**
+;
 
-**TextBuffer label byte**
+TextBuffer label byte
 
-**db 'This is a sample text buffer, suitable '**
+db 'This is a sample text buffer, suitable '
 
-**db 'for a searching text of any sort... '**
+db 'for a searching text of any sort... '
 
-**db 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 '**
+db 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 '
 
-**db 'End of text... '**
+db 'End of text... '
 
-**TEXT\_BUFFER\_LENGTH equ ($-TextBuffer)**
+TEXT_BUFFER_LENGTH equ ($-TextBuffer)
 
-**;**
+;
 
-**; Sequence of bytes that we'll search for.**
+; Sequence of bytes that we'll search for.
 
-**;**
+;
 
-**SearchSequence label byte**
+SearchSequence label byte
 
-**db 'text...'**
+db 'text...'
 
-**SEARCH\_SEQUENCE\_LENGTH equ ($-SearchSequence)**
+SEARCH_SEQUENCE_LENGTH equ ($-SearchSequence)
 
-**;**
+;
 
-**; Searches a buffer for the first occurrence of a specified**
+; Searches a buffer for the first occurrence of a specified
 
-**; sequence of bytes.**
+; sequence of bytes.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; CX = length of sequence of bytes to search for**
+; CX = length of sequence of bytes to search for
 
-**; DX = length of buffer to search in**
+; DX = length of buffer to search in
 
-**; DS:SI = start of sequence of bytes to search for**
+; DS:SI = start of sequence of bytes to search for
 
-**; ES:DI = start of buffer to search**
+; ES:DI = start of buffer to search
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; ES:DI = pointer to start of first occurrence of**
+; ES:DI = pointer to start of first occurrence of
 
-**; desired sequence of bytes in the buffer, or**
+; desired sequence of bytes in the buffer, or
 
-**; 0:0 if the sequence wasn't found**
+; 0:0 if the sequence wasn't found
 
-**;**
+;
 
-**; Registers altered: AL, BX, CX, DX, SI, DI, BP**
+; Registers altered: AL, BX, CX, DX, SI, DI, BP
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Does not handle search sequences or text buffers**
+; Note: Does not handle search sequences or text buffers
 
-**; that are longer than 64K bytes or cross segment**
+; that are longer than 64K bytes or cross segment
 
-**; boundaries.**
+; boundaries.
 
-**;**
+;
 
-**; Note: Assumes non-zero length of search sequence (CX \> 0),**
+; Note: Assumes non-zero length of search sequence (CX \> 0),
 
-**; and search sequence shorter than 64K (CX <= 0ffffh).**
+; and search sequence shorter than 64K (CX <= 0ffffh).
 
-**;**
+;
 
-**; Note: Assumes buffer is longer than search sequence**
+; Note: Assumes buffer is longer than search sequence
 
-**; (DX \> CX). Zero length of buffer (DX = 0) is taken**
+; (DX \> CX). Zero length of buffer (DX = 0) is taken
 
-**; to mean that the buffer is 64K bytes long.**
+; to mean that the buffer is 64K bytes long.
 
-**;**
+;
 
-**FindSequence:**
+FindSequence:
 
-**cld**
+cld
 
-**lodsb ;get the first byte of the search**
+lodsb ;get the first byte of the search
 
-**; sequence, which we'll leave in AL**
+; sequence, which we'll leave in AL
 
-**; for faster searching**
+; for faster searching
 
-**mov bp,si ;set aside the sequence start**
+mov bp,si ;set aside the sequence start
 
-**; offset plus one**
+; offset plus one
 
-**dec cx ;we don't need to compare the first**
+dec cx ;we don't need to compare the first
 
-**; byte of the sequence with CMPS,**
+; byte of the sequence with CMPS,
 
-**; since we'll do it with SCAS**
+; since we'll do it with SCAS
 
-**mov bx,cx ;set aside the sequence length**
+mov bx,cx ;set aside the sequence length
 
-**; minus 1**
+; minus 1
 
-**sub dx,cx ;difference between buffer and**
+sub dx,cx ;difference between buffer and
 
-**; search sequence lengths plus 1**
+; search sequence lengths plus 1
 
-**; (\# of possible sequence start**
+; (\# of possible sequence start
 
-**; bytes to check in the buffer)**
+; bytes to check in the buffer)
 
-**mov cx,dx ;put buffer search length in CX**
+mov cx,dx ;put buffer search length in CX
 
-**jnz FindSequenceLoop ;start normally if the**
+jnz FindSequenceLoop ;start normally if the
 
-**; buffer isn't 64Kb long**
+; buffer isn't 64Kb long
 
-**dec cx ;the buffer is 64K bytes long-we**
+dec cx ;the buffer is 64K bytes long-we
 
-**; have to check the first byte**
+; have to check the first byte
 
-**; specially since CX = 0 means**
+; specially since CX = 0 means
 
-**; "do nothing" to REPNZ SCASB**
+; "do nothing" to REPNZ SCASB
 
-**scasb ;check the first byte of the buffer**
+scasb ;check the first byte of the buffer
 
-**jz FindSequenceCheck ;it's a match for 1 byte,**
+jz FindSequenceCheck ;it's a match for 1 byte,
 
-**; at least-check the rest**
+; at least-check the rest
 
-**FindSequenceLoop:**
+FindSequenceLoop:
 
-**repnz scasb ;search for the first byte of the**
+repnz scasb ;search for the first byte of the
 
-**; search sequence**
+; search sequence
 
-**jnz FindSequenceNotFound**
+jnz FindSequenceNotFound
 
-**;it's not found, so there are no**
+;it's not found, so there are no
 
-**; possible matches**
+; possible matches
 
-**FindSequenceCheck:**
+FindSequenceCheck:
 
-**;we've got a potential (first byte)**
+;we've got a potential (first byte)
 
-**; match-check the rest of this**
+; match-check the rest of this
 
-**; candidate sequence**
+; candidate sequence
 
-**push di ;remember the address of the next**
+push di ;remember the address of the next
 
-**; byte to check in case it's needed**
+; byte to check in case it's needed
 
-**mov dx,cx ;set aside the remaining length to**
+mov dx,cx ;set aside the remaining length to
 
-**; search in the buffer**
+; search in the buffer
 
-**mov si,bp ;point to the rest of the search**
+mov si,bp ;point to the rest of the search
 
-**; sequence**
+; sequence
 
-**mov cx,bx ;sequence length (minus first byte)**
+mov cx,bx ;sequence length (minus first byte)
 
-**shr cx,1 ;convert to word for faster search**
+shr cx,1 ;convert to word for faster search
 
-**jnc FindSequenceWord ;do word search if no odd**
+jnc FindSequenceWord ;do word search if no odd
 
-**; byte**
+; byte
 
-**cmpsb ;compare the odd byte**
+cmpsb ;compare the odd byte
 
-**jnz FindSequenceNoMatch**
+jnz FindSequenceNoMatch
 
-**;odd byte doesn't match,**
+;odd byte doesn't match,
 
-**; so we haven't found the**
+; so we haven't found the
 
-**; search sequence here**
+; search sequence here
 
-**FindSequenceWord:**
+FindSequenceWord:
 
-**jcxz FindSequenceFound**
+jcxz FindSequenceFound
 
-**;since we're guaranteed to have**
+;since we're guaranteed to have
 
-**; a non-zero length, the**
+; a non-zero length, the
 
-**; sequence must be 1 byte long**
+; sequence must be 1 byte long
 
-**; and we've already found that**
+; and we've already found that
 
-**; it matched**
+; it matched
 
-**repz cmpsw ;check the rest of the sequence a**
+repz cmpsw ;check the rest of the sequence a
 
-**; word at a time for speed**
+; word at a time for speed
 
-**jz FindSequenceFound ;it's a match**
+jz FindSequenceFound ;it's a match
 
-**FindSequenceNoMatch:**
+FindSequenceNoMatch:
 
-**pop di ;get back the pointer to the next**
+pop di ;get back the pointer to the next
 
-**; byte to check**
+; byte to check
 
-**mov cx,dx ;get back the remaining length to**
+mov cx,dx ;get back the remaining length to
 
-**; search in the buffer**
+; search in the buffer
 
-**and cx,cx ;see if there's anything left to**
+and cx,cx ;see if there's anything left to
 
-**; check**
+; check
 
-**jnz FindSequenceLoop ;yes-check next byte**
+jnz FindSequenceLoop ;yes-check next byte
 
-**FindSequenceNotFound:**
+FindSequenceNotFound:
 
-**sub di,di ;return 0 pointer indicating that**
+sub di,di ;return 0 pointer indicating that
 
-**mov es,di ; the sequence was not found**
+mov es,di ; the sequence was not found
 
-**ret**
+ret
 
-**FindSequenceFound:**
+FindSequenceFound:
 
-**pop di ;point to the buffer location at**
+pop di ;point to the buffer location at
 
-**dec di ; which the first occurrence of the**
+dec di ; which the first occurrence of the
 
-**; sequence was found (remember that**
+; sequence was found (remember that
 
-**; earlier we pushed the address of**
+; earlier we pushed the address of
 
-**; the byte after the potential**
+; the byte after the potential
 
-**; sequence start)**
+; sequence start)
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov si,offset SearchSequence**
+mov si,offset SearchSequence
 
-**;point to search sequence**
+;point to search sequence
 
-**mov cx,SEARCH\_SEQUENCE\_LENGTH**
+mov cx,SEARCH_SEQUENCE_LENGTH
 
-**;length of search sequence**
+;length of search sequence
 
-**mov di,seg TextBuffer**
+mov di,seg TextBuffer
 
-**mov es,di**
+mov es,di
 
-**mov di,offset TextBuffer**
+mov di,offset TextBuffer
 
-**;point to buffer to search**
+;point to buffer to search
 
-**mov dx,TEXT\_BUFFER\_LENGTH**
+mov dx,TEXT_BUFFER_LENGTH
 
-**;length of buffer to search**
+;length of buffer to search
 
-**call FindSequence ;search for the sequence**
+call FindSequence ;search for the sequence
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 11-30
 
 
-**;**
+;
 
-**; \*\*\* Listing 11-30 \*\*\***
+; *** Listing 11-30 ***
 
-**;**
+;
 
-**; Searches a text buffer for a sequence of bytes by checking**
+; Searches a text buffer for a sequence of bytes by checking
 
-**; for the sequence with non-string instructions starting at**
+; for the sequence with non-string instructions starting at
 
-**; each byte of the buffer that potentially could start the**
+; each byte of the buffer that potentially could start the
 
-**; sequence.**
+; sequence.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**; Text buffer that we'll search.**
+; Text buffer that we'll search.
 
-**;**
+;
 
-**TextBuffer label byte**
+TextBuffer label byte
 
-**db 'This is a sample text buffer, suitable '**
+db 'This is a sample text buffer, suitable '
 
-**db 'for a searching text of any sort... '**
+db 'for a searching text of any sort... '
 
-**db 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 '**
+db 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 '
 
-**db 'End of text... '**
+db 'End of text... '
 
-**TEXT\_BUFFER\_LENGTH equ ($-TextBuffer)**
+TEXT_BUFFER_LENGTH equ ($-TextBuffer)
 
-**;**
+;
 
-**; Sequence of bytes that we'll search for.**
+; Sequence of bytes that we'll search for.
 
-**;**
+;
 
-**SearchSequence label byte**
+SearchSequence label byte
 
-**db 'text...'**
+db 'text...'
 
-**SEARCH\_SEQUENCE\_LENGTH equ ($-SearchSequence)**
+SEARCH_SEQUENCE_LENGTH equ ($-SearchSequence)
 
-**;**
+;
 
-**; Searches a buffer for the first occurrence of a specified**
+; Searches a buffer for the first occurrence of a specified
 
-**; sequence of bytes.**
+; sequence of bytes.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; CX = length of sequence of bytes to search for**
+; CX = length of sequence of bytes to search for
 
-**; DX = length of buffer to search in**
+; DX = length of buffer to search in
 
-**; DS:SI = start of sequence of bytes to search for**
+; DS:SI = start of sequence of bytes to search for
 
-**; ES:DI = start of buffer to search**
+; ES:DI = start of buffer to search
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; ES:DI = pointer to start of first occurrence of**
+; ES:DI = pointer to start of first occurrence of
 
-**; desired sequence of bytes in the buffer, or**
+; desired sequence of bytes in the buffer, or
 
-**; 0:0 if the sequence wasn't found**
+; 0:0 if the sequence wasn't found
 
-**;**
+;
 
-**; Registers altered: AX, BX, CX, DX, SI, DI, BP**
+; Registers altered: AX, BX, CX, DX, SI, DI, BP
 
-**;**
+;
 
-**; Note: Does not handle search sequences or text buffers**
+; Note: Does not handle search sequences or text buffers
 
-**; that are longer than 64K bytes or cross segment**
+; that are longer than 64K bytes or cross segment
 
-**; boundaries.**
+; boundaries.
 
-**;**
+;
 
-**; Note: Assumes non-zero length of search sequence (CX \> 0),**
+; Note: Assumes non-zero length of search sequence (CX \> 0),
 
-**; and search sequence shorter than 64K (CX <= 0ffffh).**
+; and search sequence shorter than 64K (CX <= 0ffffh).
 
-**;**
+;
 
-**; Note: Assumes buffer is longer than search sequence**
+; Note: Assumes buffer is longer than search sequence
 
-**; (DX \> CX). Zero length of buffer is taken to mean**
+; (DX \> CX). Zero length of buffer is taken to mean
 
-**; that the buffer is 64K bytes long.**
+; that the buffer is 64K bytes long.
 
-**;**
+;
 
-**FindSequence:**
+FindSequence:
 
-**mov bp,si ;set aside the sequence start**
+mov bp,si ;set aside the sequence start
 
-**; offset**
+; offset
 
-**mov bx,cx ;set aside the sequence length**
+mov bx,cx ;set aside the sequence length
 
-**sub dx,cx ;difference between buffer and**
+sub dx,cx ;difference between buffer and
 
-**; search sequence lengths**
+; search sequence lengths
 
-**inc dx ;\# of possible sequence start bytes**
+inc dx ;\# of possible sequence start bytes
 
-**; to check in the buffer**
+; to check in the buffer
 
-**FindSequenceLoop:**
+FindSequenceLoop:
 
-**push di ;remember the address of the current**
+push di ;remember the address of the current
 
-**; byte in case it's needed**
+; byte in case it's needed
 
-**mov cx,bx ;sequence length**
+mov cx,bx ;sequence length
 
-**shr cx,1 ;convert to word for faster search**
+shr cx,1 ;convert to word for faster search
 
-**jnc FindSequenceWord ;do word search if no odd**
+jnc FindSequenceWord ;do word search if no odd
 
-**; byte**
+; byte
 
-**mov al,[si]**
+mov al,[si]
 
-**cmp es:[di],al ;compare the odd byte**
+cmp es:[di],al ;compare the odd byte
 
-**jnz FindSequenceNoMatch ;odd byte doesn't match,**
+jnz FindSequenceNoMatch ;odd byte doesn't match,
 
-**; so we havent' found the**
+; so we havent' found the
 
-**; search sequence here**
+; search sequence here
 
-**inc si ;odd byte matches, so point**
+inc si ;odd byte matches, so point
 
-**inc di ; to the next byte in the**
+inc di ; to the next byte in the
 
-**; buffer and sequence**
+; buffer and sequence
 
-**FindSequenceWord:**
+FindSequenceWord:
 
-**jcxz FindSequenceFound**
+jcxz FindSequenceFound
 
-**;since we're guaranteed to**
+;since we're guaranteed to
 
-**; have a non-zero length,**
+; have a non-zero length,
 
-**; the sequence must be 1**
+; the sequence must be 1
 
-**; byte long and we've**
+; byte long and we've
 
-**; already found that it**
+; already found that it
 
-**; matched**
+; matched
 
-**FindSequenceWordCompareLoop:**
+FindSequenceWordCompareLoop:
 
-**mov ax,[si] ;compare the remainder of**
+mov ax,[si] ;compare the remainder of
 
-**cmp es:[di],ax ; the search sequence to**
+cmp es:[di],ax ; the search sequence to
 
-**jnz FindSequenceNoMatch ; this part of the**
+jnz FindSequenceNoMatch ; this part of the
 
-**inc si ; buffer a word at a time**
+inc si ; buffer a word at a time
 
-**inc si ; for speed**
+inc si ; for speed
 
-**inc di**
+inc di
 
-**inc di**
+inc di
 
-**loop FindSequenceWordCompareLoop**
+loop FindSequenceWordCompareLoop
 
-**FindSequenceFound: ;it's a match**
+FindSequenceFound: ;it's a match
 
-**pop di ;point to the buffer location at**
+pop di ;point to the buffer location at
 
-**; which the first occurrence of the**
+; which the first occurrence of the
 
-**; sequence was found (remember that**
+; sequence was found (remember that
 
-**; earlier we pushed the address of**
+; earlier we pushed the address of
 
-**; the potential sequence start)**
+; the potential sequence start)
 
-**ret**
+ret
 
-**FindSequenceNoMatch:**
+FindSequenceNoMatch:
 
-**pop di ;get back the pointer to the current**
+pop di ;get back the pointer to the current
 
-**; byte**
+; byte
 
-**inc di ;point to the next buffer start**
+inc di ;point to the next buffer start
 
-**; search location**
+; search location
 
-**mov si,bp ;point to the start of the search**
+mov si,bp ;point to the start of the search
 
-**; sequence again**
+; sequence again
 
-**dec dx ;count down the remaining bytes to**
+dec dx ;count down the remaining bytes to
 
-**; search in the buffer**
+; search in the buffer
 
-**jnz FindSequenceLoop**
+jnz FindSequenceLoop
 
-**sub di,di ;return 0 pointer indicating that**
+sub di,di ;return 0 pointer indicating that
 
-**mov es,di ; the sequence was not found**
+mov es,di ; the sequence was not found
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov si,offset SearchSequence**
+mov si,offset SearchSequence
 
-**;point to search sequence**
+;point to search sequence
 
-**mov cx,SEARCH\_SEQUENCE\_LENGTH**
+mov cx,SEARCH_SEQUENCE_LENGTH
 
-**;length of search sequence**
+;length of search sequence
 
-**mov di,seg TextBuffer**
+mov di,seg TextBuffer
 
-**mov es,di**
+mov es,di
 
-**mov di,offset TextBuffer**
+mov di,offset TextBuffer
 
-**;point to buffer to search**
+;point to buffer to search
 
-**mov dx,TEXT\_BUFFER\_LENGTH**
+mov dx,TEXT_BUFFER_LENGTH
 
-**;length of buffer to search**
+;length of buffer to search
 
-**call FindSequence ;search for the sequence**
+call FindSequence ;search for the sequence
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 11-31
 
 
-**;**
+;
 
-**; \*\*\* Listing 11-31 \*\*\***
+; *** Listing 11-31 ***
 
-**;**
+;
 
-**; Compares two arrays of 16-bit signed values in order to**
+; Compares two arrays of 16-bit signed values in order to
 
-**; find the first point at which the arrays cross, using**
+; find the first point at which the arrays cross, using
 
-**; non-repeated CMPSW.**
+; non-repeated CMPSW.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**; The two arrays that we'll compare.**
+; The two arrays that we'll compare.
 
-**;**
+;
 
-**ARRAY\_LENGTH equ 200**
+ARRAY_LENGTH equ 200
 
-**;**
+;
 
-**Array1 label byte**
+Array1 label byte
 
-**TEMP=-100**
+TEMP=-100
 
-**rept ARRAY\_LENGTH**
+rept ARRAY_LENGTH
 
-**dw TEMP**
+dw TEMP
 
-**TEMP=TEMP+1**
+TEMP=TEMP+1
 
-**endm**
+endm
 
-**;**
+;
 
-**Array2 label byte**
+Array2 label byte
 
-**TEMP=100**
+TEMP=100
 
-**rept ARRAY\_LENGTH**
+rept ARRAY_LENGTH
 
-**dw TEMP**
+dw TEMP
 
-**TEMP=TEMP-1**
+TEMP=TEMP-1
 
-**endm**
+endm
 
-**;**
+;
 
-**; Compares two buffers to find the first point at which they**
+; Compares two buffers to find the first point at which they
 
-**; cross. Points at which the arrays become equal are**
+; cross. Points at which the arrays become equal are
 
-**; considered to be crossing points.**
+; considered to be crossing points.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; CX = length of arrays in words (they must be of**
+; CX = length of arrays in words (they must be of
 
-**; equal length)**
+; equal length)
 
-**; DS:SI = start of first array**
+; DS:SI = start of first array
 
-**; ES:DI = start of second array**
+; ES:DI = start of second array
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; DS:SI = pointer to crossing point in first array,**
+; DS:SI = pointer to crossing point in first array,
 
-**; or SI=0 if there is no crossing point**
+; or SI=0 if there is no crossing point
 
-**; ES:DI = pointer to crossing point in second array,**
+; ES:DI = pointer to crossing point in second array,
 
-**; or DI=0 if there is no crossing point**
+; or DI=0 if there is no crossing point
 
-**;**
+;
 
-**; Registers altered: AX, CX, SI, DI**
+; Registers altered: AX, CX, SI, DI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Does not handle arrays that are longer than 64K**
+; Note: Does not handle arrays that are longer than 64K
 
-**; bytes or cross segment boundaries.**
+; bytes or cross segment boundaries.
 
-**;**
+;
 
-**FindCrossing:**
+FindCrossing:
 
-**cld**
+cld
 
-**jcxz FindCrossingNotFound**
+jcxz FindCrossingNotFound
 
-**;if there's nothing to compare, we**
+;if there's nothing to compare, we
 
-**; certainly can't find a crossing**
+; certainly can't find a crossing
 
-**mov ax,[si] ;compare the first two points to**
+mov ax,[si] ;compare the first two points to
 
-**cmp ax,es:[di] ; make sure that the first array**
+cmp ax,es:[di] ; make sure that the first array
 
-**; doesn't start out below the second**
+; doesn't start out below the second
 
-**; array**
+; array
 
-**pushf ;remember the original relationship**
+pushf ;remember the original relationship
 
-**; of the arrays, so we can put the**
+; of the arrays, so we can put the
 
-**; pointers back at the end (can't**
+; pointers back at the end (can't
 
-**; use LAHF because it doesn't save**
+; use LAHF because it doesn't save
 
-**; the Overflow flag)**
+; the Overflow flag)
 
-**jnl FindCrossingLoop ;the first array is above**
+jnl FindCrossingLoop ;the first array is above
 
-**; the second array**
+; the second array
 
-**xchg si,di ;swap the array pointers so that**
+xchg si,di ;swap the array pointers so that
 
-**; SI points to the initially-**
+; SI points to the initially-
 
-**; greater array**
+; greater array
 
-**FindCrossingLoop:**
+FindCrossingLoop:
 
-**cmpsw ;compare the next element in each**
+cmpsw ;compare the next element in each
 
-**; array**
+; array
 
-**jng FindCrossingFound ;if SI doesn't point to a**
+jng FindCrossingFound ;if SI doesn't point to a
 
-**; greater value, we've found**
+; greater value, we've found
 
-**; the first crossing**
+; the first crossing
 
-**loop FindCrossingLoop ;check the next element in**
+loop FindCrossingLoop ;check the next element in
 
-**; each array**
+; each array
 
-**FindCrossingNotFound:**
+FindCrossingNotFound:
 
-**popf ;clear the flags we pushed earlier**
+popf ;clear the flags we pushed earlier
 
-**sub si,si ;return 0 pointers to indicate that**
+sub si,si ;return 0 pointers to indicate that
 
-**mov di,si ; no crossing was found**
+mov di,si ; no crossing was found
 
-**ret**
+ret
 
-**FindCrossingFound:**
+FindCrossingFound:
 
-**dec si**
+dec si
 
-**dec si ;point back to the crossing point**
+dec si ;point back to the crossing point
 
-**dec di ; in each array**
+dec di ; in each array
 
-**dec di**
+dec di
 
-**popf ;get back the original relationship**
+popf ;get back the original relationship
 
-**; of the arrays**
+; of the arrays
 
-**jnl FindCrossingDone**
+jnl FindCrossingDone
 
-**;SI pointed to the initially-**
+;SI pointed to the initially-
 
-**; greater array, so we're all set**
+; greater array, so we're all set
 
-**xchg si,di ;SI pointed to the initially-**
+xchg si,di ;SI pointed to the initially-
 
-**; less array, so swap SI and DI to**
+; less array, so swap SI and DI to
 
-**; undo our earlier swap**
+; undo our earlier swap
 
-**FindCrossingDone:**
+FindCrossingDone:
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov si,offset Array1 ;point to first array**
+mov si,offset Array1 ;point to first array
 
-**mov di,seg Array2**
+mov di,seg Array2
 
-**mov es,di**
+mov es,di
 
-**mov di,offset Array2 ;point to second array**
+mov di,offset Array2 ;point to second array
 
-**mov cx,ARRAY\_LENGTH ;length to compare**
+mov cx,ARRAY_LENGTH ;length to compare
 
-**call FindCrossing ;find the first crossing, if**
+call FindCrossing ;find the first crossing, if
 
-**; any**
+; any
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 11-32
 
 
-**;**
+;
 
-**; \*\*\* Listing 11-32 \*\*\***
+; *** Listing 11-32 ***
 
-**;**
+;
 
-**; Compares two arrays of 16-bit signed values in order to**
+; Compares two arrays of 16-bit signed values in order to
 
-**; find the first point at which the arrays cross, using**
+; find the first point at which the arrays cross, using
 
-**; non-string instructions.**
+; non-string instructions.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**; The two arrays that we'll compare.**
+; The two arrays that we'll compare.
 
-**;**
+;
 
-**ARRAY\_LENGTH equ 200**
+ARRAY_LENGTH equ 200
 
-**;**
+;
 
-**Array1 label byte**
+Array1 label byte
 
-**TEMP=-100**
+TEMP=-100
 
-**rept ARRAY\_LENGTH**
+rept ARRAY_LENGTH
 
-**dw TEMP**
+dw TEMP
 
-**TEMP=TEMP+1**
+TEMP=TEMP+1
 
-**endm**
+endm
 
-**;**
+;
 
-**Array2 label byte**
+Array2 label byte
 
-**TEMP=100**
+TEMP=100
 
-**rept ARRAY\_LENGTH**
+rept ARRAY_LENGTH
 
-**dw TEMP**
+dw TEMP
 
-**TEMP=TEMP-1**
+TEMP=TEMP-1
 
-**endm**
+endm
 
-**;**
+;
 
-**; Compares two buffers to find the first point at which they**
+; Compares two buffers to find the first point at which they
 
-**; cross. Points at which the arrays become equal are**
+; cross. Points at which the arrays become equal are
 
-**; considered to be crossing points.**
+; considered to be crossing points.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; CX = length of arrays in words (they must be of**
+; CX = length of arrays in words (they must be of
 
-**; equal length)**
+; equal length)
 
-**; DS:SI = start of first array**
+; DS:SI = start of first array
 
-**; ES:DI = start of second array**
+; ES:DI = start of second array
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; DS:SI = pointer to crossing point in first array,**
+; DS:SI = pointer to crossing point in first array,
 
-**; or SI=0 if there is no crossing point**
+; or SI=0 if there is no crossing point
 
-**; ES:DI = pointer to crossing point in second array,**
+; ES:DI = pointer to crossing point in second array,
 
-**; or DI=0 if there is no crossing point**
+; or DI=0 if there is no crossing point
 
-**;**
+;
 
-**; Registers altered: BX, CX, DX, SI, DI**
+; Registers altered: BX, CX, DX, SI, DI
 
-**;**
+;
 
-**; Note: Does not handle arrays that are longer than 64K**
+; Note: Does not handle arrays that are longer than 64K
 
-**; bytes or cross segment boundaries.**
+; bytes or cross segment boundaries.
 
-**;**
+;
 
-**FindCrossing:**
+FindCrossing:
 
-**jcxz FindCrossingNotFound**
+jcxz FindCrossingNotFound
 
-**;if there's nothing to compare, we**
+;if there's nothing to compare, we
 
-**; certainly can't find a crossing**
+; certainly can't find a crossing
 
-**mov dx,2 ;amount we'll add to the pointer**
+mov dx,2 ;amount we'll add to the pointer
 
-**; registers after each comparison,**
+; registers after each comparison,
 
-**; kept in a register for speed**
+; kept in a register for speed
 
-**mov bx,[si] ;compare the first two points to**
+mov bx,[si] ;compare the first two points to
 
-**cmp bx,es:[di] ; make sure that the first array**
+cmp bx,es:[di] ; make sure that the first array
 
-**; doesn't start out below the second**
+; doesn't start out below the second
 
-**; array**
+; array
 
-**pushf ;remember the original relationship**
+pushf ;remember the original relationship
 
-**; of the arrays, so we can put the**
+; of the arrays, so we can put the
 
-**; pointers back at the end (can't**
+; pointers back at the end (can't
 
-**; use LAHF because it doesn't save**
+; use LAHF because it doesn't save
 
-**; the Overflow flag)**
+; the Overflow flag)
 
-**jnl FindCrossingLoop ;the first array is above**
+jnl FindCrossingLoop ;the first array is above
 
-**; the second array**
+; the second array
 
-**xchg si,di ;swap the array pointers so that**
+xchg si,di ;swap the array pointers so that
 
-**; SI points to the initially-**
+; SI points to the initially-
 
-**; greater array**
+; greater array
 
-**FindCrossingLoop:**
+FindCrossingLoop:
 
-**mov bx,[si] ;compare the next element in**
+mov bx,[si] ;compare the next element in
 
-**cmp bx,es:[di] ; each array**
+cmp bx,es:[di] ; each array
 
-**jng FindCrossingFound ;if SI doesn't point to a**
+jng FindCrossingFound ;if SI doesn't point to a
 
-**; greater value, we've found**
+; greater value, we've found
 
-**; the first crossing**
+; the first crossing
 
-**add si,dx ;point to the next element**
+add si,dx ;point to the next element
 
-**add di,dx ; in each array**
+add di,dx ; in each array
 
-**loop FindCrossingLoop ;check the next element in**
+loop FindCrossingLoop ;check the next element in
 
-**; each array**
+; each array
 
-**FindCrossingNotFound:**
+FindCrossingNotFound:
 
-**popf ;clear the flags we pushed earlier**
+popf ;clear the flags we pushed earlier
 
-**sub si,si ;return 0 pointers to indicate that**
+sub si,si ;return 0 pointers to indicate that
 
-**mov di,si ; no crossing was found**
+mov di,si ; no crossing was found
 
-**ret**
+ret
 
-**FindCrossingFound:**
+FindCrossingFound:
 
-**popf ;get back the original relationship**
+popf ;get back the original relationship
 
-**; of the arrays**
+; of the arrays
 
-**jnl FindCrossingDone**
+jnl FindCrossingDone
 
-**;SI pointed to the initially-**
+;SI pointed to the initially-
 
-**; greater array, so we're all set**
+; greater array, so we're all set
 
-**xchg si,di ;SI pointed to the initially-**
+xchg si,di ;SI pointed to the initially-
 
-**; less array, so swap SI and DI to**
+; less array, so swap SI and DI to
 
-**; undo our earlier swap**
+; undo our earlier swap
 
-**FindCrossingDone:**
+FindCrossingDone:
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov si,offset Array1 ;point to first array**
+mov si,offset Array1 ;point to first array
 
-**mov di,seg Array2**
+mov di,seg Array2
 
-**mov es,di**
+mov es,di
 
-**mov di,offset Array2 ;point to second array**
+mov di,offset Array2 ;point to second array
 
-**mov cx,ARRAY\_LENGTH ;length to compare**
+mov cx,ARRAY_LENGTH ;length to compare
 
-**call FindCrossing ;find the first crossing, if**
+call FindCrossing ;find the first crossing, if
 
-**; any**
+; any
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 11-33
 
 
-**;**
+;
 
-**; \*\*\* Listing 11-33 \*\*\***
+; *** Listing 11-33 ***
 
-**;**
+;
 
-**; Illustrates animation based on exclusive-oring.**
+; Illustrates animation based on exclusive-oring.
 
-**; Animates 10 images at once.**
+; Animates 10 images at once.
 
-**; Not a general animation implementation, but rather an**
+; Not a general animation implementation, but rather an
 
-**; example of the strengths and weaknesses of exclusive-or**
+; example of the strengths and weaknesses of exclusive-or
 
-**; based animation.**
+; based animation.
 
-**;**
+;
 
-**; Make with LZTIME.BAT, since this program is too long to be**
+; Make with LZTIME.BAT, since this program is too long to be
 
-**; handled by the precision Zen timer.**
+; handled by the precision Zen timer.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**DELAY equ 0 ;set to higher values to**
+DELAY equ 0 ;set to higher values to
 
-**; slow down for closer**
+; slow down for closer
 
-**; observation**
+; observation
 
-**REPETITIONS equ 500 ;\# of times to move and**
+REPETITIONS equ 500 ;\# of times to move and
 
-**; redraw the images**
+; redraw the images
 
-**DISPLAY\_SEGMENT equ 0b800h ;display memory segment**
+DISPLAY_SEGMENT equ 0b800h ;display memory segment
 
-**; in 320x200 4-color**
+; in 320x200 4-color
 
-**; graphics mode**
+; graphics mode
 
-**SCREEN\_WIDTH equ 80 ;\# of bytes per scan line**
+SCREEN_WIDTH equ 80 ;\# of bytes per scan line
 
-**BANK\_OFFSET equ 2000h ;offset from the bank**
+BANK_OFFSET equ 2000h ;offset from the bank
 
-**; containing the even-**
+; containing the even-
 
-**; numbered lines on the**
+; numbered lines on the
 
-**; screen to the bank**
+; screen to the bank
 
-**; containing the odd-**
+; containing the odd-
 
-**; numbered lines**
+; numbered lines
 
-**;**
+;
 
-**; Used to count down \# of times images are moved.**
+; Used to count down \# of times images are moved.
 
-**;**
+;
 
-**RepCount dw REPETITIONS**
+RepCount dw REPETITIONS
 
-**;**
+;
 
-**; Complete info about one image that we're animating.**
+; Complete info about one image that we're animating.
 
-**;**
+;
 
-**Image struc**
+Image struc
 
-**XCoord dw ? ;image X location in pixels**
+XCoord dw ? ;image X location in pixels
 
-**XInc dw ? ;\# of pixels to increment**
+XInc dw ? ;\# of pixels to increment
 
-**; location by in the X**
+; location by in the X
 
-**; direction on each move**
+; direction on each move
 
-**YCoord dw ? ;image Y location in pixels**
+YCoord dw ? ;image Y location in pixels
 
-**YInc dw ? ;\# of pixels to increment**
+YInc dw ? ;\# of pixels to increment
 
-**; location by in the Y**
+; location by in the Y
 
-**; direction on each move**
+; direction on each move
 
-**Image ends**
+Image ends
 
-**;**
+;
 
-**; List of images to animate.**
+; List of images to animate.
 
-**;**
+;
 
-**Images label Image**
+Images label Image
 
-**Image <64,4,8,4\>**
+Image <64,4,8,4\>
 
-**Image <144,0,56,2\>**
+Image <144,0,56,2\>
 
-**Image <224,-4,104,0\>**
+Image <224,-4,104,0\>
 
-**Image <64,4,152,-2\>**
+Image <64,4,152,-2\>
 
-**Image <144,0,8,-4\>**
+Image <144,0,8,-4\>
 
-**Image <224,-4,56,-2\>**
+Image <224,-4,56,-2\>
 
-**Image <64,4,104,0\>**
+Image <64,4,104,0\>
 
-**Image <144,0,152,2\>**
+Image <144,0,152,2\>
 
-**Image <224,-4,8,4\>**
+Image <224,-4,8,4\>
 
-**Image <64,4,56,2\>**
+Image <64,4,56,2\>
 
-**ImagesEnd label Image**
+ImagesEnd label Image
 
-**;**
+;
 
-**; Pixel pattern for the one image this program draws,**
+; Pixel pattern for the one image this program draws,
 
-**; a 32x32 3-color square.**
+; a 32x32 3-color square.
 
-**;**
+;
 
-**TheImage label byte**
+TheImage label byte
 
-**rept 32**
+rept 32
 
-**dw 0ffffh, 05555h, 0aaaah, 0ffffh**
+dw 0ffffh, 05555h, 0aaaah, 0ffffh
 
-**endm**
+endm
 
-**IMAGE\_HEIGHT equ 32 ;\# of rows in the image**
+IMAGE_HEIGHT equ 32 ;\# of rows in the image
 
-**IMAGE\_WIDTH equ 8 ;\# of bytes across the image**
+IMAGE_WIDTH equ 8 ;\# of bytes across the image
 
-**;**
+;
 
-**; Exclusive-ors the image of a 3-color square at the**
+; Exclusive-ors the image of a 3-color square at the
 
-**; specified screen location. Assumes images start on**
+; specified screen location. Assumes images start on
 
-**; even-numbered scan lines and are an even number of**
+; even-numbered scan lines and are an even number of
 
-**; scan lines high. Always draws images byte-aligned in**
+; scan lines high. Always draws images byte-aligned in
 
-**; display memory.**
+; display memory.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; CX = X coordinate of upper left corner at which to**
+; CX = X coordinate of upper left corner at which to
 
-**; draw image (will be adjusted to nearest**
+; draw image (will be adjusted to nearest
 
-**; less-than or equal-to multiple of 4 in order**
+; less-than or equal-to multiple of 4 in order
 
-**; to byte-align)**
+; to byte-align)
 
-**; DX = Y coordinate of upper left corner at which to**
+; DX = Y coordinate of upper left corner at which to
 
-**; draw image**
+; draw image
 
-**; ES = display memory segment**
+; ES = display memory segment
 
-**;**
+;
 
-**; Output: none**
+; Output: none
 
-**;**
+;
 
-**; Registers altered: AX, CX, DX, SI, DI, BP**
+; Registers altered: AX, CX, DX, SI, DI, BP
 
-**;**
+;
 
-**XorImage:**
+XorImage:
 
-**push bx ;preserve the main loop's pointer**
+push bx ;preserve the main loop's pointer
 
-**shr dx,1 ;divide the row \# by 2 to compensate**
+shr dx,1 ;divide the row \# by 2 to compensate
 
-**; for the 2-bank nature of 320x200**
+; for the 2-bank nature of 320x200
 
-**; 4-color mode**
+; 4-color mode
 
-**mov ax,SCREEN\_WIDTH**
+mov ax,SCREEN_WIDTH
 
-**mul dx ;start offset of top row of image in**
+mul dx ;start offset of top row of image in
 
-**; display memory**
+; display memory
 
-**shr cx,1 ;divide the X coordinate by 4**
+shr cx,1 ;divide the X coordinate by 4
 
-**shr cx,1 ; because there are 4 pixels per**
+shr cx,1 ; because there are 4 pixels per
 
-**; byte**
+; byte
 
-**add ax,cx ;point to the offset at which the**
+add ax,cx ;point to the offset at which the
 
-**; upper left byte of the image will**
+; upper left byte of the image will
 
-**; go**
+; go
 
-**mov di,ax**
+mov di,ax
 
-**mov si,offset TheImage**
+mov si,offset TheImage
 
-**;point to the start of the one image**
+;point to the start of the one image
 
-**; we always draw**
+; we always draw
 
-**mov bx,BANK\_OFFSET-IMAGE\_WIDTH**
+mov bx,BANK_OFFSET-IMAGE_WIDTH
 
-**;offset from the end of an even line**
+;offset from the end of an even line
 
-**; of the image in display memory to**
+; of the image in display memory to
 
-**; the start of the next odd line of**
+; the start of the next odd line of
 
-**; the image**
+; the image
 
-**mov dx,IMAGE\_HEIGHT/2**
+mov dx,IMAGE_HEIGHT/2
 
-**;\# of even/odd numbered row pairs to**
+;\# of even/odd numbered row pairs to
 
-**; draw in the image**
+; draw in the image
 
-**mov bp,IMAGE\_WIDTH/2**
+mov bp,IMAGE_WIDTH/2
 
-**;\# of words to draw per row of the**
+;\# of words to draw per row of the
 
-**; image. Note that IMAGE\_WIDTH must**
+; image. Note that IMAGE_WIDTH must
 
-**; be an even number since we XOR**
+; be an even number since we XOR
 
-**; the image a word at a time**
+; the image a word at a time
 
-**XorRowLoop:**
+XorRowLoop:
 
-**mov cx,bp ;\# of words to draw per row of the**
+mov cx,bp ;\# of words to draw per row of the
 
-**; image**
+; image
 
-**XorColumnLoopEvenRows:**
+XorColumnLoopEvenRows:
 
-**lodsw ;next word of the image pattern**
+lodsw ;next word of the image pattern
 
-**xor es:[di],ax ;XOR the next word of the**
+xor es:[di],ax ;XOR the next word of the
 
-**; image into the screen**
+; image into the screen
 
-**inc di ;point to the next word in display**
+inc di ;point to the next word in display
 
-**inc di ; memory**
+inc di ; memory
 
-**loop XorColumnLoopEvenRows**
+loop XorColumnLoopEvenRows
 
-**add di,bx ;point to the start of the next**
+add di,bx ;point to the start of the next
 
-**; (odd) row of the image, which is**
+; (odd) row of the image, which is
 
-**; in the second bank of display**
+; in the second bank of display
 
-**; memory**
+; memory
 
-**mov cx,bp ;\# of words to draw per row of the**
+mov cx,bp ;\# of words to draw per row of the
 
-**; image**
+; image
 
-**XorColumnLoopOddRows:**
+XorColumnLoopOddRows:
 
-**lodsw ;next word of the image pattern**
+lodsw ;next word of the image pattern
 
-**xor es:[di],ax ;XOR the next word of the**
+xor es:[di],ax ;XOR the next word of the
 
-**; image into the screen**
+; image into the screen
 
-**inc di ;point to the next word in display**
+inc di ;point to the next word in display
 
-**inc di ; memory**
+inc di ; memory
 
-**loop XorColumnLoopOddRows**
+loop XorColumnLoopOddRows
 
-**sub di,BANK\_OFFSET-SCREEN\_WIDTH+IMAGE\_WIDTH**
+sub di,BANK_OFFSET-SCREEN_WIDTH+IMAGE_WIDTH
 
-**;point to the start of the next**
+;point to the start of the next
 
-**; (even) row of the image, which is**
+; (even) row of the image, which is
 
-**; in the first bank of display**
+; in the first bank of display
 
-**; memory**
+; memory
 
-**dec dx ;count down the row pairs**
+dec dx ;count down the row pairs
 
-**jnz XorRowLoop**
+jnz XorRowLoop
 
-**pop bx ;restore the main loop's pointer**
+pop bx ;restore the main loop's pointer
 
-**ret**
+ret
 
-**;**
+;
 
-**; Main animation program.**
+; Main animation program.
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**;**
+;
 
-**; Set the mode to 320x200 4-color graphics mode.**
+; Set the mode to 320x200 4-color graphics mode.
 
-**;**
+;
 
-**mov ax,0004h ;AH=0 is mode select fn**
+mov ax,0004h ;AH=0 is mode select fn
 
-**;AL=4 selects mode 4,**
+;AL=4 selects mode 4,
 
-**; 320x200 4-color mode**
+; 320x200 4-color mode
 
-**int 10h ;invoke the BIOS video**
+int 10h ;invoke the BIOS video
 
-**; interrupt to set the mode**
+; interrupt to set the mode
 
-**;**
+;
 
-**; Point ES to display memory for the rest of the program.**
+; Point ES to display memory for the rest of the program.
 
-**;**
+;
 
-**mov ax,DISPLAY\_SEGMENT**
+mov ax,DISPLAY_SEGMENT
 
-**mov es,ax**
+mov es,ax
 
-**;**
+;
 
-**; We'll always want to count up.**
+; We'll always want to count up.
 
-**;**
+;
 
-**cld**
+cld
 
-**;**
+;
 
-**; Start timing.**
+; Start timing.
 
-**;**
+;
 
-**call ZTimerOn**
+call ZTimerOn
 
-**;**
+;
 
-**; Draw all the images initially.**
+; Draw all the images initially.
 
-**;**
+;
 
-**mov bx,offset Images ;list of images**
+mov bx,offset Images ;list of images
 
-**InitialDrawLoop:**
+InitialDrawLoop:
 
-**mov cx,[bx+XCoord] ;X coordinate**
+mov cx,[bx+XCoord] ;X coordinate
 
-**mov dx,[bx+YCoord] ;Y coordinate**
+mov dx,[bx+YCoord] ;Y coordinate
 
-**call XorImage ;draw this image**
+call XorImage ;draw this image
 
-**add bx,size Image ;point to next image**
+add bx,size Image ;point to next image
 
-**cmp bx,offset ImagesEnd**
+cmp bx,offset ImagesEnd
 
-**jb InitialDrawLoop ;draw next image, if**
+jb InitialDrawLoop ;draw next image, if
 
-**; there is one**
+; there is one
 
-**;**
+;
 
-**; Erase, move, and redraw each image in turn REPETITIONS**
+; Erase, move, and redraw each image in turn REPETITIONS
 
-**; times.**
+; times.
 
-**;**
+;
 
-**MainMoveAndDrawLoop:**
+MainMoveAndDrawLoop:
 
-**mov bx,offset Images ;list of images**
+mov bx,offset Images ;list of images
 
-**ImageMoveLoop:**
+ImageMoveLoop:
 
-**mov cx,[bx+XCoord] ;X coordinate**
+mov cx,[bx+XCoord] ;X coordinate
 
-**mov dx,[bx+YCoord] ;Y coordinate**
+mov dx,[bx+YCoord] ;Y coordinate
 
-**call XorImage ;erase this image (it's**
+call XorImage ;erase this image (it's
 
-**; already drawn at this**
+; already drawn at this
 
-**; location, so this XOR**
+; location, so this XOR
 
-**; erases it)**
+; erases it)
 
-**mov cx,[bx+XCoord] ;X coordinate**
+mov cx,[bx+XCoord] ;X coordinate
 
-**cmp cx,4 ;at left edge?**
+cmp cx,4 ;at left edge?
 
-**ja CheckRightMargin ;no**
+ja CheckRightMargin ;no
 
-**neg [bx+XInc] ;yes, so bounce**
+neg [bx+XInc] ;yes, so bounce
 
-**CheckRightMargin:**
+CheckRightMargin:
 
-**cmp cx,284 ;at right edge?**
+cmp cx,284 ;at right edge?
 
-**jb MoveX ;no**
+jb MoveX ;no
 
-**neg [bx+XInc] ;yes, so bounce**
+neg [bx+XInc] ;yes, so bounce
 
-**MoveX:**
+MoveX:
 
-**add cx,[bx+XInc] ;move horizontally**
+add cx,[bx+XInc] ;move horizontally
 
-**mov [bx+XCoord],cx ;save the new location**
+mov [bx+XCoord],cx ;save the new location
 
-**mov dx,[bx+YCoord] ;Y coordinate**
+mov dx,[bx+YCoord] ;Y coordinate
 
-**cmp dx,4 ;at top edge?**
+cmp dx,4 ;at top edge?
 
-**ja CheckBottomMargin ;no**
+ja CheckBottomMargin ;no
 
-**neg [bx+YInc] ;yes, so bounce**
+neg [bx+YInc] ;yes, so bounce
 
-**CheckBottomMargin:**
+CheckBottomMargin:
 
-**cmp dx,164 ;at bottom edge?**
+cmp dx,164 ;at bottom edge?
 
-**jb MoveY ;no**
+jb MoveY ;no
 
-**neg [bx+YInc] ;yes, so bounce**
+neg [bx+YInc] ;yes, so bounce
 
-**MoveY:**
+MoveY:
 
-**add dx,[bx+YInc] ;move horizontally**
+add dx,[bx+YInc] ;move horizontally
 
-**mov [bx+YCoord],dx ;save the new location**
+mov [bx+YCoord],dx ;save the new location
 
-**call XorImage ;draw the image at its**
+call XorImage ;draw the image at its
 
-**; new location**
+; new location
 
-**add bx,size Image ;point to the next image**
+add bx,size Image ;point to the next image
 
-**cmp bx,offset ImagesEnd**
+cmp bx,offset ImagesEnd
 
-**jb ImageMoveLoop ;move next image, if there**
+jb ImageMoveLoop ;move next image, if there
 
-**; is one**
+; is one
 
 
-**if DELAY**
+if DELAY
 
-**mov cx,DELAY ;slow down as specified**
+mov cx,DELAY ;slow down as specified
 
-**loop $**
+loop $
 
-**endif**
+endif
 
-**dec [RepCount] ;animate again?**
+dec [RepCount] ;animate again?
 
-**jnz MainMoveAndDrawLoop ;yes**
+jnz MainMoveAndDrawLoop ;yes
 
-**;**
+;
 
-**call ZTimerOff ;done timing**
+call ZTimerOff ;done timing
 
-**;**
+;
 
-**; Return to text mode.**
+; Return to text mode.
 
-**;**
+;
 
-**mov ax,0003h ;AH=0 is mode select fn**
+mov ax,0003h ;AH=0 is mode select fn
 
-**;AL=3 selects mode 3,**
+;AL=3 selects mode 3,
 
-**; 80x25 text mode**
+; 80x25 text mode
 
-**int 10h ;invoke the BIOS video**
+int 10h ;invoke the BIOS video
 
-**; interrupt to set the mode**
+; interrupt to set the mode
 
 
 
 ## Listing 11-34
 
 
-**;**
+;
 
-**; \*\*\* Listing 11-34 \*\*\***
+; *** Listing 11-34 ***
 
-**;**
+;
 
-**; Illustrates animation based on block moves.**
+; Illustrates animation based on block moves.
 
-**; Animates 10 images at once.**
+; Animates 10 images at once.
 
-**; Not a general animation implementation, but rather an**
+; Not a general animation implementation, but rather an
 
-**; example of the strengths and weaknesses of block-move**
+; example of the strengths and weaknesses of block-move
 
-**; based animation.**
+; based animation.
 
-**;**
+;
 
-**; Make with LZTIME.BAT, since this program is too long to be**
+; Make with LZTIME.BAT, since this program is too long to be
 
-**; handled by the precision Zen timer.**
+; handled by the precision Zen timer.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**DELAY equ 0 ;set to higher values to**
+DELAY equ 0 ;set to higher values to
 
-**; slow down for closer**
+; slow down for closer
 
-**; observation**
+; observation
 
-**REPETITIONS equ 500 ;\# of times to move and**
+REPETITIONS equ 500 ;\# of times to move and
 
-**; redraw the images**
+; redraw the images
 
-**DISPLAY\_SEGMENT equ 0b800h ;display memory segment**
+DISPLAY_SEGMENT equ 0b800h ;display memory segment
 
-**; in 320x200 4-color**
+; in 320x200 4-color
 
-**; graphics mode**
+; graphics mode
 
-**SCREEN\_WIDTH equ 80 ;\# of bytes per scan line**
+SCREEN_WIDTH equ 80 ;\# of bytes per scan line
 
-**BANK\_OFFSET equ 2000h ;offset from the bank**
+BANK_OFFSET equ 2000h ;offset from the bank
 
-**; containing the even-**
+; containing the even-
 
-**; numbered lines on the**
+; numbered lines on the
 
-**; screen to the bank**
+; screen to the bank
 
-**; containing the odd-**
+; containing the odd-
 
-**; numbered lines**
+; numbered lines
 
-**;**
+;
 
-**; Used to count down \# of times images are moved.**
+; Used to count down \# of times images are moved.
 
-**;**
+;
 
-**RepCount dw REPETITIONS**
+RepCount dw REPETITIONS
 
-**;**
+;
 
-**; Complete info about one image that we're animating.**
+; Complete info about one image that we're animating.
 
-**;**
+;
 
-**Image struc**
+Image struc
 
-**XCoord dw ? ;image X location in pixels**
+XCoord dw ? ;image X location in pixels
 
-**XInc dw ? ;\# of pixels to increment**
+XInc dw ? ;\# of pixels to increment
 
-**; location by in the X**
+; location by in the X
 
-**; direction on each move**
+; direction on each move
 
-**YCoord dw ? ;image Y location in pixels**
+YCoord dw ? ;image Y location in pixels
 
-**YInc dw ? ;\# of pixels to increment**
+YInc dw ? ;\# of pixels to increment
 
-**; location by in the Y**
+; location by in the Y
 
-**; direction on each move**
+; direction on each move
 
-**Image ends**
+Image ends
 
-**;**
+;
 
-**; List of images to animate.**
+; List of images to animate.
 
-**;**
+;
 
-**Images label Image**
+Images label Image
 
-**Image <60,4,4,4\>**
+Image <60,4,4,4\>
 
-**Image <140,0,52,2\>**
+Image <140,0,52,2\>
 
-**Image <220,-4,100,0\>**
+Image <220,-4,100,0\>
 
-**Image <60,4,148,-2\>**
+Image <60,4,148,-2\>
 
-**Image <140,0,4,-4\>**
+Image <140,0,4,-4\>
 
-**Image <220,-4,52,-2\>**
+Image <220,-4,52,-2\>
 
-**Image <60,4,100,0\>**
+Image <60,4,100,0\>
 
-**Image <140,0,148,2\>**
+Image <140,0,148,2\>
 
-**Image <220,-4,4,4\>**
+Image <220,-4,4,4\>
 
-**Image <60,4,52,2\>**
+Image <60,4,52,2\>
 
-**ImagesEnd label Image**
+ImagesEnd label Image
 
-**;**
+;
 
-**; Pixel pattern for the one image this program draws,**
+; Pixel pattern for the one image this program draws,
 
-**; a 32x32 3-color square. There's a 4-pixel-wide blank**
+; a 32x32 3-color square. There's a 4-pixel-wide blank
 
-**; fringe around each image, which makes sure the image at**
+; fringe around each image, which makes sure the image at
 
-**; the old location is erased by the drawing of the image at**
+; the old location is erased by the drawing of the image at
 
-**; the new location.**
+; the new location.
 
-**;**
+;
 
-**TheImage label byte**
+TheImage label byte
 
-**rept 4**
+rept 4
 
-**dw 5 dup (0) ;top blank fringe**
+dw 5 dup (0) ;top blank fringe
 
-**endm**
+endm
 
-**rept 32**
+rept 32
 
-**db 00h ;left blank fringe**
+db 00h ;left blank fringe
 
-**dw 0ffffh, 05555h, 0aaaah, 0ffffh**
+dw 0ffffh, 05555h, 0aaaah, 0ffffh
 
-**db 00h ;right blank fringe**
+db 00h ;right blank fringe
 
-**endm**
+endm
 
-**rept 4**
+rept 4
 
-**dw 5 dup (0) ;bottom blank fringe**
+dw 5 dup (0) ;bottom blank fringe
 
-**endm**
+endm
 
-**IMAGE\_HEIGHT equ 40 ;\# of rows in the image**
+IMAGE_HEIGHT equ 40 ;\# of rows in the image
 
-**; (including blank fringe)**
+; (including blank fringe)
 
-**IMAGE\_WIDTH equ 10 ;\# of bytes across the image**
+IMAGE_WIDTH equ 10 ;\# of bytes across the image
 
-**; (including blank fringe)**
+; (including blank fringe)
 
-**;**
+;
 
-**; Block-move draws the image of a 3-color square at the**
+; Block-move draws the image of a 3-color square at the
 
-**; specified screen location. Assumes images start on**
+; specified screen location. Assumes images start on
 
-**; even-numbered scan lines and are an even number of**
+; even-numbered scan lines and are an even number of
 
-**; scan lines high. Always draws images byte-aligned in**
+; scan lines high. Always draws images byte-aligned in
 
-**; display memory.**
+; display memory.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; CX = X coordinate of upper left corner at which to**
+; CX = X coordinate of upper left corner at which to
 
-**; draw image (will be adjusted to nearest**
+; draw image (will be adjusted to nearest
 
-**; less-than or equal-to multiple of 4 in order**
+; less-than or equal-to multiple of 4 in order
 
-**; to byte-align)**
+; to byte-align)
 
-**; DX = Y coordinate of upper left corner at which to**
+; DX = Y coordinate of upper left corner at which to
 
-**; draw image**
+; draw image
 
-**; ES = display memory segment**
+; ES = display memory segment
 
-**;**
+;
 
-**; Output: none**
+; Output: none
 
-**;**
+;
 
-**; Registers altered: AX, CX, DX, SI, DI, BP**
+; Registers altered: AX, CX, DX, SI, DI, BP
 
-**;**
+;
 
-**BlockDrawImage:**
+BlockDrawImage:
 
-**push bx ;preserve the main loop's pointer**
+push bx ;preserve the main loop's pointer
 
-**shr dx,1 ;divide the row \# by 2 to compensate**
+shr dx,1 ;divide the row \# by 2 to compensate
 
-**; for the 2-bank nature of 320x200**
+; for the 2-bank nature of 320x200
 
-**; 4-color mode**
+; 4-color mode
 
-**mov ax,SCREEN\_WIDTH**
+mov ax,SCREEN_WIDTH
 
-**mul dx ;start offset of top row of image in**
+mul dx ;start offset of top row of image in
 
-**; display memory**
+; display memory
 
-**shr cx,1 ;divide the X coordinate by 4**
+shr cx,1 ;divide the X coordinate by 4
 
-**shr cx,1 ; because there are 4 pixels per**
+shr cx,1 ; because there are 4 pixels per
 
-**; byte**
+; byte
 
-**add ax,cx ;point to the offset at which the**
+add ax,cx ;point to the offset at which the
 
-**; upper left byte of the image will**
+; upper left byte of the image will
 
-**; go**
+; go
 
-**mov di,ax**
+mov di,ax
 
-**mov si,offset TheImage**
+mov si,offset TheImage
 
-**;point to the start of the one image**
+;point to the start of the one image
 
-**; we always draw**
+; we always draw
 
-**mov ax,BANK\_OFFSET-SCREEN\_WIDTH+IMAGE\_WIDTH**
+mov ax,BANK_OFFSET-SCREEN_WIDTH+IMAGE_WIDTH
 
-**;offset from the end of an odd line**
+;offset from the end of an odd line
 
-**; of the image in display memory to**
+; of the image in display memory to
 
-**; the start of the next even line of**
+; the start of the next even line of
 
-**; the image**
+; the image
 
-**mov bx,BANK\_OFFSET-IMAGE\_WIDTH**
+mov bx,BANK_OFFSET-IMAGE_WIDTH
 
-**;offset from the end of an even line**
+;offset from the end of an even line
 
-**; of the image in display memory to**
+; of the image in display memory to
 
-**; the start of the next odd line of**
+; the start of the next odd line of
 
-**; the image**
+; the image
 
-**mov dx,IMAGE\_HEIGHT/2**
+mov dx,IMAGE_HEIGHT/2
 
-**;\# of even/odd numbered row pairs to**
+;\# of even/odd numbered row pairs to
 
-**; draw in the image**
+; draw in the image
 
-**mov bp,IMAGE\_WIDTH/2**
+mov bp,IMAGE_WIDTH/2
 
-**;\# of words to draw per row of the**
+;\# of words to draw per row of the
 
-**; image. Note that IMAGE\_WIDTH must**
+; image. Note that IMAGE_WIDTH must
 
-**; be an even number since we draw**
+; be an even number since we draw
 
-**; the image a word at a time**
+; the image a word at a time
 
-**BlockDrawRowLoop:**
+BlockDrawRowLoop:
 
-**mov cx,bp ;\# of words to draw per row of the**
+mov cx,bp ;\# of words to draw per row of the
 
-**; image**
+; image
 
-**rep movsw ;draw a whole even row with this one**
+rep movsw ;draw a whole even row with this one
 
-**; repeated instruction**
+; repeated instruction
 
-**add di,bx ;point to the start of the next**
+add di,bx ;point to the start of the next
 
-**; (odd) row of the image, which is**
+; (odd) row of the image, which is
 
-**; in the second bank of display**
+; in the second bank of display
 
-**; memory**
+; memory
 
-**mov cx,bp ;\# of words to draw per row of the**
+mov cx,bp ;\# of words to draw per row of the
 
-**; image**
+; image
 
-**rep movsw ;draw a whole odd row with this one**
+rep movsw ;draw a whole odd row with this one
 
-**; repeated instruction**
+; repeated instruction
 
-**sub di,ax**
+sub di,ax
 
-**;point to the start of the next**
+;point to the start of the next
 
-**; (even) row of the image, which is**
+; (even) row of the image, which is
 
-**; in the first bank of display**
+; in the first bank of display
 
-**; memory**
+; memory
 
-**dec dx ;count down the row pairs**
+dec dx ;count down the row pairs
 
-**jnz BlockDrawRowLoop**
+jnz BlockDrawRowLoop
 
-**pop bx ;restore the main loop's pointer**
+pop bx ;restore the main loop's pointer
 
-**ret**
+ret
 
-**;**
+;
 
-**; Main animation program.**
+; Main animation program.
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**;**
+;
 
-**; Set the mode to 320x200 4-color graphics mode.**
+; Set the mode to 320x200 4-color graphics mode.
 
-**;**
+;
 
-**mov ax,0004h ;AH=0 is mode select fn**
+mov ax,0004h ;AH=0 is mode select fn
 
-**;AL=4 selects mode 4,**
+;AL=4 selects mode 4,
 
-**; 320x200 4-color mode**
+; 320x200 4-color mode
 
-**int 10h ;invoke the BIOS video**
+int 10h ;invoke the BIOS video
 
-**; interrupt to set the mode**
+; interrupt to set the mode
 
-**;**
+;
 
-**; Point ES to display memory for the rest of the program.**
+; Point ES to display memory for the rest of the program.
 
-**;**
+;
 
-**mov ax,DISPLAY\_SEGMENT**
+mov ax,DISPLAY_SEGMENT
 
-**mov es,ax**
+mov es,ax
 
-**;**
+;
 
-**; We'll always want to count up.**
+; We'll always want to count up.
 
-**;**
+;
 
-**cld**
+cld
 
-**;**
+;
 
-**; Start timing.**
+; Start timing.
 
-**;**
+;
 
-**call ZTimerOn**
+call ZTimerOn
 
-**;**
+;
 
-**; There's no need to draw all the images initially with**
+; There's no need to draw all the images initially with
 
-**; block-move animation.**
+; block-move animation.
 
-**;**
+;
 
-**; Move and redraw each image in turn REPETITIONS times.**
+; Move and redraw each image in turn REPETITIONS times.
 
-**; Redrawing automatically erases the image at the old**
+; Redrawing automatically erases the image at the old
 
-**; location, thanks to the blank fringe.**
+; location, thanks to the blank fringe.
 
-**;**
+;
 
-**MainMoveAndDrawLoop:**
+MainMoveAndDrawLoop:
 
-**mov bx,offset Images ;list of images**
+mov bx,offset Images ;list of images
 
-**ImageMoveLoop:**
+ImageMoveLoop:
 
-**mov cx,[bx+XCoord] ;X coordinate**
+mov cx,[bx+XCoord] ;X coordinate
 
-**cmp cx,0 ;at left edge?**
+cmp cx,0 ;at left edge?
 
-**ja CheckRightMargin ;no**
+ja CheckRightMargin ;no
 
-**neg [bx+XInc] ;yes, so bounce**
+neg [bx+XInc] ;yes, so bounce
 
-**CheckRightMargin:**
+CheckRightMargin:
 
-**cmp cx,280 ;at right edge?**
+cmp cx,280 ;at right edge?
 
-**jb MoveX ;no**
+jb MoveX ;no
 
-**neg [bx+XInc] ;yes, so bounce**
+neg [bx+XInc] ;yes, so bounce
 
-**MoveX:**
+MoveX:
 
-**add cx,[bx+XInc] ;move horizontally**
+add cx,[bx+XInc] ;move horizontally
 
-**mov [bx+XCoord],cx ;save the new location**
+mov [bx+XCoord],cx ;save the new location
 
-**mov dx,[bx+YCoord] ;Y coordinate**
+mov dx,[bx+YCoord] ;Y coordinate
 
-**cmp dx,0 ;at top edge?**
+cmp dx,0 ;at top edge?
 
-**ja CheckBottomMargin ;no**
+ja CheckBottomMargin ;no
 
-**neg [bx+YInc] ;yes, so bounce**
+neg [bx+YInc] ;yes, so bounce
 
-**CheckBottomMargin:**
+CheckBottomMargin:
 
-**cmp dx,160 ;at bottom edge?**
+cmp dx,160 ;at bottom edge?
 
-**jb MoveY ;no**
+jb MoveY ;no
 
-**neg [bx+YInc] ;yes, so bounce**
+neg [bx+YInc] ;yes, so bounce
 
-**MoveY:**
+MoveY:
 
-**add dx,[bx+YInc] ;move horizontally**
+add dx,[bx+YInc] ;move horizontally
 
-**mov [bx+YCoord],dx ;save the new location**
+mov [bx+YCoord],dx ;save the new location
 
-**call BlockDrawImage ;draw the image at its**
+call BlockDrawImage ;draw the image at its
 
-**; new location**
+; new location
 
-**add bx,size Image ;point to the next image**
+add bx,size Image ;point to the next image
 
-**cmp bx,offset ImagesEnd**
+cmp bx,offset ImagesEnd
 
-**jb ImageMoveLoop ;move next image, if there**
+jb ImageMoveLoop ;move next image, if there
 
-**; is one**
+; is one
 
 
-**if DELAY**
+if DELAY
 
-**mov cx,DELAY ;slow down as specified**
+mov cx,DELAY ;slow down as specified
 
-**loop $**
+loop $
 
-**endif**
+endif
 
-**dec [RepCount] ;animate again?**
+dec [RepCount] ;animate again?
 
-**jnz MainMoveAndDrawLoop ;yes**
+jnz MainMoveAndDrawLoop ;yes
 
-**;**
+;
 
-**call ZTimerOff ;done timing**
+call ZTimerOff ;done timing
 
-**;**
+;
 
-**; Return to text mode.**
+; Return to text mode.
 
-**;**
+;
 
-**mov ax,0003h ;AH=0 is mode select fn**
+mov ax,0003h ;AH=0 is mode select fn
 
-**;AL=3 selects mode 3,**
+;AL=3 selects mode 3,
 
-**; 80x25 text mode**
+; 80x25 text mode
 
-**int 10h ;invoke the BIOS video**
+int 10h ;invoke the BIOS video
 
-**; interrupt to set the mode**
+; interrupt to set the mode
 
 
 
 ## Listing 12-1
 
 
-**;**
+;
 
-**; \*\*\* Listing 12-1 \*\*\***
+; *** Listing 12-1 ***
 
-**;**
+;
 
-**; Measures the performance of JMP.**
+; Measures the performance of JMP.
 
-**;**
+;
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rept 1000**
+rept 1000
 
-**jmp short $+2 ;we'll do a short jump,**
+jmp short $+2 ;we'll do a short jump,
 
-**; since the next instruction**
+; since the next instruction
 
-**; can be reached with a**
+; can be reached with a
 
-**; 1-byte displacement**
+; 1-byte displacement
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 ## Listing 12-2
 
 
-**;**
+;
 
-**; \*\*\* Listing 12-2 \*\*\***
+; *** Listing 12-2 ***
 
-**;**
+;
 
-**; Measures the performance of IMUL when used to calculate**
+; Measures the performance of IMUL when used to calculate
 
-**; the 32-bit product of two 16-bit factors each with a value**
+; the 32-bit product of two 16-bit factors each with a value
 
-**; of zero.**
+; of zero.
 
-**;**
+;
 
-**sub ax,ax ;we'll multiply zero times zero**
+sub ax,ax ;we'll multiply zero times zero
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rept 1000**
+rept 1000
 
-**imul ax**
+imul ax
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 12-3
 
 
-**;**
+;
 
-**; \*\*\* Listing 12-3 \*\*\***
+; *** Listing 12-3 ***
 
-**;**
+;
 
-**; Measures the performance of JMP when the prefetch queue**
+; Measures the performance of JMP when the prefetch queue
 
-**; is full when it comes time for each JMP to run.**
+; is full when it comes time for each JMP to run.
 
-**;**
+;
 
-**sub ax,ax ;we'll multiply zero times zero**
+sub ax,ax ;we'll multiply zero times zero
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rept 1000**
+rept 1000
 
-**imul ax ;let the prefetch queue fill**
+imul ax ;let the prefetch queue fill
 
-**jmp short $+2 ;we'll do a short jump,**
+jmp short $+2 ;we'll do a short jump,
 
-**; since the next instruction**
+; since the next instruction
 
-**; is less than 127 bytes**
+; is less than 127 bytes
 
-**; away**
+; away
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 12-4
 
 
-**;**
+;
 
-**; \*\*\* Listing 12-4 \*\*\***
+; *** Listing 12-4 ***
 
-**;**
+;
 
-**; Measures the performance of JMP when 1) the prefetch queue**
+; Measures the performance of JMP when 1) the prefetch queue
 
-**; is full when it comes time for each JMP to run and 2) the**
+; is full when it comes time for each JMP to run and 2) the
 
-**; prefetch queue is allowed to fill faster than the**
+; prefetch queue is allowed to fill faster than the
 
-**; instruction bytes after the JMP are requested by the EU,**
+; instruction bytes after the JMP are requested by the EU,
 
-**; so the EU doesn't have to wait for instruction bytes.**
+; so the EU doesn't have to wait for instruction bytes.
 
-**;**
+;
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rept 1000**
+rept 1000
 
-**push ax ;let the prefetch queue fill while**
+push ax ;let the prefetch queue fill while
 
-**; the first instruction byte after**
+; the first instruction byte after
 
-**; each branch executes**
+; each branch executes
 
-**jmp short $+2 ;we'll do a short jump,**
+jmp short $+2 ;we'll do a short jump,
 
-**; since the next instruction**
+; since the next instruction
 
-**; is less than 127 bytes**
+; is less than 127 bytes
 
-**; away**
+; away
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 12-5
 
 
-**;**
+;
 
-**; \*\*\* Listing 12-5 \*\*\***
+; *** Listing 12-5 ***
 
-**;**
+;
 
-**; Measures the performance of PUSH AX.**
+; Measures the performance of PUSH AX.
 
-**;**
+;
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rept 1000**
+rept 1000
 
-**push ax**
+push ax
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 13-1
 
 
-**;**
+;
 
-**; \*\*\* Listing 13-1 \*\*\***
+; *** Listing 13-1 ***
 
-**;**
+;
 
-**; Generates the cumulative exclusive-or of all bytes in a**
+; Generates the cumulative exclusive-or of all bytes in a
 
-**; 64-byte block of memory by using the LOOP instruction to**
+; 64-byte block of memory by using the LOOP instruction to
 
-**; repeat the same code 64 times.**
+; repeat the same code 64 times.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**; The 64-byte block for which to generate the cumulative**
+; The 64-byte block for which to generate the cumulative
 
-**; exclusive-or.**
+; exclusive-or.
 
-**;**
+;
 
-**X=1**
+X=1
 
-**ByteArray label byte**
+ByteArray label byte
 
-**rept 64**
+rept 64
 
-**db X**
+db X
 
-**X=X+1**
+X=X+1
 
-**endm**
+endm
 
-**;**
+;
 
-**; Generates the cumulative exclusive-or of all bytes in a**
+; Generates the cumulative exclusive-or of all bytes in a
 
-**; 64-byte memory block.**
+; 64-byte memory block.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; SI = pointer to start of 64-byte block for which to**
+; SI = pointer to start of 64-byte block for which to
 
-**; calculate cumulative exclusive-or**
+; calculate cumulative exclusive-or
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; AH = cumulative exclusive-or of all bytes in the**
+; AH = cumulative exclusive-or of all bytes in the
 
-**; 64-byte block**
+; 64-byte block
 
-**;**
+;
 
-**; Registers altered: AX, CX, SI**
+; Registers altered: AX, CX, SI
 
-**;**
+;
 
-**CumulativeXor:**
+CumulativeXor:
 
-**cld**
+cld
 
-**sub ah,ah ;initialize our cumulative XOR to 0**
+sub ah,ah ;initialize our cumulative XOR to 0
 
-**mov cx,64 ;number of bytes to XOR together**
+mov cx,64 ;number of bytes to XOR together
 
-**XorLoop:**
+XorLoop:
 
-**lodsb ;get the next byte and**
+lodsb ;get the next byte and
 
-**xor ah,al ; XOR it into the cumulative result**
+xor ah,al ; XOR it into the cumulative result
 
-**loop XorLoop**
+loop XorLoop
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov si,offset ByteArray**
+mov si,offset ByteArray
 
-**;point to the 64-byte block**
+;point to the 64-byte block
 
-**call CumulativeXor ;get the cumulative XOR**
+call CumulativeXor ;get the cumulative XOR
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 13-2
 
 
-**;**
+;
 
-**; \*\*\* Listing 13-2 \*\*\***
+; *** Listing 13-2 ***
 
-**;**
+;
 
-**; Generates the cumulative exclusive-or of all bytes in a**
+; Generates the cumulative exclusive-or of all bytes in a
 
-**; 64-byte block of memory by replicating the exclusive-or**
+; 64-byte block of memory by replicating the exclusive-or
 
-**; code 64 times and then executing all 64 instances in a**
+; code 64 times and then executing all 64 instances in a
 
-**; row without branching.**
+; row without branching.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**; The 64-byte block for which to generate the cumulative**
+; The 64-byte block for which to generate the cumulative
 
-**; exclusive-or.**
+; exclusive-or.
 
-**;**
+;
 
-**X=1**
+X=1
 
-**ByteArray label byte**
+ByteArray label byte
 
-**rept 64**
+rept 64
 
-**db X**
+db X
 
-**X=X+1**
+X=X+1
 
-**endm**
+endm
 
-**;**
+;
 
-**; Generates the cumulative exclusive-or of all bytes in a**
+; Generates the cumulative exclusive-or of all bytes in a
 
-**; 64-byte memory block.**
+; 64-byte memory block.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; SI = pointer to start of 64-byte block for which to**
+; SI = pointer to start of 64-byte block for which to
 
-**; calculate cumulative exclusive-or**
+; calculate cumulative exclusive-or
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; AH = cumulative exclusive-or of all bytes in the**
+; AH = cumulative exclusive-or of all bytes in the
 
-**; 64-byte block**
+; 64-byte block
 
-**;**
+;
 
-**; Registers altered: AX, SI**
+; Registers altered: AX, SI
 
-**;**
+;
 
-**CumulativeXor:**
+CumulativeXor:
 
-**sub ah,ah ;initialize our cumulative XOR to 0**
+sub ah,ah ;initialize our cumulative XOR to 0
 
-**rept 64**
+rept 64
 
-**lodsb ;get the next byte and**
+lodsb ;get the next byte and
 
-**xor ah,al ; XOR it into the cumulative result**
+xor ah,al ; XOR it into the cumulative result
 
-**endm**
+endm
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**cld**
+cld
 
-**mov si,offset ByteArray**
+mov si,offset ByteArray
 
-**;point to the 64-byte block**
+;point to the 64-byte block
 
-**call CumulativeXor ;get the cumulative XOR**
+call CumulativeXor ;get the cumulative XOR
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 13-3
 
 
-**;**
+;
 
-**; \*\*\* Listing 13-3 \*\*\***
+; *** Listing 13-3 ***
 
-**;**
+;
 
-**; Tests whether several characters are in the set**
+; Tests whether several characters are in the set
 
-**; {A,Z,3,!} by using the compare-and-jump approach,**
+; {A,Z,3,!} by using the compare-and-jump approach,
 
-**; branching each time a match isn't found.**
+; branching each time a match isn't found.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**; Determines whether a given character is in the set**
+; Determines whether a given character is in the set
 
-**; {A,Z,3,!}.**
+; {A,Z,3,!}.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; AL = character to check for inclusion in the set**
+; AL = character to check for inclusion in the set
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; Z if character is in TestSet, NZ otherwise**
+; Z if character is in TestSet, NZ otherwise
 
-**;**
+;
 
-**; Registers altered: none**
+; Registers altered: none
 
-**;**
+;
 
-**CheckTestSetInclusion:**
+CheckTestSetInclusion:
 
-**cmp al,'A' ;is it 'A'?**
+cmp al,'A' ;is it 'A'?
 
-**jnz CheckTestSetZ**
+jnz CheckTestSetZ
 
-**ret ;yes, we're done**
+ret ;yes, we're done
 
-**CheckTestSetZ:**
+CheckTestSetZ:
 
-**cmp al,'Z' ;is it 'Z'?**
+cmp al,'Z' ;is it 'Z'?
 
-**jnz CheckTestSet3**
+jnz CheckTestSet3
 
-**ret ;yes, we're done**
+ret ;yes, we're done
 
-**CheckTestSet3:**
+CheckTestSet3:
 
-**cmp al,'3' ;is it '3'?**
+cmp al,'3' ;is it '3'?
 
-**jnz CheckTestSetEx**
+jnz CheckTestSetEx
 
-**ret ;yes, we're done**
+ret ;yes, we're done
 
-**CheckTestSetEx:**
+CheckTestSetEx:
 
-**cmp al,'!' ;is it '!'?**
+cmp al,'!' ;is it '!'?
 
-**ret ;the success status is already in**
+ret ;the success status is already in
 
-**; the Zero flag**
+; the Zero flag
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov al,'A'**
+mov al,'A'
 
-**call CheckTestSetInclusion ;check 'A'**
+call CheckTestSetInclusion ;check 'A'
 
-**mov al,'Z'**
+mov al,'Z'
 
-**call CheckTestSetInclusion ;check 'Z'**
+call CheckTestSetInclusion ;check 'Z'
 
-**mov al,'3'**
+mov al,'3'
 
-**call CheckTestSetInclusion ;check '3'**
+call CheckTestSetInclusion ;check '3'
 
-**mov al,'!'**
+mov al,'!'
 
-**call CheckTestSetInclusion ;check '!'**
+call CheckTestSetInclusion ;check '!'
 
-**mov al,' '**
+mov al,' '
 
-**call CheckTestSetInclusion ;check space, so**
+call CheckTestSetInclusion ;check space, so
 
-**; we've got a failed**
+; we've got a failed
 
-**; search**
+; search
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 13-4
 
 
-**;**
+;
 
-**; \*\*\* Listing 13-4 \*\*\***
+; *** Listing 13-4 ***
 
-**;**
+;
 
-**; Negates several 32-bit values with non-branching code.**
+; Negates several 32-bit values with non-branching code.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**; Negates a 32-bit value.**
+; Negates a 32-bit value.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; DX:AX = 32-bit value to negate**
+; DX:AX = 32-bit value to negate
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; DX:AX = negated 32-bit value**
+; DX:AX = negated 32-bit value
 
-**;**
+;
 
-**; Registers altered: AX, DX**
+; Registers altered: AX, DX
 
-**;**
+;
 
-**Negate32Bits:**
+Negate32Bits:
 
-**neg dx**
+neg dx
 
-**neg ax**
+neg ax
 
-**sbb dx,0**
+sbb dx,0
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**; First, negate zero.**
+; First, negate zero.
 
-**sub dx,dx**
+sub dx,dx
 
-**mov ax,dx ;0**
+mov ax,dx ;0
 
-**call Negate32Bits**
+call Negate32Bits
 
-**; Next, negate 1 through 50.**
+; Next, negate 1 through 50.
 
-**X=1**
+X=1
 
-**rept 50**
+rept 50
 
-**sub dx,dx**
+sub dx,dx
 
-**mov ax,X**
+mov ax,X
 
-**call Negate32Bits**
+call Negate32Bits
 
-**X=X+1**
+X=X+1
 
-**endm**
+endm
 
-**; Finally, negate -1 through -50.**
+; Finally, negate -1 through -50.
 
-**X=-1**
+X=-1
 
-**rept 50**
+rept 50
 
-**mov dx,0ffffh**
+mov dx,0ffffh
 
-**mov ax,X**
+mov ax,X
 
-**call Negate32Bits**
+call Negate32Bits
 
-**X=X-1**
+X=X-1
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 13-5
 
 
-**;**
+;
 
-**; \*\*\* Listing 13-5 \*\*\***
+; *** Listing 13-5 ***
 
-**;**
+;
 
-**; Negates several 32-bit values using the branch-on-zero-AX**
+; Negates several 32-bit values using the branch-on-zero-AX
 
-**; approach.**
+; approach.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**; Negates a 32-bit value.**
+; Negates a 32-bit value.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; DX:AX = 32-bit value to negate**
+; DX:AX = 32-bit value to negate
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; DX:AX = negated 32-bit value**
+; DX:AX = negated 32-bit value
 
-**;**
+;
 
-**; Registers altered: AX, DX**
+; Registers altered: AX, DX
 
-**;**
+;
 
-**;
--------------------------------------------------------------------------------------------------**
+;
+-------------------------------------------------------------------------------------------------
 
-**; Branching-out exit for Negate32Bits when AX negates to**
+; Branching-out exit for Negate32Bits when AX negates to
 
-**; zero, necessitating an increment of DX.**
+; zero, necessitating an increment of DX.
 
-**;**
+;
 
-**Negate32BitsIncDX:**
+Negate32BitsIncDX:
 
-**inc dx**
+inc dx
 
-**ret**
+ret
 
-**;**
+;
 
-**Negate32Bits:**
+Negate32Bits:
 
-**not dx**
+not dx
 
-**neg ax**
+neg ax
 
-**jnc Negate32BitsIncDX**
+jnc Negate32BitsIncDX
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**; First, negate zero.**
+; First, negate zero.
 
-**sub dx,dx**
+sub dx,dx
 
-**mov ax,dx ;0**
+mov ax,dx ;0
 
-**call Negate32Bits**
+call Negate32Bits
 
-**; Next, negate 1 through 50.**
+; Next, negate 1 through 50.
 
-**X=1**
+X=1
 
-**rept 50**
+rept 50
 
-**sub dx,dx**
+sub dx,dx
 
-**mov ax,X**
+mov ax,X
 
-**call Negate32Bits**
+call Negate32Bits
 
-**X=X+1**
+X=X+1
 
-**endm**
+endm
 
-**; Finally, negate -1 through -50.**
+; Finally, negate -1 through -50.
 
-**X=-1**
+X=-1
 
-**rept 50**
+rept 50
 
-**mov dx,0ffffh**
+mov dx,0ffffh
 
-**mov ax,X**
+mov ax,X
 
-**call Negate32Bits**
+call Negate32Bits
 
-**X=X-1**
+X=X-1
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 13-6
 
 
-**;**
+;
 
-**; \*\*\* Listing 13-6 \*\*\***
+; *** Listing 13-6 ***
 
-**;**
+;
 
-**; Measures the time needed to set AL, based on the contents**
+; Measures the time needed to set AL, based on the contents
 
-**; of DL, with test-and-branch code (a branch is required no**
+; of DL, with test-and-branch code (a branch is required no
 
-**; matter what value DL contains).**
+; matter what value DL contains).
 
-**;**
+;
 
-**;
----------------------------------------------------------------------------------------------------------**
+;
+---------------------------------------------------------------------------------------------------------
 
-**; Macro to perform the test of DL and setting of AL.**
+; Macro to perform the test of DL and setting of AL.
 
-**; It's necessary to use a macro because the LOCAL directive**
+; It's necessary to use a macro because the LOCAL directive
 
-**; doesn't work properly inside REPT blocks with MASM.**
+; doesn't work properly inside REPT blocks with MASM.
 
-**;**
+;
 
-**TEST\_DL\_AND\_SET\_AL macro**
+TEST_DL_AND_SET_AL macro
 
-**local DLGreaterThan10, DLCheckDone**
+local DLGreaterThan10, DLCheckDone
 
-**cmp dl,10 ;is DL greater than 10?**
+cmp dl,10 ;is DL greater than 10?
 
-**ja DLGreaterThan10 ;yes, so set AL to 1**
+ja DLGreaterThan10 ;yes, so set AL to 1
 
-**sub al,al ;DLis <= 10**
+sub al,al ;DLis <= 10
 
-**jmp short DLCheckDone**
+jmp short DLCheckDone
 
-**DLGreaterThan10:**
+DLGreaterThan10:
 
-**mov al,1 ;DLis greater than 10**
+mov al,1 ;DLis greater than 10
 
-**DLCheckDone:**
+DLCheckDone:
 
-**endm**
+endm
 
-**;**
+;
 
-**mov dl,10 ;AL will always be set to 0**
+mov dl,10 ;AL will always be set to 0
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rept 1000**
+rept 1000
 
-**TEST\_DL\_AND\_SET\_AL**
+TEST_DL_AND_SET_AL
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 ## Listing 13-7
 
 
-**;**
+;
 
-**; \*\*\* Listing 13-7 \*\*\***
+; *** Listing 13-7 ***
 
-**;**
+;
 
-**; Measures the time needed to set AL, based on the contents**
+; Measures the time needed to set AL, based on the contents
 
-**; of DL, with preload code (a branch is required in only one**
+; of DL, with preload code (a branch is required in only one
 
-**; of the two possible cases).**
+; of the two possible cases).
 
-**;**
+;
 
-**;
-------------------------------------------------------------------------------------------------------**
+;
+------------------------------------------------------------------------------------------------------
 
-**; Macro to perform the test of DL and setting of AL.**
+; Macro to perform the test of DL and setting of AL.
 
-**; It's necessary to use a macro because the LOCAL directive**
+; It's necessary to use a macro because the LOCAL directive
 
-**; doesn't work properly inside REPT blocks with MASM.**
+; doesn't work properly inside REPT blocks with MASM.
 
-**;**
+;
 
-**TEST\_DL\_AND\_SET\_AL macro**
+TEST_DL_AND_SET_AL macro
 
-**local DLCheckDone**
+local DLCheckDone
 
-**sub al,al ;assume DL <= 10**
+sub al,al ;assume DL <= 10
 
-**cmp dl,10 ;is DL greater than 10?**
+cmp dl,10 ;is DL greater than 10?
 
-**jbe DLCheckDone ;no, so ALis already set**
+jbe DLCheckDone ;no, so ALis already set
 
-**mov al,1 ;DLis greater than 10**
+mov al,1 ;DLis greater than 10
 
-**DLCheckDone:**
+DLCheckDone:
 
-**endm**
+endm
 
-**;**
+;
 
-**mov dl,10 ;AL will always be set to 0**
+mov dl,10 ;AL will always be set to 0
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rept 1000**
+rept 1000
 
-**TEST\_DL\_AND\_SET\_AL**
+TEST_DL_AND_SET_AL
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 13-8
 
 
-**;**
+;
 
-**; \*\*\* Listing 13-8 \*\*\***
+; *** Listing 13-8 ***
 
-**;**
+;
 
-**; Counts the number of negative values in a 1000-word array,**
+; Counts the number of negative values in a 1000-word array,
 
-**; by comparing each element to 0 and branching accordingly.**
+; by comparing each element to 0 and branching accordingly.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**WordArray label word**
+WordArray label word
 
-**X=-500**
+X=-500
 
-**rept 1000**
+rept 1000
 
-**dw X**
+dw X
 
-**X=X+1**
+X=X+1
 
-**endm**
+endm
 
-**WORD\_ARRAY\_LENGTH equ ($-WordArray)**
+WORD_ARRAY_LENGTH equ ($-WordArray)
 
-**;**
+;
 
-**; Counts the number of negative values in a word-sized**
+; Counts the number of negative values in a word-sized
 
-**; array.**
+; array.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; CX = length of array in words**
+; CX = length of array in words
 
-**; DS:SI = pointer to start of array**
+; DS:SI = pointer to start of array
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; DX = count of negative values in array**
+; DX = count of negative values in array
 
-**;**
+;
 
-**; Registers altered: AX, CX, DX, SI**
+; Registers altered: AX, CX, DX, SI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Does not handle arrays that are longer than 32K**
+; Note: Does not handle arrays that are longer than 32K
 
-**; words or cross segment boundaries.**
+; words or cross segment boundaries.
 
-**;**
+;
 
-**CountNegativeWords:**
+CountNegativeWords:
 
-**cld**
+cld
 
-**sub dx,dx ;initialize the count to 0**
+sub dx,dx ;initialize the count to 0
 
-**CountNegativeWordsLoop:**
+CountNegativeWordsLoop:
 
-**lodsw ;get the next word from the array**
+lodsw ;get the next word from the array
 
-**and ax,ax ;is the word negative?**
+and ax,ax ;is the word negative?
 
-**jns CountNegativeWordsLoopBottom**
+jns CountNegativeWordsLoopBottom
 
-**;not negative-do the next element**
+;not negative-do the next element
 
-**inc dx ;word is negative, so increment the**
+inc dx ;word is negative, so increment the
 
-**; negative-word counter**
+; negative-word counter
 
-**CountNegativeWordsLoopBottom:**
+CountNegativeWordsLoopBottom:
 
-**loop CountNegativeWordsLoop**
+loop CountNegativeWordsLoop
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov si,offset WordArray**
+mov si,offset WordArray
 
-**;point to the array to count**
+;point to the array to count
 
-**; the \# of negative words in...**
+; the \# of negative words in...
 
-**mov cx,WORD\_ARRAY\_LENGTH/2**
+mov cx,WORD_ARRAY_LENGTH/2
 
-**;...set the \# of words to check...**
+;...set the \# of words to check...
 
-**call CountNegativeWords**
+call CountNegativeWords
 
-**;...and count the negative words**
+;...and count the negative words
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 13-9
 
 
-**;**
+;
 
-**; \*\*\* Listing 13-9 \*\*\***
+; *** Listing 13-9 ***
 
-**;**
+;
 
-**; Counts the number of negative values in a 1000-word array,**
+; Counts the number of negative values in a 1000-word array,
 
-**; by adding the Sign bit of each array element directly to**
+; by adding the Sign bit of each array element directly to
 
-**; the register used for counting.**
+; the register used for counting.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**WordArray label word**
+WordArray label word
 
-**X=-500**
+X=-500
 
-**rept 1000**
+rept 1000
 
-**dw X**
+dw X
 
-**X=X+1**
+X=X+1
 
-**endm**
+endm
 
-**WORD\_ARRAY\_LENGTH equ ($-WordArray)**
+WORD_ARRAY_LENGTH equ ($-WordArray)
 
-**;**
+;
 
-**; Counts the number of negative values in a word-sized**
+; Counts the number of negative values in a word-sized
 
-**; array.**
+; array.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; CX = length of array in words**
+; CX = length of array in words
 
-**; DS:SI = pointer to start of array**
+; DS:SI = pointer to start of array
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; DX = count of negative values in array**
+; DX = count of negative values in array
 
-**;**
+;
 
-**; Registers altered: AX, BX, CX, DX, SI**
+; Registers altered: AX, BX, CX, DX, SI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Does not handle arrays that are longer than 32K**
+; Note: Does not handle arrays that are longer than 32K
 
-**; words or cross segment boundaries.**
+; words or cross segment boundaries.
 
-**;**
+;
 
-**CountNegativeWords:**
+CountNegativeWords:
 
-**cld**
+cld
 
-**sub dx,dx ;initialize the count to 0**
+sub dx,dx ;initialize the count to 0
 
-**mov bx,dx ;store the constant 0 in BX to speed**
+mov bx,dx ;store the constant 0 in BX to speed
 
-**; up ADC in the loop**
+; up ADC in the loop
 
-**CountNegativeWordsLoop:**
+CountNegativeWordsLoop:
 
-**lodsw ;get the next word from the array**
+lodsw ;get the next word from the array
 
-**shl ax,1 ;put the sign bit in the Carry flag**
+shl ax,1 ;put the sign bit in the Carry flag
 
-**adc dx,bx ;add the sign bit (via the Carry**
+adc dx,bx ;add the sign bit (via the Carry
 
-**; flag) to DX, since BX is 0**
+; flag) to DX, since BX is 0
 
-**CountNegativeWordsLoopBottom:**
+CountNegativeWordsLoopBottom:
 
-**loop CountNegativeWordsLoop**
+loop CountNegativeWordsLoop
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov si,offset WordArray**
+mov si,offset WordArray
 
-**;point to the array to count**
+;point to the array to count
 
-**; the \# of negative words in...**
+; the \# of negative words in...
 
-**mov cx,WORD\_ARRAY\_LENGTH/2**
+mov cx,WORD_ARRAY_LENGTH/2
 
-**;...set the \# of words to check...**
+;...set the \# of words to check...
 
-**call CountNegativeWords**
+call CountNegativeWords
 
-**;...and count the negative words**
+;...and count the negative words
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 13-10
 
 
-**;**
+;
 
-**; \*\*\* Listing 13-10 \*\*\***
+; *** Listing 13-10 ***
 
-**;**
+;
 
-**; Finds the first occurrence of the letter 'z' in**
+; Finds the first occurrence of the letter 'z' in
 
-**; a zero-terminated string, with a less-than-ideal**
+; a zero-terminated string, with a less-than-ideal
 
-**; conditional jump followed by an unconditional jump at**
+; conditional jump followed by an unconditional jump at
 
-**; the end of the loop.**
+; the end of the loop.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**TestString label byte**
+TestString label byte
 
-**db 'This is a test string that is '**
+db 'This is a test string that is '
 
-**db 'z'**
+db 'z'
 
-**db 'terminated with a zero byte...',0**
+db 'terminated with a zero byte...',0
 
-**;**
+;
 
-**; Finds the first occurrence of the specified byte in the**
+; Finds the first occurrence of the specified byte in the
 
-**; specified zero-terminated string.**
+; specified zero-terminated string.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; AL = byte to find**
+; AL = byte to find
 
-**; DS:SI = zero-terminated string to search**
+; DS:SI = zero-terminated string to search
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; SI = pointer to first occurrence of byte in string,**
+; SI = pointer to first occurrence of byte in string,
 
-**; or 0 if the byte wasn't found**
+; or 0 if the byte wasn't found
 
-**;**
+;
 
-**; Registers altered: AX, SI**
+; Registers altered: AX, SI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Do not pass a string that starts at offset 0 (SI=0),**
+; Note: Do not pass a string that starts at offset 0 (SI=0),
 
-**; since a match on the first byte and failure to find**
+; since a match on the first byte and failure to find
 
-**; the byte would be indistinguishable.**
+; the byte would be indistinguishable.
 
-**;**
+;
 
-**; Note: Does not handle strings that are longer than 64K**
+; Note: Does not handle strings that are longer than 64K
 
-**; bytes or cross segment boundaries.**
+; bytes or cross segment boundaries.
 
-**;**
+;
 
-**FindCharInString:**
+FindCharInString:
 
-**mov ah,al ;we'll need AL since that's the**
+mov ah,al ;we'll need AL since that's the
 
-**; only register LODSB can use**
+; only register LODSB can use
 
-**cld**
+cld
 
-**FindCharInStringLoop:**
+FindCharInStringLoop:
 
-**lodsb ;get the next string byte**
+lodsb ;get the next string byte
 
-**cmp al,ah ;is this the byte we're**
+cmp al,ah ;is this the byte we're
 
-**; looking for?**
+; looking for?
 
-**jz FindCharInStringFound**
+jz FindCharInStringFound
 
-**;yes, so we're done with a match**
+;yes, so we're done with a match
 
-**and al,al ;is this the terminating zero?**
+and al,al ;is this the terminating zero?
 
-**jz FindCharInStringNotFound**
+jz FindCharInStringNotFound
 
-**;yes, so we're done with no match**
+;yes, so we're done with no match
 
-**jmp FindCharInStringLoop**
+jmp FindCharInStringLoop
 
-**;check the next byte**
+;check the next byte
 
-**FindCharInStringFound:**
+FindCharInStringFound:
 
-**dec si ;point back to the matching byte**
+dec si ;point back to the matching byte
 
-**ret**
+ret
 
-**FindCharInStringNotFound:**
+FindCharInStringNotFound:
 
-**sub si,si ;we didn't find a match, so return**
+sub si,si ;we didn't find a match, so return
 
-**; 0 in SI**
+; 0 in SI
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov al,'z' ;byte value to find**
+mov al,'z' ;byte value to find
 
-**mov si,offset TestString**
+mov si,offset TestString
 
-**;string to search**
+;string to search
 
-**call FindCharInString ;search for the byte**
+call FindCharInString ;search for the byte
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 13-11
 
 
-**;**
+;
 
-**; \*\*\* Listing 13-11 \*\*\***
+; *** Listing 13-11 ***
 
-**;**
+;
 
-**; Determines whether there are more non-negative or negative**
+; Determines whether there are more non-negative or negative
 
-**; elements in an array of 8-bit signed values, using a**
+; elements in an array of 8-bit signed values, using a
 
-**; standard test-and-branch approach and a single LOOP**
+; standard test-and-branch approach and a single LOOP
 
-**; instruction.**
+; instruction.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ARRAY\_LENGTH equ 256**
+ARRAY_LENGTH equ 256
 
-**ByteArray label byte**
+ByteArray label byte
 
-**X=0**
+X=0
 
-**rept ARRAY\_LENGTH**
+rept ARRAY_LENGTH
 
-**db X**
+db X
 
-**X=X+1**
+X=X+1
 
-**endm**
+endm
 
-**;**
+;
 
-**; Determines whether there are more non-negative or**
+; Determines whether there are more non-negative or
 
-**; negative elements in the specified array of 8-bit**
+; negative elements in the specified array of 8-bit
 
-**; signed values.**
+; signed values.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; CX = length of array**
+; CX = length of array
 
-**; DS:SI = array to check**
+; DS:SI = array to check
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; DX = signed count of the number of non-negative**
+; DX = signed count of the number of non-negative
 
-**; elements found in the array minus the number**
+; elements found in the array minus the number
 
-**; of negative elements found. (Zero if there**
+; of negative elements found. (Zero if there
 
-**; are the same number of each type of element.**
+; are the same number of each type of element.
 
-**; Otherwise, sign bit set if there are more**
+; Otherwise, sign bit set if there are more
 
-**; negative elements than non-negative**
+; negative elements than non-negative
 
-**; elements, cleared if there are more**
+; elements, cleared if there are more
 
-**; non-negative elements than negative**
+; non-negative elements than negative
 
-**; elements)**
+; elements)
 
-**;**
+;
 
-**; Registers altered: AL, CX, DX, SI**
+; Registers altered: AL, CX, DX, SI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Only usefuLif the surplus of non-negative**
+; Note: Only usefuLif the surplus of non-negative
 
-**; elements over negative elements is less than**
+; elements over negative elements is less than
 
-**; 32K, or if the surplus of negative elements**
+; 32K, or if the surplus of negative elements
 
-**; over non-negative elements is less than or**
+; over non-negative elements is less than or
 
-**; equal to 32K. Otherwise, the signed count**
+; equal to 32K. Otherwise, the signed count
 
-**; returned in DX overflows.**
+; returned in DX overflows.
 
-**;**
+;
 
-**; Note: Does not handle arrays that are longer than 64K**
+; Note: Does not handle arrays that are longer than 64K
 
-**; bytes or cross segment boundaries.**
+; bytes or cross segment boundaries.
 
-**;**
+;
 
-**CountNegPos:**
+CountNegPos:
 
-**cld**
+cld
 
-**sub dx,dx ;initialize the count to zero**
+sub dx,dx ;initialize the count to zero
 
-**CountNegPosLoop:**
+CountNegPosLoop:
 
-**lodsb ;get the next byte to check**
+lodsb ;get the next byte to check
 
-**and al,al ;see if it's negative or**
+and al,al ;see if it's negative or
 
-**; non-negative**
+; non-negative
 
-**js CountNeg ;it's negative**
+js CountNeg ;it's negative
 
-**inc dx ;count off one non-negative element**
+inc dx ;count off one non-negative element
 
-**jmp short CountNegPosLoopBottom**
+jmp short CountNegPosLoopBottom
 
-**CountNeg:**
+CountNeg:
 
-**dec dx ;count off one negative element**
+dec dx ;count off one negative element
 
-**CountNegPosLoopBottom:**
+CountNegPosLoopBottom:
 
-**loop CountNegPosLoop**
+loop CountNegPosLoop
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov si,offset ByteArray ;array to check**
+mov si,offset ByteArray ;array to check
 
-**mov cx,ARRAY\_LENGTH ;\# of bytes to check**
+mov cx,ARRAY_LENGTH ;\# of bytes to check
 
-**call CountNegPos ;see whether there**
+call CountNegPos ;see whether there
 
-**; are more negative**
+; are more negative
 
-**; or non-negative**
+; or non-negative
 
-**; elements**
+; elements
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 13-12
 
 
-**; \*\*\* Listing 13-12 \*\*\***
+; *** Listing 13-12 ***
 
-**;**
+;
 
-**; Determines whether there are more non-negative or negative**
+; Determines whether there are more non-negative or negative
 
-**; elements in an array of 8-bit signed values, using**
+; elements in an array of 8-bit signed values, using
 
-**; duplicated code with two LOOP instructions and two RET**
+; duplicated code with two LOOP instructions and two RET
 
-**; instructions.**
+; instructions.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ARRAY\_LENGTH equ 256**
+ARRAY_LENGTH equ 256
 
-**ByteArray label byte**
+ByteArray label byte
 
-**X=0**
+X=0
 
-**rept ARRAY\_LENGTH**
+rept ARRAY_LENGTH
 
-**db X**
+db X
 
-**X=X+1**
+X=X+1
 
-**endm**
+endm
 
-**;**
+;
 
-**; Determines whether there are more non-negative or**
+; Determines whether there are more non-negative or
 
-**; negative elements in the specified array of 8-bit**
+; negative elements in the specified array of 8-bit
 
-**; signed values.**
+; signed values.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; CX = length of array**
+; CX = length of array
 
-**; DS:SI = array to check**
+; DS:SI = array to check
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; DX = signed count of the number of non-negative**
+; DX = signed count of the number of non-negative
 
-**; elements found in the array minus the number**
+; elements found in the array minus the number
 
-**; of negative elements found. (Zero if there**
+; of negative elements found. (Zero if there
 
-**; are the same number of each type of element.**
+; are the same number of each type of element.
 
-**; Otherwise, sign bit set if there are more**
+; Otherwise, sign bit set if there are more
 
-**; negative elements than non-negative**
+; negative elements than non-negative
 
-**; elements, cleared if there are more**
+; elements, cleared if there are more
 
-**; non-negative elements than negative**
+; non-negative elements than negative
 
-**; elements)**
+; elements)
 
-**;**
+;
 
-**; Registers altered: AL, CX, DX, SI**
+; Registers altered: AL, CX, DX, SI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Only usefuLif the surplus of non-negative**
+; Note: Only usefuLif the surplus of non-negative
 
-**; elements over negative elements is less than**
+; elements over negative elements is less than
 
-**; 32K, or if the surplus of negative elements**
+; 32K, or if the surplus of negative elements
 
-**; over non-negative elements is less than or**
+; over non-negative elements is less than or
 
-**; equal to 32K. Otherwise, the signed count**
+; equal to 32K. Otherwise, the signed count
 
-**; returned in DX overflows.**
+; returned in DX overflows.
 
-**;**
+;
 
-**; Note: Does not handle arrays that are longer than 64K**
+; Note: Does not handle arrays that are longer than 64K
 
-**; bytes or cross segment boundaries.**
+; bytes or cross segment boundaries.
 
-**;**
+;
 
-**CountNegPos:**
+CountNegPos:
 
-**cld**
+cld
 
-**sub dx,dx ;initialize the count to zero**
+sub dx,dx ;initialize the count to zero
 
-**CountNegPosLoop:**
+CountNegPosLoop:
 
-**lodsb ;get the next byte to check**
+lodsb ;get the next byte to check
 
-**and al,al ;see if it's negative or**
+and al,al ;see if it's negative or
 
-**; non-negative**
+; non-negative
 
-**js CountNeg ;it's negative**
+js CountNeg ;it's negative
 
-**inc dx ;count off one non-negative element**
+inc dx ;count off one non-negative element
 
-**loop CountNegPosLoop**
+loop CountNegPosLoop
 
-**ret**
+ret
 
-**CountNeg:**
+CountNeg:
 
-**dec dx ;count off one negative element**
+dec dx ;count off one negative element
 
-**loop CountNegPosLoop**
+loop CountNegPosLoop
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov si,offset ByteArray ;array to check**
+mov si,offset ByteArray ;array to check
 
-**mov cx,ARRAY\_LENGTH ;\# of bytes to check**
+mov cx,ARRAY_LENGTH ;\# of bytes to check
 
-**call CountNegPos ;see whether there**
+call CountNegPos ;see whether there
 
-**; are more negative**
+; are more negative
 
-**; or non-negative**
+; or non-negative
 
-**; elements**
+; elements
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 13-13
 
 
-**;**
+;
 
-**; \*\*\* Listing 13-13 \*\*\***
+; *** Listing 13-13 ***
 
-**;**
+;
 
-**; Copies a zero-terminated string to another string,**
+; Copies a zero-terminated string to another string,
 
-**; optionally converting characters to uppercase. The**
+; optionally converting characters to uppercase. The
 
-**; decision as to whether to convert to uppercase is made**
+; decision as to whether to convert to uppercase is made
 
-**; once for each character.**
+; once for each character.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**SourceString label byte**
+SourceString label byte
 
-**db 'This is a sample string, consisting of '**
+db 'This is a sample string, consisting of '
 
-**db 'both uppercase and lowercase characters.'**
+db 'both uppercase and lowercase characters.'
 
-**db 0**
+db 0
 
-**DestinationString label byte**
+DestinationString label byte
 
-**db 100 dup (?)**
+db 100 dup (?)
 
-**;**
+;
 
-**; Copies a zero-terminated string to another string,**
+; Copies a zero-terminated string to another string,
 
-**; optionally converting characters to uppercase.**
+; optionally converting characters to uppercase.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; DL = 1 if conversion to uppercase during copying is**
+; DL = 1 if conversion to uppercase during copying is
 
-**; desired, 0 otherwise**
+; desired, 0 otherwise
 
-**; DS:SI = source string**
+; DS:SI = source string
 
-**; ES:DI = destination string**
+; ES:DI = destination string
 
-**;**
+;
 
-**; Output: none**
+; Output: none
 
-**;**
+;
 
-**; Registers altered: AL, SI, DI**
+; Registers altered: AL, SI, DI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Does not handle strings that are longer than 64K**
+; Note: Does not handle strings that are longer than 64K
 
-**; bytes or cross segment boundaries.**
+; bytes or cross segment boundaries.
 
-**;**
+;
 
-**CopyAndConvert:**
+CopyAndConvert:
 
-**cld**
+cld
 
-**CopyAndConvertLoop:**
+CopyAndConvertLoop:
 
-**lodsb ;get the next byte**
+lodsb ;get the next byte
 
-**; to check**
+; to check
 
-**and dl,dl ;conversion to**
+and dl,dl ;conversion to
 
-**; uppercase desired?**
+; uppercase desired?
 
-**jz CopyAndConvertUC ;no**
+jz CopyAndConvertUC ;no
 
-**cmp al,'a' ;less than 'a'?**
+cmp al,'a' ;less than 'a'?
 
-**jb CopyAndConvertUC ;yes, not lowercase**
+jb CopyAndConvertUC ;yes, not lowercase
 
-**cmp al,'z' ;greater than 'z'?**
+cmp al,'z' ;greater than 'z'?
 
-**ja CopyAndConvertUC ;yes, not lowercase**
+ja CopyAndConvertUC ;yes, not lowercase
 
-**and al,not 20h ;make it uppercase**
+and al,not 20h ;make it uppercase
 
-**CopyAndConvertUC:**
+CopyAndConvertUC:
 
-**stosb ;put the byte in the**
+stosb ;put the byte in the
 
-**; destination string**
+; destination string
 
-**and al,al ;was that the**
+and al,al ;was that the
 
-**; terminating zero?**
+; terminating zero?
 
-**jnz CopyAndConvertLoop ;no, do next byte**
+jnz CopyAndConvertLoop ;no, do next byte
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**;**
+;
 
-**; First, copy without converting to uppercase.**
+; First, copy without converting to uppercase.
 
-**;**
+;
 
-**mov di,seg DestinationString**
+mov di,seg DestinationString
 
-**mov es,di**
+mov es,di
 
-**mov di,offset DestinationString**
+mov di,offset DestinationString
 
-**;ES:DI points to the destination**
+;ES:DI points to the destination
 
-**mov si,offset SourceString**
+mov si,offset SourceString
 
-**;DS:SI points to the source**
+;DS:SI points to the source
 
-**sub dl,dl ;don't convert to uppercase**
+sub dl,dl ;don't convert to uppercase
 
-**call CopyAndConvert ;copy without converting**
+call CopyAndConvert ;copy without converting
 
-**; to uppercase**
+; to uppercase
 
-**;**
+;
 
-**; Now copy and convert to uppercase.**
+; Now copy and convert to uppercase.
 
-**;**
+;
 
-**mov di,offset DestinationString**
+mov di,offset DestinationString
 
-**;ES:DI points to the destination**
+;ES:DI points to the destination
 
-**mov si,offset SourceString**
+mov si,offset SourceString
 
-**;DS:SI points to the source**
+;DS:SI points to the source
 
-**mov dl,1 ;convert to uppercase this time**
+mov dl,1 ;convert to uppercase this time
 
-**call CopyAndConvert ;copy and convert to**
+call CopyAndConvert ;copy and convert to
 
-**; uppercase**
+; uppercase
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 13-14
 
 
-**;**
+;
 
-**; \*\*\* Listing 13-14 \*\*\***
+; *** Listing 13-14 ***
 
-**;**
+;
 
-**; Copies a zero-terminated string to another string,**
+; Copies a zero-terminated string to another string,
 
-**; optionally converting characters to uppercase. The**
+; optionally converting characters to uppercase. The
 
-**; decision as to whether to convert to uppercase is made**
+; decision as to whether to convert to uppercase is made
 
-**; once at the beginning of the subroutine; if conversion**
+; once at the beginning of the subroutine; if conversion
 
-**; is not desired, the register containing the value of the**
+; is not desired, the register containing the value of the
 
-**; start of the lowercase range is simply set to cause all**
+; start of the lowercase range is simply set to cause all
 
-**; tests for lowercase to fail. This avoids one test in the**
+; tests for lowercase to fail. This avoids one test in the
 
-**; case where conversion to uppercase is desired, since the**
+; case where conversion to uppercase is desired, since the
 
-**; single test for the start of the lowercase range is able**
+; single test for the start of the lowercase range is able
 
-**; to perform both that test and the test for whether**
+; to perform both that test and the test for whether
 
-**; conversion is desired.**
+; conversion is desired.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**SourceString label byte**
+SourceString label byte
 
-**db 'This is a sample string, consisting of '**
+db 'This is a sample string, consisting of '
 
-**db 'both uppercase and lowercase characters.'**
+db 'both uppercase and lowercase characters.'
 
-**db 0**
+db 0
 
-**DestinationString label byte**
+DestinationString label byte
 
-**db 100 dup (?)**
+db 100 dup (?)
 
-**;**
+;
 
-**; Copies a zero-terminated string to another string,**
+; Copies a zero-terminated string to another string,
 
-**; optionally converting characters to uppercase.**
+; optionally converting characters to uppercase.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; DL = 1 if conversion to uppercase during copying is**
+; DL = 1 if conversion to uppercase during copying is
 
-**; desired, 0 otherwise**
+; desired, 0 otherwise
 
-**; DS:SI = source string**
+; DS:SI = source string
 
-**; ES:DI = destination string**
+; ES:DI = destination string
 
-**;**
+;
 
-**; Output: none**
+; Output: none
 
-**;**
+;
 
-**; Registers altered: AX, SI, DI**
+; Registers altered: AX, SI, DI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Does not handle strings that are longer than 64K**
+; Note: Does not handle strings that are longer than 64K
 
-**; bytes or cross segment boundaries.**
+; bytes or cross segment boundaries.
 
-**;**
+;
 
-**CopyAndConvert:**
+CopyAndConvert:
 
-**cld**
+cld
 
-**mov ah,0ffh ;assume conversion to uppercase is**
+mov ah,0ffh ;assume conversion to uppercase is
 
-**; not desired. In that case, this**
+; not desired. In that case, this
 
-**; value will cause the initial**
+; value will cause the initial
 
-**; lowercase test to fail (except**
+; lowercase test to fail (except
 
-**; when the character is 0FFh, but**
+; when the character is 0FFh, but
 
-**; that's rare and will be rejected**
+; that's rare and will be rejected
 
-**; by the second lowercase test**
+; by the second lowercase test
 
-**and dl,dl ;is conversion to uppercase desired?**
+and dl,dl ;is conversion to uppercase desired?
 
-**jz CopyAndConvertLoop ;no, AH is all set**
+jz CopyAndConvertLoop ;no, AH is all set
 
-**mov ah,'a' ;set the proper lower limit of the**
+mov ah,'a' ;set the proper lower limit of the
 
-**; lowercase range**
+; lowercase range
 
-**CopyAndConvertLoop:**
+CopyAndConvertLoop:
 
-**lodsb ;get the next byte**
+lodsb ;get the next byte
 
-**; to check**
+; to check
 
-**cmp al,ah ;less than 'a'?**
+cmp al,ah ;less than 'a'?
 
-**; (If conversion**
+; (If conversion
 
-**; isn't desired,**
+; isn't desired,
 
-**; AH is 0FFh, and**
+; AH is 0FFh, and
 
-**; this fails)**
+; this fails)
 
-**jb CopyAndConvertUC ;yes, not lowercase**
+jb CopyAndConvertUC ;yes, not lowercase
 
-**cmp al,'z' ;greater than 'z'?**
+cmp al,'z' ;greater than 'z'?
 
-**ja CopyAndConvertUC ;yes, not lowercase**
+ja CopyAndConvertUC ;yes, not lowercase
 
-**and al,not 20h ;make it uppercase**
+and al,not 20h ;make it uppercase
 
-**CopyAndConvertUC:**
+CopyAndConvertUC:
 
-**stosb ;put the byte in the**
+stosb ;put the byte in the
 
-**; destination string**
+; destination string
 
-**and al,al ;was that the**
+and al,al ;was that the
 
-**; terminating zero?**
+; terminating zero?
 
-**jnz CopyAndConvertLoop ;no, do next byte**
+jnz CopyAndConvertLoop ;no, do next byte
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**;**
+;
 
-**; First, copy without converting to uppercase.**
+; First, copy without converting to uppercase.
 
-**;**
+;
 
-**mov di,seg DestinationString**
+mov di,seg DestinationString
 
-**mov es,di**
+mov es,di
 
-**mov di,offset DestinationString**
+mov di,offset DestinationString
 
-**;ES:DI points to the destination**
+;ES:DI points to the destination
 
-**mov si,offset SourceString**
+mov si,offset SourceString
 
-**;DS:SI points to the source**
+;DS:SI points to the source
 
-**sub dl,dl ;don't convert to uppercase**
+sub dl,dl ;don't convert to uppercase
 
-**call CopyAndConvert ;copy without converting**
+call CopyAndConvert ;copy without converting
 
-**; to uppercase**
+; to uppercase
 
-**;**
+;
 
-**; Now copy and convert to uppercase.**
+; Now copy and convert to uppercase.
 
-**;**
+;
 
-**mov di,offset DestinationString**
+mov di,offset DestinationString
 
-**;ES:DI points to the destination**
+;ES:DI points to the destination
 
-**mov si,offset SourceString**
+mov si,offset SourceString
 
-**;DS:SI points to the source**
+;DS:SI points to the source
 
-**mov dl,1 ;convert to uppercase this time**
+mov dl,1 ;convert to uppercase this time
 
-**call CopyAndConvert ;copy and convert to**
+call CopyAndConvert ;copy and convert to
 
-**; uppercase**
+; uppercase
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 13-15
 
 
-**;**
+;
 
-**; \*\*\* Listing 13-15 \*\*\***
+; *** Listing 13-15 ***
 
-**;**
+;
 
-**; Copies a zero-terminated string to another string,**
+; Copies a zero-terminated string to another string,
 
-**; optionally converting characters to uppercase. The**
+; optionally converting characters to uppercase. The
 
-**; decision as to whether to convert to uppercase is made**
+; decision as to whether to convert to uppercase is made
 
-**; once at the beginning of the subroutine, with separate**
+; once at the beginning of the subroutine, with separate
 
-**; code executed depending on whether conversion is desired**
+; code executed depending on whether conversion is desired
 
-**; or not.**
+; or not.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**SourceString label byte**
+SourceString label byte
 
-**db 'This is a sample string, consisting of '**
+db 'This is a sample string, consisting of '
 
-**db 'both uppercase and lowercase characters.'**
+db 'both uppercase and lowercase characters.'
 
-**db 0**
+db 0
 
-**DestinationString label byte**
+DestinationString label byte
 
-**db 100 dup (?)**
+db 100 dup (?)
 
-**;**
+;
 
-**; Copies a zero-terminated string to another string,**
+; Copies a zero-terminated string to another string,
 
-**; optionally converting characters to uppercase.**
+; optionally converting characters to uppercase.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; DL = 1 if conversion to uppercase during copying is**
+; DL = 1 if conversion to uppercase during copying is
 
-**; desired, 0 otherwise**
+; desired, 0 otherwise
 
-**; DS:SI = source string**
+; DS:SI = source string
 
-**; ES:DI = destination string**
+; ES:DI = destination string
 
-**;**
+;
 
-**; Output: none**
+; Output: none
 
-**;**
+;
 
-**; Registers altered: AL, SI, DI**
+; Registers altered: AL, SI, DI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Does not handle strings that are longer than 64K**
+; Note: Does not handle strings that are longer than 64K
 
-**; bytes or cross segment boundaries.**
+; bytes or cross segment boundaries.
 
-**;**
+;
 
-**CopyAndConvert:**
+CopyAndConvert:
 
-**cld**
+cld
 
-**and dl,dl ;is conversion desired?**
+and dl,dl ;is conversion desired?
 
-**jz CopyLoop ;no, so just copy the string**
+jz CopyLoop ;no, so just copy the string
 
-**;**
+;
 
-**; Copy the string, converting to uppercase.**
+; Copy the string, converting to uppercase.
 
-**;**
+;
 
-**CopyAndConvertLoop:**
+CopyAndConvertLoop:
 
-**lodsb ;get the next byte**
+lodsb ;get the next byte
 
-**; to check**
+; to check
 
-**cmp al,'a' ;less than 'a'?**
+cmp al,'a' ;less than 'a'?
 
-**jb CopyAndConvertUC ;yes, not lowercase**
+jb CopyAndConvertUC ;yes, not lowercase
 
-**cmp al,'z' ;greater than 'z'?**
+cmp al,'z' ;greater than 'z'?
 
-**ja CopyAndConvertUC ;yes, not lowercase**
+ja CopyAndConvertUC ;yes, not lowercase
 
-**and al,not 20h ;make it uppercase**
+and al,not 20h ;make it uppercase
 
-**CopyAndConvertUC:**
+CopyAndConvertUC:
 
-**stosb ;put the byte in the**
+stosb ;put the byte in the
 
-**; destination string**
+; destination string
 
-**and al,al ;was that the**
+and al,al ;was that the
 
-**; terminating zero?**
+; terminating zero?
 
-**jnz CopyAndConvertLoop ;no, do next byte**
+jnz CopyAndConvertLoop ;no, do next byte
 
-**ret**
+ret
 
-**;**
+;
 
-**; Copy the string without conversion to uppercase.**
+; Copy the string without conversion to uppercase.
 
-**;**
+;
 
-**CopyLoop:**
+CopyLoop:
 
-**lodsb ;get the next byte to check**
+lodsb ;get the next byte to check
 
-**stosb ;copy the byte**
+stosb ;copy the byte
 
-**and al,al ;was that the terminating 0?**
+and al,al ;was that the terminating 0?
 
-**jnz CopyLoop ;no, do next byte**
+jnz CopyLoop ;no, do next byte
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**;**
+;
 
-**; First, copy without converting to uppercase.**
+; First, copy without converting to uppercase.
 
-**;**
+;
 
-**mov di,seg DestinationString**
+mov di,seg DestinationString
 
-**mov es,di**
+mov es,di
 
-**mov di,offset DestinationString**
+mov di,offset DestinationString
 
-**;ES:DI points to the destination**
+;ES:DI points to the destination
 
-**mov si,offset SourceString**
+mov si,offset SourceString
 
-**;DS:SI points to the source**
+;DS:SI points to the source
 
-**sub dl,dl ;don't convert to uppercase**
+sub dl,dl ;don't convert to uppercase
 
-**call CopyAndConvert ;copy without converting**
+call CopyAndConvert ;copy without converting
 
-**; to uppercase**
+; to uppercase
 
-**;**
+;
 
-**; Now copy and convert to uppercase.**
+; Now copy and convert to uppercase.
 
-**;**
+;
 
-**mov di,offset DestinationString**
+mov di,offset DestinationString
 
-**;ES:DI points to the destination**
+;ES:DI points to the destination
 
-**mov si,offset SourceString**
+mov si,offset SourceString
 
-**;DS:SI points to the source**
+;DS:SI points to the source
 
-**mov dl,1 ;convert to uppercase this time**
+mov dl,1 ;convert to uppercase this time
 
-**call CopyAndConvert ;copy and convert to**
+call CopyAndConvert ;copy and convert to
 
-**; uppercase**
+; uppercase
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 13-16
 
 
-**;**
+;
 
-**; \*\*\* Listing 13-16 \*\*\***
+; *** Listing 13-16 ***
 
-**;**
+;
 
-**; Copies a zero-terminated string to another string,**
+; Copies a zero-terminated string to another string,
 
-**; filtering out non-printable characters by means of a**
+; filtering out non-printable characters by means of a
 
-**; subroutine that performs the test.**
+; subroutine that performs the test.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**SourceString label byte**
+SourceString label byte
 
-**db 'This is a sample string, consisting of '**
+db 'This is a sample string, consisting of '
 
-**X=1**
+X=1
 
-**rept 31**
+rept 31
 
-**db X**
+db X
 
-**X=X+1**
+X=X+1
 
-**endm**
+endm
 
-**db 7fh**
+db 7fh
 
-**db 'both printable and non-printable '**
+db 'both printable and non-printable '
 
-**db 'characters', 0**
+db 'characters', 0
 
-**DestinationString label byte**
+DestinationString label byte
 
-**db 200 dup (?)**
+db 200 dup (?)
 
-**;**
+;
 
-**; Determines whether a character is printable (in the range**
+; Determines whether a character is printable (in the range
 
-**; 20h through 7Eh).**
+; 20h through 7Eh).
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; AL = character to check**
+; AL = character to check
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; Zero flag set to 1 if character is printable,**
+; Zero flag set to 1 if character is printable,
 
-**; set to 0 otherwise**
+; set to 0 otherwise
 
-**;**
+;
 
-**; Registers altered: none**
+; Registers altered: none
 
-**;**
+;
 
-**IsPrintable:**
+IsPrintable:
 
-**cmp al,20h**
+cmp al,20h
 
-**jb IsPrintableDone ;not printable**
+jb IsPrintableDone ;not printable
 
-**cmp al,7eh**
+cmp al,7eh
 
-**ja IsPrintableDone ;not printable**
+ja IsPrintableDone ;not printable
 
-**cmp al,al ;set the Zero flag to 1, since the**
+cmp al,al ;set the Zero flag to 1, since the
 
-**; character is printable**
+; character is printable
 
-**IsPrintableDone:**
+IsPrintableDone:
 
-**ret**
+ret
 
-**;**
+;
 
-**; Copies a zero-terminated string to another string,**
+; Copies a zero-terminated string to another string,
 
-**; filtering out non-printable characters.**
+; filtering out non-printable characters.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; DS:SI = source string**
+; DS:SI = source string
 
-**; ES:DI = destination string**
+; ES:DI = destination string
 
-**;**
+;
 
-**; Output: none**
+; Output: none
 
-**;**
+;
 
-**; Registers altered: AL, SI, DI**
+; Registers altered: AL, SI, DI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Does not handle strings that are longer than 64K**
+; Note: Does not handle strings that are longer than 64K
 
-**; bytes or cross segment boundaries.**
+; bytes or cross segment boundaries.
 
-**;**
+;
 
-**CopyPrintable:**
+CopyPrintable:
 
-**cld**
+cld
 
-**CopyPrintableLoop:**
+CopyPrintableLoop:
 
-**lodsb ;get the next byte to copy**
+lodsb ;get the next byte to copy
 
-**call IsPrintable ;is it printable?**
+call IsPrintable ;is it printable?
 
-**jnz NotPrintable ;nope, don't copy it**
+jnz NotPrintable ;nope, don't copy it
 
-**stosb ;put the byte in the**
+stosb ;put the byte in the
 
-**; destination string**
+; destination string
 
-**jmp CopyPrintableLoop ;the character was**
+jmp CopyPrintableLoop ;the character was
 
-**; printable, so it couldn't**
+; printable, so it couldn't
 
-**; possibly have been 0. No**
+; possibly have been 0. No
 
-**; need to check whether it**
+; need to check whether it
 
-**; terminated the string**
+; terminated the string
 
-**NotPrintable:**
+NotPrintable:
 
-**and al,al ;was that the**
+and al,al ;was that the
 
-**; terminating zero?**
+; terminating zero?
 
-**jnz CopyPrintableLoop ;no, do next byte**
+jnz CopyPrintableLoop ;no, do next byte
 
-**stosb ;copy the terminating zero**
+stosb ;copy the terminating zero
 
-**ret ;done**
+ret ;done
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov di,seg DestinationString**
+mov di,seg DestinationString
 
-**mov es,di**
+mov es,di
 
-**mov di,offset DestinationString**
+mov di,offset DestinationString
 
-**;ES:DI points to the destination**
+;ES:DI points to the destination
 
-**mov si,offset SourceString**
+mov si,offset SourceString
 
-**;DS:SI points to the source**
+;DS:SI points to the source
 
-**call CopyPrintable ;copy the printable**
+call CopyPrintable ;copy the printable
 
-**; characters**
+; characters
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 13-17
 
 
-**;**
+;
 
-**; \*\*\* Listing 13-17 \*\*\***
+; *** Listing 13-17 ***
 
-**;**
+;
 
-**; Copies a zero-terminated string to another string,**
+; Copies a zero-terminated string to another string,
 
-**; filtering out non-printable characters by means of a**
+; filtering out non-printable characters by means of a
 
-**; macro that performs the test.**
+; macro that performs the test.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**SourceString label byte**
+SourceString label byte
 
-**db 'This is a sample string, consisting of '**
+db 'This is a sample string, consisting of '
 
-**X=1**
+X=1
 
-**rept 31**
+rept 31
 
-**db X**
+db X
 
-**X=X+1**
+X=X+1
 
-**endm**
+endm
 
-**db 7fh**
+db 7fh
 
-**db 'both printable and non-printable '**
+db 'both printable and non-printable '
 
-**db 'characters', 0**
+db 'characters', 0
 
-**DestinationString label byte**
+DestinationString label byte
 
-**db 200 dup (?)**
+db 200 dup (?)
 
-**;**
+;
 
-**; Macro that determines whether a character is printable (in**
+; Macro that determines whether a character is printable (in
 
-**; the range 20h through 7Eh).**
+; the range 20h through 7Eh).
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; AL = character to check**
+; AL = character to check
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; Zero flag set to 1 if character is printable,**
+; Zero flag set to 1 if character is printable,
 
-**; set to 0 otherwise**
+; set to 0 otherwise
 
-**;**
+;
 
-**; Registers altered: none**
+; Registers altered: none
 
-**;**
+;
 
-**IS\_PRINTABLE macro**
+IS_PRINTABLE macro
 
-**local IsPrintableDone**
+local IsPrintableDone
 
-**cmp al,20h**
+cmp al,20h
 
-**jb IsPrintableDone ;not printable**
+jb IsPrintableDone ;not printable
 
-**cmp al,7eh**
+cmp al,7eh
 
-**ja IsPrintableDone ;not printable**
+ja IsPrintableDone ;not printable
 
-**cmp al,al ;set the Zero flag to 1, since the**
+cmp al,al ;set the Zero flag to 1, since the
 
-**; character is printable**
+; character is printable
 
-**IsPrintableDone:**
+IsPrintableDone:
 
-**endm**
+endm
 
-**;**
+;
 
-**; Copies a zero-terminated string to another string,**
+; Copies a zero-terminated string to another string,
 
-**; filtering out non-printable characters.**
+; filtering out non-printable characters.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; DS:SI = source string**
+; DS:SI = source string
 
-**; ES:DI = destination string**
+; ES:DI = destination string
 
-**;**
+;
 
-**; Output: none**
+; Output: none
 
-**;**
+;
 
-**; Registers altered: AL, SI, DI**
+; Registers altered: AL, SI, DI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Does not handle strings that are longer than 64K**
+; Note: Does not handle strings that are longer than 64K
 
-**; bytes or cross segment boundaries.**
+; bytes or cross segment boundaries.
 
-**;**
+;
 
-**CopyPrintable:**
+CopyPrintable:
 
-**cld**
+cld
 
-**CopyPrintableLoop:**
+CopyPrintableLoop:
 
-**lodsb ;get the next byte to copy**
+lodsb ;get the next byte to copy
 
-**IS\_PRINTABLE ;is it printable?**
+IS_PRINTABLE ;is it printable?
 
-**jnz NotPrintable ;nope, don't copy it**
+jnz NotPrintable ;nope, don't copy it
 
-**stosb ;put the byte in the**
+stosb ;put the byte in the
 
-**; destination string**
+; destination string
 
-**jmp CopyPrintableLoop ;the character was**
+jmp CopyPrintableLoop ;the character was
 
-**; printable, so it couldn't**
+; printable, so it couldn't
 
-**; possibly have been 0. No**
+; possibly have been 0. No
 
-**; need to check whether it**
+; need to check whether it
 
-**; terminated the string**
+; terminated the string
 
-**NotPrintable:**
+NotPrintable:
 
-**and al,al ;was that the**
+and al,al ;was that the
 
-**; terminating zero?**
+; terminating zero?
 
-**jnz CopyPrintableLoop ;no, do next byte**
+jnz CopyPrintableLoop ;no, do next byte
 
-**stosb ;copy the terminating zero**
+stosb ;copy the terminating zero
 
-**ret ;done**
+ret ;done
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov di,seg DestinationString**
+mov di,seg DestinationString
 
-**mov es,di**
+mov es,di
 
-**mov di,offset DestinationString**
+mov di,offset DestinationString
 
-**;ES:DI points to the destination**
+;ES:DI points to the destination
 
-**mov si,offset SourceString**
+mov si,offset SourceString
 
-**;DS:SI points to the source**
+;DS:SI points to the source
 
-**call CopyPrintable ;copy the printable**
+call CopyPrintable ;copy the printable
 
-**; characters**
+; characters
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 13-18
 
 
-**;**
+;
 
-**; \*\*\* Listing 13-18 \*\*\***
+; *** Listing 13-18 ***
 
-**;**
+;
 
-**; Copies a zero-terminated string to another string,**
+; Copies a zero-terminated string to another string,
 
-**; filtering out non-printable characters by means of**
+; filtering out non-printable characters by means of
 
-**; carefully customized code that performs the test**
+; carefully customized code that performs the test
 
-**; directly in the loop.**
+; directly in the loop.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**SourceString label byte**
+SourceString label byte
 
-**db 'This is a sample string, consisting of '**
+db 'This is a sample string, consisting of '
 
-**X=1**
+X=1
 
-**rept 31**
+rept 31
 
-**db X**
+db X
 
-**X=X+1**
+X=X+1
 
-**endm**
+endm
 
-**db 7fh**
+db 7fh
 
-**db 'both printable and non-printable '**
+db 'both printable and non-printable '
 
-**db 'characters', 0**
+db 'characters', 0
 
-**DestinationString label byte**
+DestinationString label byte
 
-**db 200 dup (?)**
+db 200 dup (?)
 
-**;**
+;
 
-**; Copies a zero-terminated string to another string,**
+; Copies a zero-terminated string to another string,
 
-**; filtering out non-printable characters.**
+; filtering out non-printable characters.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; DS:SI = source string**
+; DS:SI = source string
 
-**; ES:DI = destination string**
+; ES:DI = destination string
 
-**;**
+;
 
-**; Output: none**
+; Output: none
 
-**;**
+;
 
-**; Registers altered: AL, SI, DI**
+; Registers altered: AL, SI, DI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Does not handle strings that are longer than 64K**
+; Note: Does not handle strings that are longer than 64K
 
-**; bytes or cross segment boundaries.**
+; bytes or cross segment boundaries.
 
-**;**
+;
 
-**CopyPrintable:**
+CopyPrintable:
 
-**cld**
+cld
 
-**CopyPrintableLoop:**
+CopyPrintableLoop:
 
-**lodsb ;get the next byte to copy**
+lodsb ;get the next byte to copy
 
-**cmp al,20h**
+cmp al,20h
 
-**jb NotPrintable ;not printable**
+jb NotPrintable ;not printable
 
-**cmp al,7eh**
+cmp al,7eh
 
-**ja CopyPrintableLoop ;not printable**
+ja CopyPrintableLoop ;not printable
 
-**stosb ;put the byte in the**
+stosb ;put the byte in the
 
-**; destination string**
+; destination string
 
-**jmp CopyPrintableLoop ;the character was**
+jmp CopyPrintableLoop ;the character was
 
-**; printable, so it couldn't**
+; printable, so it couldn't
 
-**; possibly have been 0. No**
+; possibly have been 0. No
 
-**; need to check whether it**
+; need to check whether it
 
-**; terminated the string**
+; terminated the string
 
-**NotPrintable:**
+NotPrintable:
 
-**and al,al ;was that the**
+and al,al ;was that the
 
-**; terminating zero?**
+; terminating zero?
 
-**jnz CopyPrintableLoop ;no, do next byte**
+jnz CopyPrintableLoop ;no, do next byte
 
-**stosb ;copy the terminating zero**
+stosb ;copy the terminating zero
 
-**ret ;done**
+ret ;done
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov di,seg DestinationString**
+mov di,seg DestinationString
 
-**mov es,di**
+mov es,di
 
-**mov di,offset DestinationString**
+mov di,offset DestinationString
 
-**;ES:DI points to the destination**
+;ES:DI points to the destination
 
-**mov si,offset SourceString**
+mov si,offset SourceString
 
-**;DS:SI points to the source**
+;DS:SI points to the source
 
-**call CopyPrintable ;copy the printable**
+call CopyPrintable ;copy the printable
 
-**; characters**
+; characters
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 13-19
 
 
-**;**
+;
 
-**; \*\*\* Listing 13-19 \*\*\***
+; *** Listing 13-19 ***
 
-**;**
+;
 
-**; Zeros the high-bit of each byte in a 100-byte array,**
+; Zeros the high-bit of each byte in a 100-byte array,
 
-**; using the LOOP instruction.**
+; using the LOOP instruction.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ARRAY\_LENGTH equ 100**
+ARRAY_LENGTH equ 100
 
-**ByteArray label byte**
+ByteArray label byte
 
-**db ARRAY\_LENGTH dup (80h)**
+db ARRAY_LENGTH dup (80h)
 
-**;**
+;
 
-**; Clears the high bit of each byte in an array of**
+; Clears the high bit of each byte in an array of
 
-**; length ARRAY\_LENGTH.**
+; length ARRAY_LENGTH.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; BX = pointer to the start of the array to clear**
+; BX = pointer to the start of the array to clear
 
-**;**
+;
 
-**; Output: none**
+; Output: none
 
-**;**
+;
 
-**; Registers altered: AL, BX, CX**
+; Registers altered: AL, BX, CX
 
-**;**
+;
 
-**ClearHighBits:**
+ClearHighBits:
 
-**mov cx,ARRAY\_LENGTH ;\# of bytes to clear**
+mov cx,ARRAY_LENGTH ;\# of bytes to clear
 
-**mov al,not 80h ;pattern to clear**
+mov al,not 80h ;pattern to clear
 
-**; high bits with**
+; high bits with
 
-**ClearHighBitsLoop:**
+ClearHighBitsLoop:
 
-**and [bx],al ;clear the high bit**
+and [bx],al ;clear the high bit
 
-**; of this byte**
+; of this byte
 
-**inc bx ;point to the next**
+inc bx ;point to the next
 
-**; byte**
+; byte
 
-**loop ClearHighBitsLoop ;repeat until we're**
+loop ClearHighBitsLoop ;repeat until we're
 
-**; out of bytes**
+; out of bytes
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov bx,offset ByteArray**
+mov bx,offset ByteArray
 
-**;array in which to clear**
+;array in which to clear
 
-**; high bits**
+; high bits
 
-**call ClearHighBits ;clear the high bits of the**
+call ClearHighBits ;clear the high bits of the
 
-**; bytes**
+; bytes
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 13-20
 
 
-**;**
+;
 
-**; \*\*\* Listing 13-20 \*\*\***
+; *** Listing 13-20 ***
 
-**;**
+;
 
-**; Zeros the high-bit of each byte in a 100-byte array,**
+; Zeros the high-bit of each byte in a 100-byte array,
 
-**; using in-line code.**
+; using in-line code.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ARRAY\_LENGTH equ 100**
+ARRAY_LENGTH equ 100
 
-**ByteArray label byte**
+ByteArray label byte
 
-**db ARRAY\_LENGTH dup (80h)**
+db ARRAY_LENGTH dup (80h)
 
-**;**
+;
 
-**; Clears the high bit of each byte in an array of**
+; Clears the high bit of each byte in an array of
 
-**; length ARRAY\_LENGTH.**
+; length ARRAY_LENGTH.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; BX = pointer to the start of the array to clear**
+; BX = pointer to the start of the array to clear
 
-**;**
+;
 
-**; Output: none**
+; Output: none
 
-**;**
+;
 
-**; Registers altered: AL, BX**
+; Registers altered: AL, BX
 
-**;**
+;
 
-**ClearHighBits:**
+ClearHighBits:
 
-**mov al,not 80h ;pattern to clear**
+mov al,not 80h ;pattern to clear
 
-**; high bits with**
+; high bits with
 
-**rept ARRAY\_LENGTH ;\# of bytes to clear**
+rept ARRAY_LENGTH ;\# of bytes to clear
 
-**and [bx],al ;clear the high bit**
+and [bx],al ;clear the high bit
 
-**; of this byte**
+; of this byte
 
-**inc bx ;point to the next**
+inc bx ;point to the next
 
-**; byte**
+; byte
 
-**endm**
+endm
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov bx,offset ByteArray**
+mov bx,offset ByteArray
 
-**;array in which to clear**
+;array in which to clear
 
-**; high bits**
+; high bits
 
-**call ClearHighBits ;clear the high bits of the**
+call ClearHighBits ;clear the high bits of the
 
-**; bytes**
+; bytes
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 13-21
 
 
-**;**
+;
 
-**; \*\*\* Listing 13-21 \*\*\***
+; *** Listing 13-21 ***
 
-**;**
+;
 
-**; Replacement code for XorImage in Listing 11-33.**
+; Replacement code for XorImage in Listing 11-33.
 
-**; This version uses in-line code to eliminate branching**
+; This version uses in-line code to eliminate branching
 
-**; during the drawing of each image line.**
+; during the drawing of each image line.
 
-**;-----------------------------**
+;-----------------------------
 
-**; Exclusive-ors the image of a 3-color square at the**
+; Exclusive-ors the image of a 3-color square at the
 
-**; specified screen location. Assumes images start on**
+; specified screen location. Assumes images start on
 
-**; even-numbered scan lines and are an even number of**
+; even-numbered scan lines and are an even number of
 
-**; scan lines high. Always draws images byte-aligned in**
+; scan lines high. Always draws images byte-aligned in
 
-**; display memory.**
+; display memory.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; CX = X coordinate of upper left corner at which to**
+; CX = X coordinate of upper left corner at which to
 
-**; draw image (will be adjusted to nearest**
+; draw image (will be adjusted to nearest
 
-**; less-than or equal-to multiple of 4 in order**
+; less-than or equal-to multiple of 4 in order
 
-**; to byte-align)**
+; to byte-align)
 
-**; DX = Y coordinate of upper left corner at which to**
+; DX = Y coordinate of upper left corner at which to
 
-**; draw image**
+; draw image
 
-**; ES = display memory segment**
+; ES = display memory segment
 
-**;**
+;
 
-**; Output: none**
+; Output: none
 
-**;**
+;
 
-**; Registers altered: AX, CX, DX, SI, DI, BP**
+; Registers altered: AX, CX, DX, SI, DI, BP
 
-**;**
+;
 
-**XorImage:**
+XorImage:
 
-**shr dx,1 ;divide the row \# by 2 to compensate**
+shr dx,1 ;divide the row \# by 2 to compensate
 
-**; for the 2-bank nature of 320x200**
+; for the 2-bank nature of 320x200
 
-**; 4-color mode**
+; 4-color mode
 
-**mov ax,SCREEN\_WIDTH**
+mov ax,SCREEN_WIDTH
 
-**mul dx ;start offset of top row of image in**
+mul dx ;start offset of top row of image in
 
-**; display memory**
+; display memory
 
-**shr cx,1 ;divide the X coordinate by 4**
+shr cx,1 ;divide the X coordinate by 4
 
-**shr cx,1 ; because there are 4 pixels per**
+shr cx,1 ; because there are 4 pixels per
 
-**; byte**
+; byte
 
-**add ax,cx ;point to the offset at which the**
+add ax,cx ;point to the offset at which the
 
-**; upper left byte of the image will**
+; upper left byte of the image will
 
-**; go**
+; go
 
-**mov di,ax**
+mov di,ax
 
-**mov si,offset TheImage**
+mov si,offset TheImage
 
-**;point to the start of the one image**
+;point to the start of the one image
 
-**; we always draw**
+; we always draw
 
-**mov dx,BANK\_OFFSET-IMAGE\_WIDTH**
+mov dx,BANK_OFFSET-IMAGE_WIDTH
 
-**;offset from the end of an even line**
+;offset from the end of an even line
 
-**; of the image in display memory to**
+; of the image in display memory to
 
-**; the start of the next odd line of**
+; the start of the next odd line of
 
-**; the image**
+; the image
 
-**mov bp,BANK\_OFFSET-SCREEN\_WIDTH+IMAGE\_WIDTH**
+mov bp,BANK_OFFSET-SCREEN_WIDTH+IMAGE_WIDTH
 
-**;offset from the end of an odd line**
+;offset from the end of an odd line
 
-**; of the image in display memory to**
+; of the image in display memory to
 
-**; the start of the next even line of**
+; the start of the next even line of
 
-**; the image**
+; the image
 
-**mov cx,IMAGE\_HEIGHT/2**
+mov cx,IMAGE_HEIGHT/2
 
-**;\# of even/odd numbered row pairs to**
+;\# of even/odd numbered row pairs to
 
-**; draw in the image**
+; draw in the image
 
-**XorRowLoop:**
+XorRowLoop:
 
-**rept IMAGE\_WIDTH/2**
+rept IMAGE_WIDTH/2
 
-**lodsw ;next word of the image pattern**
+lodsw ;next word of the image pattern
 
-**xor es:[di],ax ;XOR the next word of the**
+xor es:[di],ax ;XOR the next word of the
 
-**; image into the screen**
+; image into the screen
 
-**inc di ;point to the next word in display**
+inc di ;point to the next word in display
 
-**inc di ; memory**
+inc di ; memory
 
-**endm**
+endm
 
-**add di,dx ;point to the start of the next**
+add di,dx ;point to the start of the next
 
-**; (odd) row of the image, which is**
+; (odd) row of the image, which is
 
-**; in the second bank of display**
+; in the second bank of display
 
-**; memory**
+; memory
 
-**rept IMAGE\_WIDTH/2**
+rept IMAGE_WIDTH/2
 
-**lodsw ;next word of the image pattern**
+lodsw ;next word of the image pattern
 
-**xor es:[di],ax ;XOR the next word of the**
+xor es:[di],ax ;XOR the next word of the
 
-**; image into the screen**
+; image into the screen
 
-**inc di ;point to the next word in display**
+inc di ;point to the next word in display
 
-**inc di ; memory**
+inc di ; memory
 
-**endm**
+endm
 
-**sub di,bp ;point to the start of the next**
+sub di,bp ;point to the start of the next
 
-**; (even) row of the image, which is**
+; (even) row of the image, which is
 
-**; in the first bank of display**
+; in the first bank of display
 
-**; memory**
+; memory
 
-**loop XorRowLoop ;count down the row pairs**
+loop XorRowLoop ;count down the row pairs
 
-**ret**
+ret
 
 
 
 ## Listing 13-22
 
 
-**;**
+;
 
-**; \*\*\* Listing 13-22 \*\*\***
+; *** Listing 13-22 ***
 
-**;**
+;
 
-**; Replacement code for BlockDrawImage in Listing 11-34.**
+; Replacement code for BlockDrawImage in Listing 11-34.
 
-**; This version uses in-line code to eliminate branching**
+; This version uses in-line code to eliminate branching
 
-**; entirely during the drawing of each image (eliminates**
+; entirely during the drawing of each image (eliminates
 
-**; the branching between the drawing of each pair of lines.)**
+; the branching between the drawing of each pair of lines.)
 
-**;-----------------------------**
+;-----------------------------
 
-**; Block-move draws the image of a 3-color square at the**
+; Block-move draws the image of a 3-color square at the
 
-**; specified screen location. Assumes images start on**
+; specified screen location. Assumes images start on
 
-**; even-numbered scan lines and are an even number of**
+; even-numbered scan lines and are an even number of
 
-**; scan lines high. Always draws images byte-aligned in**
+; scan lines high. Always draws images byte-aligned in
 
-**; display memory.**
+; display memory.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; CX = X coordinate of upper left corner at which to**
+; CX = X coordinate of upper left corner at which to
 
-**; draw image (will be adjusted to nearest**
+; draw image (will be adjusted to nearest
 
-**; less-than or equal-to multiple of 4 in order**
+; less-than or equal-to multiple of 4 in order
 
-**; to byte-align)**
+; to byte-align)
 
-**; DX = Y coordinate of upper left corner at which to**
+; DX = Y coordinate of upper left corner at which to
 
-**; draw image**
+; draw image
 
-**; ES = display memory segment**
+; ES = display memory segment
 
-**;**
+;
 
-**; Output: none**
+; Output: none
 
-**;**
+;
 
-**; Registers altered: AX, CX, DX, SI, DI, BP**
+; Registers altered: AX, CX, DX, SI, DI, BP
 
-**;**
+;
 
-**BlockDrawImage:**
+BlockDrawImage:
 
-**shr dx,1 ;divide the row \# by 2 to compensate**
+shr dx,1 ;divide the row \# by 2 to compensate
 
-**; for the 2-bank nature of 320x200**
+; for the 2-bank nature of 320x200
 
-**; 4-color mode**
+; 4-color mode
 
-**mov ax,SCREEN\_WIDTH**
+mov ax,SCREEN_WIDTH
 
-**mul dx ;start offset of top row of image in**
+mul dx ;start offset of top row of image in
 
-**; display memory**
+; display memory
 
-**shr cx,1 ;divide the X coordinate by 4**
+shr cx,1 ;divide the X coordinate by 4
 
-**shr cx,1 ; because there are 4 pixels per**
+shr cx,1 ; because there are 4 pixels per
 
-**; byte**
+; byte
 
-**add ax,cx ;point to the offset at which the**
+add ax,cx ;point to the offset at which the
 
-**; upper left byte of the image will**
+; upper left byte of the image will
 
-**; go**
+; go
 
-**mov di,ax**
+mov di,ax
 
-**mov si,offset TheImage**
+mov si,offset TheImage
 
-**;point to the start of the one image**
+;point to the start of the one image
 
-**; we always draw**
+; we always draw
 
-**mov ax,BANK\_OFFSET-SCREEN\_WIDTH+IMAGE\_WIDTH**
+mov ax,BANK_OFFSET-SCREEN_WIDTH+IMAGE_WIDTH
 
-**;offset from the end of an odd line**
+;offset from the end of an odd line
 
-**; of the image in display memory to**
+; of the image in display memory to
 
-**; the start of the next even line of**
+; the start of the next even line of
 
-**; the image**
+; the image
 
-**mov dx,BANK\_OFFSET-IMAGE\_WIDTH**
+mov dx,BANK_OFFSET-IMAGE_WIDTH
 
-**;offset from the end of an even line**
+;offset from the end of an even line
 
-**; of the image in display memory to**
+; of the image in display memory to
 
-**; the start of the next odd line of**
+; the start of the next odd line of
 
-**; the image**
+; the image
 
-**mov bp,IMAGE\_WIDTH/2**
+mov bp,IMAGE_WIDTH/2
 
-**;\# of words to draw per row of the**
+;\# of words to draw per row of the
 
-**; image. Note that IMAGE\_WIDTH must**
+; image. Note that IMAGE_WIDTH must
 
-**; be an even number since we XOR**
+; be an even number since we XOR
 
-**; the image a word at a time**
+; the image a word at a time
 
-**rept IMAGE\_HEIGHT/2**
+rept IMAGE_HEIGHT/2
 
-**mov cx,bp ;\# of words to draw per row of the**
+mov cx,bp ;\# of words to draw per row of the
 
-**; image**
+; image
 
-**rep movsw ;draw a whole even row with this one**
+rep movsw ;draw a whole even row with this one
 
-**; repeated instruction**
+; repeated instruction
 
-**add di,dx ;point to the start of the next**
+add di,dx ;point to the start of the next
 
-**; (odd) row of the image, which is**
+; (odd) row of the image, which is
 
-**; in the second bank of display**
+; in the second bank of display
 
-**; memory**
+; memory
 
-**mov cx,bp ;\# of words to draw per row of the**
+mov cx,bp ;\# of words to draw per row of the
 
-**; image**
+; image
 
-**rep movsw ;draw a whole odd row with this one**
+rep movsw ;draw a whole odd row with this one
 
-**; repeated instruction**
+; repeated instruction
 
-**sub di,ax**
+sub di,ax
 
-**;point to the start of the next**
+;point to the start of the next
 
-**; (even) row of the image, which is**
+; (even) row of the image, which is
 
-**; in the first bank of display**
+; in the first bank of display
 
-**; memory**
+; memory
 
-**endm**
+endm
 
-**ret**
+ret
 
 
 
 ## Listing 13-23
 
 
-**;**
+;
 
-**; \*\*\* Listing 13-23 \*\*\***
+; *** Listing 13-23 ***
 
-**;**
+;
 
-**; Zeros the high-bit of each byte in a 100-byte array,**
+; Zeros the high-bit of each byte in a 100-byte array,
 
-**; using branched-to in-line code.**
+; using branched-to in-line code.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**MAXIMUM\_ARRAY\_LENGTH equ 200**
+MAXIMUM_ARRAY_LENGTH equ 200
 
-**ARRAY\_LENGTH equ 100**
+ARRAY_LENGTH equ 100
 
-**ByteArray label byte**
+ByteArray label byte
 
-**db ARRAY\_LENGTH dup (80h)**
+db ARRAY_LENGTH dup (80h)
 
-**;**
+;
 
-**; Clears the high bit of each byte in an array.**
+; Clears the high bit of each byte in an array.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; BX = pointer to the start of the array to clear**
+; BX = pointer to the start of the array to clear
 
-**; CX = number of bytes to clear (no greater than**
+; CX = number of bytes to clear (no greater than
 
-**; MAXIMUM\_ARRAY\_LENGTH)**
+; MAXIMUM_ARRAY_LENGTH)
 
-**;**
+;
 
-**; Output: none**
+; Output: none
 
-**;**
+;
 
-**; Registers altered: AX, BX, CX**
+; Registers altered: AX, BX, CX
 
-**;**
+;
 
-**ClearHighBits:**
+ClearHighBits:
 
-**;**
+;
 
-**; Calculate the offset in the in-line code to which to jump**
+; Calculate the offset in the in-line code to which to jump
 
-**; in order to get the desired number of repetitions.**
+; in order to get the desired number of repetitions.
 
-**;**
+;
 
-**mov al,InLineBitClearEnd-SingleRepetitionStart**
+mov al,InLineBitClearEnd-SingleRepetitionStart
 
-**;\# of bytes per single**
+;\# of bytes per single
 
-**; repetition of**
+; repetition of
 
-**; AND [BX],AL/INC BX**
+; AND [BX],AL/INC BX
 
-**mul cl ;\# of code bytes in the \# of**
+mul cl ;\# of code bytes in the \# of
 
-**; repetitions desired**
+; repetitions desired
 
-**mov cx,offset InLineBitClearEnd**
+mov cx,offset InLineBitClearEnd
 
-**sub cx,ax ;point back just enough**
+sub cx,ax ;point back just enough
 
-**; instruction bytes from**
+; instruction bytes from
 
-**; the end of the in-line**
+; the end of the in-line
 
-**; code to perform the**
+; code to perform the
 
-**; desired \# of repetitions**
+; desired \# of repetitions
 
-**mov al,not 80h ;pattern to clear high bits**
+mov al,not 80h ;pattern to clear high bits
 
-**; with**
+; with
 
-**jmp cx ;finally, branch to perform**
+jmp cx ;finally, branch to perform
 
-**; the desired \# of**
+; the desired \# of
 
-**; repetitions**
+; repetitions
 
-**;**
+;
 
-**; In-line code to clear the high bits of up to the maximum \#**
+; In-line code to clear the high bits of up to the maximum \#
 
-**; of bytes.**
+; of bytes.
 
-**;**
+;
 
-**rept MAXIMUM\_ARRAY\_LENGTH-1**
+rept MAXIMUM_ARRAY_LENGTH-1
 
-**;maximum \# of bytes to clear**
+;maximum \# of bytes to clear
 
-**; less 1**
+; less 1
 
-**and [bx],al ;clear the high bit of this**
+and [bx],al ;clear the high bit of this
 
-**; byte**
+; byte
 
-**inc bx ;point to the next byte**
+inc bx ;point to the next byte
 
-**endm**
+endm
 
-**SingleRepetitionStart: ;a single repetition of the**
+SingleRepetitionStart: ;a single repetition of the
 
-**; loop code, so we can**
+; loop code, so we can
 
-**; calculate the length of**
+; calculate the length of
 
-**; a single repetition**
+; a single repetition
 
-**and [bx],dl ;clear the high bit of this**
+and [bx],dl ;clear the high bit of this
 
-**; byte**
+; byte
 
-**inc bx ;point to the next byte**
+inc bx ;point to the next byte
 
-**InLineBitClearEnd:**
+InLineBitClearEnd:
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov bx,offset ByteArray**
+mov bx,offset ByteArray
 
-**;array in which to clear**
+;array in which to clear
 
-**; high bits**
+; high bits
 
-**mov cx,ARRAY\_LENGTH ;\# of bytes to clear**
+mov cx,ARRAY_LENGTH ;\# of bytes to clear
 
-**; (always less than**
+; (always less than
 
-**; MAXIMUM\_ARRAY\_LENGTH)**
+; MAXIMUM_ARRAY_LENGTH)
 
-**call ClearHighBits ;clear the high bits of the**
+call ClearHighBits ;clear the high bits of the
 
-**; bytes**
+; bytes
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 13-24
 
 
-**;**
+;
 
-**; \*\*\* Listing 13-24 \*\*\***
+; *** Listing 13-24 ***
 
-**;**
+;
 
-**; Zeros the high-bit of each byte in a 100-byte array,**
+; Zeros the high-bit of each byte in a 100-byte array,
 
-**; using partiaLin-line code.**
+; using partiaLin-line code.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ARRAY\_LENGTH equ 100**
+ARRAY_LENGTH equ 100
 
-**ByteArray label byte**
+ByteArray label byte
 
-**db ARRAY\_LENGTH dup (80h)**
+db ARRAY_LENGTH dup (80h)
 
-**;**
+;
 
-**; Clears the high bit of each byte in an array.**
+; Clears the high bit of each byte in an array.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; BX = pointer to the start of the array to clear**
+; BX = pointer to the start of the array to clear
 
-**; CX = number of bytes to clear (must be a multiple**
+; CX = number of bytes to clear (must be a multiple
 
-**; of 4)**
+; of 4)
 
-**;**
+;
 
-**; Output: none**
+; Output: none
 
-**;**
+;
 
-**; Registers altered: AL, BX, CX**
+; Registers altered: AL, BX, CX
 
-**;**
+;
 
-**ClearHighBits:**
+ClearHighBits:
 
-**mov al,not 80h ;pattern to clear**
+mov al,not 80h ;pattern to clear
 
-**; high bits with**
+; high bits with
 
-**shr cx,1 ;\# of passes through**
+shr cx,1 ;\# of passes through
 
-**shr cx,1 ; partiaLin-line**
+shr cx,1 ; partiaLin-line
 
-**; loop, which does**
+; loop, which does
 
-**; 4 bytes at a pop**
+; 4 bytes at a pop
 
-**ClearHighBitsLoop:**
+ClearHighBitsLoop:
 
-**rept 4 ;we'll put 4 bit-**
+rept 4 ;we'll put 4 bit-
 
-**; clears back to**
+; clears back to
 
-**; back, then loop**
+; back, then loop
 
-**and [bx],al ;clear the high bit**
+and [bx],al ;clear the high bit
 
-**; of this byte**
+; of this byte
 
-**inc bx ;point to the next**
+inc bx ;point to the next
 
-**; byte**
+; byte
 
-**endm**
+endm
 
-**loop ClearHighBitsLoop**
+loop ClearHighBitsLoop
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov bx,offset ByteArray**
+mov bx,offset ByteArray
 
-**;array in which to clear**
+;array in which to clear
 
-**; high bits**
+; high bits
 
-**mov cx,ARRAY\_LENGTH ;\# of bytes to clear**
+mov cx,ARRAY_LENGTH ;\# of bytes to clear
 
-**; (always a multiple of 4)**
+; (always a multiple of 4)
 
-**call ClearHighBits ;clear the high bits of the**
+call ClearHighBits ;clear the high bits of the
 
-**; bytes**
+; bytes
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
@@ -16675,5376 +16675,5376 @@ Skip:
 ## Listing 13-25
 
 
-**;**
+;
 
-**; \*\*\* Listing 13-25 \*\*\***
+; *** Listing 13-25 ***
 
-**;**
+;
 
-**; Zeros the high-bit of each byte in a 100-byte array,**
+; Zeros the high-bit of each byte in a 100-byte array,
 
-**; using branched-to partiaLin-line code.**
+; using branched-to partiaLin-line code.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ARRAY\_LENGTH equ 100**
+ARRAY_LENGTH equ 100
 
-**ByteArray label byte**
+ByteArray label byte
 
-**db ARRAY\_LENGTH dup (80h)**
+db ARRAY_LENGTH dup (80h)
 
-**;**
+;
 
-**; Clears the high bit of each byte in an array.**
+; Clears the high bit of each byte in an array.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; BX = pointer to the start of the array to clear**
+; BX = pointer to the start of the array to clear
 
-**; CX = number of bytes to clear (0 means 0)**
+; CX = number of bytes to clear (0 means 0)
 
-**;**
+;
 
-**; Output: none**
+; Output: none
 
-**;**
+;
 
-**; Registers altered: AX, BX, CX, DX**
+; Registers altered: AX, BX, CX, DX
 
-**;**
+;
 
-**ClearHighBits:**
+ClearHighBits:
 
-**;**
+;
 
-**; Calculate the offset in the partiaLin-line code to which**
+; Calculate the offset in the partiaLin-line code to which
 
-**; to jump in order to perform CX modulo 4 repetitions (the**
+; to jump in order to perform CX modulo 4 repetitions (the
 
-**; remaining repetitions will be handled by full passes**
+; remaining repetitions will be handled by full passes
 
-**; through the loop).**
+; through the loop).
 
-**;**
+;
 
-**mov ax,cx**
+mov ax,cx
 
-**and ax,3 ;\# of repetitions modulo 4**
+and ax,3 ;\# of repetitions modulo 4
 
-**mov dx,ax**
+mov dx,ax
 
-**shl ax,1**
+shl ax,1
 
-**add ax,dx ;(\# of reps modulo 4) \* 3**
+add ax,dx ;(\# of reps modulo 4) * 3
 
-**; is the \# of bytes from the**
+; is the \# of bytes from the
 
-**; the end of the partial**
+; the end of the partial
 
-**; in-line code to branch to**
+; in-line code to branch to
 
-**; in order to handle the**
+; in order to handle the
 
-**; \# of repetitions that**
+; \# of repetitions that
 
-**; can't be handled in a full**
+; can't be handled in a full
 
-**; loop**
+; loop
 
-**mov dx,offset InLineBitClearEnd**
+mov dx,offset InLineBitClearEnd
 
-**sub dx,ax ;point back just enough**
+sub dx,ax ;point back just enough
 
-**; instruction bytes from**
+; instruction bytes from
 
-**; the end of the in-line**
+; the end of the in-line
 
-**; code to perform the**
+; code to perform the
 
-**; desired \# of repetitions**
+; desired \# of repetitions
 
-**shr cx,1 ;divide by 4, since we'll do**
+shr cx,1 ;divide by 4, since we'll do
 
-**shr cx,1 ; 4 repetitions per loop**
+shr cx,1 ; 4 repetitions per loop
 
-**inc cx ;account for the first,**
+inc cx ;account for the first,
 
-**; partial pass through the**
+; partial pass through the
 
-**; loop**
+; loop
 
-**mov al,not 80h ;pattern to clear high bits**
+mov al,not 80h ;pattern to clear high bits
 
-**; with**
+; with
 
-**jmp dx ;finally, branch to perform**
+jmp dx ;finally, branch to perform
 
-**; the desired \# of**
+; the desired \# of
 
-**; repetitions**
+; repetitions
 
-**;**
+;
 
-**; PartiaLin-line code to clear the high bits of 4 bytes per**
+; PartiaLin-line code to clear the high bits of 4 bytes per
 
-**; pass through the loop.**
+; pass through the loop.
 
-**;**
+;
 
-**ClearHighBitsLoop:**
+ClearHighBitsLoop:
 
-**rept 4**
+rept 4
 
-**and [bx],al ;clear the high bit of this**
+and [bx],al ;clear the high bit of this
 
-**; byte**
+; byte
 
-**inc bx ;point to the next byte**
+inc bx ;point to the next byte
 
-**endm**
+endm
 
-**InLineBitClearEnd:**
+InLineBitClearEnd:
 
-**loop ClearHighBitsLoop**
+loop ClearHighBitsLoop
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov bx,offset ByteArray**
+mov bx,offset ByteArray
 
-**;array in which to clear**
+;array in which to clear
 
-**; high bits**
+; high bits
 
-**mov cx,ARRAY\_LENGTH ;\# of bytes to clear**
+mov cx,ARRAY_LENGTH ;\# of bytes to clear
 
-**; (always less than**
+; (always less than
 
-**; MAXIMUM\_ARRAY\_LENGTH)**
+; MAXIMUM_ARRAY_LENGTH)
 
-**call ClearHighBits ;clear the high bits of the**
+call ClearHighBits ;clear the high bits of the
 
-**; bytes**
+; bytes
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 13-26
 
 
-**;**
+;
 
-**; \*\*\* Listing 13-26 \*\*\***
+; *** Listing 13-26 ***
 
-**;**
+;
 
-**; Replacement code for ClearHighBits in Listing 13-25.**
+; Replacement code for ClearHighBits in Listing 13-25.
 
-**; This version performs 64K rather than 0 repetitions**
+; This version performs 64K rather than 0 repetitions
 
-**; when CX is 0.**
+; when CX is 0.
 
-**;-----------------------------**
+;-----------------------------
 
-**; Clears the high bit of each byte in an array.**
+; Clears the high bit of each byte in an array.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; BX = pointer to the start of the array to clear**
+; BX = pointer to the start of the array to clear
 
-**; CX = number of bytes to clear (0 means 64K)**
+; CX = number of bytes to clear (0 means 64K)
 
-**;**
+;
 
-**; Output: none**
+; Output: none
 
-**;**
+;
 
-**; Registers altered: AX, BX, CX, DX**
+; Registers altered: AX, BX, CX, DX
 
-**;**
+;
 
-**ClearHighBits:**
+ClearHighBits:
 
-**;**
+;
 
-**; Calculate the offset in the partiaLin-line code to which**
+; Calculate the offset in the partiaLin-line code to which
 
-**; to jump in order to perform CX modulo 4 repetitions (the**
+; to jump in order to perform CX modulo 4 repetitions (the
 
-**; remaining repetitions will be handled by full passes**
+; remaining repetitions will be handled by full passes
 
-**; through the loop).**
+; through the loop).
 
-**;**
+;
 
-**dec cx ;\# of reps -1, since 1 to 4**
+dec cx ;\# of reps -1, since 1 to 4
 
-**; (rather than 0 to 3) repetitions**
+; (rather than 0 to 3) repetitions
 
-**; are performed on the first,**
+; are performed on the first,
 
-**; possibly partial pass through**
+; possibly partial pass through
 
-**; the loop**
+; the loop
 
-****
 
-**mov ax,cx**
 
-**and ax,3 ;\# of repetitions modulo 4**
+mov ax,cx
 
-**inc ax ;(\# of reps modulo 4)+1 in order to**
+and ax,3 ;\# of repetitions modulo 4
 
-**; perform 1 to 4 repetitions on the**
+inc ax ;(\# of reps modulo 4)+1 in order to
 
-**; first, possibly partial pass**
+; perform 1 to 4 repetitions on the
 
-**; through the loop**
+; first, possibly partial pass
 
-**mov dx,ax**
+; through the loop
 
-**shl ax,1**
+mov dx,ax
 
-**add ax,dx ;(((\# of reps -1) modulo 4)+1)\*3**
+shl ax,1
 
-**; is the \# of bytes from the**
+add ax,dx ;(((\# of reps -1) modulo 4)+1)*3
 
-**; the end of the partial**
+; is the \# of bytes from the
 
-**; in-line code to branch to**
+; the end of the partial
 
-**; in order to handle the**
+; in-line code to branch to
 
-**; \# of repetitions that**
+; in order to handle the
 
-**; must be handled in the**
+; \# of repetitions that
 
-**; first, possibly partial**
+; must be handled in the
 
-**; loop**
+; first, possibly partial
 
-**mov dx,offset InLineBitClearEnd**
+; loop
 
-**sub dx,ax ;point back just enough**
+mov dx,offset InLineBitClearEnd
 
-**; instruction bytes from**
+sub dx,ax ;point back just enough
 
-**; the end of the in-line**
+; instruction bytes from
 
-**; code to perform the**
+; the end of the in-line
 
-**; desired \# of repetitions**
+; code to perform the
 
-**shr cx,1 ;divide by 4, since we'll do**
+; desired \# of repetitions
 
-**shr cx,1 ; 4 repetitions per loop**
+shr cx,1 ;divide by 4, since we'll do
 
-**inc cx ;account for the first,**
+shr cx,1 ; 4 repetitions per loop
 
-**; possibly partial pass**
+inc cx ;account for the first,
 
-**; through the loop**
+; possibly partial pass
 
-**mov al,not 80h**
+; through the loop
 
-**;pattern with which to clear**
+mov al,not 80h
 
-**; high bits**
+;pattern with which to clear
 
-**jmp dx ;finally, branch to perform**
+; high bits
 
-**; the desired \# of repetitions**
+jmp dx ;finally, branch to perform
 
-**;**
+; the desired \# of repetitions
 
-**; PartiaLin-line code to clear the high bits of 4 bytes per**
+;
 
-**; pass through the loop.**
+; PartiaLin-line code to clear the high bits of 4 bytes per
 
-**;**
+; pass through the loop.
 
-**ClearHighBitsLoop:**
+;
 
-**rept 4**
+ClearHighBitsLoop:
 
-**and [bx],al ;clear the high bit of this**
+rept 4
 
-**; byte**
+and [bx],al ;clear the high bit of this
 
-**inc bx ;point to the next byte**
+; byte
 
-**endm**
+inc bx ;point to the next byte
 
-**InLineBitClearEnd:**
+endm
 
-**loop ClearHighBitsLoop**
+InLineBitClearEnd:
 
-**ret**
+loop ClearHighBitsLoop
+
+ret
 
 
 
 ## Listing 13-27
 
 
-**;**
+;
 
-**; \*\*\* Listing 13-27 \*\*\***
+; *** Listing 13-27 ***
 
-**;**
+;
 
-**; Determines whether two zero-terminated strings differ, and**
+; Determines whether two zero-terminated strings differ, and
 
-**; if so where, using LODS/SCAS and partiaLin-line code.**
+; if so where, using LODS/SCAS and partiaLin-line code.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**TestString1 label byte**
+TestString1 label byte
 
-**db 'This is a test string that is '**
+db 'This is a test string that is '
 
-**db 'z'**
+db 'z'
 
-**db 'terminated with a zero byte...',0**
+db 'terminated with a zero byte...',0
 
-**TestString2 label byte**
+TestString2 label byte
 
-**db 'This is a test string that is '**
+db 'This is a test string that is '
 
-**db 'a'**
+db 'a'
 
-**db 'terminated with a zero byte...',0**
+db 'terminated with a zero byte...',0
 
-**;**
+;
 
-**; Compares two zero-terminated strings.**
+; Compares two zero-terminated strings.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; DS:SI = first zero-terminated string**
+; DS:SI = first zero-terminated string
 
-**; ES:DI = second zero-terminated string**
+; ES:DI = second zero-terminated string
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; DS:SI = pointer to first differing location in**
+; DS:SI = pointer to first differing location in
 
-**; first string, or 0 if the byte wasn't found**
+; first string, or 0 if the byte wasn't found
 
-**; ES:DI = pointer to first differing location in**
+; ES:DI = pointer to first differing location in
 
-**; second string, or 0 if the byte wasn't found**
+; second string, or 0 if the byte wasn't found
 
-**;**
+;
 
-**; Registers altered: AX, SI, DI**
+; Registers altered: AX, SI, DI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Does not handle strings that are longer than 64K**
+; Note: Does not handle strings that are longer than 64K
 
-**; bytes or cross segment boundaries.**
+; bytes or cross segment boundaries.
 
-**;**
+;
 
-**CompareStrings:**
+CompareStrings:
 
-**cld**
+cld
 
-**CompareStringsLoop:**
+CompareStringsLoop:
 
-**;**
+;
 
-**; First 7 repetitions of partiaLin-line code.**
+; First 7 repetitions of partiaLin-line code.
 
-**;**
+;
 
-**rept 7**
+rept 7
 
-**lodsw ;get the next 2 bytes**
+lodsw ;get the next 2 bytes
 
-**and al,al ;is the first byte the terminating**
+and al,al ;is the first byte the terminating
 
-**; zero?**
+; zero?
 
-**jz CompareStringsFinalByte**
+jz CompareStringsFinalByte
 
-**;yes, so there's only one byte left**
+;yes, so there's only one byte left
 
-**; to check**
+; to check
 
-**scasw ;compare this word**
+scasw ;compare this word
 
-**jnz CompareStringsDifferent ;the strings differ**
+jnz CompareStringsDifferent ;the strings differ
 
-**and ah,ah ;is the second byte the terminating**
+and ah,ah ;is the second byte the terminating
 
-**; zero?**
+; zero?
 
-**jz CompareStringsSame**
+jz CompareStringsSame
 
-**;yes, we've got a match**
+;yes, we've got a match
 
-**endm**
+endm
 
-**;**
+;
 
-**; Final repetition of partiaLin-line code.**
+; Final repetition of partiaLin-line code.
 
-**;**
+;
 
-**lodsw ;get the next 2 bytes**
+lodsw ;get the next 2 bytes
 
-**and al,al ;is the first byte the terminating**
+and al,al ;is the first byte the terminating
 
-**; zero?**
+; zero?
 
-**jz CompareStringsFinalByte**
+jz CompareStringsFinalByte
 
-**;yes, so there's only one byte left**
+;yes, so there's only one byte left
 
-**; to check**
+; to check
 
-**scasw ;compare this word**
+scasw ;compare this word
 
-**jnz CompareStringsDifferent ;the strings differ**
+jnz CompareStringsDifferent ;the strings differ
 
-**and ah,ah ;is the second byte the terminating**
+and ah,ah ;is the second byte the terminating
 
-**; zero?**
+; zero?
 
-**jnz CompareStringsLoop ;no, continue comparing**
+jnz CompareStringsLoop ;no, continue comparing
 
-**;the strings are the same**
+;the strings are the same
 
-**CompareStringsSame:**
+CompareStringsSame:
 
-**sub si,si ;return 0 pointers indicating that**
+sub si,si ;return 0 pointers indicating that
 
-**mov di,si ; the strings are identical**
+mov di,si ; the strings are identical
 
-**ret**
+ret
 
-**CompareStringsFinalByte:**
+CompareStringsFinalByte:
 
-**scasb ;does the terminating zero match in**
+scasb ;does the terminating zero match in
 
-**; the 2 strings?**
+; the 2 strings?
 
-**jz CompareStringsSame ;yes, the strings match**
+jz CompareStringsSame ;yes, the strings match
 
-**dec si ;point back to the differing byte**
+dec si ;point back to the differing byte
 
-**dec di ; in each string**
+dec di ; in each string
 
-**ret**
+ret
 
-**CompareStringsDifferent:**
+CompareStringsDifferent:
 
-**;the strings are different, so we**
+;the strings are different, so we
 
-**; have to figure which byte in the**
+; have to figure which byte in the
 
-**; word just compared was the first**
+; word just compared was the first
 
-**; difference**
+; difference
 
-**dec si**
+dec si
 
-**dec si ;point back to the first byte of the**
+dec si ;point back to the first byte of the
 
-**dec di ; differing word in each string**
+dec di ; differing word in each string
 
-**dec di**
+dec di
 
-**lodsb**
+lodsb
 
-**scasb ;compare that first byte again**
+scasb ;compare that first byte again
 
-**jz CompareStringsDone**
+jz CompareStringsDone
 
-**;if the first bytes are the same,**
+;if the first bytes are the same,
 
-**; then it must have been the second**
+; then it must have been the second
 
-**; bytes that differed. That's where**
+; bytes that differed. That's where
 
-**; we're pointing, so we're done**
+; we're pointing, so we're done
 
-**dec si ;the first bytes differed, so point**
+dec si ;the first bytes differed, so point
 
-**dec di ; back to them**
+dec di ; back to them
 
-**CompareStringsDone:**
+CompareStringsDone:
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov si,offset TestString1 ;point to one string**
+mov si,offset TestString1 ;point to one string
 
-**mov di,seg TestString2**
+mov di,seg TestString2
 
-**mov es,di**
+mov es,di
 
-**mov di,offset TestString2 ;point to other string**
+mov di,offset TestString2 ;point to other string
 
-**call CompareStrings ;and compare the strings**
+call CompareStrings ;and compare the strings
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 14-1
 
 
-**;**
+;
 
-**; \*\*\* Listing 14-1 \*\*\***
+; *** Listing 14-1 ***
 
-**;**
+;
 
-**; Copies a zero-terminated string to another string,**
+; Copies a zero-terminated string to another string,
 
-**; filtering out non-printable characters by means of a**
+; filtering out non-printable characters by means of a
 
-**; subroutine that performs the test. The subroutine is**
+; subroutine that performs the test. The subroutine is
 
-**; called with a far call and returns with a far return.**
+; called with a far call and returns with a far return.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**SourceString label byte**
+SourceString label byte
 
-**db 'This is a sample string, consisting of '**
+db 'This is a sample string, consisting of '
 
-**X=1**
+X=1
 
-**rept 31**
+rept 31
 
-**db X**
+db X
 
-**X=X+1**
+X=X+1
 
-**endm**
+endm
 
-**db 7fh**
+db 7fh
 
-**db 'both printable and non-printable '**
+db 'both printable and non-printable '
 
-**db 'characters', 0**
+db 'characters', 0
 
-**DestinationString label byte**
+DestinationString label byte
 
-**db 200 dup (?)**
+db 200 dup (?)
 
-**;**
+;
 
-**; Determines whether a character is printable (in the range**
+; Determines whether a character is printable (in the range
 
-**; 20h through 7Eh).**
+; 20h through 7Eh).
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; AL = character to check**
+; AL = character to check
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; Zero flag set to 1 if character is printable,**
+; Zero flag set to 1 if character is printable,
 
-**; set to 0 otherwise**
+; set to 0 otherwise
 
-**;**
+;
 
-**; Registers altered: none**
+; Registers altered: none
 
-**;**
+;
 
-**IsPrintable proc far**
+IsPrintable proc far
 
-**cmp al,20h**
+cmp al,20h
 
-**jb IsPrintableDone ;not printable**
+jb IsPrintableDone ;not printable
 
-**cmp al,7eh**
+cmp al,7eh
 
-**ja IsPrintableDone ;not printable**
+ja IsPrintableDone ;not printable
 
-**cmp al,al ;set the Zero flag to 1, since the**
+cmp al,al ;set the Zero flag to 1, since the
 
-**; character is printable**
+; character is printable
 
-**IsPrintableDone:**
+IsPrintableDone:
 
-**ret**
+ret
 
-**IsPrintable endp**
+IsPrintable endp
 
-**;**
+;
 
-**; Copies a zero-terminated string to another string,**
+; Copies a zero-terminated string to another string,
 
-**; filtering out non-printable characters.**
+; filtering out non-printable characters.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; DS:SI = source string**
+; DS:SI = source string
 
-**; ES:DI = destination string**
+; ES:DI = destination string
 
-**;**
+;
 
-**; Output: none**
+; Output: none
 
-**;**
+;
 
-**; Registers altered: AL, SI, DI**
+; Registers altered: AL, SI, DI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Does not handle strings that are longer than 64K**
+; Note: Does not handle strings that are longer than 64K
 
-**; bytes or cross segment boundaries.**
+; bytes or cross segment boundaries.
 
-**;**
+;
 
-**CopyPrintable:**
+CopyPrintable:
 
-**cld**
+cld
 
-**CopyPrintableLoop:**
+CopyPrintableLoop:
 
-**lodsb ;get the next byte to copy**
+lodsb ;get the next byte to copy
 
-**call IsPrintable ;is it printable?**
+call IsPrintable ;is it printable?
 
-**jnz NotPrintable ;nope, don't copy it**
+jnz NotPrintable ;nope, don't copy it
 
-**stosb ;put the byte in the**
+stosb ;put the byte in the
 
-**; destination string**
+; destination string
 
-**jmp CopyPrintableLoop ;the character was**
+jmp CopyPrintableLoop ;the character was
 
-**; printable, so it couldn't**
+; printable, so it couldn't
 
-**; possibly have been 0. No**
+; possibly have been 0. No
 
-**; need to check whether it**
+; need to check whether it
 
-**; terminated the string**
+; terminated the string
 
-**NotPrintable:**
+NotPrintable:
 
-**and al,al ;was that the**
+and al,al ;was that the
 
-**; terminating zero?**
+; terminating zero?
 
-**jnz CopyPrintableLoop ;no, do next byte**
+jnz CopyPrintableLoop ;no, do next byte
 
-**stosb ;copy the terminating zero**
+stosb ;copy the terminating zero
 
-**ret ;done**
+ret ;done
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov di,seg DestinationString**
+mov di,seg DestinationString
 
-**mov es,di**
+mov es,di
 
-**mov di,offset DestinationString**
+mov di,offset DestinationString
 
-**;ES:DI points to the destination**
+;ES:DI points to the destination
 
-**mov si,offset SourceString**
+mov si,offset SourceString
 
-**;DS:SI points to the source**
+;DS:SI points to the source
 
-**call CopyPrintable ;copy the printable**
+call CopyPrintable ;copy the printable
 
-**; characters**
+; characters
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 14-2
 
 
-**;**
+;
 
-**; \*\*\* Listing 14-2 \*\*\***
+; *** Listing 14-2 ***
 
-**;**
+;
 
-**; Copies a zero-terminated string to another string,**
+; Copies a zero-terminated string to another string,
 
-**; filtering out non-printable characters by means of a**
+; filtering out non-printable characters by means of a
 
-**; subroutine that performs the test. The subroutine is**
+; subroutine that performs the test. The subroutine is
 
-**; invoked with a JMP and returns with another JMP.**
+; invoked with a JMP and returns with another JMP.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**SourceString label byte**
+SourceString label byte
 
-**db 'This is a sample string, consisting of '**
+db 'This is a sample string, consisting of '
 
-**X=1**
+X=1
 
-**rept 31**
+rept 31
 
-**db X**
+db X
 
-**X=X+1**
+X=X+1
 
-**endm**
+endm
 
-**db 7fh**
+db 7fh
 
-**db 'both printable and non-printable '**
+db 'both printable and non-printable '
 
-**db 'characters', 0**
+db 'characters', 0
 
-**DestinationString label byte**
+DestinationString label byte
 
-**db 200 dup (?)**
+db 200 dup (?)
 
-**;**
+;
 
-**; Determines whether a character is printable (in the range**
+; Determines whether a character is printable (in the range
 
-**; 20h through 7Eh).**
+; 20h through 7Eh).
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; AL = character to check**
+; AL = character to check
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; Zero flag set to 1 if character is printable,**
+; Zero flag set to 1 if character is printable,
 
-**; set to 0 otherwise**
+; set to 0 otherwise
 
-**;**
+;
 
-**; Registers altered: none**
+; Registers altered: none
 
-**;**
+;
 
-**IsPrintable:**
+IsPrintable:
 
-**cmp al,20h**
+cmp al,20h
 
-**jb IsPrintableDone ;not printable**
+jb IsPrintableDone ;not printable
 
-**cmp al,7eh**
+cmp al,7eh
 
-**ja IsPrintableDone ;not printable**
+ja IsPrintableDone ;not printable
 
-**cmp al,al ;set the Zero flag to 1, since the**
+cmp al,al ;set the Zero flag to 1, since the
 
-**; character is printable**
+; character is printable
 
-**IsPrintableDone:**
+IsPrintableDone:
 
-**jmp short IsPrintableReturn**
+jmp short IsPrintableReturn
 
-**;this hardwires IsPrintable to**
+;this hardwires IsPrintable to
 
-**; return to just one place**
+; return to just one place
 
-**;**
+;
 
-**; Copies a zero-terminated string to another string,**
+; Copies a zero-terminated string to another string,
 
-**; filtering out non-printable characters.**
+; filtering out non-printable characters.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; DS:SI = source string**
+; DS:SI = source string
 
-**; ES:DI = destination string**
+; ES:DI = destination string
 
-**;**
+;
 
-**; Output: none**
+; Output: none
 
-**;**
+;
 
-**; Registers altered: AL, SI, DI**
+; Registers altered: AL, SI, DI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Does not handle strings that are longer than 64K**
+; Note: Does not handle strings that are longer than 64K
 
-**; bytes or cross segment boundaries.**
+; bytes or cross segment boundaries.
 
-**;**
+;
 
-**CopyPrintable:**
+CopyPrintable:
 
-**cld**
+cld
 
-**CopyPrintableLoop:**
+CopyPrintableLoop:
 
-**lodsb ;get the next byte to copy**
+lodsb ;get the next byte to copy
 
-**jmp IsPrintable ;is it printable?**
+jmp IsPrintable ;is it printable?
 
-**IsPrintableReturn:**
+IsPrintableReturn:
 
-**jnz NotPrintable ;nope, don't copy it**
+jnz NotPrintable ;nope, don't copy it
 
-**stosb ;put the byte in the**
+stosb ;put the byte in the
 
-**; destination string**
+; destination string
 
-**jmp CopyPrintableLoop ;the character was**
+jmp CopyPrintableLoop ;the character was
 
-**; printable, so it couldn't**
+; printable, so it couldn't
 
-**; possibly have been 0. No**
+; possibly have been 0. No
 
-**; need to check whether it**
+; need to check whether it
 
-**; terminated the string**
+; terminated the string
 
-**NotPrintable:**
+NotPrintable:
 
-**and al,al ;was that the**
+and al,al ;was that the
 
-**; terminating zero?**
+; terminating zero?
 
-**jnz CopyPrintableLoop ;no, do next byte**
+jnz CopyPrintableLoop ;no, do next byte
 
-**stosb ;copy the terminating zero**
+stosb ;copy the terminating zero
 
-**ret ;done**
+ret ;done
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov di,seg DestinationString**
+mov di,seg DestinationString
 
-**mov es,di**
+mov es,di
 
-**mov di,offset DestinationString**
+mov di,offset DestinationString
 
-**;ES:DI points to the destination**
+;ES:DI points to the destination
 
-**mov si,offset SourceString**
+mov si,offset SourceString
 
-**;DS:SI points to the source**
+;DS:SI points to the source
 
-**call CopyPrintable ;copy the printable**
+call CopyPrintable ;copy the printable
 
-**; characters**
+; characters
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 14-3
 
 
-**;**
+;
 
-**; \*\*\* Listing 14-3 \*\*\***
+; *** Listing 14-3 ***
 
-**;**
+;
 
-**; Copies a zero-terminated string to another string,**
+; Copies a zero-terminated string to another string,
 
-**; filtering out non-printable characters by means of a**
+; filtering out non-printable characters by means of a
 
-**; subroutine that performs the test. The subroutine is**
+; subroutine that performs the test. The subroutine is
 
-**; invoked with a JMP and returns with a JMP through a**
+; invoked with a JMP and returns with a JMP through a
 
-**; register.**
+; register.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**SourceString label byte**
+SourceString label byte
 
-**db 'This is a sample string, consisting of '**
+db 'This is a sample string, consisting of '
 
-**X=1**
+X=1
 
-**rept 31**
+rept 31
 
-**db X**
+db X
 
-**X=X+1**
+X=X+1
 
-**endm**
+endm
 
-**db 7fh**
+db 7fh
 
-**db 'both printable and non-printable '**
+db 'both printable and non-printable '
 
-**db 'characters', 0**
+db 'characters', 0
 
-**DestinationString label byte**
+DestinationString label byte
 
-**db 200 dup (?)**
+db 200 dup (?)
 
-**;**
+;
 
-**; Determines whether a character is printable (in the range**
+; Determines whether a character is printable (in the range
 
-**; 20h through 7Eh).**
+; 20h through 7Eh).
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; AL = character to check**
+; AL = character to check
 
-**; BP = return address**
+; BP = return address
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; Zero flag set to 1 if character is printable,**
+; Zero flag set to 1 if character is printable,
 
-**; set to 0 otherwise**
+; set to 0 otherwise
 
-**;**
+;
 
-**; Registers altered: none**
+; Registers altered: none
 
-**;**
+;
 
-**IsPrintable:**
+IsPrintable:
 
-**cmp al,20h**
+cmp al,20h
 
-**jb IsPrintableDone ;not printable**
+jb IsPrintableDone ;not printable
 
-**cmp al,7eh**
+cmp al,7eh
 
-**ja IsPrintableDone ;not printable**
+ja IsPrintableDone ;not printable
 
-**cmp al,al ;set the Zero flag to 1, since the**
+cmp al,al ;set the Zero flag to 1, since the
 
-**; character is printable**
+; character is printable
 
-**IsPrintableDone:**
+IsPrintableDone:
 
-**jmp bp ;return to the address in BP**
+jmp bp ;return to the address in BP
 
-**;**
+;
 
-**; Copies a zero-terminated string to another string,**
+; Copies a zero-terminated string to another string,
 
-**; filtering out non-printable characters.**
+; filtering out non-printable characters.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; DS:SI = source string**
+; DS:SI = source string
 
-**; ES:DI = destination string**
+; ES:DI = destination string
 
-**;**
+;
 
-**; Output: none**
+; Output: none
 
-**;**
+;
 
-**; Registers altered: AL, SI, DI, BP**
+; Registers altered: AL, SI, DI, BP
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Does not handle strings that are longer than 64K**
+; Note: Does not handle strings that are longer than 64K
 
-**; bytes or cross segment boundaries.**
+; bytes or cross segment boundaries.
 
-**;**
+;
 
-**CopyPrintable:**
+CopyPrintable:
 
-**cld**
+cld
 
-**mov bp,offset IsPrintableReturn**
+mov bp,offset IsPrintableReturn
 
-**;set the return address for**
+;set the return address for
 
-**; IsPrintable. Note that**
+; IsPrintable. Note that
 
-**; this is done outside the**
+; this is done outside the
 
-**; loop for speed**
+; loop for speed
 
-**CopyPrintableLoop:**
+CopyPrintableLoop:
 
-**lodsb ;get the next byte to copy**
+lodsb ;get the next byte to copy
 
-**jmp IsPrintable ;is it printable?**
+jmp IsPrintable ;is it printable?
 
-**IsPrintableReturn:**
+IsPrintableReturn:
 
-**jnz NotPrintable ;nope, don't copy it**
+jnz NotPrintable ;nope, don't copy it
 
-**stosb ;put the byte in the**
+stosb ;put the byte in the
 
-**; destination string**
+; destination string
 
-**jmp CopyPrintableLoop ;the character was**
+jmp CopyPrintableLoop ;the character was
 
-**; printable, so it couldn't**
+; printable, so it couldn't
 
-**; possibly have been 0. No**
+; possibly have been 0. No
 
-**; need to check whether it**
+; need to check whether it
 
-**; terminated the string**
+; terminated the string
 
-**NotPrintable:**
+NotPrintable:
 
-**and al,al ;was that the**
+and al,al ;was that the
 
-**; terminating zero?**
+; terminating zero?
 
-**jnz CopyPrintableLoop ;no, do next byte**
+jnz CopyPrintableLoop ;no, do next byte
 
-**stosb ;copy the terminating zero**
+stosb ;copy the terminating zero
 
-**ret ;done**
+ret ;done
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov di,seg DestinationString**
+mov di,seg DestinationString
 
-**mov es,di**
+mov es,di
 
-**mov di,offset DestinationString**
+mov di,offset DestinationString
 
-**;ES:DI points to the destination**
+;ES:DI points to the destination
 
-**mov si,offset SourceString**
+mov si,offset SourceString
 
-**;DS:SI points to the source**
+;DS:SI points to the source
 
-**call CopyPrintable ;copy the printable**
+call CopyPrintable ;copy the printable
 
-**; characters**
+; characters
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 14-4
 
 
-**;**
+;
 
-**; \*\*\* Listing 14-4 \*\*\***
+; *** Listing 14-4 ***
 
-**;**
+;
 
-**; Copies the standard input to the standard output,**
+; Copies the standard input to the standard output,
 
-**; converting all characters to uppercase. Does so**
+; converting all characters to uppercase. Does so
 
-**; one character at a time.**
+; one character at a time.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**; Storage for the character we're processing.**
+; Storage for the character we're processing.
 
-**Character db ?**
+Character db ?
 
-**ErrorMsg db 'An error occurred', 0dh, 0ah**
+ErrorMsg db 'An error occurred', 0dh, 0ah
 
-**ERROR\_MSG\_LENGTH equ $-ErrorMsg**
+ERROR_MSG_LENGTH equ $-ErrorMsg
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**CopyLoop:**
+CopyLoop:
 
-**mov ah,3fh ;DOS read fn**
+mov ah,3fh ;DOS read fn
 
-**sub bx,bx ;handle 0 is the standard input**
+sub bx,bx ;handle 0 is the standard input
 
-**mov cx,1 ;we want to get 1 character**
+mov cx,1 ;we want to get 1 character
 
-**mov dx,offset Character ;the character goes here**
+mov dx,offset Character ;the character goes here
 
-**int 21h ;get the character**
+int 21h ;get the character
 
-**jc Error ;check for an error**
+jc Error ;check for an error
 
-**and ax,ax ;did we read any characters?**
+and ax,ax ;did we read any characters?
 
-**jz Done ;no, we've hit the end of the file**
+jz Done ;no, we've hit the end of the file
 
-**mov al,[Character] ;get the character and**
+mov al,[Character] ;get the character and
 
-**cmp al,'a' ; convert it to uppercase**
+cmp al,'a' ; convert it to uppercase
 
-**jb WriteCharacter ; if it's lowercase**
+jb WriteCharacter ; if it's lowercase
 
-**cmp al,'z'**
+cmp al,'z'
 
-**ja WriteCharacter**
+ja WriteCharacter
 
-**and al,not 20h ;it's uppercase-convert to**
+and al,not 20h ;it's uppercase-convert to
 
-**mov [Character],al ; uppercase and save**
+mov [Character],al ; uppercase and save
 
-**WriteCharacter:**
+WriteCharacter:
 
-**mov ah,40h ;DOS write fn**
+mov ah,40h ;DOS write fn
 
-**mov bx,1 ;handle 1 is the standard output**
+mov bx,1 ;handle 1 is the standard output
 
-**mov cx,1 ;we want to write 1 character**
+mov cx,1 ;we want to write 1 character
 
-**mov dx,offset Character ;the character to write**
+mov dx,offset Character ;the character to write
 
-**int 21h ;write the character**
+int 21h ;write the character
 
-**jnc CopyLoop ;if no error, do the next character**
+jnc CopyLoop ;if no error, do the next character
 
-**Error:**
+Error:
 
-**mov ah,40h ;DOS write fn**
+mov ah,40h ;DOS write fn
 
-**mov bx,2 ;handle 2 is standard error**
+mov bx,2 ;handle 2 is standard error
 
-**mov cx,ERROR\_MSG\_LENGTH ;\# of chars to display**
+mov cx,ERROR_MSG_LENGTH ;\# of chars to display
 
-**mov dx,offset ErrorMsg ;error msg to display**
+mov dx,offset ErrorMsg ;error msg to display
 
-**int 21h ;notify of error**
+int 21h ;notify of error
 
-**Done:**
+Done:
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 14-5
 
 
-**;**
+;
 
-**; \*\*\* Listing 14-5 \*\*\***
+; *** Listing 14-5 ***
 
-**;**
+;
 
-**; Copies the standard input to the standard output,**
+; Copies the standard input to the standard output,
 
-**; converting all characters to uppercase. Does so in**
+; converting all characters to uppercase. Does so in
 
-**; blocks of 256 characters.**
+; blocks of 256 characters.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**; Storage for the characters we're processing.**
+; Storage for the characters we're processing.
 
-**CHARACTER\_BLOCK\_SIZE equ 256**
+CHARACTER_BLOCK_SIZE equ 256
 
-**CharacterBlock db CHARACTER\_BLOCK\_SIZE dup (?)**
+CharacterBlock db CHARACTER_BLOCK_SIZE dup (?)
 
-**ErrorMsg db 'An error occurred', 0dh, 0ah**
+ErrorMsg db 'An error occurred', 0dh, 0ah
 
-**ERROR\_MSG\_LENGTH equ $-ErrorMsg**
+ERROR_MSG_LENGTH equ $-ErrorMsg
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**CopyLoop:**
+CopyLoop:
 
-**mov ah,3fh ;DOS read fn**
+mov ah,3fh ;DOS read fn
 
-**sub bx,bx ;handle 0 is the standard input**
+sub bx,bx ;handle 0 is the standard input
 
-**mov cx,CHARACTER\_BLOCK\_SIZE**
+mov cx,CHARACTER_BLOCK_SIZE
 
-**;we want to get a block**
+;we want to get a block
 
-**mov dx,offset CharacterBlock**
+mov dx,offset CharacterBlock
 
-**;the characters go here**
+;the characters go here
 
-**int 21h ;get the characters**
+int 21h ;get the characters
 
-**jc Error ;check for an error**
+jc Error ;check for an error
 
-**mov cx,ax ;get the count where it does us the**
+mov cx,ax ;get the count where it does us the
 
-**; most good**
+; most good
 
-**jcxz Done ;if we didn't read anything, we've**
+jcxz Done ;if we didn't read anything, we've
 
-**; hit the end of the file**
+; hit the end of the file
 
-**mov dx,cx ;remember how many characters we read**
+mov dx,cx ;remember how many characters we read
 
-**mov bx,offset CharacterBlock**
+mov bx,offset CharacterBlock
 
-**;point to the first character to**
+;point to the first character to
 
-**; convert**
+; convert
 
-**ConvertLoop:**
+ConvertLoop:
 
-**mov al,[bx] ;get the next character and**
+mov al,[bx] ;get the next character and
 
-**cmp al,'a' ; convert it to uppercase**
+cmp al,'a' ; convert it to uppercase
 
-**jb ConvertLoopBottom ; if it's lowercase**
+jb ConvertLoopBottom ; if it's lowercase
 
-**cmp al,'z'**
+cmp al,'z'
 
-**ja ConvertLoopBottom**
+ja ConvertLoopBottom
 
-**and al,not 20h ;it's uppercase-convert to**
+and al,not 20h ;it's uppercase-convert to
 
-**mov [bx],al ; uppercase and save**
+mov [bx],al ; uppercase and save
 
-**ConvertLoopBottom:**
+ConvertLoopBottom:
 
-**inc bx ;point to the next character**
+inc bx ;point to the next character
 
-**loop ConvertLoop**
+loop ConvertLoop
 
-**mov cx,dx ;get back the character count in**
+mov cx,dx ;get back the character count in
 
-**; this block, to serve as a count of**
+; this block, to serve as a count of
 
-**; bytes for DOS to write**
+; bytes for DOS to write
 
-**mov ah,40h ;DOS write fn**
+mov ah,40h ;DOS write fn
 
-**mov bx,1 ;handle 1 is the standard output**
+mov bx,1 ;handle 1 is the standard output
 
-**mov dx,offset CharacterBlock**
+mov dx,offset CharacterBlock
 
-**;point to the characters to write**
+;point to the characters to write
 
-**push cx ;remember \# of characters read**
+push cx ;remember \# of characters read
 
-**int 21h ;write the character**
+int 21h ;write the character
 
-**pop ax ;get back the \# of characters in**
+pop ax ;get back the \# of characters in
 
-**; this block**
+; this block
 
-**jc Error ;check for an error**
+jc Error ;check for an error
 
-**cmp ax,CHARACTER\_BLOCK\_SIZE**
+cmp ax,CHARACTER_BLOCK_SIZE
 
-**;was it a partial block?**
+;was it a partial block?
 
-**jz CopyLoop ;no, so we're not done yet**
+jz CopyLoop ;no, so we're not done yet
 
-**jmp short Done ;it was a partial block, so that**
+jmp short Done ;it was a partial block, so that
 
-**; was the end of the file**
+; was the end of the file
 
-**Error:**
+Error:
 
-**mov ah,40h ;DOS write fn**
+mov ah,40h ;DOS write fn
 
-**mov bx,2 ;handle 2 is standard error**
+mov bx,2 ;handle 2 is standard error
 
-**mov cx,ERROR\_MSG\_LENGTH ;\# of chars to display**
+mov cx,ERROR_MSG_LENGTH ;\# of chars to display
 
-**mov dx,offset ErrorMsg ;error msg to display**
+mov dx,offset ErrorMsg ;error msg to display
 
-**int 21h ;notify of error**
+int 21h ;notify of error
 
-**Done:**
+Done:
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 14-6
 
 
-**;**
+;
 
-**; \*\*\* Listing 14-6 \*\*\***
+; *** Listing 14-6 ***
 
-**;**
+;
 
-**; Searches for the first appearance of a character, in any**
+; Searches for the first appearance of a character, in any
 
-**; case, in a byte-sized array by using JZ and LOOP.**
+; case, in a byte-sized array by using JZ and LOOP.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ByteArray label byte**
+ByteArray label byte
 
-**db 'Array Containing Both Upper and Lowercase'**
+db 'Array Containing Both Upper and Lowercase'
 
-**db ' Characters And Blanks'**
+db ' Characters And Blanks'
 
-**ARRAY\_LENGTH equ ($-ByteArray)**
+ARRAY_LENGTH equ ($-ByteArray)
 
-**;**
+;
 
-**; Finds the first occurrence of the specified character, in**
+; Finds the first occurrence of the specified character, in
 
-**; any case, in the specified byte-sized array.**
+; any case, in the specified byte-sized array.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; AL = character for which to perform a**
+; AL = character for which to perform a
 
-**; case-insensitive search**
+; case-insensitive search
 
-**; CX = array length (0 means 64K long)**
+; CX = array length (0 means 64K long)
 
-**; DS:SI = array to search**
+; DS:SI = array to search
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; SI = pointer to first case-insensitive match, or 0**
+; SI = pointer to first case-insensitive match, or 0
 
-**; if no match is found**
+; if no match is found
 
-**;**
+;
 
-**; Registers altered: AX, CX, SI**
+; Registers altered: AX, CX, SI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Does not handle arrays that are longer than 64K**
+; Note: Does not handle arrays that are longer than 64K
 
-**; bytes or cross segment boundaries.**
+; bytes or cross segment boundaries.
 
-**;**
+;
 
-**; Note: Do not pass an array that starts at offset 0 (SI=0),**
+; Note: Do not pass an array that starts at offset 0 (SI=0),
 
-**; since a match on the first byte and failure to find**
+; since a match on the first byte and failure to find
 
-**; the byte would be indistinguishable.**
+; the byte would be indistinguishable.
 
-**;**
+;
 
-**CaseInsensitiveSearch:**
+CaseInsensitiveSearch:
 
-**cld**
+cld
 
-**cmp al,'a'**
+cmp al,'a'
 
-**jb CaseInsensitiveSearchBegin**
+jb CaseInsensitiveSearchBegin
 
-**cmp al,'z'**
+cmp al,'z'
 
-**ja CaseInsensitiveSearchBegin**
+ja CaseInsensitiveSearchBegin
 
-**and al,not 20h ;make sure the search byte**
+and al,not 20h ;make sure the search byte
 
-**; is uppercase**
+; is uppercase
 
-**CaseInsensitiveSearchBegin:**
+CaseInsensitiveSearchBegin:
 
-**mov ah,al ;put the search byte in AH**
+mov ah,al ;put the search byte in AH
 
-**; so we can use AL to hold**
+; so we can use AL to hold
 
-**; the bytes we're checking**
+; the bytes we're checking
 
-**CaseInsensitiveSearchLoop:**
+CaseInsensitiveSearchLoop:
 
-**lodsb ;get the next byte from the**
+lodsb ;get the next byte from the
 
-**; array being searched**
+; array being searched
 
-**cmp al,'a'**
+cmp al,'a'
 
-**jb CaseInsensitiveSearchIsUpper**
+jb CaseInsensitiveSearchIsUpper
 
-**cmp al,'z'**
+cmp al,'z'
 
-**ja CaseInsensitiveSearchIsUpper**
+ja CaseInsensitiveSearchIsUpper
 
-**and al,not 20h ;make sure the array byte is**
+and al,not 20h ;make sure the array byte is
 
-**; uppercase**
+; uppercase
 
-**CaseInsensitiveSearchIsUpper:**
+CaseInsensitiveSearchIsUpper:
 
-**cmp al,ah ;do we have a**
+cmp al,ah ;do we have a
 
-**; case-insensitive match?**
+; case-insensitive match?
 
-**jz CaseInsensitiveSearchMatchFound ;yes**
+jz CaseInsensitiveSearchMatchFound ;yes
 
-**loop CaseInsensitiveSearchLoop**
+loop CaseInsensitiveSearchLoop
 
-**;check the next byte, if any**
+;check the next byte, if any
 
-**sub si,si ;no match found**
+sub si,si ;no match found
 
-**ret**
+ret
 
-**CaseInsensitiveSearchMatchFound:**
+CaseInsensitiveSearchMatchFound:
 
-**dec si ;point back to the matching**
+dec si ;point back to the matching
 
-**; array byte**
+; array byte
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov al,'K' ;character to search for**
+mov al,'K' ;character to search for
 
-**mov si,offset ByteArray ;array to search**
+mov si,offset ByteArray ;array to search
 
-**mov cx,ARRAY\_LENGTH ;\# of bytes to search**
+mov cx,ARRAY_LENGTH ;\# of bytes to search
 
-**; through**
+; through
 
-**call CaseInsensitiveSearch**
+call CaseInsensitiveSearch
 
-**;perform a case-insensitive**
+;perform a case-insensitive
 
-**; search for 'K'**
+; search for 'K'
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 14-7
 
 
-**;**
+;
 
-**; \*\*\* Listing 14-7 \*\*\***
+; *** Listing 14-7 ***
 
-**;**
+;
 
-**; Searches for the first appearance of a character, in any**
+; Searches for the first appearance of a character, in any
 
-**; case, in a byte-sized array by using LOOPNZ.**
+; case, in a byte-sized array by using LOOPNZ.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ByteArray label byte**
+ByteArray label byte
 
-**db 'Array Containing Both Upper and Lowercase'**
+db 'Array Containing Both Upper and Lowercase'
 
-**db ' Characters And Blanks'**
+db ' Characters And Blanks'
 
-**ARRAY\_LENGTH equ ($-ByteArray)**
+ARRAY_LENGTH equ ($-ByteArray)
 
-**;**
+;
 
-**; Finds the first occurrence of the specified character, in**
+; Finds the first occurrence of the specified character, in
 
-**; any case, in the specified byte-sized array.**
+; any case, in the specified byte-sized array.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; AL = character for which to perform a**
+; AL = character for which to perform a
 
-**; case-insensitive search**
+; case-insensitive search
 
-**; CX = array length (0 means 64K long)**
+; CX = array length (0 means 64K long)
 
-**; DS:SI = array to search**
+; DS:SI = array to search
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; SI = pointer to first case-insensitive match, or 0**
+; SI = pointer to first case-insensitive match, or 0
 
-**; if no match is found**
+; if no match is found
 
-**;**
+;
 
-**; Registers altered: AX, CX, SI**
+; Registers altered: AX, CX, SI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Does not handle arrays that are longer than 64K**
+; Note: Does not handle arrays that are longer than 64K
 
-**; bytes or cross segment boundaries.**
+; bytes or cross segment boundaries.
 
-**;**
+;
 
-**; Note: Do not pass an array that starts at offset 0 (SI=0),**
+; Note: Do not pass an array that starts at offset 0 (SI=0),
 
-**; since a match on the first byte and failure to find**
+; since a match on the first byte and failure to find
 
-**; the byte would be indistinguishable.**
+; the byte would be indistinguishable.
 
-**;**
+;
 
-**CaseInsensitiveSearch:**
+CaseInsensitiveSearch:
 
-**cld**
+cld
 
-**cmp al,'a'**
+cmp al,'a'
 
-**jb CaseInsensitiveSearchBegin**
+jb CaseInsensitiveSearchBegin
 
-**cmp al,'z'**
+cmp al,'z'
 
-**ja CaseInsensitiveSearchBegin**
+ja CaseInsensitiveSearchBegin
 
-**and al,not 20h ;make sure the search byte**
+and al,not 20h ;make sure the search byte
 
-**; is uppercase**
+; is uppercase
 
-**CaseInsensitiveSearchBegin:**
+CaseInsensitiveSearchBegin:
 
-**mov ah,al ;put the search byte in AH**
+mov ah,al ;put the search byte in AH
 
-**; so we can use AL to hold**
+; so we can use AL to hold
 
-**; the bytes we're checking**
+; the bytes we're checking
 
-**CaseInsensitiveSearchLoop:**
+CaseInsensitiveSearchLoop:
 
-**lodsb ;get the next byte from the**
+lodsb ;get the next byte from the
 
-**; array being searched**
+; array being searched
 
-**cmp al,'a'**
+cmp al,'a'
 
-**jb CaseInsensitiveSearchIsUpper**
+jb CaseInsensitiveSearchIsUpper
 
-**cmp al,'z'**
+cmp al,'z'
 
-**ja CaseInsensitiveSearchIsUpper**
+ja CaseInsensitiveSearchIsUpper
 
-**and al,not 20h ;make sure the array byte is**
+and al,not 20h ;make sure the array byte is
 
-**; uppercase**
+; uppercase
 
-**CaseInsensitiveSearchIsUpper:**
+CaseInsensitiveSearchIsUpper:
 
-**cmp al,ah ;do we have a**
+cmp al,ah ;do we have a
 
-**; case-insensitive match?**
+; case-insensitive match?
 
-**loopnz CaseInsensitiveSearchLoop**
+loopnz CaseInsensitiveSearchLoop
 
-**;fall through if we have a**
+;fall through if we have a
 
-**; match, or if we've run out**
+; match, or if we've run out
 
-**; of bytes. Otherwise, check**
+; of bytes. Otherwise, check
 
-**; the next byte**
+; the next byte
 
-**jz CaseInsensitiveSearchMatchFound**
+jz CaseInsensitiveSearchMatchFound
 
-**;we did find a match**
+;we did find a match
 
-**sub si,si ;no match found**
+sub si,si ;no match found
 
-**ret**
+ret
 
-**CaseInsensitiveSearchMatchFound:**
+CaseInsensitiveSearchMatchFound:
 
-**dec si ;point back to the matching**
+dec si ;point back to the matching
 
-**; array byte**
+; array byte
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov al,'K' ;character to search for**
+mov al,'K' ;character to search for
 
-**mov si,offset ByteArray ;array to search**
+mov si,offset ByteArray ;array to search
 
-**mov cx,ARRAY\_LENGTH ;\# of bytes to search**
+mov cx,ARRAY_LENGTH ;\# of bytes to search
 
-**; through**
+; through
 
-**call CaseInsensitiveSearch**
+call CaseInsensitiveSearch
 
-**;perform a case-insensitive**
+;perform a case-insensitive
 
-**; search for 'K'**
+; search for 'K'
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 14-8
 
 
-**;**
+;
 
-**; \*\*\* Listing 14-8 \*\*\***
+; *** Listing 14-8 ***
 
-**;**
+;
 
-**; Searches for the first appearance of a character, in any**
+; Searches for the first appearance of a character, in any
 
-**; case, in a byte-sized array by using JZ, DEC REG16, and**
+; case, in a byte-sized array by using JZ, DEC REG16, and
 
-**; JNZ.**
+; JNZ.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ByteArray label byte**
+ByteArray label byte
 
-**db 'Array Containing Both Upper and Lowercase'**
+db 'Array Containing Both Upper and Lowercase'
 
-**db ' Characters And Blanks'**
+db ' Characters And Blanks'
 
-**ARRAY\_LENGTH equ ($-ByteArray)**
+ARRAY_LENGTH equ ($-ByteArray)
 
-**;**
+;
 
-**; Finds the first occurrence of the specified character, in**
+; Finds the first occurrence of the specified character, in
 
-**; any case, in the specified byte-sized array.**
+; any case, in the specified byte-sized array.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; AL = character for which to perform a**
+; AL = character for which to perform a
 
-**; case-insensitive search**
+; case-insensitive search
 
-**; CX = array length (0 means 64K long)**
+; CX = array length (0 means 64K long)
 
-**; DS:SI = array to search**
+; DS:SI = array to search
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; SI = pointer to first case-insensitive match, or 0**
+; SI = pointer to first case-insensitive match, or 0
 
-**; if no match is found**
+; if no match is found
 
-**;**
+;
 
-**; Registers altered: AX, CX, SI**
+; Registers altered: AX, CX, SI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Does not handle arrays that are longer than 64K**
+; Note: Does not handle arrays that are longer than 64K
 
-**; bytes or cross segment boundaries.**
+; bytes or cross segment boundaries.
 
-**;**
+;
 
-**; Note: Do not pass an array that starts at offset 0 (SI=0),**
+; Note: Do not pass an array that starts at offset 0 (SI=0),
 
-**; since a match on the first byte and failure to find**
+; since a match on the first byte and failure to find
 
-**; the byte would be indistinguishable.**
+; the byte would be indistinguishable.
 
-**;**
+;
 
-**CaseInsensitiveSearch:**
+CaseInsensitiveSearch:
 
-**cld**
+cld
 
-**cmp al,'a'**
+cmp al,'a'
 
-**jb CaseInsensitiveSearchBegin**
+jb CaseInsensitiveSearchBegin
 
-**cmp al,'z'**
+cmp al,'z'
 
-**ja CaseInsensitiveSearchBegin**
+ja CaseInsensitiveSearchBegin
 
-**and al,not 20h ;make sure the search byte**
+and al,not 20h ;make sure the search byte
 
-**; is uppercase**
+; is uppercase
 
-**CaseInsensitiveSearchBegin:**
+CaseInsensitiveSearchBegin:
 
-**mov ah,al ;put the search byte in AH**
+mov ah,al ;put the search byte in AH
 
-**; so we can use AL to hold**
+; so we can use AL to hold
 
-**; the bytes we're checking**
+; the bytes we're checking
 
-**CaseInsensitiveSearchLoop:**
+CaseInsensitiveSearchLoop:
 
-**lodsb ;get the next byte from the**
+lodsb ;get the next byte from the
 
-**; array being searched**
+; array being searched
 
-**cmp al,'a'**
+cmp al,'a'
 
-**jb CaseInsensitiveSearchIsUpper**
+jb CaseInsensitiveSearchIsUpper
 
-**cmp al,'z'**
+cmp al,'z'
 
-**ja CaseInsensitiveSearchIsUpper**
+ja CaseInsensitiveSearchIsUpper
 
-**and al,not 20h ;make sure the array byte is**
+and al,not 20h ;make sure the array byte is
 
-**; uppercase**
+; uppercase
 
-**CaseInsensitiveSearchIsUpper:**
+CaseInsensitiveSearchIsUpper:
 
-**cmp al,ah ;do we have a**
+cmp al,ah ;do we have a
 
-**; case-insensitive match?**
+; case-insensitive match?
 
-**jz CaseInsensitiveSearchMatchFound ;yes**
+jz CaseInsensitiveSearchMatchFound ;yes
 
-**dec cx ;count down bytes remaining**
+dec cx ;count down bytes remaining
 
-**; in array being searched**
+; in array being searched
 
-**jnz CaseInsensitiveSearchLoop**
+jnz CaseInsensitiveSearchLoop
 
-**;check the next byte, if any**
+;check the next byte, if any
 
-**sub si,si ;no match found**
+sub si,si ;no match found
 
-**ret**
+ret
 
-**CaseInsensitiveSearchMatchFound:**
+CaseInsensitiveSearchMatchFound:
 
-**dec si ;point back to the matching**
+dec si ;point back to the matching
 
-**; array byte**
+; array byte
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov al,'K' ;character to search for**
+mov al,'K' ;character to search for
 
-**mov si,offset ByteArray ;array to search**
+mov si,offset ByteArray ;array to search
 
-**mov cx,ARRAY\_LENGTH ;\# of bytes to search**
+mov cx,ARRAY_LENGTH ;\# of bytes to search
 
-**; through**
+; through
 
-**call CaseInsensitiveSearch**
+call CaseInsensitiveSearch
 
-**;perform a case-insensitive**
+;perform a case-insensitive
 
-**; search for 'K'**
+; search for 'K'
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 14-9
 
 
-**;**
+;
 
-**; \*\*\* Listing 14-9 \*\*\***
+; *** Listing 14-9 ***
 
-**;**
+;
 
-**; Searches for the first appearance of a character, in any**
+; Searches for the first appearance of a character, in any
 
-**; case, in a byte-sized array by using JZ, DEC REG8, and**
+; case, in a byte-sized array by using JZ, DEC REG8, and
 
-**; JNZ.**
+; JNZ.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ByteArray label byte**
+ByteArray label byte
 
-**db 'Array Containing Both Upper and Lowercase'**
+db 'Array Containing Both Upper and Lowercase'
 
-**db ' Characters And Blanks'**
+db ' Characters And Blanks'
 
-**ARRAY\_LENGTH equ ($-ByteArray)**
+ARRAY_LENGTH equ ($-ByteArray)
 
-**;**
+;
 
-**; Finds the first occurrence of the specified character, in**
+; Finds the first occurrence of the specified character, in
 
-**; any case, in the specified byte-sized array.**
+; any case, in the specified byte-sized array.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; AL = character for which to perform a**
+; AL = character for which to perform a
 
-**; case-insensitive search**
+; case-insensitive search
 
-**; CL = array length (0 means 256 long)**
+; CL = array length (0 means 256 long)
 
-**; DS:SI = array to search**
+; DS:SI = array to search
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; SI = pointer to first case-insensitive match, or 0**
+; SI = pointer to first case-insensitive match, or 0
 
-**; if no match is found**
+; if no match is found
 
-**;**
+;
 
-**; Registers altered: AX, CL, SI**
+; Registers altered: AX, CL, SI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Does not handle arrays that are longer than 256**
+; Note: Does not handle arrays that are longer than 256
 
-**; bytes or cross segment boundaries.**
+; bytes or cross segment boundaries.
 
-**;**
+;
 
-**; Note: Do not pass an array that starts at offset 0 (SI=0),**
+; Note: Do not pass an array that starts at offset 0 (SI=0),
 
-**; since a match on the first byte and failure to find**
+; since a match on the first byte and failure to find
 
-**; the byte would be indistinguishable.**
+; the byte would be indistinguishable.
 
-**;**
+;
 
-**CaseInsensitiveSearch:**
+CaseInsensitiveSearch:
 
-**cld**
+cld
 
-**cmp al,'a'**
+cmp al,'a'
 
-**jb CaseInsensitiveSearchBegin**
+jb CaseInsensitiveSearchBegin
 
-**cmp al,'z'**
+cmp al,'z'
 
-**ja CaseInsensitiveSearchBegin**
+ja CaseInsensitiveSearchBegin
 
-**and al,not 20h ;make sure the search byte**
+and al,not 20h ;make sure the search byte
 
-**; is uppercase**
+; is uppercase
 
-**CaseInsensitiveSearchBegin:**
+CaseInsensitiveSearchBegin:
 
-**mov ah,al ;put the search byte in AH**
+mov ah,al ;put the search byte in AH
 
-**; so we can use AL to hold**
+; so we can use AL to hold
 
-**; the bytes we're checking**
+; the bytes we're checking
 
-**CaseInsensitiveSearchLoop:**
+CaseInsensitiveSearchLoop:
 
-**lodsb ;get the next byte from the**
+lodsb ;get the next byte from the
 
-**; array being searched**
+; array being searched
 
-**cmp al,'a'**
+cmp al,'a'
 
-**jb CaseInsensitiveSearchIsUpper**
+jb CaseInsensitiveSearchIsUpper
 
-**cmp al,'z'**
+cmp al,'z'
 
-**ja CaseInsensitiveSearchIsUpper**
+ja CaseInsensitiveSearchIsUpper
 
-**and al,not 20h ;make sure the array byte is**
+and al,not 20h ;make sure the array byte is
 
-**; uppercase**
+; uppercase
 
-**CaseInsensitiveSearchIsUpper:**
+CaseInsensitiveSearchIsUpper:
 
-**cmp al,ah ;do we have a**
+cmp al,ah ;do we have a
 
-**; case-insensitive match?**
+; case-insensitive match?
 
-**jz CaseInsensitiveSearchMatchFound ;yes**
+jz CaseInsensitiveSearchMatchFound ;yes
 
-**dec cl ;count down bytes remaining**
+dec cl ;count down bytes remaining
 
-**; in array being searched**
+; in array being searched
 
-**jnz CaseInsensitiveSearchLoop**
+jnz CaseInsensitiveSearchLoop
 
-**;check the next byte, if any**
+;check the next byte, if any
 
-**sub si,si ;no match found**
+sub si,si ;no match found
 
-**ret**
+ret
 
-**CaseInsensitiveSearchMatchFound:**
+CaseInsensitiveSearchMatchFound:
 
-**dec si ;point back to the matching**
+dec si ;point back to the matching
 
-**; array byte**
+; array byte
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov al,'K' ;character to search for**
+mov al,'K' ;character to search for
 
-**mov si,offset ByteArray ;array to search**
+mov si,offset ByteArray ;array to search
 
-**mov cx,ARRAY\_LENGTH ;\# of bytes to search**
+mov cx,ARRAY_LENGTH ;\# of bytes to search
 
-**; through**
+; through
 
-**call CaseInsensitiveSearch**
+call CaseInsensitiveSearch
 
-**;perform a case-insensitive**
+;perform a case-insensitive
 
-**; search for 'K'**
+; search for 'K'
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 14-10
 
 
-**;**
+;
 
-**; \*\*\* Listing 14-10 \*\*\***
+; *** Listing 14-10 ***
 
-**;**
+;
 
-**; Searches for the first appearance of a character, in any**
+; Searches for the first appearance of a character, in any
 
-**; case, in a byte-sized array by using JZ, DEC MEM8, and**
+; case, in a byte-sized array by using JZ, DEC MEM8, and
 
-**; JNZ.**
+; JNZ.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ByteArray label byte**
+ByteArray label byte
 
-**db 'Array Containing Both Upper and Lowercase'**
+db 'Array Containing Both Upper and Lowercase'
 
-**db ' Characters And Blanks'**
+db ' Characters And Blanks'
 
-**ARRAY\_LENGTH equ ($-ByteArray)**
+ARRAY_LENGTH equ ($-ByteArray)
 
-**BCount db ? ;used to count down the \# of bytes**
+BCount db ? ;used to count down the \# of bytes
 
-**; remaining in the array being**
+; remaining in the array being
 
-**; searched (counter is byte-sized)**
+; searched (counter is byte-sized)
 
-**;**
+;
 
-**; Finds the first occurrence of the specified character, in**
+; Finds the first occurrence of the specified character, in
 
-**; any case, in the specified byte-sized array.**
+; any case, in the specified byte-sized array.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; AL = character for which to perform a**
+; AL = character for which to perform a
 
-**; case-insensitive search**
+; case-insensitive search
 
-**; CL = array length (0 means 256 long)**
+; CL = array length (0 means 256 long)
 
-**; DS:SI = array to search**
+; DS:SI = array to search
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; SI = pointer to first case-insensitive match, or 0**
+; SI = pointer to first case-insensitive match, or 0
 
-**; if no match is found**
+; if no match is found
 
-**;**
+;
 
-**; Registers altered: AX, SI**
+; Registers altered: AX, SI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Does not handle arrays that are longer than 256**
+; Note: Does not handle arrays that are longer than 256
 
-**; bytes or cross segment boundaries.**
+; bytes or cross segment boundaries.
 
-**;**
+;
 
-**; Note: Do not pass an array that starts at offset 0 (SI=0),**
+; Note: Do not pass an array that starts at offset 0 (SI=0),
 
-**; since a match on the first byte and failure to find**
+; since a match on the first byte and failure to find
 
-**; the byte would be indistinguishable.**
+; the byte would be indistinguishable.
 
-**;**
+;
 
-**CaseInsensitiveSearch:**
+CaseInsensitiveSearch:
 
-**cld**
+cld
 
-**mov [BCount],cl ;set the count variable**
+mov [BCount],cl ;set the count variable
 
-**cmp al,'a'**
+cmp al,'a'
 
-**jb CaseInsensitiveSearchBegin**
+jb CaseInsensitiveSearchBegin
 
-**cmp al,'z'**
+cmp al,'z'
 
-**ja CaseInsensitiveSearchBegin**
+ja CaseInsensitiveSearchBegin
 
-**and al,not 20h ;make sure the search byte**
+and al,not 20h ;make sure the search byte
 
-**; is uppercase**
+; is uppercase
 
-**CaseInsensitiveSearchBegin:**
+CaseInsensitiveSearchBegin:
 
-**mov ah,al ;put the search byte in AH**
+mov ah,al ;put the search byte in AH
 
-**; so we can use AL to hold**
+; so we can use AL to hold
 
-**; the bytes we're checking**
+; the bytes we're checking
 
-**CaseInsensitiveSearchLoop:**
+CaseInsensitiveSearchLoop:
 
-**lodsb ;get the next byte from the**
+lodsb ;get the next byte from the
 
-**; array being searched**
+; array being searched
 
-**cmp al,'a'**
+cmp al,'a'
 
-**jb CaseInsensitiveSearchIsUpper**
+jb CaseInsensitiveSearchIsUpper
 
-**cmp al,'z'**
+cmp al,'z'
 
-**ja CaseInsensitiveSearchIsUpper**
+ja CaseInsensitiveSearchIsUpper
 
-**and al,not 20h ;make sure the array byte is**
+and al,not 20h ;make sure the array byte is
 
-**; uppercase**
+; uppercase
 
-**CaseInsensitiveSearchIsUpper:**
+CaseInsensitiveSearchIsUpper:
 
-**cmp al,ah ;do we have a**
+cmp al,ah ;do we have a
 
-**; case-insensitive match?**
+; case-insensitive match?
 
-**jz CaseInsensitiveSearchMatchFound ;yes**
+jz CaseInsensitiveSearchMatchFound ;yes
 
-**dec [BCount] ;count down bytes remaining**
+dec [BCount] ;count down bytes remaining
 
-**; in array being searched**
+; in array being searched
 
-**; (counter is byte-sized)**
+; (counter is byte-sized)
 
-**jnz CaseInsensitiveSearchLoop**
+jnz CaseInsensitiveSearchLoop
 
-**;check the next byte, if any**
+;check the next byte, if any
 
-**sub si,si ;no match found**
+sub si,si ;no match found
 
-**ret**
+ret
 
-**CaseInsensitiveSearchMatchFound:**
+CaseInsensitiveSearchMatchFound:
 
-**dec si ;point back to the matching**
+dec si ;point back to the matching
 
-**; array byte**
+; array byte
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov al,'K' ;character to search for**
+mov al,'K' ;character to search for
 
-**mov si,offset ByteArray ;array to search**
+mov si,offset ByteArray ;array to search
 
-**mov cx,ARRAY\_LENGTH ;\# of bytes to search**
+mov cx,ARRAY_LENGTH ;\# of bytes to search
 
-**; through**
+; through
 
-**call CaseInsensitiveSearch**
+call CaseInsensitiveSearch
 
-**;perform a case-insensitive**
+;perform a case-insensitive
 
-**; search for 'K'**
+; search for 'K'
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 14-11
 
 
-**;**
+;
 
-**; \*\*\* Listing 14-11 \*\*\***
+; *** Listing 14-11 ***
 
-**;**
+;
 
-**; Searches for the first appearance of a character, in any**
+; Searches for the first appearance of a character, in any
 
-**; case, in a byte-sized array by using JZ, DEC MEM16, and**
+; case, in a byte-sized array by using JZ, DEC MEM16, and
 
-**; JNZ.**
+; JNZ.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**ByteArray label byte**
+ByteArray label byte
 
-**db 'Array Containing Both Upper and Lowercase'**
+db 'Array Containing Both Upper and Lowercase'
 
-**db ' Characters And Blanks'**
+db ' Characters And Blanks'
 
-**ARRAY\_LENGTH equ ($-ByteArray)**
+ARRAY_LENGTH equ ($-ByteArray)
 
-**WCount dw ? ;used to count down the \# of bytes**
+WCount dw ? ;used to count down the \# of bytes
 
-**; remaining in the array being**
+; remaining in the array being
 
-**; searched (counter is word-sized)**
+; searched (counter is word-sized)
 
-**;**
+;
 
-**; Finds the first occurrence of the specified character, in**
+; Finds the first occurrence of the specified character, in
 
-**; any case, in the specified byte-sized array.**
+; any case, in the specified byte-sized array.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; AL = character for which to perform a**
+; AL = character for which to perform a
 
-**; case-insensitive search**
+; case-insensitive search
 
-**; CX = array length (0 means 64K long)**
+; CX = array length (0 means 64K long)
 
-**; DS:SI = array to search**
+; DS:SI = array to search
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; SI = pointer to first case-insensitive match, or 0**
+; SI = pointer to first case-insensitive match, or 0
 
-**; if no match is found**
+; if no match is found
 
-**;**
+;
 
-**; Registers altered: AX, SI**
+; Registers altered: AX, SI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Does not handle arrays that are longer than 64K**
+; Note: Does not handle arrays that are longer than 64K
 
-**; bytes or cross segment boundaries.**
+; bytes or cross segment boundaries.
 
-**;**
+;
 
-**; Note: Do not pass an array that starts at offset 0 (SI=0),**
+; Note: Do not pass an array that starts at offset 0 (SI=0),
 
-**; since a match on the first byte and failure to find**
+; since a match on the first byte and failure to find
 
-**; the byte would be indistinguishable.**
+; the byte would be indistinguishable.
 
-**;**
+;
 
-**CaseInsensitiveSearch:**
+CaseInsensitiveSearch:
 
-**cld**
+cld
 
-**mov [WCount],cx ;set the count variable**
+mov [WCount],cx ;set the count variable
 
-**cmp al,'a'**
+cmp al,'a'
 
-**jb CaseInsensitiveSearchBegin**
+jb CaseInsensitiveSearchBegin
 
-**cmp al,'z'**
+cmp al,'z'
 
-**ja CaseInsensitiveSearchBegin**
+ja CaseInsensitiveSearchBegin
 
-**and al,not 20h ;make sure the search byte**
+and al,not 20h ;make sure the search byte
 
-**; is uppercase**
+; is uppercase
 
-**CaseInsensitiveSearchBegin:**
+CaseInsensitiveSearchBegin:
 
-**mov ah,al ;put the search byte in AH**
+mov ah,al ;put the search byte in AH
 
-**; so we can use AL to hold**
+; so we can use AL to hold
 
-**; the bytes we're checking**
+; the bytes we're checking
 
-**CaseInsensitiveSearchLoop:**
+CaseInsensitiveSearchLoop:
 
-**lodsb ;get the next byte from the**
+lodsb ;get the next byte from the
 
-**; array being searched**
+; array being searched
 
-**cmp al,'a'**
+cmp al,'a'
 
-**jb CaseInsensitiveSearchIsUpper**
+jb CaseInsensitiveSearchIsUpper
 
-**cmp al,'z'**
+cmp al,'z'
 
-**ja CaseInsensitiveSearchIsUpper**
+ja CaseInsensitiveSearchIsUpper
 
-**and al,not 20h ;make sure the array byte is**
+and al,not 20h ;make sure the array byte is
 
-**; uppercase**
+; uppercase
 
-**CaseInsensitiveSearchIsUpper:**
+CaseInsensitiveSearchIsUpper:
 
-**cmp al,ah ;do we have a**
+cmp al,ah ;do we have a
 
-**; case-insensitive match?**
+; case-insensitive match?
 
-**jz CaseInsensitiveSearchMatchFound ;yes**
+jz CaseInsensitiveSearchMatchFound ;yes
 
-**dec [WCount] ;count down bytes remaining**
+dec [WCount] ;count down bytes remaining
 
-**; in array being searched**
+; in array being searched
 
-**; (counter is word-sized)**
+; (counter is word-sized)
 
-**jnz CaseInsensitiveSearchLoop**
+jnz CaseInsensitiveSearchLoop
 
-**;check the next byte, if any**
+;check the next byte, if any
 
-**sub si,si ;no match found**
+sub si,si ;no match found
 
-**ret**
+ret
 
-**CaseInsensitiveSearchMatchFound:**
+CaseInsensitiveSearchMatchFound:
 
-**dec si ;point back to the matching**
+dec si ;point back to the matching
 
-**; array byte**
+; array byte
 
-**ret**
+ret
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov al,'K' ;character to search for**
+mov al,'K' ;character to search for
 
-**mov si,offset ByteArray ;array to search**
+mov si,offset ByteArray ;array to search
 
-**mov cx,ARRAY\_LENGTH ;\# of bytes to search**
+mov cx,ARRAY_LENGTH ;\# of bytes to search
 
-**; through**
+; through
 
-**call CaseInsensitiveSearch**
+call CaseInsensitiveSearch
 
-**;perform a case-insensitive**
+;perform a case-insensitive
 
-**; search for 'K'**
+; search for 'K'
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 14-12
 
 
-**;**
+;
 
-**; \*\*\* Listing 14-12 \*\*\***
+; *** Listing 14-12 ***
 
-**;**
+;
 
-**; Demonstrates scanning a table with REPNZ SCASW in**
+; Demonstrates scanning a table with REPNZ SCASW in
 
-**; order to generate an index to be used with a jump table.**
+; order to generate an index to be used with a jump table.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**; Branches to the routine corresponding to the key code in**
+; Branches to the routine corresponding to the key code in
 
-**; AX. Simply returns if no match is found.**
+; AX. Simply returns if no match is found.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; AX = 16-bit key code, as returned by the BIOS**
+; AX = 16-bit key code, as returned by the BIOS
 
-**;**
+;
 
-**; Output: none**
+; Output: none
 
-**;**
+;
 
-**; Registers altered: CX, DI, ES**
+; Registers altered: CX, DI, ES
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Table of 16-bit key codes this routine handles.**
+; Table of 16-bit key codes this routine handles.
 
-**;**
+;
 
-**KeyLookUpTable label word**
+KeyLookUpTable label word
 
-**dw 1e41h, 3042h, 2e43h, 2044h ;A-D**
+dw 1e41h, 3042h, 2e43h, 2044h ;A-D
 
-**dw 1245h, 2146h, 2247h, 2347h ;E-H**
+dw 1245h, 2146h, 2247h, 2347h ;E-H
 
-**dw 1749h, 244ah, 254bh, 264ch ;I-L**
+dw 1749h, 244ah, 254bh, 264ch ;I-L
 
-**dw 324dh, 314eh, 184fh, 1950h ;M-P**
+dw 324dh, 314eh, 184fh, 1950h ;M-P
 
-**dw 1051h, 1352h, 1f53h, 1454h ;Q-T**
+dw 1051h, 1352h, 1f53h, 1454h ;Q-T
 
-**dw 1655h, 2f56h, 1157h, 2d58h ;U-X**
+dw 1655h, 2f56h, 1157h, 2d58h ;U-X
 
-**dw 1559h, 2c5ah ;Y-Z**
+dw 1559h, 2c5ah ;Y-Z
 
-**KEY\_LOOK\_UP\_TABLE\_LENGTH\_IN\_WORDS equ (($-KeyLookUpTable)/2)**
+KEY_LOOK_UP_TABLE_LENGTH_IN_WORDS equ (($-KeyLookUpTable)/2)
 
-**;**
+;
 
-**; Table of addresses to which to jump when the corresponding**
+; Table of addresses to which to jump when the corresponding
 
-**; key codes in KeyLookUpTable are found. All the entries**
+; key codes in KeyLookUpTable are found. All the entries
 
-**; point to the same routine, since this is for illustrative**
+; point to the same routine, since this is for illustrative
 
-**; purposes only, but they could easily be changed to point**
+; purposes only, but they could easily be changed to point
 
-**; to any labeLin the code segment.**
+; to any labeLin the code segment.
 
-**;**
+;
 
-**KeyJumpTable label word**
+KeyJumpTable label word
 
-**dw HandleA\_Z, HandleA\_Z, HandleA\_Z, HandleA\_Z**
+dw HandleA_Z, HandleA_Z, HandleA_Z, HandleA_Z
 
-**dw HandleA\_Z, HandleA\_Z, HandleA\_Z, HandleA\_Z**
+dw HandleA_Z, HandleA_Z, HandleA_Z, HandleA_Z
 
-**dw HandleA\_Z, HandleA\_Z, HandleA\_Z, HandleA\_Z**
+dw HandleA_Z, HandleA_Z, HandleA_Z, HandleA_Z
 
-**dw HandleA\_Z, HandleA\_Z, HandleA\_Z, HandleA\_Z**
+dw HandleA_Z, HandleA_Z, HandleA_Z, HandleA_Z
 
-**dw HandleA\_Z, HandleA\_Z, HandleA\_Z, HandleA\_Z**
+dw HandleA_Z, HandleA_Z, HandleA_Z, HandleA_Z
 
-**dw HandleA\_Z, HandleA\_Z, HandleA\_Z, HandleA\_Z**
+dw HandleA_Z, HandleA_Z, HandleA_Z, HandleA_Z
 
-**dw HandleA\_Z, HandleA\_Z**
+dw HandleA_Z, HandleA_Z
 
-**;**
+;
 
-**VectorOnKey proc near**
+VectorOnKey proc near
 
-**mov di,cs**
+mov di,cs
 
-**mov es,di**
+mov es,di
 
-**mov di,offset KeyLookUpTable**
+mov di,offset KeyLookUpTable
 
-**;point ES:DI to the table of keys**
+;point ES:DI to the table of keys
 
-**; we handle, which is in the same**
+; we handle, which is in the same
 
-**; code segment as this routine**
+; code segment as this routine
 
-**mov cx,KEY\_LOOK\_UP\_TABLE\_LENGTH\_IN\_WORDS**
+mov cx,KEY_LOOK_UP_TABLE_LENGTH_IN_WORDS
 
-**;\# of words to scan**
+;\# of words to scan
 
-**cld**
+cld
 
-**repnz scasw ;look up the key**
+repnz scasw ;look up the key
 
-**jnz VectorOnKeyDone ;it's not in the table, so**
+jnz VectorOnKeyDone ;it's not in the table, so
 
-**; we're done**
+; we're done
 
-**jmp cs:[KeyJumpTable+di-2-offset KeyLookUpTable]**
+jmp cs:[KeyJumpTable+di-2-offset KeyLookUpTable]
 
-**;jump to the routine for this key**
+;jump to the routine for this key
 
-**; Note that:**
+; Note that:
 
-**; DI-2-offset KeyLookUpTable**
+; DI-2-offset KeyLookUpTable
 
-**; is the offset in KeyLookUpTable of**
+; is the offset in KeyLookUpTable of
 
-**; the key we found, with the -2**
+; the key we found, with the -2
 
-**; needed to compensate for the**
+; needed to compensate for the
 
-**; 2-byte (1-word) overrun of SCASW**
+; 2-byte (1-word) overrun of SCASW
 
-**HandleA\_Z:**
+HandleA_Z:
 
-**VectorOnKeyDone:**
+VectorOnKeyDone:
 
-**ret**
+ret
 
-**VectorOnKey endp**
+VectorOnKey endp
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov ax,1e41h**
+mov ax,1e41h
 
-**call VectorOnKey ;look up 'A'**
+call VectorOnKey ;look up 'A'
 
-**mov ax,1749h**
+mov ax,1749h
 
-**call VectorOnKey ;look up 'I'**
+call VectorOnKey ;look up 'I'
 
-**mov ax,1f53h**
+mov ax,1f53h
 
-**call VectorOnKey ;look up 'S'**
+call VectorOnKey ;look up 'S'
 
-**mov ax,2c5ah**
+mov ax,2c5ah
 
-**call VectorOnKey ;look up 'Z'**
+call VectorOnKey ;look up 'Z'
 
-**mov ax,0**
+mov ax,0
 
-**call VectorOnKey ;finally, look up a key**
+call VectorOnKey ;finally, look up a key
 
-**; code that's not in the**
+; code that's not in the
 
-**; table**
+; table
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 14-13
 
 
-**;**
+;
 
-**; \*\*\* Listing 14-13 \*\*\***
+; *** Listing 14-13 ***
 
-**;**
+;
 
-**; Demonstrates that it's much slower to scan a table**
+; Demonstrates that it's much slower to scan a table
 
-**; in a loop than to use REP SCASW; look-up tables should**
+; in a loop than to use REP SCASW; look-up tables should
 
-**; be designed so that repeated string instructions can be**
+; be designed so that repeated string instructions can be
 
-**; used.**
+; used.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**; Branches to the routine corresponding to the key code in**
+; Branches to the routine corresponding to the key code in
 
-**; AX. Simply returns if no match is found.**
+; AX. Simply returns if no match is found.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; AX = 16-bit key code, as returned by the BIOS**
+; AX = 16-bit key code, as returned by the BIOS
 
-**;**
+;
 
-**; Output: none**
+; Output: none
 
-**;**
+;
 
-**; Registers altered: CX, DI, ES**
+; Registers altered: CX, DI, ES
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Table of 16-bit key codes this routine handles, each**
+; Table of 16-bit key codes this routine handles, each
 
-**; paired with the address to jump to if that key code is**
+; paired with the address to jump to if that key code is
 
-**; found.**
+; found.
 
-**;**
+;
 
-**KeyLookUpTable label word**
+KeyLookUpTable label word
 
-**dw 1e41h, HandleA\_Z, 3042h, HandleA\_Z ;A-B**
+dw 1e41h, HandleA_Z, 3042h, HandleA_Z ;A-B
 
-**dw 2e43h, HandleA\_Z, 2044h, HandleA\_Z ;C-D**
+dw 2e43h, HandleA_Z, 2044h, HandleA_Z ;C-D
 
-**dw 1245h, HandleA\_Z, 2146h, HandleA\_Z ;E-F**
+dw 1245h, HandleA_Z, 2146h, HandleA_Z ;E-F
 
-**dw 2247h, HandleA\_Z, 2347h, HandleA\_Z ;G-H**
+dw 2247h, HandleA_Z, 2347h, HandleA_Z ;G-H
 
-**dw 1749h, HandleA\_Z, 244ah, HandleA\_Z ;I-J**
+dw 1749h, HandleA_Z, 244ah, HandleA_Z ;I-J
 
-**dw 254bh, HandleA\_Z, 264ch, HandleA\_Z ;K-L**
+dw 254bh, HandleA_Z, 264ch, HandleA_Z ;K-L
 
-**dw 324dh, HandleA\_Z, 314eh, HandleA\_Z ;M-N**
+dw 324dh, HandleA_Z, 314eh, HandleA_Z ;M-N
 
-**dw 184fh, HandleA\_Z, 1950h, HandleA\_Z ;O-P**
+dw 184fh, HandleA_Z, 1950h, HandleA_Z ;O-P
 
-**dw 1051h, HandleA\_Z, 1352h, HandleA\_Z ;Q-R**
+dw 1051h, HandleA_Z, 1352h, HandleA_Z ;Q-R
 
-**dw 1f53h, HandleA\_Z, 1454h, HandleA\_Z ;S-T**
+dw 1f53h, HandleA_Z, 1454h, HandleA_Z ;S-T
 
-**dw 1655h, HandleA\_Z, 2f56h, HandleA\_Z ;U-V**
+dw 1655h, HandleA_Z, 2f56h, HandleA_Z ;U-V
 
-**dw 1157h, HandleA\_Z, 2d58h, HandleA\_Z ;W-X**
+dw 1157h, HandleA_Z, 2d58h, HandleA_Z ;W-X
 
-**dw 1559h, HandleA\_Z, 2c5ah, HandleA\_Z ;Y-Z**
+dw 1559h, HandleA_Z, 2c5ah, HandleA_Z ;Y-Z
 
-**KEY\_LOOK\_UP\_TABLE\_LEN\_IN\_ENTRIES equ (($-KeyLookUpTable)/4)**
+KEY_LOOK_UP_TABLE_LEN_IN_ENTRIES equ (($-KeyLookUpTable)/4)
 
-**;**
+;
 
-**VectorOnKey proc near**
+VectorOnKey proc near
 
-**mov di,cs**
+mov di,cs
 
-**mov es,di**
+mov es,di
 
-**mov di,offset KeyLookUpTable**
+mov di,offset KeyLookUpTable
 
-**;point ES:DI to the table of keys**
+;point ES:DI to the table of keys
 
-**; we handle, which is in the same**
+; we handle, which is in the same
 
-**; code segment as this routine**
+; code segment as this routine
 
-**mov cx,KEY\_LOOK\_UP\_TABLE\_LEN\_IN\_ENTRIES**
+mov cx,KEY_LOOK_UP_TABLE_LEN_IN_ENTRIES
 
-**;\# of entries to scan**
+;\# of entries to scan
 
-**cld**
+cld
 
-**VectorOnKeyLoop:**
+VectorOnKeyLoop:
 
-**scasw**
+scasw
 
-**jz VectorOnKeyJump ;we've found the key code**
+jz VectorOnKeyJump ;we've found the key code
 
-**inc di ;point to the next entry**
+inc di ;point to the next entry
 
-**inc di**
+inc di
 
-**loop VectorOnKeyLoop**
+loop VectorOnKeyLoop
 
-**ret ;the key code is not in the**
+ret ;the key code is not in the
 
-**; table, so we're done**
+; table, so we're done
 
-**VectorOnKeyJump:**
+VectorOnKeyJump:
 
-**jmp word ptr cs:[di]**
+jmp word ptr cs:[di]
 
-**;jump to the routine for this key**
+;jump to the routine for this key
 
-**HandleA\_Z:**
+HandleA_Z:
 
-**ret**
+ret
 
-**VectorOnKey endp**
+VectorOnKey endp
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov ax,1e41h**
+mov ax,1e41h
 
-**call VectorOnKey ;look up 'A'**
+call VectorOnKey ;look up 'A'
 
-**mov ax,1749h**
+mov ax,1749h
 
-**call VectorOnKey ;look up 'I'**
+call VectorOnKey ;look up 'I'
 
-**mov ax,1f53h**
+mov ax,1f53h
 
-**call VectorOnKey ;look up 'S'**
+call VectorOnKey ;look up 'S'
 
-**mov ax,2c5ah**
+mov ax,2c5ah
 
-**call VectorOnKey ;look up 'Z'**
+call VectorOnKey ;look up 'Z'
 
-**mov ax,0**
+mov ax,0
 
-**call VectorOnKey ;finally, look up a key**
+call VectorOnKey ;finally, look up a key
 
-**; code that's not in the**
+; code that's not in the
 
-**; table**
+; table
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 14-14
 
 
-**;**
+;
 
-**; \*\*\* Listing 14-14 \*\*\***
+; *** Listing 14-14 ***
 
-**;**
+;
 
-**; Demonstrates the use of a jump table to branch into**
+; Demonstrates the use of a jump table to branch into
 
-**; in-line code consisting of repeated code blocks of**
+; in-line code consisting of repeated code blocks of
 
-**; varying lengths. The approach of using a jump table to**
+; varying lengths. The approach of using a jump table to
 
-**; branch into in-line code is speedy enough that**
+; branch into in-line code is speedy enough that
 
-**; it's often preferable even when all the repeated code**
+; it's often preferable even when all the repeated code
 
-**; blocks are the same size, although the jump table does**
+; blocks are the same size, although the jump table does
 
-**; take extra space.**
+; take extra space.
 
-**;**
+;
 
-**; Searches up to N bytes of a zero-terminated string for**
+; Searches up to N bytes of a zero-terminated string for
 
-**; a character.**
+; a character.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**TestString label byte**
+TestString label byte
 
-**db 'This is a string containing the letter '**
+db 'This is a string containing the letter '
 
-**db 'z but not containing capital q', 0**
+db 'z but not containing capital q', 0
 
-**;**
+;
 
-**; Searches a zero-terminated string for a character.**
+; Searches a zero-terminated string for a character.
 
-**; Searches until a match is found, the terminating zero**
+; Searches until a match is found, the terminating zero
 
-**; is found, or the specified number of characters have been**
+; is found, or the specified number of characters have been
 
-**; checked.**
+; checked.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; AL = character to search for**
+; AL = character to search for
 
-**; BX = maximum \# of characters to search. Must be**
+; BX = maximum \# of characters to search. Must be
 
-**; less than or equal to 80**
+; less than or equal to 80
 
-**; DS:SI = string to search**
+; DS:SI = string to search
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; SI = pointer to character, or 0 if character not**
+; SI = pointer to character, or 0 if character not
 
-**; found**
+; found
 
-**;**
+;
 
-**; Registers altered: AX, BX, SI**
+; Registers altered: AX, BX, SI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Don't pass a string starting at offset 0, since a**
+; Note: Don't pass a string starting at offset 0, since a
 
-**; match there couldn't be distinguished from a failure**
+; match there couldn't be distinguished from a failure
 
-**; to match.**
+; to match.
 
-**;**
+;
 
-**MAX\_SEARCH\_LENGTH equ 80 ;longest supported search**
+MAX_SEARCH_LENGTH equ 80 ;longest supported search
 
-**; length**
+; length
 
-**;**
+;
 
-**; Macro to create SearchTable entries.**
+; Macro to create SearchTable entries.
 
-**;**
+;
 
-**MAKE\_CHECK\_CHAR\_LABEL macro NUMBER**
+MAKE_CHECK_CHAR_LABEL macro NUMBER
 
-**dw CheckChar&NUMBER&**
+dw CheckChar&NUMBER&
 
-**endm**
+endm
 
-**;**
+;
 
-**; Macro to create in-line code to search 1 character.**
+; Macro to create in-line code to search 1 character.
 
-**; Gives the code block a unique label according to NUMBER.**
+; Gives the code block a unique label according to NUMBER.
 
-**; Each conditional branch uses the shortest possible jump**
+; Each conditional branch uses the shortest possible jump
 
-**; sequence to reach NoMatch and MatchFound.**
+; sequence to reach NoMatch and MatchFound.
 
-**;**
+;
 
-**CHECK\_CHAR macro NUMBER**
+CHECK_CHAR macro NUMBER
 
-**local CheckMatch, Continue**
+local CheckMatch, Continue
 
-**CheckChar&NUMBER&:**
+CheckChar&NUMBER&:
 
-**lodsb ;get the character**
+lodsb ;get the character
 
-**and al,al ;done if terminating zero**
+and al,al ;done if terminating zero
 
-**;**
+;
 
-**; Assemble a single conditional jump if it'll reach, or**
+; Assemble a single conditional jump if it'll reach, or
 
-**; a conditional jump around an unconditional jump if the**
+; a conditional jump around an unconditional jump if the
 
-**; 1-byte displacement of a conditional jump won't reach.**
+; 1-byte displacement of a conditional jump won't reach.
 
-**;**
+;
 
-**if ($+2-NoMatch) le 128**
+if ($+2-NoMatch) le 128
 
-**jz NoMatch**
+jz NoMatch
 
-**else**
+else
 
-**jnz CheckMatch**
+jnz CheckMatch
 
-**jmp NoMatch**
+jmp NoMatch
 
-**endif**
+endif
 
-**CheckMatch:**
+CheckMatch:
 
-**cmp ah,al ;done if matches search character**
+cmp ah,al ;done if matches search character
 
-**;**
+;
 
-**; Again, assemble shortest possible jump sequence.**
+; Again, assemble shortest possible jump sequence.
 
-**;**
+;
 
-**if ($+2-MatchFound) le 128**
+if ($+2-MatchFound) le 128
 
-**jz MatchFound**
+jz MatchFound
 
-**else**
+else
 
-**jnz Continue**
+jnz Continue
 
-**jmp MatchFound**
+jmp MatchFound
 
-**endif**
+endif
 
-**Continue:**
+Continue:
 
-**endm**
+endm
 
-**;**
+;
 
-**; Table of in-line code entry points for maximum search**
+; Table of in-line code entry points for maximum search
 
-**; lengths of 0 through 80.**
+; lengths of 0 through 80.
 
-**;**
+;
 
-**SearchTable label word**
+SearchTable label word
 
-**dw NoMatch ;we never match on a**
+dw NoMatch ;we never match on a
 
-**; maximum length of 0**
+; maximum length of 0
 
-**BLOCK\_NUMBER=MAX\_SEARCH\_LENGTH-1**
+BLOCK_NUMBER=MAX_SEARCH_LENGTH-1
 
-**rept MAX\_SEARCH\_LENGTH**
+rept MAX_SEARCH_LENGTH
 
-**MAKE\_CHECK\_CHAR\_LABEL %BLOCK\_NUMBER**
+MAKE_CHECK_CHAR_LABEL %BLOCK_NUMBER
 
-**BLOCK\_NUMBER=BLOCK\_NUMBER-1**
+BLOCK_NUMBER=BLOCK_NUMBER-1
 
-**endm**
+endm
 
-**;**
+;
 
-**SearchNBytes proc near**
+SearchNBytes proc near
 
-**mov ah,al ;we'll need AL for LODSB**
+mov ah,al ;we'll need AL for LODSB
 
-**cmp bx,MAX\_SEARCH\_LENGTH**
+cmp bx,MAX_SEARCH_LENGTH
 
-**ja NoMatch ;if the maximum length's**
+ja NoMatch ;if the maximum length's
 
-**; too long for the in-line**
+; too long for the in-line
 
-**; code, return a no-match**
+; code, return a no-match
 
-**; status**
+; status
 
-**shl bx,1 ;\*2 to look up in word-sized**
+shl bx,1 ;*2 to look up in word-sized
 
-**; table**
+; table
 
-**jmp [SearchTable+bx] ;branch into the in-line**
+jmp [SearchTable+bx] ;branch into the in-line
 
-**; code to do the search**
+; code to do the search
 
-**;**
+;
 
-**; No match was found.**
+; No match was found.
 
-**;**
+;
 
-**NoMatch:**
+NoMatch:
 
-**sub si,si ;return no-match status**
+sub si,si ;return no-match status
 
-**ret**
+ret
 
-**;**
+;
 
-**; A match was found.**
+; A match was found.
 
-**;**
+;
 
-**MatchFound:**
+MatchFound:
 
-**dec si ;point back to matching**
+dec si ;point back to matching
 
-**; location**
+; location
 
-**ret**
+ret
 
-**;**
+;
 
-**; This is the in-line code that actually does the search.**
+; This is the in-line code that actually does the search.
 
-**; Each repetition is uniquely labelled, with the labels**
+; Each repetition is uniquely labelled, with the labels
 
-**; running from CheckChar0 through CheckChar79.**
+; running from CheckChar0 through CheckChar79.
 
-**;**
+;
 
-**BLOCK\_NUMBER=0**
+BLOCK_NUMBER=0
 
-**;**
+;
 
-**; These in-line blocks use 1-byte displacements whenever**
+; These in-line blocks use 1-byte displacements whenever
 
-**; possible to branch backward; otherwise 2-byte**
+; possible to branch backward; otherwise 2-byte
 
-**; displacements are used to branch backward, with**
+; displacements are used to branch backward, with
 
-**; conditional jumps around unconditional jumps.**
+; conditional jumps around unconditional jumps.
 
-**;**
+;
 
-**rept MAX\_SEARCH\_LENGTH**
+rept MAX_SEARCH_LENGTH
 
-**CHECK\_CHAR %BLOCK\_NUMBER**
+CHECK_CHAR %BLOCK_NUMBER
 
-**BLOCK\_NUMBER=BLOCK\_NUMBER+1**
+BLOCK_NUMBER=BLOCK_NUMBER+1
 
-**endm**
+endm
 
-**;**
+;
 
-**; If we make it here, we haven't found the character.**
+; If we make it here, we haven't found the character.
 
-**;**
+;
 
-**sub si,si ;return no-match status**
+sub si,si ;return no-match status
 
-**ret**
+ret
 
-**SearchNBytes endp**
+SearchNBytes endp
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov al,'Q'**
+mov al,'Q'
 
-**mov bx,20 ;search up to the**
+mov bx,20 ;search up to the
 
-**mov si,offset TestString ; first 20 bytes of**
+mov si,offset TestString ; first 20 bytes of
 
-**call SearchNBytes ; TestString for 'Q'**
+call SearchNBytes ; TestString for 'Q'
 
-**mov al,'z'**
+mov al,'z'
 
-**mov bx,80 ;search up to the**
+mov bx,80 ;search up to the
 
-**mov si,offset TestString ; first 80 bytes of**
+mov si,offset TestString ; first 80 bytes of
 
-**call SearchNBytes ; TestString for 'z'**
+call SearchNBytes ; TestString for 'z'
 
-**mov al,'a'**
+mov al,'a'
 
-**mov bx,10 ;search up to the**
+mov bx,10 ;search up to the
 
-**mov si,offset TestString ; first 10 bytes of**
+mov si,offset TestString ; first 10 bytes of
 
-**call SearchNBytes ; TestString for 'a'**
+call SearchNBytes ; TestString for 'a'
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 14-15
 
 
-**;**
+;
 
-**; \*\*\* Listing 14-15 \*\*\***
+; *** Listing 14-15 ***
 
-**;**
+;
 
-**; For comparison with the in-line-code-branched-to-via-a-**
+; For comparison with the in-line-code-branched-to-via-a-
 
-**; jump-table approach of Listing 14-14, this is a loop-based**
+; jump-table approach of Listing 14-14, this is a loop-based
 
-**; string-search routine that searches at most the specified**
+; string-search routine that searches at most the specified
 
-**; number of bytes of a zero-terminated string for the**
+; number of bytes of a zero-terminated string for the
 
-**; specified character.**
+; specified character.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**TestString label byte**
+TestString label byte
 
-**db 'This is a string containing the letter '**
+db 'This is a string containing the letter '
 
-**db 'z but not containing capital q', 0**
+db 'z but not containing capital q', 0
 
-**;**
+;
 
-**; Searches a zero-terminated string for a character.**
+; Searches a zero-terminated string for a character.
 
-**; Searches until a match is found, the terminating zero**
+; Searches until a match is found, the terminating zero
 
-**; is found, or the specified number of characters have been**
+; is found, or the specified number of characters have been
 
-**; checked.**
+; checked.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; AL = character to search for**
+; AL = character to search for
 
-**; BX = maximum \# of characters to search**
+; BX = maximum \# of characters to search
 
-**; DS:SI = string to search**
+; DS:SI = string to search
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; SI = pointer to character, or 0 if character not**
+; SI = pointer to character, or 0 if character not
 
-**; found**
+; found
 
-**;**
+;
 
-**; Registers altered: AX, CX, SI**
+; Registers altered: AX, CX, SI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Don't pass a string starting at offset 0, since a**
+; Note: Don't pass a string starting at offset 0, since a
 
-**; match there couldn't be distinguished from a failure**
+; match there couldn't be distinguished from a failure
 
-**; to match.**
+; to match.
 
-**;**
+;
 
-**SearchNBytes proc near**
+SearchNBytes proc near
 
-**mov ah,al ;we'll need AL for LODSB**
+mov ah,al ;we'll need AL for LODSB
 
-**mov cx,bx ;for LOOP**
+mov cx,bx ;for LOOP
 
-**SearchNBytesLoop:**
+SearchNBytesLoop:
 
-**lodsb**
+lodsb
 
-**and al,al**
+and al,al
 
-**jz NoMatch ;terminating 0, so no match**
+jz NoMatch ;terminating 0, so no match
 
-**cmp ah,al**
+cmp ah,al
 
-**jz MatchFound ;match, so we're done**
+jz MatchFound ;match, so we're done
 
-**loop SearchNBytesLoop**
+loop SearchNBytesLoop
 
-**;**
+;
 
-**; No match was found.**
+; No match was found.
 
-**;**
+;
 
-**NoMatch:**
+NoMatch:
 
-**sub si,si ;return no-match status**
+sub si,si ;return no-match status
 
-**ret**
+ret
 
-**;**
+;
 
-**; A match was found.**
+; A match was found.
 
-**;**
+;
 
-**MatchFound:**
+MatchFound:
 
-**dec si ;point back to matching**
+dec si ;point back to matching
 
-**; location**
+; location
 
-**ret**
+ret
 
-**SearchNBytes endp**
+SearchNBytes endp
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov al,'Q'**
+mov al,'Q'
 
-**mov bx,20 ;search up to the**
+mov bx,20 ;search up to the
 
-**mov si,offset TestString ; first 20 bytes of**
+mov si,offset TestString ; first 20 bytes of
 
-**call SearchNBytes ; TestString for 'Q'**
+call SearchNBytes ; TestString for 'Q'
 
-**mov al,'z'**
+mov al,'z'
 
-**mov bx,80 ;search up to the**
+mov bx,80 ;search up to the
 
-**mov si,offset TestString ; first 80 bytes of**
+mov si,offset TestString ; first 80 bytes of
 
-**call SearchNBytes ; TestString for 'z'**
+call SearchNBytes ; TestString for 'z'
 
-**mov al,'a'**
+mov al,'a'
 
-**mov bx,10 ;search up to the**
+mov bx,10 ;search up to the
 
-**mov si,offset TestString ; first 10 bytes of**
+mov si,offset TestString ; first 10 bytes of
 
-**call SearchNBytes ; TestString for 'a'**
+call SearchNBytes ; TestString for 'a'
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 14-16
 
 
-**;**
+;
 
-**; \*\*\* Listing 14-16 \*\*\***
+; *** Listing 14-16 ***
 
-**;**
+;
 
-**; Demonstrates the use of a jump table to branch into**
+; Demonstrates the use of a jump table to branch into
 
-**; in-line code consisting of repeated code blocks of**
+; in-line code consisting of repeated code blocks of
 
-**; varying lengths. Branches out of the in-line code with**
+; varying lengths. Branches out of the in-line code with
 
-**; 1-byte displacements at both ends of the in-line code,**
+; 1-byte displacements at both ends of the in-line code,
 
-**; for improved speed.**
+; for improved speed.
 
-**;**
+;
 
-**; Searches up to N bytes of a zero-terminated string for**
+; Searches up to N bytes of a zero-terminated string for
 
-**; a character.**
+; a character.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**TestString label byte**
+TestString label byte
 
-**db 'This is a string containing the letter '**
+db 'This is a string containing the letter '
 
-**db 'z but not containing capital q', 0**
+db 'z but not containing capital q', 0
 
-**;**
+;
 
-**; Searches a zero-terminated string for a character.**
+; Searches a zero-terminated string for a character.
 
-**; Searches until a match is found, the terminating zero**
+; Searches until a match is found, the terminating zero
 
-**; is found, or the specified number of characters has been**
+; is found, or the specified number of characters has been
 
-**; checked.**
+; checked.
 
-**;**
+;
 
-**; Input:**
+; Input:
 
-**; AL = character to search for**
+; AL = character to search for
 
-**; BX = maximum \# of characters to search. Must be**
+; BX = maximum \# of characters to search. Must be
 
-**; less than or equal to MAX\_SEARCH\_LENGTH**
+; less than or equal to MAX_SEARCH_LENGTH
 
-**; DS:SI = string to search**
+; DS:SI = string to search
 
-**;**
+;
 
-**; Output:**
+; Output:
 
-**; SI = pointer to character, or 0 if character not**
+; SI = pointer to character, or 0 if character not
 
-**; found**
+; found
 
-**;**
+;
 
-**; Registers altered: AX, BX, SI**
+; Registers altered: AX, BX, SI
 
-**;**
+;
 
-**; Direction flag cleared**
+; Direction flag cleared
 
-**;**
+;
 
-**; Note: Don't pass a string starting at offset 0, since a**
+; Note: Don't pass a string starting at offset 0, since a
 
-**; match there couldn't be distinguished from a failure**
+; match there couldn't be distinguished from a failure
 
-**; to match.**
+; to match.
 
-**;**
+;
 
-**MAX\_SEARCH\_LENGTH equ 80 ;longest supported search**
+MAX_SEARCH_LENGTH equ 80 ;longest supported search
 
-**; length**
+; length
 
-**;**
+;
 
-**; Macro to create SearchTable entries.**
+; Macro to create SearchTable entries.
 
-**;**
+;
 
-**MAKE\_CHECK\_CHAR\_LABEL macro NUMBER**
+MAKE_CHECK_CHAR_LABEL macro NUMBER
 
-**dw CheckChar&NUMBER&**
+dw CheckChar&NUMBER&
 
-**endm**
+endm
 
-**;**
+;
 
-**; Macro to create in-line code to search 1 character.**
+; Macro to create in-line code to search 1 character.
 
-**; Gives the code block a unique label according to NUMBER.**
+; Gives the code block a unique label according to NUMBER.
 
-**; Each conditional branch uses the shortest possible jump**
+; Each conditional branch uses the shortest possible jump
 
-**; sequence to reach NoMatch and MatchFound.**
+; sequence to reach NoMatch and MatchFound.
 
-**;**
+;
 
-**CHECK\_CHAR macro NUMBER**
+CHECK_CHAR macro NUMBER
 
-**local CheckMatch, Continue**
+local CheckMatch, Continue
 
-**CheckChar&NUMBER&:**
+CheckChar&NUMBER&:
 
-**lodsb ;get the character**
+lodsb ;get the character
 
-**and al,al ;done if terminating zero**
+and al,al ;done if terminating zero
 
-**;**
+;
 
-**; Assemble a single conditional jump if it'll reach, or**
+; Assemble a single conditional jump if it'll reach, or
 
-**; a conditional jump around an unconditional jump if the**
+; a conditional jump around an unconditional jump if the
 
-**; 1-byte displacement of a conditional jump won't reach.**
+; 1-byte displacement of a conditional jump won't reach.
 
-**;**
+;
 
-**if ($+2-NoMatch) le 128**
+if ($+2-NoMatch) le 128
 
-**jz NoMatch**
+jz NoMatch
 
-**else**
+else
 
-**jnz CheckMatch**
+jnz CheckMatch
 
-**jmp NoMatch**
+jmp NoMatch
 
-**endif**
+endif
 
-**CheckMatch:**
+CheckMatch:
 
-**cmp ah,al ;done if matches search character**
+cmp ah,al ;done if matches search character
 
-**;**
+;
 
-**; Again, assemble shortest possible jump sequence.**
+; Again, assemble shortest possible jump sequence.
 
-**;**
+;
 
-**if ($+2-MatchFound) le 128**
+if ($+2-MatchFound) le 128
 
-**jz MatchFound**
+jz MatchFound
 
-**else**
+else
 
-**jnz Continue**
+jnz Continue
 
-**jmp MatchFound**
+jmp MatchFound
 
-**endif**
+endif
 
-**Continue:**
+Continue:
 
-**endm**
+endm
 
-**;**
+;
 
-**; Macro to create in-line code to search 1 character.**
+; Macro to create in-line code to search 1 character.
 
-**; Gives the code block a unique label according to NUMBER.**
+; Gives the code block a unique label according to NUMBER.
 
-**; All branches use a 1-byte displacement to branch to**
+; All branches use a 1-byte displacement to branch to
 
-**; NoMatch2 and MatchFound2.**
+; NoMatch2 and MatchFound2.
 
-**;**
+;
 
-**CHECK\_CHAR2 macro NUMBER**
+CHECK_CHAR2 macro NUMBER
 
-**CheckChar&NUMBER&:**
+CheckChar&NUMBER&:
 
-**lodsb ;get the character**
+lodsb ;get the character
 
-**and al,al ;done if terminating zero**
+and al,al ;done if terminating zero
 
-**jz NoMatch2**
+jz NoMatch2
 
-**cmp ah,al ;done if matches search character**
+cmp ah,al ;done if matches search character
 
-**jz MatchFound2**
+jz MatchFound2
 
-**endm**
+endm
 
-**;**
+;
 
-**; Table of in-line code entry points for maximum search**
+; Table of in-line code entry points for maximum search
 
-**; lengths of 0 through 80.**
+; lengths of 0 through 80.
 
-**;**
+;
 
-**SearchTable label word**
+SearchTable label word
 
-**dw NoMatch ;we never match on a**
+dw NoMatch ;we never match on a
 
-**; maximum length of 0**
+; maximum length of 0
 
-**BLOCK\_NUMBER=MAX\_SEARCH\_LENGTH-1**
+BLOCK_NUMBER=MAX_SEARCH_LENGTH-1
 
-**rept MAX\_SEARCH\_LENGTH**
+rept MAX_SEARCH_LENGTH
 
-**MAKE\_CHECK\_CHAR\_LABEL %BLOCK\_NUMBER**
+MAKE_CHECK_CHAR_LABEL %BLOCK_NUMBER
 
-**BLOCK\_NUMBER=BLOCK\_NUMBER-1**
+BLOCK_NUMBER=BLOCK_NUMBER-1
 
-**endm**
+endm
 
-**;**
+;
 
-**SearchNBytes proc near**
+SearchNBytes proc near
 
-**mov ah,al ;we'll need AL for LODSB**
+mov ah,al ;we'll need AL for LODSB
 
-**cmp bx,MAX\_SEARCH\_LENGTH**
+cmp bx,MAX_SEARCH_LENGTH
 
-**ja NoMatch ;if the maximum length's**
+ja NoMatch ;if the maximum length's
 
-**; too long for the in-line**
+; too long for the in-line
 
-**; code, return a no-match**
+; code, return a no-match
 
-**; status**
+; status
 
-**shl bx,1 ;\*2 to look up in word-sized**
+shl bx,1 ;*2 to look up in word-sized
 
-**; table**
+; table
 
-**jmp [SearchTable+bx] ;branch into the in-line**
+jmp [SearchTable+bx] ;branch into the in-line
 
-**; code to do the search**
+; code to do the search
 
-**;**
+;
 
-**; No match was found.**
+; No match was found.
 
-**;**
+;
 
-**NoMatch:**
+NoMatch:
 
-**sub si,si ;return no-match status**
+sub si,si ;return no-match status
 
-**ret**
+ret
 
-**;**
+;
 
-**; A match was found.**
+; A match was found.
 
-**;**
+;
 
-**MatchFound:**
+MatchFound:
 
-**dec si ;point back to matching**
+dec si ;point back to matching
 
-**; location**
+; location
 
-**ret**
+ret
 
-**;**
+;
 
-**; This is the in-line code that actually does the search.**
+; This is the in-line code that actually does the search.
 
-**; Each repetition is uniquely labelled, with labels**
+; Each repetition is uniquely labelled, with labels
 
-**; CheckChar0 through CheckChar79.**
+; CheckChar0 through CheckChar79.
 
-**;**
+;
 
-**BLOCK\_NUMBER=0**
+BLOCK_NUMBER=0
 
-**;**
+;
 
-**; These in-line code blocks use 1-byte displacements**
+; These in-line code blocks use 1-byte displacements
 
-**; whenever possible to branch backward; otherwise 2-byte**
+; whenever possible to branch backward; otherwise 2-byte
 
-**; displacements are used to branch backwards, with**
+; displacements are used to branch backwards, with
 
-**; conditional jumps around unconditional jumps.**
+; conditional jumps around unconditional jumps.
 
-**;**
+;
 
-**rept MAX\_SEARCH\_LENGTH-14**
+rept MAX_SEARCH_LENGTH-14
 
-**CHECK\_CHAR %BLOCK\_NUMBER**
+CHECK_CHAR %BLOCK_NUMBER
 
-**BLOCK\_NUMBER=BLOCK\_NUMBER+1**
+BLOCK_NUMBER=BLOCK_NUMBER+1
 
-**endm**
+endm
 
-**;**
+;
 
-**; These in-line code blocks use 1-byte displacements to**
+; These in-line code blocks use 1-byte displacements to
 
-**; branch forward.**
+; branch forward.
 
-**;**
+;
 
-**rept 14**
+rept 14
 
-**CHECK\_CHAR2 %BLOCK\_NUMBER**
+CHECK_CHAR2 %BLOCK_NUMBER
 
-**BLOCK\_NUMBER=BLOCK\_NUMBER+1**
+BLOCK_NUMBER=BLOCK_NUMBER+1
 
-**endm**
+endm
 
-**;**
+;
 
-**; If we make it here, we haven't found the character.**
+; If we make it here, we haven't found the character.
 
-**;**
+;
 
-**NoMatch2:**
+NoMatch2:
 
-**sub si,si ;return no-match status**
+sub si,si ;return no-match status
 
-**ret**
+ret
 
-**;**
+;
 
-**; A match was found.**
+; A match was found.
 
-**;**
+;
 
-**MatchFound2:**
+MatchFound2:
 
-**dec si ;point back to matching**
+dec si ;point back to matching
 
-**; location**
+; location
 
-**ret**
+ret
 
-**SearchNBytes endp**
+SearchNBytes endp
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**mov al,'Q'**
+mov al,'Q'
 
-**mov bx,20 ;search up to the**
+mov bx,20 ;search up to the
 
-**mov si,offset TestString ; first 20 bytes of**
+mov si,offset TestString ; first 20 bytes of
 
-**call SearchNBytes ; TestString for 'Q'**
+call SearchNBytes ; TestString for 'Q'
 
-**mov al,'z'**
+mov al,'z'
 
-**mov bx,80 ;search up to the**
+mov bx,80 ;search up to the
 
-**mov si,offset TestString ; first 80 bytes of**
+mov si,offset TestString ; first 80 bytes of
 
-**call SearchNBytes ; TestString for 'z'**
+call SearchNBytes ; TestString for 'z'
 
-**mov al,'a'**
+mov al,'a'
 
-**mov bx,10 ;search up to the**
+mov bx,10 ;search up to the
 
-**mov si,offset TestString ; first 10 bytes of**
+mov si,offset TestString ; first 10 bytes of
 
-**call SearchNBytes ; TestString for 'a'**
+call SearchNBytes ; TestString for 'a'
 
-**call ZTimerOff**
+call ZTimerOff
 
 ## Listing 15-1
 
 
-**;**
+;
 
-**; \*\*\* Listing 15-1 \*\*\***
+; *** Listing 15-1 ***
 
-**;**
+;
 
-**;**
+;
 
-**;**
+;
 
-**;**
+;
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**even ;always make sure word-sized memory**
+even ;always make sure word-sized memory
 
-**; variables are word-aLigned!**
+; variables are word-aLigned!
 
-**WordVar dw 0**
+WordVar dw 0
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rept 1000**
+rept 1000
 
-**mov [WordVar],1**
+mov [WordVar],1
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 15-2
 
 
-**;**
+;
 
-**; \*\*\* Listing 15-2 \*\*\***
+; *** Listing 15-2 ***
 
-**;**
+;
 
-**; Measures the performance of accesses to word-sized**
+; Measures the performance of accesses to word-sized
 
-**; variables that start at odd addresses (are not**
+; variables that start at odd addresses (are not
 
-**; Word-aLigned).**
+; Word-aLigned).
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**push ds**
+push ds
 
-**pop es**
+pop es
 
-**mov si,1 ;source and destination are the same**
+mov si,1 ;source and destination are the same
 
-**mov di,si ; and both are not word-aLigned**
+mov di,si ; and both are not word-aLigned
 
-**mov cx,1000 ;move 1000 words**
+mov cx,1000 ;move 1000 words
 
-**cld**
+cld
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rep movsw**
+rep movsw
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 15-3
 
 
-**;**
+;
 
-**; \*\*\* Listing 15-3 \*\*\***
+; *** Listing 15-3 ***
 
-**;**
+;
 
-**; Measures the performance of accesses to word-sized**
+; Measures the performance of accesses to word-sized
 
-**; variables that start at even addresses (are word-aLigned).**
+; variables that start at even addresses (are word-aLigned).
 
-**;**
+;
 
-**Skip**
+Skip
 
-**push ds**
+push ds
 
-**pop es**
+pop es
 
-**mov si,si ;source and destination are the same**
+mov si,si ;source and destination are the same
 
-**mov di,si ; and both are word-aLigned**
+mov di,si ; and both are word-aLigned
 
-**mov cx,1000 ;move 1000 words**
+mov cx,1000 ;move 1000 words
 
-**cld**
+cld
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rep movsw**
+rep movsw
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 15-4
 
 
-**;**
+;
 
-**; \*\*\* Listing 15-4 \*\*\***
+; *** Listing 15-4 ***
 
-**;**
+;
 
-**; Measures the performance of adding an immediate value**
+; Measures the performance of adding an immediate value
 
-**; to a register, for comparison with Listing 15-5, which**
+; to a register, for comparison with Listing 15-5, which
 
-**; adds an immediate value to a memory variable.**
+; adds an immediate value to a memory variable.
 
-**;**
+;
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rept 1000**
+rept 1000
 
-**add dx,100h**
+add dx,100h
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 
 ## Listing 15-5
 
 
-**;**
+;
 
-**; \*\*\* Listing 15-5 \*\*\***
+; *** Listing 15-5 ***
 
-**;**
+;
 
-**; Measures the performance of adding an immediate value**
+; Measures the performance of adding an immediate value
 
-**; to a memory variable, for comparison with listing 15-4,**
+; to a memory variable, for comparison with listing 15-4,
 
-**; which adds an immediate value to a register.**
+; which adds an immediate value to a register.
 
-**;**
+;
 
-**jmp Skip**
+jmp Skip
 
-**;**
+;
 
-**even ;always make sure word-sized memory**
+even ;always make sure word-sized memory
 
-**; Variables are word-aLigned!**
+; Variables are word-aLigned!
 
-**WordVar dw 0**
+WordVar dw 0
 
-**;**
+;
 
-**Skip:**
+Skip:
 
-**call ZTimerOn**
+call ZTimerOn
 
-**rept 1000**
+rept 1000
 
-**add [WordVar],100h**
+add [WordVar],100h
 
-**endm**
+endm
 
-**call ZTimerOff**
+call ZTimerOff
 
 
 ## LZTEST
 
-**; LZTEST**
+; LZTEST
 
-**;**
+;
 
-**; \*\*\* Listing 2-6 \*\*\***
+; *** Listing 2-6 ***
 
-**;**
+;
 
-**; Program to measure performance of code that takes longer than**
+; Program to measure performance of code that takes longer than
 
-**; 54 ms to execute. (LZTEST.ASM)**
+; 54 ms to execute. (LZTEST.ASM)
 
-**;**
+;
 
-**; Link with LZTIMER.ASM (Listing 2-5). LZTEST.BAT (Listing 2-7)**
+; Link with LZTIMER.ASM (Listing 2-5). LZTEST.BAT (Listing 2-7)
 
-**; can be used to assemble and link both files. Code to be**
+; can be used to assemble and link both files. Code to be
 
-**; measured must be in the file TESTCODE; Listing 2-8 shows**
+; measured must be in the file TESTCODE; Listing 2-8 shows
 
-**; a sample TESTCODE file.**
+; a sample TESTCODE file.
 
-**;**
+;
 
-**; By Michael Abrash 4/26/89**
+; By Michael Abrash 4/26/89
 
-**;**
+;
 
-**mystack segment para stack 'STACK'**
+mystack segment para stack 'STACK'
 
-**db 512 dup(?)**
+db 512 dup(?)
 
-**mystack ends**
+mystack ends
 
-**;**
+;
 
-**Code segment para public 'CODE'**
+Code segment para public 'CODE'
 
-**assume cs:Code, ds:Code**
+assume cs:Code, ds:Code
 
-**extrn ZTimerOn:near, ZTimerOff:near, ZTimerReport:near**
+extrn ZTimerOn:near, ZTimerOff:near, ZTimerReport:near
 
-**Start proc near**
+Start proc near
 
-**push cs**
+push cs
 
-**pop ds ;point DS to the code segment,**
+pop ds ;point DS to the code segment,
 
-**; so data as well as code can easily**
+; so data as well as code can easily
 
-**; be included in TESTCODE**
+; be included in TESTCODE
 
-**;**
+;
 
-**; Delay for 6-7 seconds, to let the Enter keystroke that started the**
+; Delay for 6-7 seconds, to let the Enter keystroke that started the
 
-**; program come back up.**
+; program come back up.
 
-**;**
+;
 
-**mov ah,2ch**
+mov ah,2ch
 
-**int 21h ;get the current time**
+int 21h ;get the current time
 
-**mov bh,dh ;set the current time aside**
+mov bh,dh ;set the current time aside
 
-**DelayLoop:**
+DelayLoop:
 
-**mov ah,2ch**
+mov ah,2ch
 
-**push bx ;preserve start time**
+push bx ;preserve start time
 
-**int 21h ;get time**
+int 21h ;get time
 
-**pop bx ;retrieve start time**
+pop bx ;retrieve start time
 
-**cmp dh,bh ;is the new seconds count less than**
+cmp dh,bh ;is the new seconds count less than
 
-**; the start seconds count?**
+; the start seconds count?
 
-**jnb CheckDelayTime ;no**
+jnb CheckDelayTime ;no
 
-**add dh,60 ;yes, a minute must have turned over,**
+add dh,60 ;yes, a minute must have turned over,
 
-**; so add one minute**
+; so add one minute
 
-**CheckDelayTime:**
+CheckDelayTime:
 
-**sub dh,bh ;get time that's passed**
+sub dh,bh ;get time that's passed
 
-**cmp dh,7 ;has it been more than 6 seconds yet?**
+cmp dh,7 ;has it been more than 6 seconds yet?
 
-**jb DelayLoop ;not yet**
+jb DelayLoop ;not yet
 
-**;**
+;
 
-**include TESTCODE ;code to be measured, including calls**
+include TESTCODE ;code to be measured, including calls
 
-**; to ZTimerOn and ZTimerOff**
+; to ZTimerOn and ZTimerOff
 
-**;**
+;
 
-**; Display the results.**
+; Display the results.
 
-**;**
+;
 
-**call ZTimerReport**
+call ZTimerReport
 
-**;**
+;
 
-**; Terminate the program.**
+; Terminate the program.
 
-**;**
+;
 
-**mov ah,4ch**
+mov ah,4ch
 
-**int 21h**
+int 21h
 
-**Start endp**
+Start endp
 
-**Code ends**
+Code ends
 
-**end Start**
+end Start
 
 
 
 ## LZTIME.BAT
 
 
-**LZTIME.BAT**
+LZTIME.BAT
 
-**echo off**
+echo off
 
-**rem**
+rem
 
-**rem \*\*\* Listing 2-7 \*\*\***
+rem *** Listing 2-7 ***
 
-**rem**
+rem
 
-**rem
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
+rem
+***************************************************************
 
-**rem \* Batch file LZTIME.BAT, which builds and runs the \***
+rem * Batch file LZTIME.BAT, which builds and runs the *
 
-**rem \* long-period Zen timer program LZTEST.EXE to time the code \***
+rem * long-period Zen timer program LZTEST.EXE to time the code *
 
-**rem \* named as the command-line parameter. Listing 2-5 must be \***
+rem * named as the command-line parameter. Listing 2-5 must be *
 
-**rem \* named LZTIMER.ASM, and Listing 2-6 must be named \***
+rem * named LZTIMER.ASM, and Listing 2-6 must be named *
 
-**rem \* LZTEST.ASM. To time the code in LST2-8, you'd type the \***
+rem * LZTEST.ASM. To time the code in LST2-8, you'd type the *
 
-**rem \* DOS command: \***
+rem * DOS command: *
 
-**rem \* \***
+rem * *
 
-**rem \* lztime lst2-8 \***
+rem * lztime lst2-8 *
 
-**rem \* \***
+rem * *
 
-**rem \* Note that MASM and LINK must be in the current directory or
-\***
+rem * Note that MASM and LINK must be in the current directory or
+*
 
-**rem \* on the current path in order for this batch file to work. \***
+rem * on the current path in order for this batch file to work. *
 
-**rem \* \***
+rem * *
 
-**rem \* This batch file can be speeded up by assembling LZTIMER.ASM
-\***
+rem * This batch file can be speeded up by assembling LZTIMER.ASM
+*
 
-**rem \* once, then removing the lines: \***
+rem * once, then removing the lines: *
 
-**rem \* \***
+rem * *
 
-**rem \* masm lztimer; \***
+rem * masm lztimer; *
 
-**rem \* if errorlevel 1 goto errorend \***
+rem * if errorlevel 1 goto errorend *
 
-**rem \* \***
+rem * *
 
-**rem \* from this file. \***
+rem * from this file. *
 
-**rem \* \***
+rem * *
 
-**rem \* By Michael Abrash 4/26/89 \***
+rem * By Michael Abrash 4/26/89 *
 
-**rem
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
+rem
+***************************************************************
 
-**rem**
+rem
 
-**rem Make sure a file to test was specified.**
+rem Make sure a file to test was specified.
 
-**rem**
+rem
 
-**if not x%1==x goto ckexist**
+if not x%1==x goto ckexist
 
-**echo
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
+echo
+***************************************************************
 
-**echo \* Please specify a file to test. \***
+echo * Please specify a file to test. *
 
-**echo
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
+echo
+***************************************************************
 
-**goto end**
+goto end
 
-**rem**
+rem
 
-**rem Make sure the file exists.**
+rem Make sure the file exists.
 
-**rem**
+rem
 
-**:ckexist**
+:ckexist
 
-**if exist %1 goto docopy**
+if exist %1 goto docopy
 
-**echo
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
+echo
+***************************************************************
 
-**echo \* The specified file, "%1," doesn't exist.**
+echo * The specified file, "%1," doesn't exist.
 
-**echo
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
+echo
+***************************************************************
 
-**goto end**
+goto end
 
-**rem**
+rem
 
-**rem copy the file to measure to TESTCODE.**
+rem copy the file to measure to TESTCODE.
 
-**:docopy**
+:docopy
 
-**copy %1 testcode**
+copy %1 testcode
 
-**masm lztest;**
+masm lztest;
 
-**if errorlevel 1 goto errorend**
+if errorlevel 1 goto errorend
 
-**masm lztimer;**
+masm lztimer;
 
-**if errorlevel 1 goto errorend**
+if errorlevel 1 goto errorend
 
-**link lztest+lztimer;**
+link lztest+lztimer;
 
-**if errorlevel 1 goto errorend**
+if errorlevel 1 goto errorend
 
-**lztest**
+lztest
 
-**goto end**
+goto end
 
-**:errorend**
+:errorend
 
-**echo
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
+echo
+***************************************************************
 
-**echo \* An error occurred while building the long-period Zen timer.
-\***
+echo * An error occurred while building the long-period Zen timer.
+*
 
-**echo
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
+echo
+***************************************************************
 
-**:end**
+:end
 
 
 
 
 ## LZTIME
 
-**; LZTIME**
-**;**
-**; \*\*\* Listing 2-5 \*\*\***
-**;**
+; LZTIME
+;
+; *** Listing 2-5 ***
+;
 
-**; The long-period Zen timer. (LZTIMER.ASM)**
+; The long-period Zen timer. (LZTIMER.ASM)
 
-**; Uses the 8253 timer and the BIOS time-of-day count to time the**
+; Uses the 8253 timer and the BIOS time-of-day count to time the
 
-**; performance of code that takes less than an hour to execute.**
+; performance of code that takes less than an hour to execute.
 
-**; Because interrupts are left on (in order to allow the timer**
+; Because interrupts are left on (in order to allow the timer
 
-**; interrupt to be recognized), this is less accurate than the**
+; interrupt to be recognized), this is less accurate than the
 
-**; precision Zen timer, so it is best used only to time code that takes**
+; precision Zen timer, so it is best used only to time code that takes
 
-**; more than about 54 milliseconds to execute (code that the precision**
+; more than about 54 milliseconds to execute (code that the precision
 
-**; Zen timer reports overflow on). Resolution is limited by the**
+; Zen timer reports overflow on). Resolution is limited by the
 
-**; occurrence of timer interrupts.**
+; occurrence of timer interrupts.
 
-**;**
+;
 
-**; By Michael Abrash 4/26/89**
+; By Michael Abrash 4/26/89
 
-**;**
+;
 
-**; Externally callable routines:**
+; Externally callable routines:
 
-**;**
+;
 
-**; ZTimerOn: Saves the BIOS time of day count and starts the**
+; ZTimerOn: Saves the BIOS time of day count and starts the
 
-**; long-period Zen timer.**
+; long-period Zen timer.
 
-**;**
+;
 
-**; ZTimerOff: Stops the long-period Zen timer and saves the timer**
+; ZTimerOff: Stops the long-period Zen timer and saves the timer
 
-**; count and the BIOS time-of-day count.**
+; count and the BIOS time-of-day count.
 
-**;**
+;
 
-**; ZTimerReport: Prints the time that passed between starting and**
+; ZTimerReport: Prints the time that passed between starting and
 
-**; stopping the timer.**
+; stopping the timer.
 
-**;**
+;
 
-**; Note: If either more than an hour passes or midnight falls between**
+; Note: If either more than an hour passes or midnight falls between
 
-**; calls to ZTimerOn and ZTimerOff, an error is reported. For**
+; calls to ZTimerOn and ZTimerOff, an error is reported. For
 
-**; timing code that takes more than a few minutes to execute,**
+; timing code that takes more than a few minutes to execute,
 
-**; either the DOS TIME command in a batch file before and after**
+; either the DOS TIME command in a batch file before and after
 
-**; execution of the code to time or the use of the DOS**
+; execution of the code to time or the use of the DOS
 
-**; time-of-day function in place of the long-period Zen timer is**
+; time-of-day function in place of the long-period Zen timer is
 
-**; more than adequate.**
+; more than adequate.
 
-**;**
+;
 
-**; Note: The PS/2 version is assembled by setting the symbol PS2 to 1.**
+; Note: The PS/2 version is assembled by setting the symbol PS2 to 1.
 
-**; PS2 must be set to 1 on PS/2 computers because the PS/2's**
+; PS2 must be set to 1 on PS/2 computers because the PS/2's
 
-**; timers are not compatible with an undocumented timer-stopping**
+; timers are not compatible with an undocumented timer-stopping
 
-**; feature of the 8253; the alternative timing approach that**
+; feature of the 8253; the alternative timing approach that
 
-**; must be used on PS/2 computers leaves a short window**
+; must be used on PS/2 computers leaves a short window
 
-**; during which the timer 0 count and the BIOS timer count may**
+; during which the timer 0 count and the BIOS timer count may
 
-**; not be synchronized. You should also set the PS2 symbol to**
+; not be synchronized. You should also set the PS2 symbol to
 
-**; 1 if you're getting erratic or obviously incorrect results.**
+; 1 if you're getting erratic or obviously incorrect results.
 
-**; When the PS/2 version is used, each block of code being timed**
+; When the PS/2 version is used, each block of code being timed
 
-**; should be run several times, with at least two similar**
+; should be run several times, with at least two similar
 
-**; readings required to establish a true measurement.**
+; readings required to establish a true measurement.
 
-**;**
+;
 
-**; Note: When PS2 is 0, the code relies on an undocumented 8253**
+; Note: When PS2 is 0, the code relies on an undocumented 8253
 
-**; feature. It is possible that the 8253 (or whatever chip**
+; feature. It is possible that the 8253 (or whatever chip
 
-**; is emulating the 8253) may be put into an undefined or**
+; is emulating the 8253) may be put into an undefined or
 
-**; incorrect state when this feature is used. If your computer**
+; incorrect state when this feature is used. If your computer
 
-**; displays any hint of erratic behavior after the long-period**
+; displays any hint of erratic behavior after the long-period
 
-**; Zen timer is used, such as the floppy drive failing to**
+; Zen timer is used, such as the floppy drive failing to
 
-**; operate properly, reboot the system, set PS2 to 1 and**
+; operate properly, reboot the system, set PS2 to 1 and
 
-**; leave it that way.**
+; leave it that way.
 
-**;**
+;
 
-**; Note: Interrupts must not be disabled for more than 54 ms at a**
+; Note: Interrupts must not be disabled for more than 54 ms at a
 
-**; stretch during the timing interval. Because interrupts**
+; stretch during the timing interval. Because interrupts
 
-**; are enabled, keys, mice, and other devices that generate**
+; are enabled, keys, mice, and other devices that generate
 
-**; interrupts should not be used during the timing interval.**
+; interrupts should not be used during the timing interval.
 
-**;**
+;
 
-**; Note: Any extra code running off the timer interrupt (such as**
+; Note: Any extra code running off the timer interrupt (such as
 
-**; some memory-resident utilities) wilLincrease the time**
+; some memory-resident utilities) wilLincrease the time
 
-**; measured by the Zen timer.**
+; measured by the Zen timer.
 
-**;**
+;
 
-**; Note: These routines can introduce inaccuracies of up to a few**
+; Note: These routines can introduce inaccuracies of up to a few
 
-**; tenths of a second into the system clock count for each**
+; tenths of a second into the system clock count for each
 
-**; code section timed. Consequently, it's a good idea to**
+; code section timed. Consequently, it's a good idea to
 
-**; reboot at the conclusion of timing sessions. (The**
+; reboot at the conclusion of timing sessions. (The
 
-**; battery-backed clock, if any, is not affected by the Zen**
+; battery-backed clock, if any, is not affected by the Zen
 
-**; timer.)**
+; timer.)
 
-**;**
+;
 
-**; All registers and all flags are preserved by all routines.**
+; All registers and all flags are preserved by all routines.
 
-**;**
+;
 
 \ 
 
-**Code segment word public 'CODE'**
+Code segment word public 'CODE'
 
-**assume cs:Code, ds:nothing**
+assume cs:Code, ds:nothing
 
-**public ZTimerOn, ZTimerOff, ZTimerReport**
-
-\ 
-
-**;**
-
-**; Set to 0 to assemble for use on a fully 8253-compatible**
-
-**; system. Set to 1 to assemble for use on non-8253-compatible**
-
-**; systems, including PS/2 computers. In general, leave this**
-
-**; set to 0 on non-PS/2 computers unless you get inconsistent**
-
-**; or inaccurate readings.**
-
-**;**
-
-**PS2 equ 0**
-
-**;**
-
-**; Base address of the 8253 timer chip.**
-
-**;**
-
-**BASE\_8253 equ 40h**
-
-**;**
-
-**; The address of the timer 0 count registers in the 8253.**
-
-**;**
-
-**TIMER\_0\_8253 equ BASE\_8253 + 0**
-
-**;**
-
-**; The address of the mode register in the 8253.**
-
-**;**
-
-**MODE\_8253 equ BASE\_8253 + 3**
-
-**;**
-
-**; The address of the BIOS timer count variable in the BIOS**
-
-**; data segment.**
-
-**;**
-
-**TIMER\_COUNT equ
-46ch**
-
-**;**
-
-**; Macro to emulate a POPF instruction in order to fix the bug in some**
-
-**; 80286 chips which allows interrupts to occur during a POPF even when**
-
-**; interrupts remain disabled.**
-
-**;**
-
-**MPOPF macro**
-
-**local p1, p2**
-
-**jmp short p2**
-
-**p1: iret ;jump to pushed address & pop flags**
-
-**p2: push cs ;construct far return address to**
-
-**call p1 ; the next instruction**
-
-**endm**
+public ZTimerOn, ZTimerOff, ZTimerReport
 
 \ 
 
-**;**
+;
 
-**; Macro to delay briefly to ensure that enough time has elapsed**
+; Set to 0 to assemble for use on a fully 8253-compatible
 
-**; between successive I/O accesses so that the device being accessed**
+; system. Set to 1 to assemble for use on non-8253-compatible
 
-**; can respond to both accesses even on a very fast PC.**
+; systems, including PS/2 computers. In general, leave this
 
-**;**
+; set to 0 on non-PS/2 computers unless you get inconsistent
 
-**DELAY macro**
+; or inaccurate readings.
 
-**jmp $+2**
+;
 
-**jmp $+2**
+PS2 equ 0
 
-**jmp $+2**
+;
 
-**endm**
+; Base address of the 8253 timer chip.
+
+;
+
+BASE_8253 equ 40h
+
+;
+
+; The address of the timer 0 count registers in the 8253.
+
+;
+
+TIMER_0_8253 equ BASE_8253 + 0
+
+;
+
+; The address of the mode register in the 8253.
+
+;
+
+MODE_8253 equ BASE_8253 + 3
+
+;
+
+; The address of the BIOS timer count variable in the BIOS
+
+; data segment.
+
+;
+
+TIMER_COUNT equ
+46ch
+
+;
+
+; Macro to emulate a POPF instruction in order to fix the bug in some
+
+; 80286 chips which allows interrupts to occur during a POPF even when
+
+; interrupts remain disabled.
+
+;
+
+MPOPF macro
+
+local p1, p2
+
+jmp short p2
+
+p1: iret ;jump to pushed address & pop flags
+
+p2: push cs ;construct far return address to
+
+call p1 ; the next instruction
+
+endm
 
 \ 
 
-**StartBIOSCountLow dw ? ;BIOS count low word at the**
+;
 
-**; start of the timing period**
+; Macro to delay briefly to ensure that enough time has elapsed
 
-**StartBIOSCountHigh dw ? ;BIOS count high word at the**
+; between successive I/O accesses so that the device being accessed
 
-**; start of the timing period**
+; can respond to both accesses even on a very fast PC.
 
-**EndBIOSCountLow dw ? ;BIOS count low word at the**
+;
 
-**; end of the timing period**
+DELAY macro
 
-**EndBIOSCountHigh dw ? ;BIOS count high word at the**
+jmp $+2
 
-**; end of the timing period**
+jmp $+2
 
-**EndTimedCount dw ? ;timer 0 count at the end of**
+jmp $+2
 
-**; the timing period**
-
-**ReferenceCount dw ? ;number of counts required to**
-
-**; execute timer overhead code**
-
-**;**
-
-**; String printed to report results.**
-
-**;**
-
-**OutputStr label byte**
-
-**db 0dh, 0ah, 'Timed count: '**
-
-**TimedCountStr db 10 dup (?)**
-
-**db ' microseconds', 0dh, 0ah**
-
-**db '$'**
-
-**;**
-
-**; Temporary storage for timed count as it's divided down by powers**
-
-**; of ten when converting from doubleword binary to ASCII.**
-
-**;**
-
-**CurrentCountLow dw ?**
-
-**CurrentCountHigh dw ?**
-
-**;**
-
-**; Powers of ten table used to perform division by 10 when doing**
-
-**; doubleword conversion from binary to ASCII.**
-
-**;**
-
-**PowersOfTen label word**
-
-**dd 1**
-
-**dd 10**
-
-**dd 100**
-
-**dd 1000**
-
-**dd 10000**
-
-**dd 100000**
-
-**dd 1000000**
-
-**dd 10000000**
-
-**dd 100000000**
-
-**dd 1000000000**
-
-**PowersOfTenEnd label word**
-
-**;**
-
-**; String printed to report that the high word of the BIOS count**
-
-**; changed while timing (an hour elapsed or midnight was crossed),**
-
-**; and so the count is invalid and the test needs to be rerun.**
-
-**;**
-
-**TurnOverStr label byte**
-
-**db 0dh, 0ah**
-
-**db '\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*'**
-
-**db 0dh, 0ah**
-
-**db '\* Either midnight passed or an hour or more passed \*'**
-
-**db 0dh, 0ah**
-
-**db '\* while timing was in progress. If the former was \*'**
-
-**db 0dh, 0ah**
-
-**db '\* the case, please rerun the test; if the latter \*'**
-
-**db 0dh, 0ah**
-
-**db '\* was the case, the test code takes too long to \*'**
-
-**db 0dh, 0ah**
-
-**db '\* run to be timed by the long-period Zen timer. \*'**
-
-**db 0dh, 0ah**
-
-**db '\* Suggestions: use the DOS TIME command, the DOS \*'**
-
-**db 0dh, 0ah**
-
-**db '\* time function, or a watch. \*'**
-
-**db 0dh, 0ah**
-
-**db '\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*'**
-
-**db 0dh, 0ah**
-
-**db '$'**
+endm
 
 \ 
 
-**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
+StartBIOSCountLow dw ? ;BIOS count low word at the
 
-**;\* Routine called to start timing. \***
+; start of the timing period
 
-**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
+StartBIOSCountHigh dw ? ;BIOS count high word at the
+
+; start of the timing period
+
+EndBIOSCountLow dw ? ;BIOS count low word at the
+
+; end of the timing period
+
+EndBIOSCountHigh dw ? ;BIOS count high word at the
+
+; end of the timing period
+
+EndTimedCount dw ? ;timer 0 count at the end of
+
+; the timing period
+
+ReferenceCount dw ? ;number of counts required to
+
+; execute timer overhead code
+
+;
+
+; String printed to report results.
+
+;
+
+OutputStr label byte
+
+db 0dh, 0ah, 'Timed count: '
+
+TimedCountStr db 10 dup (?)
+
+db ' microseconds', 0dh, 0ah
+
+db '$'
+
+;
+
+; Temporary storage for timed count as it's divided down by powers
+
+; of ten when converting from doubleword binary to ASCII.
+
+;
+
+CurrentCountLow dw ?
+
+CurrentCountHigh dw ?
+
+;
+
+; Powers of ten table used to perform division by 10 when doing
+
+; doubleword conversion from binary to ASCII.
+
+;
+
+PowersOfTen label word
+
+dd 1
+
+dd 10
+
+dd 100
+
+dd 1000
+
+dd 10000
+
+dd 100000
+
+dd 1000000
+
+dd 10000000
+
+dd 100000000
+
+dd 1000000000
+
+PowersOfTenEnd label word
+
+;
+
+; String printed to report that the high word of the BIOS count
+
+; changed while timing (an hour elapsed or midnight was crossed),
+
+; and so the count is invalid and the test needs to be rerun.
+
+;
+
+TurnOverStr label byte
+
+db 0dh, 0ah
+
+db '****************************************************'
+
+db 0dh, 0ah
+
+db '* Either midnight passed or an hour or more passed *'
+
+db 0dh, 0ah
+
+db '* while timing was in progress. If the former was *'
+
+db 0dh, 0ah
+
+db '* the case, please rerun the test; if the latter *'
+
+db 0dh, 0ah
+
+db '* was the case, the test code takes too long to *'
+
+db 0dh, 0ah
+
+db '* run to be timed by the long-period Zen timer. *'
+
+db 0dh, 0ah
+
+db '* Suggestions: use the DOS TIME command, the DOS *'
+
+db 0dh, 0ah
+
+db '* time function, or a watch. *'
+
+db 0dh, 0ah
+
+db '****************************************************'
+
+db 0dh, 0ah
+
+db '$'
 
 \ 
 
-**ZTimerOn proc near**
+;********************************************************************
+
+;* Routine called to start timing. *
+
+;********************************************************************
 
 \ 
 
-**;**
+ZTimerOn proc near
 
-**; Save the context of the program being timed.**
+\ 
 
-**;**
+;
 
-**push ax**
+; Save the context of the program being timed.
 
-**pushf**
+;
 
-**;**
+push ax
 
-**; Set timer 0 of the 8253 to mode 2 (divide-by-N), to cause**
+pushf
 
-**; linear counting rather than count-by-two counting. Also stops**
+;
 
-**; timer 0 until the timer count is loaded, except on PS/2**
+; Set timer 0 of the 8253 to mode 2 (divide-by-N), to cause
 
-**; computers.**
+; linear counting rather than count-by-two counting. Also stops
 
-**;**
+; timer 0 until the timer count is loaded, except on PS/2
 
-**mov al,00110100b ;mode 2**
+; computers.
 
-**out MODE\_8253,al**
+;
 
-**;**
+mov al,00110100b ;mode 2
 
-**; Set the timer count to 0, so we know we won't get another**
+out MODE_8253,al
 
-**; timer interrupt right away.**
+;
 
-**; Note: this introduces an inaccuracy of up to 54 ms in the system**
+; Set the timer count to 0, so we know we won't get another
 
-**; clock count each time it is executed.**
+; timer interrupt right away.
 
-**;**
+; Note: this introduces an inaccuracy of up to 54 ms in the system
 
-**DELAY**
+; clock count each time it is executed.
 
-**sub al,al**
+;
 
-**out TIMER\_0\_8253,al ;lsb**
+DELAY
 
-**DELAY**
+sub al,al
 
-**out TIMER\_0\_8253,al ;msb**
+out TIMER_0_8253,al ;lsb
 
-**;**
+DELAY
 
-**; In case interrupts are disabled, enable interrupts briefly to allow**
+out TIMER_0_8253,al ;msb
 
-**; the interrupt generated when switching from mode 3 to mode 2 to be**
+;
 
-**; recognized. Interrupts must be enabled for at least 210 ns to allow**
+; In case interrupts are disabled, enable interrupts briefly to allow
 
-**; time for that interrupt to occur. Here, 10 jumps are used for the**
+; the interrupt generated when switching from mode 3 to mode 2 to be
 
-**; delay to ensure that the delay time will be more than long enough**
+; recognized. Interrupts must be enabled for at least 210 ns to allow
 
-**; even on a very fast PC.**
+; time for that interrupt to occur. Here, 10 jumps are used for the
 
-**;**
+; delay to ensure that the delay time will be more than long enough
 
-**pushf**
+; even on a very fast PC.
 
-**sti**
+;
 
-**rept 10**
+pushf
 
-**jmp $+2**
+sti
 
-**endm**
+rept 10
 
-**MPOPF**
+jmp $+2
 
-**;**
+endm
 
-**; Store the timing start BIOS count.**
+MPOPF
 
-**; (Since the timer count was just set to 0, the BIOS count will**
+;
 
-**; stay the same for the next 54 ms, so we don't need to disable**
+; Store the timing start BIOS count.
 
-**; interrupts in order to avoid getting a half-changed count.)**
+; (Since the timer count was just set to 0, the BIOS count will
 
-**;**
+; stay the same for the next 54 ms, so we don't need to disable
 
-**push ds**
+; interrupts in order to avoid getting a half-changed count.)
 
-**sub ax,ax**
+;
 
-**mov ds,ax**
+push ds
+
+sub ax,ax
+
+mov ds,ax
 
 [**mov
-ax,ds:TIMER\_COUNT+2]**
+ax,ds:TIMER_COUNT+2]
 
 [**mov
-cs:StartBIOSCountHigh],ax**
+cs:StartBIOSCountHigh],ax
 
 [**mov
-ax,ds:TIMER\_COUNT]**
+ax,ds:TIMER_COUNT]
 
 [**mov
-cs:StartBIOSCountLow],ax**
+cs:StartBIOSCountLow],ax
 
-**pop ds**
+pop ds
 
-**;**
+;
 
-**; Set the timer count to 0 again to start the timing interval.**
+; Set the timer count to 0 again to start the timing interval.
 
-**;**
+;
 
-**mov al,00110100b ;set up to load initial**
+mov al,00110100b ;set up to load initial
 
-**out MODE\_8253,al ; timer count**
+out MODE_8253,al ; timer count
 
-**DELAY**
+DELAY
 
-**sub al,al**
+sub al,al
 
-**out TIMER\_0\_8253,al ;load count lsb**
+out TIMER_0_8253,al ;load count lsb
 
-**DELAY**
+DELAY
 
-**out TIMER\_0\_8253,al ;load count msb**
+out TIMER_0_8253,al ;load count msb
 
-**;**
+;
 
-**; Restore the context of the program being timed and return to it.**
+; Restore the context of the program being timed and return to it.
 
-**;**
+;
 
-**MPOPF**
+MPOPF
 
-**pop ax**
+pop ax
 
-**ret**
-
-\ 
-
-**ZTimerOn endp**
+ret
 
 \ 
 
-**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
-
-**;\* Routine called to stop timing and get count. \***
-
-**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
+ZTimerOn endp
 
 \ 
 
-**ZTimerOff proc near**
+;********************************************************************
+
+;* Routine called to stop timing and get count. *
+
+;********************************************************************
 
 \ 
 
-**;**
-
-**; Save the context of the program being timed.**
-
-**;**
-
-**pushf**
-
-**push ax**
-
-**push cx**
-
-**;**
-
-**; In case interrupts are disabled, enable interrupts briefly to allow**
-
-**; any pending timer interrupt to be handled. Interrupts must be**
-
-**; enabled for at least 210 ns to allow time for that interrupt to**
-
-**; occur. Here, 10 jumps are used for the delay to ensure that the**
-
-**; delay time will be more than long enough even on a very fast PC.**
-
-**;**
-
-**sti**
-
-**rept 10**
-
-**jmp $+2**
-
-**endm**
+ZTimerOff proc near
 
 \ 
 
-**;**
+;
 
-**; Latch the timer count.**
+; Save the context of the program being timed.
 
-**;**
+;
 
-\ 
+pushf
 
-**if PS2**
+push ax
 
-\ 
+push cx
 
-**mov al,00000000b**
+;
 
-**out MODE\_8253,al ;latch timer 0 count**
+; In case interrupts are disabled, enable interrupts briefly to allow
 
-**;**
+; any pending timer interrupt to be handled. Interrupts must be
 
-**; This is where a one-instruction-long window exists on the PS/2.**
+; enabled for at least 210 ns to allow time for that interrupt to
 
-**; The timer count and the BIOS count can lose synchronization;**
+; occur. Here, 10 jumps are used for the delay to ensure that the
 
-**; since the timer keeps counting after it's latched, it can turn**
+; delay time will be more than long enough even on a very fast PC.
 
-**; over right after it's latched and cause the BIOS count to turn**
+;
 
-**; over before interrupts are disabled, leaving us with the timer**
+sti
 
-**; count from before the timer turned over coupled with the BIOS**
+rept 10
 
-**; count from after the timer turned over. The result is a count**
+jmp $+2
 
-**; that's 54 ms too long.**
-
-**;**
-
-**\ **
-
-**else**
+endm
 
 \ 
 
-**;**
+;
 
-**; Set timer 0 to mode 2 (divide-by-N), waiting for a 2-byte count**
+; Latch the timer count.
 
-**; load, which stops timer 0 until the count is loaded. (Only works**
-
-**; on fully 8253-compatible chips.)**
-
-**;**
-
-**mov al,00110100b ;mode 2**
-
-**out MODE\_8253,al**
-
-**DELAY**
-
-**mov al,00000000b ;latch timer 0 count**
-
-**out MODE\_8253,al**
+;
 
 \ 
 
-**endif**
+if PS2
 
 \ 
 
-**cli ;stop the BIOS count**
+mov al,00000000b
 
-**;**
+out MODE_8253,al ;latch timer 0 count
 
-**; Read the BIOS count. (Since interrupts are disabled, the BIOS**
+;
 
-**; count won't change.)**
+; This is where a one-instruction-long window exists on the PS/2.
 
-**;**
+; The timer count and the BIOS count can lose synchronization;
 
-**push ds**
+; since the timer keeps counting after it's latched, it can turn
 
-**sub ax,ax**
+; over right after it's latched and cause the BIOS count to turn
 
-**mov ds,ax**
+; over before interrupts are disabled, leaving us with the timer
+
+; count from before the timer turned over coupled with the BIOS
+
+; count from after the timer turned over. The result is a count
+
+; that's 54 ms too long.
+
+;
+
+\ 
+
+else
+
+\ 
+
+;
+
+; Set timer 0 to mode 2 (divide-by-N), waiting for a 2-byte count
+
+; load, which stops timer 0 until the count is loaded. (Only works
+
+; on fully 8253-compatible chips.)
+
+;
+
+mov al,00110100b ;mode 2
+
+out MODE_8253,al
+
+DELAY
+
+mov al,00000000b ;latch timer 0 count
+
+out MODE_8253,al
+
+\ 
+
+endif
+
+\ 
+
+cli ;stop the BIOS count
+
+;
+
+; Read the BIOS count. (Since interrupts are disabled, the BIOS
+
+; count won't change.)
+
+;
+
+push ds
+
+sub ax,ax
+
+mov ds,ax
 
 [**mov
-ax,ds:TIMER\_COUNT+2]**
+ax,ds:TIMER_COUNT+2]
 
 [**mov
-cs:EndBIOSCountHigh],ax**
+cs:EndBIOSCountHigh],ax
 
 [**mov
-ax,ds:TIMER\_COUNT]**
+ax,ds:TIMER_COUNT]
 
 [**mov
-cs:EndBIOSCountLow],ax**
+cs:EndBIOSCountLow],ax
 
-**pop ds**
+pop ds
 
-**;**
+;
 
-**; Read the timer count and save it.**
+; Read the timer count and save it.
 
-**;**
+;
 
-**in al,TIMER\_0\_8253 ;lsb**
+in al,TIMER_0_8253 ;lsb
 
-**DELAY**
+DELAY
 
-**mov ah,al**
+mov ah,al
 
-**in al,TIMER\_0\_8253 ;msb**
+in al,TIMER_0_8253 ;msb
 
-**xchg ah,al**
+xchg ah,al
 
-**neg ax ;convert from countdown**
+neg ax ;convert from countdown
 
-**; remaining to elapsed**
+; remaining to elapsed
 
-**; count**
-
-[**mov
-cs:EndTimedCount],ax**
-
-**;**
-
-**; Restart timer 0, which is still waiting for an initial count**
-
-**; to be loaded.**
-
-**;**
-
-\ 
-
-**ife PS2**
-
-\ 
-
-**DELAY**
-
-**mov al,00110100b ;mode 2, waiting to load a**
-
-**; 2-byte count**
-
-**out MODE\_8253,al**
-
-**DELAY**
-
-**sub al,al**
-
-**out TIMER\_0\_8253,al ;lsb**
-
-**DELAY**
-
-**mov al,ah**
-
-**out TIMER\_0\_8253,al ;msb**
-
-**DELAY**
-
-\ 
-
-**endif**
-
-\ 
-
-**sti ;let the BIOS count continue**
-
-**;**
-
-**; Time a zero-length code fragment, to get a reference for how**
-
-**; much overhead this routine has. Time it 16 times and average it,**
-
-**; for accuracy, rounding the result.**
-
-**;**
+; count
 
 [**mov
-cs:ReferenceCount],0**
+cs:EndTimedCount],ax
 
-**mov cx,16**
+;
 
-**cli ;interrupts off to allow a**
+; Restart timer 0, which is still waiting for an initial count
 
-**; precise reference count**
+; to be loaded.
 
-**RefLoop:**
-
-**call ReferenceZTimerOn**
-
-**call ReferenceZTimerOff**
-
-**loop RefLoop**
-
-**sti**
-
-**add cs:[ReferenceCount],8 ;total + (0.5 \* 16)**
-
-**mov cl,4**
-
-**shr cs:[ReferenceCount],cl ;(total) / 16 + 0.5**
-
-**;**
-
-**; Restore the context of the program being timed and return to it.**
-
-**;**
-
-**pop cx**
-
-**pop ax**
-
-**MPOPF**
-
-**ret**
+;
 
 \ 
 
-**ZTimerOff endp**
+ife PS2
 
 \ 
 
-**;**
+DELAY
 
-**; Called by ZTimerOff to start the timer for overhead measurements.**
+mov al,00110100b ;mode 2, waiting to load a
 
-**;**
+; 2-byte count
 
-\ 
+out MODE_8253,al
 
-**ReferenceZTimerOn proc near**
+DELAY
 
-**;**
+sub al,al
 
-**; Save the context of the program being timed.**
+out TIMER_0_8253,al ;lsb
 
-**;**
+DELAY
 
-**push ax**
+mov al,ah
 
-**pushf**
+out TIMER_0_8253,al ;msb
 
-**;**
-
-**; Set timer 0 of the 8253 to mode 2 (divide-by-N), to cause**
-
-**; linear counting rather than count-by-two counting.**
-
-**;**
-
-**mov al,00110100b ;mode 2**
-
-**out MODE\_8253,al**
-
-**;**
-
-**; Set the timer count to 0.**
-
-**;**
-
-**DELAY**
-
-**sub al,al**
-
-**out TIMER\_0\_8253,al ;lsb**
-
-**DELAY**
-
-**out TIMER\_0\_8253,al ;msb**
-
-**;**
-
-**; Restore the context of the program being timed and return to it.**
-
-**;**
-
-**MPOPF**
-
-**pop ax**
-
-**ret**
+DELAY
 
 \ 
 
-**ReferenceZTimerOn endp**
+endif
 
 \ 
 
-**;**
+sti ;let the BIOS count continue
 
-**; Called by ZTimerOff to stop the timer and add the result to**
+;
 
-**; ReferenceCount for overhead measurements. Doesn't need to look**
+; Time a zero-length code fragment, to get a reference for how
 
-**; at the BIOS count because timing a zero-length code fragment**
+; much overhead this routine has. Time it 16 times and average it,
 
-**; isn't going to take anywhere near 54 ms.**
+; for accuracy, rounding the result.
 
-**;**
+;
+
+[**mov
+cs:ReferenceCount],0
+
+mov cx,16
+
+cli ;interrupts off to allow a
+
+; precise reference count
+
+RefLoop:
+
+call ReferenceZTimerOn
+
+call ReferenceZTimerOff
+
+loop RefLoop
+
+sti
+
+add cs:[ReferenceCount],8 ;total + (0.5 * 16)
+
+mov cl,4
+
+shr cs:[ReferenceCount],cl ;(total) / 16 + 0.5
+
+;
+
+; Restore the context of the program being timed and return to it.
+
+;
+
+pop cx
+
+pop ax
+
+MPOPF
+
+ret
 
 \ 
 
-**ReferenceZTimerOff proc near**
-
-**;**
-
-**; Save the context of the program being timed.**
-
-**;**
-
-**pushf**
-
-**push ax**
-
-**push cx**
+ZTimerOff endp
 
 \ 
 
-**;**
+;
 
-**; Match the interrupt-window delay in ZTimerOff.**
+; Called by ZTimerOff to start the timer for overhead measurements.
 
-**;**
-
-**sti**
-
-**rept 10**
-
-**jmp $+2**
-
-**endm**
+;
 
 \ 
 
-**mov al,00000000b**
+ReferenceZTimerOn proc near
 
-**out MODE\_8253,al ;latch timer**
+;
 
-**;**
+; Save the context of the program being timed.
 
-**; Read the count and save it.**
+;
 
-**;**
+push ax
 
-**DELAY**
+pushf
 
-**in al,TIMER\_0\_8253 ;lsb**
+;
 
-**DELAY**
+; Set timer 0 of the 8253 to mode 2 (divide-by-N), to cause
 
-**mov ah,al**
+; linear counting rather than count-by-two counting.
 
-**in al,TIMER\_0\_8253 ;msb**
+;
 
-**xchg ah,al**
+mov al,00110100b ;mode 2
 
-**neg ax ;convert from countdown**
+out MODE_8253,al
 
-**; remaining to elapsed**
+;
 
-**; count**
+; Set the timer count to 0.
+
+;
+
+DELAY
+
+sub al,al
+
+out TIMER_0_8253,al ;lsb
+
+DELAY
+
+out TIMER_0_8253,al ;msb
+
+;
+
+; Restore the context of the program being timed and return to it.
+
+;
+
+MPOPF
+
+pop ax
+
+ret
+
+\ 
+
+ReferenceZTimerOn endp
+
+\ 
+
+;
+
+; Called by ZTimerOff to stop the timer and add the result to
+
+; ReferenceCount for overhead measurements. Doesn't need to look
+
+; at the BIOS count because timing a zero-length code fragment
+
+; isn't going to take anywhere near 54 ms.
+
+;
+
+\ 
+
+ReferenceZTimerOff proc near
+
+;
+
+; Save the context of the program being timed.
+
+;
+
+pushf
+
+push ax
+
+push cx
+
+\ 
+
+;
+
+; Match the interrupt-window delay in ZTimerOff.
+
+;
+
+sti
+
+rept 10
+
+jmp $+2
+
+endm
+
+\ 
+
+mov al,00000000b
+
+out MODE_8253,al ;latch timer
+
+;
+
+; Read the count and save it.
+
+;
+
+DELAY
+
+in al,TIMER_0_8253 ;lsb
+
+DELAY
+
+mov ah,al
+
+in al,TIMER_0_8253 ;msb
+
+xchg ah,al
+
+neg ax ;convert from countdown
+
+; remaining to elapsed
+
+; count
 
 [**add
-cs:ReferenceCount],ax**
+cs:ReferenceCount],ax
 
-**;**
+;
 
-**; Restore the context and return.**
+; Restore the context and return.
 
-**;**
+;
 
-**pop cx**
+pop cx
 
-**pop ax**
+pop ax
 
-**MPOPF**
+MPOPF
 
-**ret**
-
-\ 
-
-**ReferenceZTimerOff endp**
+ret
 
 \ 
 
-**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
-
-**;\* Routine called to report timing results. \***
-
-**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
+ReferenceZTimerOff endp
 
 \ 
 
-**ZTimerReport proc near**
+;********************************************************************
+
+;* Routine called to report timing results. *
+
+;********************************************************************
 
 \ 
 
-**pushf**
+ZTimerReport proc near
 
-**push ax**
+\ 
 
-**push bx**
+pushf
 
-**push cx**
+push ax
 
-**push dx**
+push bx
 
-**push si**
+push cx
 
-**push di**
+push dx
 
-**push ds**
+push si
 
-**;**
+push di
 
-**push cs ;DOS functions require that DS point**
+push ds
 
-**pop ds ; to text to be displayed on the screen**
+;
 
-**assume ds:Code**
+push cs ;DOS functions require that DS point
 
-**;**
+pop ds ; to text to be displayed on the screen
 
-**; See if midnight or more than an hour passed during timing. If so,**
+assume ds:Code
 
-**; notify the user.**
+;
 
-**;**
+; See if midnight or more than an hour passed during timing. If so,
+
+; notify the user.
+
+;
 
 [**mov
-ax,StartBIOSCountHigh]**
+ax,StartBIOSCountHigh]
 
 [**cmp
-ax,EndBIOSCountHigh]**
+ax,EndBIOSCountHigh]
 
-**jz CalcBIOSTime ;hour count didn't change,**
+jz CalcBIOSTime ;hour count didn't change,
 
-**; so everything's fine**
+; so everything's fine
 
-**inc ax**
+inc ax
 
 [**cmp
-ax,EndBIOSCountHigh]**
+ax,EndBIOSCountHigh]
 
-**jnz TestTooLong ;midnight or two hour**
+jnz TestTooLong ;midnight or two hour
 
-**; boundaries passed, so the**
+; boundaries passed, so the
 
-**; results are no good**
+; results are no good
 
 [**mov
-ax,EndBIOSCountLow]**
+ax,EndBIOSCountLow]
 
 [**cmp
-ax,StartBIOSCountLow]**
+ax,StartBIOSCountLow]
 
-**jb CalcBIOSTime ;a single hour boundary**
+jb CalcBIOSTime ;a single hour boundary
 
-**; passed-that's OK, so long as**
+; passed-that's OK, so long as
 
-**; the total time wasn't more**
+; the total time wasn't more
 
-**; than an hour**
+; than an hour
 
 \ 
 
-**;**
+;
 
-**; Over an hour elapsed or midnight passed during timing, which**
+; Over an hour elapsed or midnight passed during timing, which
 
-**; renders the results invalid. Notify the user. This misses the**
+; renders the results invalid. Notify the user. This misses the
 
-**; case where a multiple of 24 hours has passed, but we'll rely**
+; case where a multiple of 24 hours has passed, but we'll rely
 
-**; on the perspicacity of the user to detect that case.**
+; on the perspicacity of the user to detect that case.
 
-**;**
+;
 
-**TestTooLong:**
+TestTooLong:
 
-**mov ah,9**
+mov ah,9
 
-**mov dx,offset TurnOverStr**
+mov dx,offset TurnOverStr
 
-**int 21h**
+int 21h
 
-**jmp short ZTimerReportDone**
+jmp short ZTimerReportDone
 
-**;**
+;
 
-**; Convert the BIOS time to microseconds.**
+; Convert the BIOS time to microseconds.
 
-**;**
+;
 
-**CalcBIOSTime:**
+CalcBIOSTime:
 
 [**mov
-ax,EndBIOSCountLow]**
+ax,EndBIOSCountLow]
 
 [**sub
-ax,StartBIOSCountLow]**
+ax,StartBIOSCountLow]
 
-**mov dx,54925 ;number of microseconds each**
+mov dx,54925 ;number of microseconds each
 
-**; BIOS count represents**
+; BIOS count represents
 
-**mul dx**
+mul dx
 
-**mov bx,ax ;set aside BIOS count in**
+mov bx,ax ;set aside BIOS count in
 
-**mov cx,dx ; microseconds**
+mov cx,dx ; microseconds
 
-**;**
+;
 
-**; Convert timer count to microseconds.**
+; Convert timer count to microseconds.
 
-**;**
-
-[**mov
-ax,EndTimedCount]**
-
-**mov si,8381**
-
-**mul si**
-
-**mov si,10000**
-
-**div si ;\* .8381 = \* 8381 / 10000**
-
-**;**
-
-**; Add timer and BIOS counts together to get an overall time in**
-
-**; microseconds.**
-
-**;**
-
-**add bx,ax**
-
-**adc cx,0**
-
-**;**
-
-**; Subtract the timer overhead and save the result.**
-
-**;**
+;
 
 [**mov
-ax,ReferenceCount]**
+ax,EndTimedCount]
 
-**mov si,8381 ;convert the reference count**
+mov si,8381
 
-**mul si ; to microseconds**
+mul si
 
-**mov si,10000**
+mov si,10000
 
-**div si ;\* .8381 = \* 8381 / 10000**
+div si ;* .8381 = * 8381 / 10000
 
-**sub bx,ax**
+;
 
-**sbb cx,0**
+; Add timer and BIOS counts together to get an overall time in
 
-[**mov
-CurrentCountLow],bx**
+; microseconds.
 
-[**mov
-CurrentCountHigh],cx**
+;
 
-**;**
+add bx,ax
 
-**; Convert the result to an ASCII string by trial subtractions of**
+adc cx,0
 
-**; powers of 10.**
+;
 
-**;**
+; Subtract the timer overhead and save the result.
 
-**mov di,offset PowersOfTenEnd -offset PowersOfTen -4**
-
-**mov si,offset TimedCountStr**
-
-**CTSNextDigit:**
-
-**mov bl,'0'**
-
-**CTSLoop:**
+;
 
 [**mov
-ax,CurrentCountLow]**
+ax,ReferenceCount]
+
+mov si,8381 ;convert the reference count
+
+mul si ; to microseconds
+
+mov si,10000
+
+div si ;* .8381 = * 8381 / 10000
+
+sub bx,ax
+
+sbb cx,0
 
 [**mov
-dx,CurrentCountHigh]**
+CurrentCountLow],bx
+
+[**mov
+CurrentCountHigh],cx
+
+;
+
+; Convert the result to an ASCII string by trial subtractions of
+
+; powers of 10.
+
+;
+
+mov di,offset PowersOfTenEnd -offset PowersOfTen -4
+
+mov si,offset TimedCountStr
+
+CTSNextDigit:
+
+mov bl,'0'
+
+CTSLoop:
+
+[**mov
+ax,CurrentCountLow]
+
+[**mov
+dx,CurrentCountHigh]
 
 [**sub
-ax,PowersOfTendi]**
+ax,PowersOfTendi]
 
 [**sbb
-dx,PowersOfTendi+2]**
+dx,PowersOfTendi+2]
 
-**jc CTSNextPowerDown**
+jc CTSNextPowerDown
 
-**inc bl**
-
-[**mov
-CurrentCountLow],ax**
+inc bl
 
 [**mov
-CurrentCountHigh],dx**
+CurrentCountLow],ax
 
-**jmp CTSLoop**
+[**mov
+CurrentCountHigh],dx
 
-**CTSNextPowerDown:**
+jmp CTSLoop
 
-**mov [si],bl**
+CTSNextPowerDown:
 
-**inc si**
+mov [si],bl
 
-**sub di,4**
+inc si
 
-**jns CTSNextDigit**
+sub di,4
 
-**;**
+jns CTSNextDigit
 
-**;**
+;
 
-**; Print the results.**
+;
 
-**;**
+; Print the results.
 
-**mov ah,9**
+;
 
-**mov dx,offset OutputStr**
+mov ah,9
 
-**int 21h**
+mov dx,offset OutputStr
 
-**;**
+int 21h
 
-**ZTimerReportDone:**
+;
 
-**pop ds**
+ZTimerReportDone:
 
-**pop di**
+pop ds
 
-**pop si**
+pop di
 
-**pop dx**
+pop si
 
-**pop cx**
+pop dx
 
-**pop bx**
+pop cx
 
-**pop ax**
+pop bx
 
-**MPOPF**
+pop ax
 
-**ret**
+MPOPF
+
+ret
 
 \ 
 
-**ZTimerReport endp**
+ZTimerReport endp
 
 \ 
 
-**Code ends**
+Code ends
 
-**end**
+end
 
 \ 
 
@@ -22053,2351 +22053,2351 @@ CurrentCountHigh],dx**
 ## LZTIMER
 
 
-**; LZTIMER**
+; LZTIMER
 
-**;**
+;
 
-**; \*\*\* Listing 2-5 \*\*\***
+; *** Listing 2-5 ***
 
-**;**
+;
 
-**; The long-period Zen timer. (LZTIMER.ASM)**
+; The long-period Zen timer. (LZTIMER.ASM)
 
-**; Uses the 8253 timer and the BIOS time-of-day count to time the**
+; Uses the 8253 timer and the BIOS time-of-day count to time the
 
-**; performance of code that takes less than an hour to execute.**
+; performance of code that takes less than an hour to execute.
 
-**; Because interrupts are left on (in order to allow the timer**
+; Because interrupts are left on (in order to allow the timer
 
-**; interrupt to be recognized), this is less accurate than the**
+; interrupt to be recognized), this is less accurate than the
 
-**; precision Zen timer, so it is best used only to time code that
-takes**
+; precision Zen timer, so it is best used only to time code that
+takes
 
-**; more than about 54 milliseconds to execute (code that the
-precision**
+; more than about 54 milliseconds to execute (code that the
+precision
 
-**; Zen timer reports overflow on). Resolution is limited by the**
+; Zen timer reports overflow on). Resolution is limited by the
 
-**; occurrence of timer interrupts.**
+; occurrence of timer interrupts.
 
-**;**
+;
 
-**; By Michael Abrash 4/26/89**
+; By Michael Abrash 4/26/89
 
-**;**
+;
 
-**; Externally callable routines:**
+; Externally callable routines:
 
-**;**
+;
 
-**; ZTimerOn: Saves the BIOS time of day count and starts the**
+; ZTimerOn: Saves the BIOS time of day count and starts the
 
-**; long-period Zen timer.**
+; long-period Zen timer.
 
-**;**
+;
 
-**; ZTimerOff: Stops the long-period Zen timer and saves the timer**
+; ZTimerOff: Stops the long-period Zen timer and saves the timer
 
-**; count and the BIOS time-of-day count.**
+; count and the BIOS time-of-day count.
 
-**;**
+;
 
-**; ZTimerReport: Prints the time that passed between starting and**
+; ZTimerReport: Prints the time that passed between starting and
 
-**; stopping the timer.**
+; stopping the timer.
 
-**;**
+;
 
-**; Note: If either more than an hour passes or midnight falls between**
+; Note: If either more than an hour passes or midnight falls between
 
-**; calls to ZTimerOn and ZTimerOff, an error is reported. For**
+; calls to ZTimerOn and ZTimerOff, an error is reported. For
 
-**; timing code that takes more than a few minutes to execute,**
+; timing code that takes more than a few minutes to execute,
 
-**; either the DOS TIME command in a batch file before and after**
+; either the DOS TIME command in a batch file before and after
 
-**; execution of the code to time or the use of the DOS**
+; execution of the code to time or the use of the DOS
 
-**; time-of-day function in place of the long-period Zen timer is**
+; time-of-day function in place of the long-period Zen timer is
 
-**; more than adequate.**
+; more than adequate.
 
-**;**
+;
 
-**; Note: The PS/2 version is assembled by setting the symbol PS2 to
-1.**
+; Note: The PS/2 version is assembled by setting the symbol PS2 to
+1.
 
-**; PS2 must be set to 1 on PS/2 computers because the PS/2's**
+; PS2 must be set to 1 on PS/2 computers because the PS/2's
 
-**; timers are not compatible with an undocumented timer-stopping**
+; timers are not compatible with an undocumented timer-stopping
 
-**; feature of the 8253; the alternative timing approach that**
+; feature of the 8253; the alternative timing approach that
 
-**; must be used on PS/2 computers leaves a short window**
+; must be used on PS/2 computers leaves a short window
 
-**; during which the timer 0 count and the BIOS timer count may**
+; during which the timer 0 count and the BIOS timer count may
 
-**; not be synchronized. You should also set the PS2 symbol to**
+; not be synchronized. You should also set the PS2 symbol to
 
-**; 1 if you're getting erratic or obviously incorrect results.**
+; 1 if you're getting erratic or obviously incorrect results.
 
-**;**
+;
 
-**; Note: When PS2 is 0, the code relies on an undocumented 8253**
+; Note: When PS2 is 0, the code relies on an undocumented 8253
 
-**; feature to get more reliable readings. It is possible that**
+; feature to get more reliable readings. It is possible that
 
-**; the 8253 (or whatever chip is emulating the 8253) may be put**
+; the 8253 (or whatever chip is emulating the 8253) may be put
 
-**; into an undefined or incorrect state when this feature is**
+; into an undefined or incorrect state when this feature is
 
-**; used.**
+; used.
 
-**;**
+;
 
-**;
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
+;
+***************************************************************
 
-**; \* If your computer displays any hint of erratic behavior \***
+; * If your computer displays any hint of erratic behavior *
 
-**; \* after the long-period Zen timer is used, such as the floppy \***
+; * after the long-period Zen timer is used, such as the floppy *
 
-**; \* drive failing to operate properly, reboot the system, set \***
+; * drive failing to operate properly, reboot the system, set *
 
-**; \* PS2 to 1 and leave it that way! \***
+; * PS2 to 1 and leave it that way! *
 
-**;
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
+;
+***************************************************************
 
-**;**
+;
 
-**; Note: Each block of code being timed should ideally be run several**
+; Note: Each block of code being timed should ideally be run several
 
-**; times, with at least two similar readings required to**
+; times, with at least two similar readings required to
 
-**; establish a true measurement, in order to eliminate any**
+; establish a true measurement, in order to eliminate any
 
-**; variability caused by interrupts.**
+; variability caused by interrupts.
 
-**;**
+;
 
-**; Note: Interrupts must not be disabled for more than 54 ms at a**
+; Note: Interrupts must not be disabled for more than 54 ms at a
 
-**; stretch during the timing interval. Because interrupts**
+; stretch during the timing interval. Because interrupts
 
-**; are enabled, keys, mice, and other devices that generate**
+; are enabled, keys, mice, and other devices that generate
 
-**; interrupts should not be used during the timing interval.**
+; interrupts should not be used during the timing interval.
 
-**;**
+;
 
-**; Note: Any extra code running off the timer interrupt (such as**
+; Note: Any extra code running off the timer interrupt (such as
 
-**; some memory-resident utilities) wilLincrease the time**
+; some memory-resident utilities) wilLincrease the time
 
-**; measured by the Zen timer.**
+; measured by the Zen timer.
 
-**;**
+;
 
-**; Note: These routines can introduce inaccuracies of up to a few**
+; Note: These routines can introduce inaccuracies of up to a few
 
-**; tenths of a second into the system clock count for each**
+; tenths of a second into the system clock count for each
 
-**; code section timed. Consequently, it's a good idea to**
+; code section timed. Consequently, it's a good idea to
 
-**; reboot at the conclusion of timing sessions. (The**
+; reboot at the conclusion of timing sessions. (The
 
-**; battery-backed clock, if any, is not affected by the Zen**
+; battery-backed clock, if any, is not affected by the Zen
 
-**; timer.)**
+; timer.)
 
-**;**
+;
 
-**; All registers and all flags are preserved by all routines.**
+; All registers and all flags are preserved by all routines.
 
-**;**
+;
 
 
-**Code segment word public 'CODE'**
+Code segment word public 'CODE'
 
-**assume cs:Code, ds:nothing**
+assume cs:Code, ds:nothing
 
-**public ZTimerOn, ZTimerOff, ZTimerReport**
+public ZTimerOn, ZTimerOff, ZTimerReport
 
 
-**;**
+;
 
-**; Set PS2 to 0 to assemble for use on a fully 8253-compatible**
+; Set PS2 to 0 to assemble for use on a fully 8253-compatible
 
-**; system; when PS2 is 0, the readings are more reliable if the**
+; system; when PS2 is 0, the readings are more reliable if the
 
-**; computer supports the undocumented timer-stopping feature,**
+; computer supports the undocumented timer-stopping feature,
 
-**; but may be badly off if that feature is not supported. In**
+; but may be badly off if that feature is not supported. In
 
-**; fact, timer-stopping may interfere with your computer's**
+; fact, timer-stopping may interfere with your computer's
 
-**; overall operation by putting the 8253 into an undefined or**
+; overall operation by putting the 8253 into an undefined or
 
-**; incorrect state. Use with caution!!!**
+; incorrect state. Use with caution!!!
 
-**;**
+;
 
-**; Set PS2 to 1 to assemble for use on non-8253-compatible**
+; Set PS2 to 1 to assemble for use on non-8253-compatible
 
-**; systems, including PS/2 computers; when PS2 is 1, readings**
+; systems, including PS/2 computers; when PS2 is 1, readings
 
-**; may occasionally be off by 54 ms, but the code will work**
+; may occasionally be off by 54 ms, but the code will work
 
-**; properly on all systems.**
+; properly on all systems.
 
-**;**
+;
 
-**; A setting of 1 is safer and will work on more systems,**
+; A setting of 1 is safer and will work on more systems,
 
-**; while a setting of 0 produces more reliable results in systems**
+; while a setting of 0 produces more reliable results in systems
 
-**; which support the undocumented timer-stopping feature of the**
+; which support the undocumented timer-stopping feature of the
 
-**; 8253. The choice is yours.**
+; 8253. The choice is yours.
 
-**;**
+;
 
-**PS2 equ 1**
+PS2 equ 1
 
-**;**
+;
 
-**; Base address of the 8253 timer chip.**
+; Base address of the 8253 timer chip.
 
-**;**
+;
 
-**BASE\_8253 equ 40h**
+BASE_8253 equ 40h
 
-**;**
+;
 
-**; The address of the timer 0 count registers in the 8253.**
+; The address of the timer 0 count registers in the 8253.
 
-**;**
+;
 
-**TIMER\_0\_8253 equ BASE\_8253 + 0**
+TIMER_0_8253 equ BASE_8253 + 0
 
-**;**
+;
 
-**; The address of the mode register in the 8253.**
+; The address of the mode register in the 8253.
 
-**;**
+;
 
-**MODE\_8253 equ BASE\_8253 + 3**
+MODE_8253 equ BASE_8253 + 3
 
-**;**
+;
 
-**; The address of the BIOS timer count variable in the BIOS**
+; The address of the BIOS timer count variable in the BIOS
 
-**; data segment.**
+; data segment.
 
-**;**
+;
 
-**TIMER\_COUNT equ 46ch**
+TIMER_COUNT equ 46ch
 
-**;**
+;
 
-**; Macro to emulate a POPF instruction in order to fix the bug in
-some**
+; Macro to emulate a POPF instruction in order to fix the bug in
+some
 
-**; 80286 chips which allows interrupts to occur during a POPF even
-when**
+; 80286 chips which allows interrupts to occur during a POPF even
+when
 
-**; interrupts remain disabled.**
+; interrupts remain disabled.
 
-**;**
+;
 
-**MPOPF macro**
+MPOPF macro
 
-**local p1, p2**
+local p1, p2
 
-**jmp short p2**
+jmp short p2
 
-**p1: iret ;jump to pushed address & pop flags**
+p1: iret ;jump to pushed address & pop flags
 
-**p2: push cs ;construct far return address to**
+p2: push cs ;construct far return address to
 
-**call p1 ; the next instruction**
+call p1 ; the next instruction
 
-**endm**
+endm
 
 
-**;**
+;
 
-**; Macro to delay briefly to ensure that enough time has elapsed**
+; Macro to delay briefly to ensure that enough time has elapsed
 
-**; between successive I/O accesses so that the device being accessed**
+; between successive I/O accesses so that the device being accessed
 
-**; can respond to both accesses even on a very fast PC.**
+; can respond to both accesses even on a very fast PC.
 
-**;**
+;
 
-**DELAY macro**
+DELAY macro
 
-**jmp $+2**
+jmp $+2
 
-**jmp $+2**
+jmp $+2
 
-**jmp $+2**
+jmp $+2
 
-**endm**
+endm
 
 
-**StartBIOSCountLow dw ? ;BIOS count low word at the**
+StartBIOSCountLow dw ? ;BIOS count low word at the
 
-**; start of the timing period**
+; start of the timing period
 
-**StartBIOSCountHigh dw ? ;BIOS count high word at the**
+StartBIOSCountHigh dw ? ;BIOS count high word at the
 
-**; start of the timing period**
+; start of the timing period
 
-**EndBIOSCountLow dw ? ;BIOS count low word at the**
+EndBIOSCountLow dw ? ;BIOS count low word at the
 
-**; end of the timing period**
+; end of the timing period
 
-**EndBIOSCountHigh dw ? ;BIOS count high word at the**
+EndBIOSCountHigh dw ? ;BIOS count high word at the
 
-**; end of the timing period**
+; end of the timing period
 
-**EndTimedCount dw ? ;timer 0 count at the end of**
+EndTimedCount dw ? ;timer 0 count at the end of
 
-**; the timing period**
+; the timing period
 
-**ReferenceCount dw ? ;number of counts required to**
+ReferenceCount dw ? ;number of counts required to
 
-**; execute timer overhead code**
+; execute timer overhead code
 
-**;**
+;
 
-**; String printed to report results.**
+; String printed to report results.
 
-**;**
+;
 
-**OutputStr label byte**
+OutputStr label byte
 
-**db 0dh, 0ah, 'Timed count: '**
+db 0dh, 0ah, 'Timed count: '
 
-**TimedCountStr db 10 dup (?)**
+TimedCountStr db 10 dup (?)
 
-**db ' microseconds', 0dh, 0ah**
+db ' microseconds', 0dh, 0ah
 
-**db '$'**
+db '$'
 
-**;**
+;
 
-**; Temporary storage for timed count as it's divided down by powers**
+; Temporary storage for timed count as it's divided down by powers
 
-**; of ten when converting from doubleword binary to ASCII.**
+; of ten when converting from doubleword binary to ASCII.
 
-**;**
+;
 
-**CurrentCountLow dw ?**
+CurrentCountLow dw ?
 
-**CurrentCountHigh dw ?**
+CurrentCountHigh dw ?
 
-**;**
+;
 
-**; Powers of ten table used to perform division by 10 when doing**
+; Powers of ten table used to perform division by 10 when doing
 
-**; doubleword conversion from binary to ASCII.**
+; doubleword conversion from binary to ASCII.
 
-**;**
+;
 
-**PowersOfTen label word**
+PowersOfTen label word
 
-**dd 1**
+dd 1
 
-**dd 10**
+dd 10
 
-**dd 100**
+dd 100
 
-**dd 1000**
+dd 1000
 
-**dd 10000**
+dd 10000
 
-**dd 100000**
+dd 100000
 
-**dd 1000000**
+dd 1000000
 
-**dd 10000000**
+dd 10000000
 
-**dd 100000000**
+dd 100000000
 
-**dd 1000000000**
+dd 1000000000
 
-**PowersOfTenEnd label word**
+PowersOfTenEnd label word
 
-**;**
+;
 
-**; String printed to report that the high word of the BIOS count**
+; String printed to report that the high word of the BIOS count
 
-**; changed while timing (an hour elapsed or midnight was crossed),**
+; changed while timing (an hour elapsed or midnight was crossed),
 
-**; and so the count is invalid and the test needs to be rerun.**
+; and so the count is invalid and the test needs to be rerun.
 
-**;**
+;
 
-**TurnOverStr label byte**
+TurnOverStr label byte
 
-**db 0dh, 0ah**
+db 0dh, 0ah
 
-**db
-'\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*'**
+db
+'****************************************************'
 
-**db 0dh, 0ah**
+db 0dh, 0ah
 
-**db '\* Either midnight passed or an hour or more passed \*'**
+db '* Either midnight passed or an hour or more passed *'
 
-**db 0dh, 0ah**
+db 0dh, 0ah
 
-**db '\* while timing was in progress. If the former was \*'**
+db '* while timing was in progress. If the former was *'
 
-**db 0dh, 0ah**
+db 0dh, 0ah
 
-**db '\* the case, please rerun the test; if the latter \*'**
+db '* the case, please rerun the test; if the latter *'
 
-**db 0dh, 0ah**
+db 0dh, 0ah
 
-**db '\* was the case, the test code takes too long to \*'**
+db '* was the case, the test code takes too long to *'
 
-**db 0dh, 0ah**
+db 0dh, 0ah
 
-**db '\* run to be timed by the long-period Zen timer. \*'**
+db '* run to be timed by the long-period Zen timer. *'
 
-**db 0dh, 0ah**
+db 0dh, 0ah
 
-**db '\* Suggestions: use the DOS TIME command, the DOS \*'**
+db '* Suggestions: use the DOS TIME command, the DOS *'
 
-**db 0dh, 0ah**
+db 0dh, 0ah
 
-**db '\* time function, or a watch. \*'**
+db '* time function, or a watch. *'
 
-**db 0dh, 0ah**
+db 0dh, 0ah
 
-**db
-'\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*'**
+db
+'****************************************************'
 
-**db 0dh, 0ah**
+db 0dh, 0ah
 
-**db '$'**
+db '$'
 
 
-**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
+;********************************************************************
 
-**;\* Routine called to start timing. \***
+;* Routine called to start timing. *
 
-**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
+;********************************************************************
 
 
-**ZTimerOn proc near**
+ZTimerOn proc near
 
 
-**;**
+;
 
-**; Save the context of the program being timed.**
+; Save the context of the program being timed.
 
-**;**
+;
 
-**push ax**
+push ax
 
-**pushf**
+pushf
 
-**;**
+;
 
-**; Set timer 0 of the 8253 to mode 2 (divide-by-N), to cause**
+; Set timer 0 of the 8253 to mode 2 (divide-by-N), to cause
 
-**; linear counting rather than count-by-two counting. Also stops**
+; linear counting rather than count-by-two counting. Also stops
 
-**; timer 0 until the timer count is loaded, except on PS/2**
+; timer 0 until the timer count is loaded, except on PS/2
 
-**; computers.**
+; computers.
 
-**;**
+;
 
-**mov al,00110100b ;mode 2**
+mov al,00110100b ;mode 2
 
-**out MODE\_8253,al**
+out MODE_8253,al
 
-**;**
+;
 
-**; Set the timer count to 0, so we know we won't get another**
+; Set the timer count to 0, so we know we won't get another
 
-**; timer interrupt right away.**
+; timer interrupt right away.
 
-**; Note: this introduces an inaccuracy of up to 54 ms in the system**
+; Note: this introduces an inaccuracy of up to 54 ms in the system
 
-**; clock count each time it is executed.**
+; clock count each time it is executed.
 
-**;**
+;
 
-**DELAY**
+DELAY
 
-**sub al,al**
+sub al,al
 
-**out TIMER\_0\_8253,al ;lsb**
+out TIMER_0_8253,al ;lsb
 
-**DELAY**
+DELAY
 
-**out TIMER\_0\_8253,al ;msb**
+out TIMER_0_8253,al ;msb
 
-**;**
+;
 
-**; In case interrupts are disabled, enable interrupts briefly to
-allow**
+; In case interrupts are disabled, enable interrupts briefly to
+allow
 
-**; the interrupt generated when switching from mode 3 to mode 2 to be**
+; the interrupt generated when switching from mode 3 to mode 2 to be
 
-**; recognized. Interrupts must be enabled for at least 210 ns to
-allow**
+; recognized. Interrupts must be enabled for at least 210 ns to
+allow
 
-**; time for that interrupt to occur. Here, 10 jumps are used for the**
+; time for that interrupt to occur. Here, 10 jumps are used for the
 
-**; delay to ensure that the delay time will be more than long enough**
+; delay to ensure that the delay time will be more than long enough
 
-**; even on a very fast PC.**
+; even on a very fast PC.
 
-**;**
+;
 
-**pushf**
+pushf
 
-**sti**
+sti
 
-**rept 10**
+rept 10
 
-**jmp $+2**
+jmp $+2
 
-**endm**
+endm
 
-**MPOPF**
+MPOPF
 
-**;**
+;
 
-**; Store the timing start BIOS count.**
+; Store the timing start BIOS count.
 
-**; (Since the timer count was just set to 0, the BIOS count will**
+; (Since the timer count was just set to 0, the BIOS count will
 
-**; stay the same for the next 54 ms, so we don't need to disable**
+; stay the same for the next 54 ms, so we don't need to disable
 
-**; interrupts in order to avoid getting a half-changed count.)**
+; interrupts in order to avoid getting a half-changed count.)
 
-**;**
+;
 
-**push ds**
+push ds
 
-**sub ax,ax**
+sub ax,ax
 
-**mov ds,ax**
+mov ds,ax
 
-**mov ax,ds:[TIMER\_COUNT+2]**
+mov ax,ds:[TIMER_COUNT+2]
 
-**mov cs:[StartBIOSCountHigh],ax**
+mov cs:[StartBIOSCountHigh],ax
 
-**mov ax,ds:[TIMER\_COUNT]**
+mov ax,ds:[TIMER_COUNT]
 
-**mov cs:[StartBIOSCountLow],ax**
+mov cs:[StartBIOSCountLow],ax
 
-**pop ds**
+pop ds
 
-**;**
+;
 
-**; Set the timer count to 0 again to start the timing interval.**
+; Set the timer count to 0 again to start the timing interval.
 
-**;**
+;
 
-**mov al,00110100b ;set up to load initial**
+mov al,00110100b ;set up to load initial
 
-**out MODE\_8253,al ; timer count**
+out MODE_8253,al ; timer count
 
-**DELAY**
+DELAY
 
-**sub al,al**
+sub al,al
 
-**out TIMER\_0\_8253,al ;load count lsb**
+out TIMER_0_8253,al ;load count lsb
 
-**DELAY**
+DELAY
 
-**out TIMER\_0\_8253,al ;load count msb**
+out TIMER_0_8253,al ;load count msb
 
-**;**
+;
 
-**; Restore the context of the program being timed and return to it.**
+; Restore the context of the program being timed and return to it.
 
-**;**
+;
 
-**MPOPF**
+MPOPF
 
-**pop ax**
+pop ax
 
-**ret**
+ret
 
 
-**ZTimerOn endp**
+ZTimerOn endp
 
 
-**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
+;********************************************************************
 
-**;\* Routine called to stop timing and get count. \***
+;* Routine called to stop timing and get count. *
 
-**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
+;********************************************************************
 
 
-**ZTimerOff proc near**
+ZTimerOff proc near
 
 
-**;**
+;
 
-**; Save the context of the program being timed.**
+; Save the context of the program being timed.
 
-**;**
+;
 
-**pushf**
+pushf
 
-**push ax**
+push ax
 
-**push cx**
+push cx
 
-**;**
+;
 
-**; In case interrupts are disabled, enable interrupts briefly to
-allow**
+; In case interrupts are disabled, enable interrupts briefly to
+allow
 
-**; any pending timer interrupt to be handled. Interrupts must be**
+; any pending timer interrupt to be handled. Interrupts must be
 
-**; enabled for at least 210 ns to allow time for that interrupt to**
+; enabled for at least 210 ns to allow time for that interrupt to
 
-**; occur. Here, 10 jumps are used for the delay to ensure that the**
+; occur. Here, 10 jumps are used for the delay to ensure that the
 
-**; delay time will be more than long enough even on a very fast PC.**
+; delay time will be more than long enough even on a very fast PC.
 
-**;**
+;
 
-**sti**
+sti
 
-**rept 10**
+rept 10
 
-**jmp $+2**
+jmp $+2
 
-**endm**
+endm
 
 
-**;**
+;
 
-**; Latch the timer count.**
+; Latch the timer count.
 
-**;**
+;
 
 
-**if PS2**
+if PS2
 
 
-**mov al,00000000b**
+mov al,00000000b
 
-**out MODE\_8253,al ;latch timer 0 count**
+out MODE_8253,al ;latch timer 0 count
 
-**;**
+;
 
-**; This is where a one-instruction-long window exists on the PS/2.**
+; This is where a one-instruction-long window exists on the PS/2.
 
-**; The timer count and the BIOS count can lose synchronization;**
+; The timer count and the BIOS count can lose synchronization;
 
-**; since the timer keeps counting after it's latched, it can turn**
+; since the timer keeps counting after it's latched, it can turn
 
-**; over right after it's latched and cause the BIOS count to turn**
+; over right after it's latched and cause the BIOS count to turn
 
-**; over before interrupts are disabled, leaving us with the timer**
+; over before interrupts are disabled, leaving us with the timer
 
-**; count from before the timer turned over coupled with the BIOS**
+; count from before the timer turned over coupled with the BIOS
 
-**; count from after the timer turned over. The result is a count**
+; count from after the timer turned over. The result is a count
 
-**; that's 54 ms too long.**
+; that's 54 ms too long.
 
-**;**
+;
 
-****
 
-**else**
 
+else
 
-**;**
 
-**; Set timer 0 to mode 2 (divide-by-N), waiting for a 2-byte count**
+;
 
-**; load, which stops timer 0 until the count is loaded. (Only works**
+; Set timer 0 to mode 2 (divide-by-N), waiting for a 2-byte count
 
-**; on fully 8253-compatible chips.)**
+; load, which stops timer 0 until the count is loaded. (Only works
 
-**;**
+; on fully 8253-compatible chips.)
 
-**mov al,00110100b ;mode 2**
+;
 
-**out MODE\_8253,al**
+mov al,00110100b ;mode 2
 
-**DELAY**
+out MODE_8253,al
 
-**mov al,00000000b ;latch timer 0 count**
+DELAY
 
-**out MODE\_8253,al**
+mov al,00000000b ;latch timer 0 count
 
+out MODE_8253,al
 
-**endif**
 
+endif
 
-**cli ;stop the BIOS count**
 
-**;**
+cli ;stop the BIOS count
 
-**; Read the BIOS count. (Since interrupts are disabled, the BIOS**
+;
 
-**; count won't change.)**
+; Read the BIOS count. (Since interrupts are disabled, the BIOS
 
-**;**
+; count won't change.)
 
-**push ds**
+;
 
-**sub ax,ax**
+push ds
 
-**mov ds,ax**
+sub ax,ax
 
-**mov ax,ds:[TIMER\_COUNT+2]**
+mov ds,ax
 
-**mov cs:[EndBIOSCountHigh],ax**
+mov ax,ds:[TIMER_COUNT+2]
 
-**mov ax,ds:[TIMER\_COUNT]**
+mov cs:[EndBIOSCountHigh],ax
 
-**mov cs:[EndBIOSCountLow],ax**
+mov ax,ds:[TIMER_COUNT]
 
-**pop ds**
+mov cs:[EndBIOSCountLow],ax
 
-**;**
+pop ds
 
-**; Read the timer count and save it.**
+;
 
-**;**
+; Read the timer count and save it.
 
-**in al,TIMER\_0\_8253 ;lsb**
+;
 
-**DELAY**
+in al,TIMER_0_8253 ;lsb
 
-**mov ah,al**
+DELAY
 
-**in al,TIMER\_0\_8253 ;msb**
+mov ah,al
 
-**xchg ah,al**
+in al,TIMER_0_8253 ;msb
 
-**neg ax ;convert from countdown**
+xchg ah,al
 
-**; remaining to elapsed**
+neg ax ;convert from countdown
 
-**; count**
+; remaining to elapsed
 
-**mov cs:[EndTimedCount],ax**
+; count
 
-**;**
+mov cs:[EndTimedCount],ax
 
-**; Restart timer 0, which is still waiting for an initial count**
+;
 
-**; to be loaded.**
+; Restart timer 0, which is still waiting for an initial count
 
-**;**
+; to be loaded.
 
+;
 
-**ife PS2**
 
+ife PS2
 
-**DELAY**
 
-**mov al,00110100b ;mode 2, waiting to load a**
+DELAY
 
-**; 2-byte count**
+mov al,00110100b ;mode 2, waiting to load a
 
-**out MODE\_8253,al**
+; 2-byte count
 
-**DELAY**
+out MODE_8253,al
 
-**sub al,al**
+DELAY
 
-**out TIMER\_0\_8253,al ;lsb**
+sub al,al
 
-**DELAY**
+out TIMER_0_8253,al ;lsb
 
-**mov al,ah**
+DELAY
 
-**out TIMER\_0\_8253,al ;msb**
+mov al,ah
 
-**DELAY**
+out TIMER_0_8253,al ;msb
 
+DELAY
 
-**endif**
 
+endif
 
-**sti ;let the BIOS count continue**
 
-**;**
+sti ;let the BIOS count continue
 
-**; Time a zero-length code fragment, to get a reference for how**
+;
 
-**; much overhead this routine has. Time it 16 times and average it,**
+; Time a zero-length code fragment, to get a reference for how
 
-**; for accuracy, rounding the result.**
+; much overhead this routine has. Time it 16 times and average it,
 
-**;**
+; for accuracy, rounding the result.
 
-**mov cs:[ReferenceCount],0**
+;
 
-**mov cx,16**
+mov cs:[ReferenceCount],0
 
-**cli ;interrupts off to allow a**
+mov cx,16
 
-**; precise reference count**
+cli ;interrupts off to allow a
 
-**RefLoop:**
+; precise reference count
 
-**call ReferenceZTimerOn**
+RefLoop:
 
-**call ReferenceZTimerOff**
+call ReferenceZTimerOn
 
-**loop RefLoop**
+call ReferenceZTimerOff
 
-**sti**
+loop RefLoop
 
-**add cs:[ReferenceCount],8 ;total + (0.5 \* 16)**
+sti
 
-**mov cl,4**
+add cs:[ReferenceCount],8 ;total + (0.5 * 16)
 
-**shr cs:[ReferenceCount],cl ;(total) / 16 + 0.5**
+mov cl,4
 
-**;**
+shr cs:[ReferenceCount],cl ;(total) / 16 + 0.5
 
-**; Restore the context of the program being timed and return to it.**
+;
 
-**;**
+; Restore the context of the program being timed and return to it.
 
-**pop cx**
+;
 
-**pop ax**
+pop cx
 
-**MPOPF**
+pop ax
 
-**ret**
+MPOPF
 
+ret
 
-**ZTimerOff endp**
 
+ZTimerOff endp
 
-**;**
 
-**; Called by ZTimerOff to start the timer for overhead measurements.**
+;
 
-**;**
+; Called by ZTimerOff to start the timer for overhead measurements.
 
+;
 
-**ReferenceZTimerOn proc near**
 
-**;**
+ReferenceZTimerOn proc near
 
-**; Save the context of the program being timed.**
+;
 
-**;**
+; Save the context of the program being timed.
 
-**push ax**
+;
 
-**pushf**
+push ax
 
-**;**
+pushf
 
-**; Set timer 0 of the 8253 to mode 2 (divide-by-N), to cause**
+;
 
-**; linear counting rather than count-by-two counting.**
+; Set timer 0 of the 8253 to mode 2 (divide-by-N), to cause
 
-**;**
+; linear counting rather than count-by-two counting.
 
-**mov al,00110100b ;mode 2**
+;
 
-**out MODE\_8253,al**
+mov al,00110100b ;mode 2
 
-**;**
+out MODE_8253,al
 
-**; Set the timer count to 0.**
+;
 
-**;**
+; Set the timer count to 0.
 
-**DELAY**
+;
 
-**sub al,al**
+DELAY
 
-**out TIMER\_0\_8253,al ;lsb**
+sub al,al
 
-**DELAY**
+out TIMER_0_8253,al ;lsb
 
-**out TIMER\_0\_8253,al ;msb**
+DELAY
 
-**;**
+out TIMER_0_8253,al ;msb
 
-**; Restore the context of the program being timed and return to it.**
+;
 
-**;**
+; Restore the context of the program being timed and return to it.
 
-**MPOPF**
+;
 
-**pop ax**
+MPOPF
 
-**ret**
+pop ax
 
+ret
 
-**ReferenceZTimerOn endp**
 
+ReferenceZTimerOn endp
 
-**;**
 
-**; Called by ZTimerOff to stop the timer and add the result to**
+;
 
-**; ReferenceCount for overhead measurements. Doesn't need to look**
+; Called by ZTimerOff to stop the timer and add the result to
 
-**; at the BIOS count because timing a zero-length code fragment**
+; ReferenceCount for overhead measurements. Doesn't need to look
 
-**; isn't going to take anywhere near 54 ms.**
+; at the BIOS count because timing a zero-length code fragment
 
-**;**
+; isn't going to take anywhere near 54 ms.
 
+;
 
-**ReferenceZTimerOff proc near**
 
-**;**
+ReferenceZTimerOff proc near
 
-**; Save the context of the program being timed.**
+;
 
-**;**
+; Save the context of the program being timed.
 
-**pushf**
+;
 
-**push ax**
+pushf
 
-**push cx**
+push ax
 
+push cx
 
-**;**
 
-**; Match the interrupt-window delay in ZTimerOff.**
+;
 
-**;**
+; Match the interrupt-window delay in ZTimerOff.
 
-**sti**
+;
 
-**rept 10**
+sti
 
-**jmp $+2**
+rept 10
 
-**endm**
+jmp $+2
 
+endm
 
-**mov al,00000000b**
 
-**out MODE\_8253,al ;latch timer**
+mov al,00000000b
 
-**;**
+out MODE_8253,al ;latch timer
 
-**; Read the count and save it.**
+;
 
-**;**
+; Read the count and save it.
 
-**DELAY**
+;
 
-**in al,TIMER\_0\_8253 ;lsb**
+DELAY
 
-**DELAY**
+in al,TIMER_0_8253 ;lsb
 
-**mov ah,al**
+DELAY
 
-**in al,TIMER\_0\_8253 ;msb**
+mov ah,al
 
-**xchg ah,al**
+in al,TIMER_0_8253 ;msb
 
-**neg ax ;convert from countdown**
+xchg ah,al
 
-**; remaining to elapsed**
+neg ax ;convert from countdown
 
-**; count**
+; remaining to elapsed
 
-**add cs:[ReferenceCount],ax**
+; count
 
-**;**
+add cs:[ReferenceCount],ax
 
-**; Restore the context and return.**
+;
 
-**;**
+; Restore the context and return.
 
-**pop cx**
+;
 
-**pop ax**
+pop cx
 
-**MPOPF**
+pop ax
 
-**ret**
+MPOPF
 
+ret
 
-**ReferenceZTimerOff endp**
 
+ReferenceZTimerOff endp
 
-**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
 
-**;\* Routine called to report timing results. \***
+;********************************************************************
 
-**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
+;* Routine called to report timing results. *
 
+;********************************************************************
 
-**ZTimerReport proc near**
 
+ZTimerReport proc near
 
-**pushf**
 
-**push ax**
+pushf
 
-**push bx**
+push ax
 
-**push cx**
+push bx
 
-**push dx**
+push cx
 
-**push si**
+push dx
 
-**push di**
+push si
 
-**push ds**
+push di
 
-**;**
+push ds
 
-**push cs ;DOS functions require that DS point**
+;
 
-**pop ds ; to text to be displayed on the screen**
+push cs ;DOS functions require that DS point
 
-**assume ds:Code**
+pop ds ; to text to be displayed on the screen
 
-**;**
+assume ds:Code
 
-**; See if midnight or more than an hour passed during timing. If so,**
+;
 
-**; notify the user.**
+; See if midnight or more than an hour passed during timing. If so,
 
-**;**
+; notify the user.
 
-**mov ax,[StartBIOSCountHigh]**
+;
 
-**cmp ax,[EndBIOSCountHigh]**
+mov ax,[StartBIOSCountHigh]
 
-**jz CalcBIOSTime ;hour count didn't change,**
+cmp ax,[EndBIOSCountHigh]
 
-**; so everything's fine**
+jz CalcBIOSTime ;hour count didn't change,
 
-**inc ax**
+; so everything's fine
 
-**cmp ax,[EndBIOSCountHigh]**
+inc ax
 
-**jnz TestTooLong ;midnight or two hour**
+cmp ax,[EndBIOSCountHigh]
 
-**; boundaries passed, so the**
+jnz TestTooLong ;midnight or two hour
 
-**; results are no good**
+; boundaries passed, so the
 
-**mov ax,[EndBIOSCountLow]**
+; results are no good
 
-**cmp ax,[StartBIOSCountLow]**
+mov ax,[EndBIOSCountLow]
 
-**jb CalcBIOSTime ;a single hour boundary**
+cmp ax,[StartBIOSCountLow]
 
-**; passed-that's OK, so long as**
+jb CalcBIOSTime ;a single hour boundary
 
-**; the total time wasn't more**
+; passed-that's OK, so long as
 
-**; than an hour**
+; the total time wasn't more
 
+; than an hour
 
-**;**
 
-**; Over an hour elapsed or midnight passed during timing, which**
+;
 
-**; renders the results invalid. Notify the user. This misses the**
+; Over an hour elapsed or midnight passed during timing, which
 
-**; case where a multiple of 24 hours has passed, but we'll rely**
+; renders the results invalid. Notify the user. This misses the
 
-**; on the perspicacity of the user to detect that case.**
+; case where a multiple of 24 hours has passed, but we'll rely
 
-**;**
+; on the perspicacity of the user to detect that case.
 
-**TestTooLong:**
+;
 
-**mov ah,9**
+TestTooLong:
 
-**mov dx,offset TurnOverStr**
+mov ah,9
 
-**int 21h**
+mov dx,offset TurnOverStr
 
-**jmp short ZTimerReportDone**
+int 21h
 
-**;**
+jmp short ZTimerReportDone
 
-**; Convert the BIOS time to microseconds.**
+;
 
-**;**
+; Convert the BIOS time to microseconds.
 
-**CalcBIOSTime:**
+;
 
-**mov ax,[EndBIOSCountLow]**
+CalcBIOSTime:
 
-**sub ax,[StartBIOSCountLow]**
+mov ax,[EndBIOSCountLow]
 
-**mov dx,54925 ;number of microseconds each**
+sub ax,[StartBIOSCountLow]
 
-**; BIOS count represents**
+mov dx,54925 ;number of microseconds each
 
-**mul dx**
+; BIOS count represents
 
-**mov bx,ax ;set aside BIOS count in**
+mul dx
 
-**mov cx,dx ; microseconds**
+mov bx,ax ;set aside BIOS count in
 
-**;**
+mov cx,dx ; microseconds
 
-**; Convert timer count to microseconds.**
+;
 
-**;**
+; Convert timer count to microseconds.
 
-**mov ax,[EndTimedCount]**
+;
 
-**mov si,8381**
+mov ax,[EndTimedCount]
 
-**mul si**
+mov si,8381
 
-**mov si,10000**
+mul si
 
-**div si ;\* .8381 = \* 8381 / 10000**
+mov si,10000
 
-**;**
+div si ;* .8381 = * 8381 / 10000
 
-**; Add timer and BIOS counts together to get an overall time in**
+;
 
-**; microseconds.**
+; Add timer and BIOS counts together to get an overall time in
 
-**;**
+; microseconds.
 
-**add bx,ax**
+;
 
-**adc cx,0**
+add bx,ax
 
-**;**
+adc cx,0
 
-**; Subtract the timer overhead and save the result.**
+;
 
-**;**
+; Subtract the timer overhead and save the result.
 
-**mov ax,[ReferenceCount]**
+;
 
-**mov si,8381 ;convert the reference count**
+mov ax,[ReferenceCount]
 
-**mul si ; to microseconds**
+mov si,8381 ;convert the reference count
 
-**mov si,10000**
+mul si ; to microseconds
 
-**div si ;\* .8381 = \* 8381 / 10000**
+mov si,10000
 
-**sub bx,ax**
+div si ;* .8381 = * 8381 / 10000
 
-**sbb cx,0**
+sub bx,ax
 
-**mov [CurrentCountLow],bx**
+sbb cx,0
 
-**mov [CurrentCountHigh],cx**
+mov [CurrentCountLow],bx
 
-**;**
+mov [CurrentCountHigh],cx
 
-**; Convert the result to an ASCII string by trial subtractions of**
+;
 
-**; powers of 10.**
+; Convert the result to an ASCII string by trial subtractions of
 
-**;**
+; powers of 10.
 
-**mov di,offset PowersOfTenEnd -offset PowersOfTen -4**
+;
 
-**mov si,offset TimedCountStr**
+mov di,offset PowersOfTenEnd -offset PowersOfTen -4
 
-**CTSNextDigit:**
+mov si,offset TimedCountStr
 
-**mov bl,'0'**
+CTSNextDigit:
 
-**CTSLoop:**
+mov bl,'0'
 
-**mov ax,[CurrentCountLow]**
+CTSLoop:
 
-**mov dx,[CurrentCountHigh]**
+mov ax,[CurrentCountLow]
 
-**sub ax,PowersOfTen[di]**
+mov dx,[CurrentCountHigh]
 
-**sbb dx,PowersOfTen[di+2]**
+sub ax,PowersOfTen[di]
 
-**jc CTSNextPowerDown**
+sbb dx,PowersOfTen[di+2]
 
-**inc bl**
+jc CTSNextPowerDown
 
-**mov [CurrentCountLow],ax**
+inc bl
 
-**mov [CurrentCountHigh],dx**
+mov [CurrentCountLow],ax
 
-**jmp CTSLoop**
+mov [CurrentCountHigh],dx
 
-**CTSNextPowerDown:**
+jmp CTSLoop
 
-**mov [si],bl**
+CTSNextPowerDown:
 
-**inc si**
+mov [si],bl
 
-**sub di,4**
+inc si
 
-**jns CTSNextDigit**
+sub di,4
 
-**;**
+jns CTSNextDigit
 
-**;**
+;
 
-**; Print the results.**
+;
 
-**;**
+; Print the results.
 
-**mov ah,9**
+;
 
-**mov dx,offset OutputStr**
+mov ah,9
 
-**int 21h**
+mov dx,offset OutputStr
 
-**;**
+int 21h
 
-**ZTimerReportDone:**
+;
 
-**pop ds**
+ZTimerReportDone:
 
-**pop di**
+pop ds
 
-**pop si**
+pop di
 
-**pop dx**
+pop si
 
-**pop cx**
+pop dx
 
-**pop bx**
+pop cx
 
-**pop ax**
+pop bx
 
-**MPOPF**
+pop ax
 
-**ret**
+MPOPF
 
+ret
 
-**ZTimerReport endp**
 
+ZTimerReport endp
 
-**Code ends**
 
-**end**
+Code ends
+
+end
 
 
 
 ## PZTEST
 
 
-**; PZTEST**
+; PZTEST
 
-**;**
+;
 
-**; \*\*\* Listing 2-2 \*\*\***
+; *** Listing 2-2 ***
 
-**;**
+;
 
-**; Program to measure performance of code that takes less than**
+; Program to measure performance of code that takes less than
 
-**; 54 ms to execute. (PZTEST.ASM)**
+; 54 ms to execute. (PZTEST.ASM)
 
-**;**
+;
 
-**; Link with PZTIMER.ASM (Listing 2-1). PZTEST.BAT (Listing 2-4)**
+; Link with PZTIMER.ASM (Listing 2-1). PZTEST.BAT (Listing 2-4)
 
-**; can be used to assemble and link both files. Code to be**
+; can be used to assemble and link both files. Code to be
 
-**; measured must be in the file TESTCODE; Listing 2-3 shows**
+; measured must be in the file TESTCODE; Listing 2-3 shows
 
-**; a sample TESTCODE file.**
+; a sample TESTCODE file.
 
-**;**
+;
 
-**; By Michael Abrash 4/26/89**
+; By Michael Abrash 4/26/89
 
-**;**
+;
 
-**mystack segment para stack 'STACK'**
+mystack segment para stack 'STACK'
 
-**db 512 dup(?)**
+db 512 dup(?)
 
-**mystack ends**
+mystack ends
 
-**;**
+;
 
-**Code segment para public 'CODE'**
+Code segment para public 'CODE'
 
-**assume cs:Code, ds:Code**
+assume cs:Code, ds:Code
 
-**extrn ZTimerOn:near, ZTimerOff:near, ZTimerReport:near**
+extrn ZTimerOn:near, ZTimerOff:near, ZTimerReport:near
 
-**Start proc near**
+Start proc near
 
-**push cs**
+push cs
 
-**pop ds ;set DS to point to the code segment,**
+pop ds ;set DS to point to the code segment,
 
-**; so data as well as code can easily**
+; so data as well as code can easily
 
-**; be included in TESTCODE**
+; be included in TESTCODE
 
-**;**
+;
 
-**include TESTCODE ;code to be measured, including**
+include TESTCODE ;code to be measured, including
 
-**; calls to ZTimerOn and ZTimerOff**
+; calls to ZTimerOn and ZTimerOff
 
-**;**
+;
 
-**; Display the results.**
+; Display the results.
 
-**;**
+;
 
-**call ZTimerReport**
+call ZTimerReport
 
-**;**
+;
 
-**; Terminate the program.**
+; Terminate the program.
 
-**;**
+;
 
-**mov ah,4ch**
+mov ah,4ch
 
-**int 21h**
+int 21h
 
-**Start endp**
+Start endp
 
-**Code ends**
+Code ends
 
-**end Start**
+end Start
 
 
 
 ## PZTIME.BAT
 
 
-**PZTIME.BAT**
+PZTIME.BAT
 
-**echo off**
+echo off
 
-**rem**
+rem
 
-**rem \*\*\* Listing 2-4 \*\*\***
+rem *** Listing 2-4 ***
 
-**rem**
+rem
 
-**rem
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
+rem
+***************************************************************
 
-**rem \* Batch file PZTIME.BAT, which builds and runs the precision \***
+rem * Batch file PZTIME.BAT, which builds and runs the precision *
 
-**rem \* Zen timer program PZTEST.EXE to time the code named as the \***
+rem * Zen timer program PZTEST.EXE to time the code named as the *
 
-**rem \* command-line parameter. Listing 2-1 must be named \***
+rem * command-line parameter. Listing 2-1 must be named *
 
-**rem \* PZTIMER.ASM, and Listing 2-2 must be named PZTEST.ASM. To \***
+rem * PZTIMER.ASM, and Listing 2-2 must be named PZTEST.ASM. To *
 
-**rem \* time the code in LST2-3, you'd type the DOS command: \***
+rem * time the code in LST2-3, you'd type the DOS command: *
 
-**rem \* \***
+rem * *
 
-**rem \* pztime lst2-3 \***
+rem * pztime lst2-3 *
 
-**rem \* \***
+rem * *
 
-**rem \* Note that MASM and LINK must be in the current directory or
-\***
+rem * Note that MASM and LINK must be in the current directory or
+*
 
-**rem \* on the current path in order for this batch file to work. \***
+rem * on the current path in order for this batch file to work. *
 
-**rem \* \***
+rem * *
 
-**rem \* This batch file can be speeded up by assembling PZTIMER.ASM
-\***
+rem * This batch file can be speeded up by assembling PZTIMER.ASM
+*
 
-**rem \* once, then removing the lines: \***
+rem * once, then removing the lines: *
 
-**rem \* \***
+rem * *
 
-**rem \* masm pztimer; \***
+rem * masm pztimer; *
 
-**rem \* if errorlevel 1 goto errorend \***
+rem * if errorlevel 1 goto errorend *
 
-**rem \* \***
+rem * *
 
-**rem \* from this file. \***
+rem * from this file. *
 
-**rem \* \***
+rem * *
 
-**rem \* By Michael Abrash 4/26/89 \***
+rem * By Michael Abrash 4/26/89 *
 
-**rem
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
+rem
+***************************************************************
 
-**rem**
+rem
 
-**rem Make sure a file to test was specified.**
+rem Make sure a file to test was specified.
 
-**rem**
+rem
 
-**if not x%1==x goto ckexist**
+if not x%1==x goto ckexist
 
-**echo
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
+echo
+***************************************************************
 
-**echo \* Please specify a file to test. \***
+echo * Please specify a file to test. *
 
-**echo
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
+echo
+***************************************************************
 
-**goto end**
+goto end
 
-**rem**
+rem
 
-**rem Make sure the file exists.**
+rem Make sure the file exists.
 
-**rem**
+rem
 
-**:ckexist**
+:ckexist
 
-**if exist %1 goto docopy**
+if exist %1 goto docopy
 
-**echo
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
+echo
+***************************************************************
 
-**echo \* The specified file, "%1," doesn't exist.**
+echo * The specified file, "%1," doesn't exist.
 
-**echo
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
+echo
+***************************************************************
 
-**goto end**
+goto end
 
-**rem**
+rem
 
-**rem copy the file to measure to TESTCODE.**
+rem copy the file to measure to TESTCODE.
 
-**rem**
+rem
 
-**:docopy**
+:docopy
 
-**copy %1 testcode**
+copy %1 testcode
 
-**masm pztest;**
+masm pztest;
 
-**if errorlevel 1 goto errorend**
+if errorlevel 1 goto errorend
 
-**masm pztimer;**
+masm pztimer;
 
-**if errorlevel 1 goto errorend**
+if errorlevel 1 goto errorend
 
-**link pztest+pztimer;**
+link pztest+pztimer;
 
-**if errorlevel 1 goto errorend**
+if errorlevel 1 goto errorend
 
-**pztest**
+pztest
 
-**goto end**
+goto end
 
-**:errorend**
+:errorend
 
-**echo
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
+echo
+***************************************************************
 
-**echo \* An error occurred while building the precision Zen timer. \***
+echo * An error occurred while building the precision Zen timer. *
 
-**echo
-\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
+echo
+***************************************************************
 
-**:end**
+:end
 
 
 
 ## PZTIMER
 
 
-**; PZTIMER**
+; PZTIMER
 
-**;**
+;
 
-**; \*\*\* Listing 2-1 \*\*\***
+; *** Listing 2-1 ***
 
-**;**
+;
 
-**; The precision Zen timer (PZTIMER.ASM)**
+; The precision Zen timer (PZTIMER.ASM)
 
-**;**
+;
 
-**; Uses the 8253 timer to time the performance of code that takes**
+; Uses the 8253 timer to time the performance of code that takes
 
-**; less than about 54 milliseconds to execute, with a resolution**
+; less than about 54 milliseconds to execute, with a resolution
 
-**; of better than 10 microseconds.**
+; of better than 10 microseconds.
 
-**;**
+;
 
-**; By Michael Abrash 4/26/89**
+; By Michael Abrash 4/26/89
 
-**;**
+;
 
-**; Externally callable routines:**
+; Externally callable routines:
 
-**;**
+;
 
-**; ZTimerOn: Starts the Zen timer, with interrupts disabled.**
+; ZTimerOn: Starts the Zen timer, with interrupts disabled.
 
-**;**
+;
 
-**; ZTimerOff: Stops the Zen timer, saves the timer count,**
+; ZTimerOff: Stops the Zen timer, saves the timer count,
 
-**; times the overhead code, and restores interrupts to the**
+; times the overhead code, and restores interrupts to the
 
-**; state they were in when ZTimerOn was called.**
+; state they were in when ZTimerOn was called.
 
-**;**
+;
 
-**; ZTimerReport: Prints the net time that passed between starting**
+; ZTimerReport: Prints the net time that passed between starting
 
-**; and stopping the timer.**
+; and stopping the timer.
 
-**;**
+;
 
-**; Note: If longer than about 54 ms passes between ZTimerOn and**
+; Note: If longer than about 54 ms passes between ZTimerOn and
 
-**; ZTimerOff calls, the timer turns over and the count is**
+; ZTimerOff calls, the timer turns over and the count is
 
-**; inaccurate. When this happens, an error message is displayed**
+; inaccurate. When this happens, an error message is displayed
 
-**; instead of a count. The long-period Zen timer should be used**
+; instead of a count. The long-period Zen timer should be used
 
-**; in such cases.**
+; in such cases.
 
-**;**
+;
 
-**; Note: Interrupts \*MUST\* be left off between calls to ZTimerOn**
+; Note: Interrupts *MUST* be left off between calls to ZTimerOn
 
-**; and ZTimerOff for accurate timing and for detection of**
+; and ZTimerOff for accurate timing and for detection of
 
-**; timer overflow.**
+; timer overflow.
 
-**;**
+;
 
-**; Note: These routines can introduce slight inaccuracies into the**
+; Note: These routines can introduce slight inaccuracies into the
 
-**; system clock count for each code section timed even if**
+; system clock count for each code section timed even if
 
-**; timer 0 doesn't overflow. If timer 0 does overflow, the**
+; timer 0 doesn't overflow. If timer 0 does overflow, the
 
-**; system clock can become slow by virtually any amount of**
+; system clock can become slow by virtually any amount of
 
-**; time, since the system clock can't advance while the**
+; time, since the system clock can't advance while the
 
-**; precison timer is timing. Consequently, it's a good idea**
+; precison timer is timing. Consequently, it's a good idea
 
-**; to reboot at the end of each timing session. (The**
+; to reboot at the end of each timing session. (The
 
-**; battery-backed clock, if any, is not affected by the Zen**
+; battery-backed clock, if any, is not affected by the Zen
 
-**; timer.)**
+; timer.)
 
-**;**
+;
 
-**; All registers, and all flags except the interrupt flag, are**
+; All registers, and all flags except the interrupt flag, are
 
-**; preserved by all routines. Interrupts are enabled and then
-disabled**
+; preserved by all routines. Interrupts are enabled and then
+disabled
 
-**; by ZTimerOn, and are restored by ZTimerOff to the state they were**
+; by ZTimerOn, and are restored by ZTimerOff to the state they were
 
-**; in when ZTimerOn was called.**
+; in when ZTimerOn was called.
 
-**;**
+;
 
 
-**Code segment word public 'CODE'**
+Code segment word public 'CODE'
 
-**assume cs:Code, ds:nothing**
+assume cs:Code, ds:nothing
 
-**public ZTimerOn, ZTimerOff, ZTimerReport**
+public ZTimerOn, ZTimerOff, ZTimerReport
 
 
-**;**
+;
 
-**; Base address of the 8253 timer chip.**
+; Base address of the 8253 timer chip.
 
-**;**
+;
 
-**BASE\_8253 equ 40h**
+BASE_8253 equ 40h
 
-**;**
+;
 
-**; The address of the timer 0 count registers in the 8253.**
+; The address of the timer 0 count registers in the 8253.
 
-**;**
+;
 
-**TIMER\_0\_8253 equ BASE\_8253 + 0**
+TIMER_0_8253 equ BASE_8253 + 0
 
-**;**
+;
 
-**; The address of the mode register in the 8253.**
+; The address of the mode register in the 8253.
 
-**;**
+;
 
-**MODE\_8253 equ BASE\_8253 + 3**
+MODE_8253 equ BASE_8253 + 3
 
-**;**
+;
 
-**; The address of Operation Command Word 3 in the 8259 Programmable**
+; The address of Operation Command Word 3 in the 8259 Programmable
 
-**; Interrupt Controller (PIC) (write only, and writable only when**
+; Interrupt Controller (PIC) (write only, and writable only when
 
-**; bit 4 of the byte written to this address is 0 and bit 3 is 1).**
+; bit 4 of the byte written to this address is 0 and bit 3 is 1).
 
-**;**
+;
 
-**OCW3 equ 20h**
+OCW3 equ 20h
 
-**;**
+;
 
-**; The address of the Interrupt Request register in the 8259 PIC**
+; The address of the Interrupt Request register in the 8259 PIC
 
-**; (read only, and readable only when bit 1 of OCW3 = 1 and bit 0**
+; (read only, and readable only when bit 1 of OCW3 = 1 and bit 0
 
-**; of OCW3 = 0).**
+; of OCW3 = 0).
 
-**;**
+;
 
-**IRR equ 20h**
+IRR equ 20h
 
-**;**
+;
 
-**; Macro to emulate a POPF instruction in order to fix the bug in
-some**
+; Macro to emulate a POPF instruction in order to fix the bug in
+some
 
-**; 80286 chips which allows interrupts to occur during a POPF even
-when**
+; 80286 chips which allows interrupts to occur during a POPF even
+when
 
-**; interrupts remain disabled.**
+; interrupts remain disabled.
 
-**;**
+;
 
-**MPOPF macro**
+MPOPF macro
 
-**local p1, p2**
+local p1, p2
 
-**jmp short p2**
+jmp short p2
 
-**p1: iret ;jump to pushed address & pop flags**
+p1: iret ;jump to pushed address & pop flags
 
-**p2: push cs ;construct far return address to**
+p2: push cs ;construct far return address to
 
-**call p1 ; the next instruction**
+call p1 ; the next instruction
 
-**endm**
+endm
 
 
-**;**
+;
 
-**; Macro to delay briefly to ensure that enough time has elapsed**
+; Macro to delay briefly to ensure that enough time has elapsed
 
-**; between successive I/O accesses so that the device being accessed**
+; between successive I/O accesses so that the device being accessed
 
-**; can respond to both accesses even on a very fast PC.**
+; can respond to both accesses even on a very fast PC.
 
-**;**
+;
 
-**DELAY macro**
+DELAY macro
 
-**jmp $+2**
+jmp $+2
 
-**jmp $+2**
+jmp $+2
 
-**jmp $+2**
+jmp $+2
 
-**endm**
+endm
 
 
-**OriginalFlags db ? ;storage for upper byte of**
+OriginalFlags db ? ;storage for upper byte of
 
-**; FLAGS register when**
+; FLAGS register when
 
-**; ZTimerOn called**
+; ZTimerOn called
 
-**TimedCount dw ? ;timer 0 count when the timer**
+TimedCount dw ? ;timer 0 count when the timer
 
-**; is stopped**
+; is stopped
 
-**ReferenceCount dw ? ;number of counts required to**
+ReferenceCount dw ? ;number of counts required to
 
-**; execute timer overhead code**
+; execute timer overhead code
 
-**OverflowFlag db ? ;used to indicate whether the**
+OverflowFlag db ? ;used to indicate whether the
 
-**; timer overflowed during the**
+; timer overflowed during the
 
-**; timing interval**
+; timing interval
 
-**;**
+;
 
-**; String printed to report results.**
+; String printed to report results.
 
-**;**
+;
 
-**OutputStr label byte**
+OutputStr label byte
 
-**db 0dh, 0ah, 'Timed count: ', 5 dup (?)**
+db 0dh, 0ah, 'Timed count: ', 5 dup (?)
 
-**ASCIICountEnd label byte**
+ASCIICountEnd label byte
 
-**db ' microseconds', 0dh, 0ah**
+db ' microseconds', 0dh, 0ah
 
-**db '$'**
+db '$'
 
-**;**
+;
 
-**; String printed to report timer overflow.**
+; String printed to report timer overflow.
 
-**;**
+;
 
-**OverflowStr label byte**
+OverflowStr label byte
 
-**db 0dh, 0ah**
+db 0dh, 0ah
 
-**db
-'\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*'**
+db
+'****************************************************'
 
-**db 0dh, 0ah**
+db 0dh, 0ah
 
-**db '\* The timer overflowed, so the interval timed was \*'**
+db '* The timer overflowed, so the interval timed was *'
 
-**db 0dh, 0ah**
+db 0dh, 0ah
 
-**db '\* too long for the precision timer to measure. \*'**
+db '* too long for the precision timer to measure. *'
 
-**db 0dh, 0ah**
+db 0dh, 0ah
 
-**db '\* Please perform the timing test again with the \*'**
+db '* Please perform the timing test again with the *'
 
-**db 0dh, 0ah**
+db 0dh, 0ah
 
-**db '\* long-period timer. \*'**
+db '* long-period timer. *'
 
-**db 0dh, 0ah**
+db 0dh, 0ah
 
-**db
-'\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*'**
+db
+'****************************************************'
 
-**db 0dh, 0ah**
+db 0dh, 0ah
 
-**db '$'**
+db '$'
 
 
-**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
+;********************************************************************
 
-**;\* Routine called to start timing. \***
+;* Routine called to start timing. *
 
-**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
+;********************************************************************
 
 
-**ZTimerOn proc near**
+ZTimerOn proc near
 
 
-**;**
+;
 
-**; Save the context of the program being timed.**
+; Save the context of the program being timed.
 
-**;**
+;
 
-**push ax**
+push ax
 
-**pushf**
+pushf
 
-**pop ax ;get flags so we can keep**
+pop ax ;get flags so we can keep
 
-**; interrupts off when leaving**
+; interrupts off when leaving
 
-**; this routine**
+; this routine
 
-**mov cs:[OriginalFlags],ah ;remember the state of the**
+mov cs:[OriginalFlags],ah ;remember the state of the
 
-**; Interrupt flag**
+; Interrupt flag
 
-**and ah,0fdh ;set pushed interrupt flag**
+and ah,0fdh ;set pushed interrupt flag
 
-**; to 0**
+; to 0
 
-**push ax**
+push ax
 
-**;**
+;
 
-**; Turn on interrupts, so the timer interrupt can occur if it's**
+; Turn on interrupts, so the timer interrupt can occur if it's
 
-**; pending.**
+; pending.
 
-**;**
+;
 
-**sti**
+sti
 
-**;**
+;
 
-**; Set timer 0 of the 8253 to mode 2 (divide-by-N), to cause**
+; Set timer 0 of the 8253 to mode 2 (divide-by-N), to cause
 
-**; linear counting rather than count-by-two counting. Also**
+; linear counting rather than count-by-two counting. Also
 
-**; leaves the 8253 waiting for the initial timer 0 count to**
+; leaves the 8253 waiting for the initial timer 0 count to
 
-**; be loaded.**
+; be loaded.
 
-**;**
+;
 
-**mov al,00110100b ;mode 2**
+mov al,00110100b ;mode 2
 
-**out MODE\_8253,al**
+out MODE_8253,al
 
-**;**
+;
 
-**; Set the timer count to 0, so we know we won't get another**
+; Set the timer count to 0, so we know we won't get another
 
-**; timer interrupt right away.**
+; timer interrupt right away.
 
-**; Note: this introduces an inaccuracy of up to 54 ms in the system**
+; Note: this introduces an inaccuracy of up to 54 ms in the system
 
-**; clock count each time it is executed.**
+; clock count each time it is executed.
 
-**;**
+;
 
-**DELAY**
+DELAY
 
-**sub al,al**
+sub al,al
 
-**out TIMER\_0\_8253,al ;lsb**
+out TIMER_0_8253,al ;lsb
 
-**DELAY**
+DELAY
 
-**out TIMER\_0\_8253,al ;msb**
+out TIMER_0_8253,al ;msb
 
-**;**
+;
 
-**; Wait before clearing interrupts to allow the interrupt generated**
+; Wait before clearing interrupts to allow the interrupt generated
 
-**; when switching from mode 3 to mode 2 to be recognized. The delay**
+; when switching from mode 3 to mode 2 to be recognized. The delay
 
-**; must be at least 210 ns long to allow time for that interrupt to**
+; must be at least 210 ns long to allow time for that interrupt to
 
-**; occur. Here, 10 jumps are used for the delay to ensure that the**
+; occur. Here, 10 jumps are used for the delay to ensure that the
 
-**; delay time will be more than long enough even on a very fast PC.**
+; delay time will be more than long enough even on a very fast PC.
 
-**;**
+;
 
-**rept 10**
+rept 10
 
-**jmp $+2**
+jmp $+2
 
-**endm**
+endm
 
-**;**
+;
 
-**; Disable interrupts to get an accurate count.**
+; Disable interrupts to get an accurate count.
 
-**;**
+;
 
-**cli**
+cli
 
-**;**
+;
 
-**; Set the timer count to 0 again to start the timing interval.**
+; Set the timer count to 0 again to start the timing interval.
 
-**;**
+;
 
-**mov al,00110100b ;set up to load initial**
+mov al,00110100b ;set up to load initial
 
-**out MODE\_8253,al ; timer count**
+out MODE_8253,al ; timer count
 
-**DELAY**
+DELAY
 
-**sub al,al**
+sub al,al
 
-**out TIMER\_0\_8253,al ;load count lsb**
+out TIMER_0_8253,al ;load count lsb
 
-**DELAY**
+DELAY
 
-**out TIMER\_0\_8253,al ;load count msb**
+out TIMER_0_8253,al ;load count msb
 
-**;**
+;
 
-**; Restore the context and return.**
+; Restore the context and return.
 
-**;**
+;
 
-**MPOPF ;keeps interrupts off**
+MPOPF ;keeps interrupts off
 
-**pop ax**
+pop ax
 
-**ret**
+ret
 
 
-**ZTimerOn endp**
+ZTimerOn endp
 
 
-**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
+;********************************************************************
 
-**;\* Routine called to stop timing and get count. \***
+;* Routine called to stop timing and get count. *
 
-**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
+;********************************************************************
 
 
-**ZTimerOff proc near**
+ZTimerOff proc near
 
 
-**;**
+;
 
-**; Save the context of the program being timed.**
+; Save the context of the program being timed.
 
-**;**
+;
 
-**push ax**
+push ax
 
-**push cx**
+push cx
 
-**pushf**
+pushf
 
-**;**
+;
 
-**; Latch the count.**
+; Latch the count.
 
-**;**
+;
 
-**mov al,00000000b ;latch timer 0**
+mov al,00000000b ;latch timer 0
 
-**out MODE\_8253,al**
+out MODE_8253,al
 
-**;**
+;
 
-**; See if the timer has overflowed by checking the 8259 for a pending**
+; See if the timer has overflowed by checking the 8259 for a pending
 
-**; timer interrupt.**
+; timer interrupt.
 
-**;**
+;
 
-**mov al,00001010b ;OCW3, set up to read**
+mov al,00001010b ;OCW3, set up to read
 
-**out OCW3,al ; Interrupt Request register**
+out OCW3,al ; Interrupt Request register
 
-**DELAY**
+DELAY
 
-**in al,IRR ;read Interrupt Request**
+in al,IRR ;read Interrupt Request
 
-**; register**
+; register
 
-**and al,1 ;set AL to 1 if IRQ0 (the**
+and al,1 ;set AL to 1 if IRQ0 (the
 
-**; timer interrupt) is pending**
+; timer interrupt) is pending
 
-**mov cs:[OverflowFlag],al ;store the timer overflow**
+mov cs:[OverflowFlag],al ;store the timer overflow
 
-**; status**
+; status
 
-**;**
+;
 
-**; Allow interrupts to happen again.**
+; Allow interrupts to happen again.
 
-**;**
+;
 
-**sti**
+sti
 
-**;**
+;
 
-**; Read out the count we latched earlier.**
+; Read out the count we latched earlier.
 
-**;**
+;
 
-**in al,TIMER\_0\_8253 ;least significant byte**
+in al,TIMER_0_8253 ;least significant byte
 
-**DELAY**
+DELAY
 
-**mov ah,al**
+mov ah,al
 
-**in al,TIMER\_0\_8253 ;most significant byte**
+in al,TIMER_0_8253 ;most significant byte
 
-**xchg ah,al**
+xchg ah,al
 
-**neg ax ;convert from countdown**
+neg ax ;convert from countdown
 
-**; remaining to elapsed**
+; remaining to elapsed
 
-**; count**
+; count
 
-**mov cs:[TimedCount],ax**
+mov cs:[TimedCount],ax
 
-**; Time a zero-length code fragment, to get a reference for how**
+; Time a zero-length code fragment, to get a reference for how
 
-**; much overhead this routine has. Time it 16 times and average it,**
+; much overhead this routine has. Time it 16 times and average it,
 
-**; for accuracy, rounding the result.**
+; for accuracy, rounding the result.
 
-**;**
+;
 
-**mov cs:[ReferenceCount],0**
+mov cs:[ReferenceCount],0
 
-**mov cx,16**
+mov cx,16
 
-**cli ;interrupts off to allow a**
+cli ;interrupts off to allow a
 
-**; precise reference count**
+; precise reference count
 
-**RefLoop:**
+RefLoop:
 
-**call ReferenceZTimerOn**
+call ReferenceZTimerOn
 
-**call ReferenceZTimerOff**
+call ReferenceZTimerOff
 
-**loop RefLoop**
+loop RefLoop
 
-**sti**
+sti
 
-**add cs:[ReferenceCount],8 ;total + (0.5 \* 16)**
+add cs:[ReferenceCount],8 ;total + (0.5 * 16)
 
-**mov cl,4**
+mov cl,4
 
-**shr cs:[ReferenceCount],cl ;(total) / 16 + 0.5**
+shr cs:[ReferenceCount],cl ;(total) / 16 + 0.5
 
-**;**
+;
 
-**; Restore originaLinterrupt state.**
+; Restore originaLinterrupt state.
 
-**;**
+;
 
-**pop ax ;retrieve flags when called**
+pop ax ;retrieve flags when called
 
-**mov ch,cs:[OriginalFlags] ;get back the original upper**
+mov ch,cs:[OriginalFlags] ;get back the original upper
 
-**; byte of the FLAGS register**
+; byte of the FLAGS register
 
-**and ch,not 0fdh ;only care about original**
+and ch,not 0fdh ;only care about original
 
-**; interrupt flag...**
+; interrupt flag...
 
-**and ah,0fdh ;...keep all other flags in**
+and ah,0fdh ;...keep all other flags in
 
-**; their current condition**
+; their current condition
 
-**or ah,ch ;make flags word with original**
+or ah,ch ;make flags word with original
 
-**; interrupt flag**
+; interrupt flag
 
-**push ax ;prepare flags to be popped**
+push ax ;prepare flags to be popped
 
-**;**
+;
 
-**; Restore the context of the program being timed and return to it.**
+; Restore the context of the program being timed and return to it.
 
-**;**
+;
 
-**MPOPF ;restore the flags with the**
+MPOPF ;restore the flags with the
 
-**; originaLinterrupt state**
+; originaLinterrupt state
 
-**pop cx**
+pop cx
 
-**pop ax**
+pop ax
 
-**ret**
+ret
 
 
-**ZTimerOff endp**
+ZTimerOff endp
 
 
-**;**
+;
 
-**; Called by ZTimerOff to start timer for overhead measurements.**
+; Called by ZTimerOff to start timer for overhead measurements.
 
-**;**
+;
 
 
-**ReferenceZTimerOn proc near**
+ReferenceZTimerOn proc near
 
-**;**
+;
 
-**; Save the context of the program being timed.**
+; Save the context of the program being timed.
 
-**;**
+;
 
-**push ax**
+push ax
 
-**pushf ;interrupts are already off**
+pushf ;interrupts are already off
 
-**;**
+;
 
-**; Set timer 0 of the 8253 to mode 2 (divide-by-N), to cause**
+; Set timer 0 of the 8253 to mode 2 (divide-by-N), to cause
 
-**; linear counting rather than count-by-two counting.**
+; linear counting rather than count-by-two counting.
 
-**;**
+;
 
-**mov al,00110100b ;set up to load**
+mov al,00110100b ;set up to load
 
-**out MODE\_8253,al ; initial timer count**
+out MODE_8253,al ; initial timer count
 
-**DELAY**
+DELAY
 
-**;**
+;
 
-**; Set the timer count to 0.**
+; Set the timer count to 0.
 
-**;**
+;
 
-**sub al,al**
+sub al,al
 
-**out TIMER\_0\_8253,al ;load count lsb**
+out TIMER_0_8253,al ;load count lsb
 
-**DELAY**
+DELAY
 
-**out TIMER\_0\_8253,al ;load count msb**
+out TIMER_0_8253,al ;load count msb
 
-**;**
+;
 
-**; Restore the context of the program being timed and return to it.**
+; Restore the context of the program being timed and return to it.
 
-**;**
+;
 
-**MPOPF**
+MPOPF
 
-**pop ax**
+pop ax
 
-**ret**
+ret
 
 
-**ReferenceZTimerOn endp**
+ReferenceZTimerOn endp
 
 
-**;**
+;
 
-**; Called by ZTimerOff to stop timer and add result to ReferenceCount**
+; Called by ZTimerOff to stop timer and add result to ReferenceCount
 
-**; for overhead measurements.**
+; for overhead measurements.
 
-**;**
+;
 
 
-**ReferenceZTimerOff proc near**
+ReferenceZTimerOff proc near
 
-**;**
+;
 
-**; Save the context of the program being timed.**
+; Save the context of the program being timed.
 
-**;**
+;
 
-**push ax**
+push ax
 
-**push cx**
+push cx
 
-**pushf**
+pushf
 
-**;**
+;
 
-**; Latch the count and read it.**
+; Latch the count and read it.
 
-**;**
+;
 
-**mov al,00000000b ;latch timer 0**
+mov al,00000000b ;latch timer 0
 
-**out MODE\_8253,al**
+out MODE_8253,al
 
-**DELAY**
+DELAY
 
-**in al,TIMER\_0\_8253 ;lsb**
+in al,TIMER_0_8253 ;lsb
 
-**DELAY**
+DELAY
 
-**mov ah,al**
+mov ah,al
 
-**in al,TIMER\_0\_8253 ;msb**
+in al,TIMER_0_8253 ;msb
 
-**xchg ah,al**
+xchg ah,al
 
-**neg ax ;convert from countdown**
+neg ax ;convert from countdown
 
-**; remaining to amount**
+; remaining to amount
 
-**; counted down**
+; counted down
 
-**add cs:[ReferenceCount],ax**
+add cs:[ReferenceCount],ax
 
-**;**
+;
 
-**; Restore the context of the program being timed and return to it.**
+; Restore the context of the program being timed and return to it.
 
-**;**
+;
 
-**MPOPF**
+MPOPF
 
-**pop cx**
+pop cx
 
-**pop ax**
+pop ax
 
-**ret**
+ret
 
 
-**ReferenceZTimerOff endp**
+ReferenceZTimerOff endp
 
 
-**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
+;********************************************************************
 
-**;\* Routine called to report timing results. \***
+;* Routine called to report timing results. *
 
-**;\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
+;********************************************************************
 
 
-**ZTimerReport proc near**
+ZTimerReport proc near
 
 
-**pushf**
+pushf
 
-**push ax**
+push ax
 
-**push bx**
+push bx
 
-**push cx**
+push cx
 
-**push dx**
+push dx
 
-**push si**
+push si
 
-**push ds**
+push ds
 
-**;**
+;
 
-**push cs ;DOS functions require that DS point**
+push cs ;DOS functions require that DS point
 
-**pop ds ; to text to be displayed on the screen**
+pop ds ; to text to be displayed on the screen
 
-**assume ds:Code**
+assume ds:Code
 
-**;**
+;
 
-**; Check for timer 0 overflow.**
+; Check for timer 0 overflow.
 
-**;**
+;
 
-**cmp [OverflowFlag],0**
+cmp [OverflowFlag],0
 
-**jz PrintGoodCount**
+jz PrintGoodCount
 
-**mov dx,offset OverflowStr**
+mov dx,offset OverflowStr
 
-**mov ah,9**
+mov ah,9
 
-**int 21h**
+int 21h
 
-**jmp short EndZTimerReport**
+jmp short EndZTimerReport
 
-**;**
+;
 
-**; Convert net count to decimal ASCII in microseconds.**
+; Convert net count to decimal ASCII in microseconds.
 
-**;**
+;
 
-**PrintGoodCount:**
+PrintGoodCount:
 
-**mov ax,[TimedCount]**
+mov ax,[TimedCount]
 
-**sub ax,[ReferenceCount]**
+sub ax,[ReferenceCount]
 
-**mov si,offset ASCIICountEnd -1**
+mov si,offset ASCIICountEnd -1
 
-**;**
+;
 
-**; Convert count to microseconds by multiplying by .8381.**
+; Convert count to microseconds by multiplying by .8381.
 
-**;**
+;
 
-**mov dx,8381**
+mov dx,8381
 
-**mul dx**
+mul dx
 
-**mov bx,10000**
+mov bx,10000
 
-**div bx ;\* .8381 = \* 8381 / 10000**
+div bx ;* .8381 = * 8381 / 10000
 
-**;**
+;
 
-**; Convert time in microseconds to 5 decimal ASCII digits.**
+; Convert time in microseconds to 5 decimal ASCII digits.
 
-**;**
+;
 
-**mov bx,10**
+mov bx,10
 
-**mov cx,5**
+mov cx,5
 
-**CTSLoop:**
+CTSLoop:
 
-**sub dx,dx**
+sub dx,dx
 
-**div bx**
+div bx
 
-**add dl,'0'**
+add dl,'0'
 
-**mov [si],dl**
+mov [si],dl
 
-**dec si**
+dec si
 
-**loop CTSLoop**
+loop CTSLoop
 
-**;**
+;
 
-**; Print the results.**
+; Print the results.
 
-**;**
+;
 
-**mov ah,9**
+mov ah,9
 
-**mov dx,offset OutputStr**
+mov dx,offset OutputStr
 
-**int 21h**
+int 21h
 
-**;**
+;
 
-**EndZTimerReport:**
+EndZTimerReport:
 
-**pop ds**
+pop ds
 
-**pop si**
+pop si
 
-**pop dx**
+pop dx
 
-**pop cx**
+pop cx
 
-**pop bx**
+pop bx
 
-**pop ax**
+pop ax
 
-**MPOPF**
+MPOPF
 
-**ret**
+ret
 
 
-**ZTimerReport endp**
+ZTimerReport endp
 
 
-**Code ends**
+Code ends
 
-**end**
+end
