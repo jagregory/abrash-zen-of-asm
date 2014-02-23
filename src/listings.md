@@ -1398,7 +1398,6 @@ Skip:
 
 ## Listing 3-1
 
-
 ```nasm
 ;
 ; *** Listing 3-1 ***
@@ -2080,7 +2079,7 @@ call ZTimerOff
 
 ## Listing 7-7
 
-
+```nasm
 ;
 ; *** Listing 7-7 ***
 ;
@@ -2125,10 +2124,11 @@ mov bx,offset TestArray ;point to array
 ; high bits stripped
 call StripHighBits ;strip the high bits
 call ZTimerOff
+```
 
 ## Listing 7-8
 
-
+```nasm
 ;
 ; *** Listing 7-8 ***
 ;
@@ -2177,10 +2177,11 @@ mov bx,offset TestArray ;point to array
 ; high bits stripped
 call StripHighBits ;strip the high bits
 call ZTimerOff
+```
 
 ## Listing 7-9
 
-
+```nasm
 ;
 ; *** Listing 7-9 ***
 ;
@@ -2210,10 +2211,11 @@ adc ah,dl ; to the 16-bit sum
 inc si ;point to next byte
 loop SumArrayLoop
 call ZTimerOff
+```
 
 ## Listing 7-10
 
-
+```nasm
 ;
 ; *** Listing 7-10 ***
 ;
@@ -2246,10 +2248,11 @@ adc ah,dl ; to the 16-bit sum
 inc si ;point to next byte
 loop SumArrayLoop
 call ZTimerOff
+```
 
 ## Listing 7-11
 
-
+```nasm
 ;
 ; *** Listing 7-11 ***
 ;
@@ -2282,10 +2285,11 @@ adc ah,dl ; to the 16-bit sum
 inc bx ;point to next byte
 loop SumArrayLoop
 call ZTimerOff
+```
 
 ## Listing 7-12
 
-
+```nasm
 ;
 ; *** Listing 7-12 ***
 ;
@@ -2316,10 +2320,11 @@ adc ah,0 ; to the 16-bit sum
 inc bx ;point to next byte
 loop SumArrayLoop
 call ZTimerOff
+```
 
 ## Listing 7-13
 
-
+```nasm
 ;
 ; *** Listing 7-13 ***
 ;
@@ -2351,10 +2356,11 @@ adc ah,[MemZero] ; to the 16-bit sum
 inc bx ;point to next byte
 loop SumArrayLoop
 call ZTimerOff
+```
 
 ## Listing 7-14
 
-
+```nasm
 ;
 ; *** Listing 7-14 ***
 ;
@@ -2397,10 +2403,11 @@ DOUBLE_BYTE
 BYTE_TO_DOUBLE=BYTE_TO_DOUBLE+1
 endm
 call ZTimerOff
+```
 
 ## Listing 7-15
 
-
+```nasm
 ;
 ; *** Listing 7-15 ***
 ;
@@ -2478,10 +2485,11 @@ DOUBLE_BYTE
 BYTE_TO_DOUBLE=BYTE_TO_DOUBLE+1
 endm
 call ZTimerOff
+```
 
 ## Listing 7-16
 
-
+```nasm
 ;
 ; *** Listing 7-16 ***
 ;
@@ -2530,10 +2538,11 @@ DOUBLE_BYTE
 BYTE_TO_DOUBLE=BYTE_TO_DOUBLE+1
 endm
 call ZTimerOff
+```
 
 ## Listing 7-17
 
-
+```nasm
 ;
 ; *** Listing 7-17 ***
 ;
@@ -2589,10 +2598,11 @@ DOUBLE_BYTE
 BYTE_TO_DOUBLE=BYTE_TO_DOUBLE+1
 endm
 call ZTimerOff
+```
 
 ## Listing 7-18
 
-
+```nasm
 ;
 ; *** Listing 7-18 ***
 ;
@@ -2645,10 +2655,11 @@ DOUBLE_BYTE
 BYTE_TO_DOUBLE=BYTE_TO_DOUBLE+1
 endm
 call ZTimerOff
+```
 
 ## Listing 7-19
 
-
+```nasm
 ;
 ; *** Listing 7-19 ***
 ;
@@ -2664,9 +2675,11 @@ mov dx,80 ;amount to multiply by
 mul dx
 endm
 call ZTimerOff
+```
 
 ## Listing 7-20
 
+```nasm
 ;
 ; *** Listing 7-20 ***
 ;
@@ -2686,9 +2699,11 @@ shl ax,1 ;times 64
 add ax,cx ;times 80 (times 64 + times 16)
 endm
 call ZTimerOff
+```
 
 ## Listing 7-21
 
+```nasm
 ;
 ; *** Listing 7-21 ***
 ;
@@ -2721,9 +2736,11 @@ mov ax,[Times80Table+bx]
 ;look up the answer
 endm
 call ZTimerOff
+```
 
 ## Listing 8-1
 
+```nasm
 ;
 ; *** Listing 8-1 ***
 ;
@@ -2742,9 +2759,11 @@ mov ah,[SourceValue]
 mov [DestValue],ah
 endm
 call ZTimerOff
+```
 
 ## Listing 8-2
 
+```nasm
 ;
 ; *** Listing 8-2 ***
 ;
@@ -2763,9 +2782,11 @@ mov al,[SourceValue]
 mov [DestValue],al
 endm
 call ZTimerOff
+```
 
 ## Listing 8-3
 
+```nasm
 ;
 ; *** Listing 8-3 ***
 ;
@@ -2782,9 +2803,11 @@ rept 1000
 cmp [TestValue],0
 endm
 call ZTimerOff
+```
 
 ## Listing 8-4
 
+```nasm
 ;
 ; *** Listing 8-4 ***
 ;
@@ -2803,9 +2826,11 @@ mov ax,[TestValue]
 and ax,ax
 endm
 call ZTimerOff
+```
 
 ## Listing 8-5
 
+```nasm
 ;
 ; *** Listing 8-5 ***
 ;
@@ -2824,9 +2849,11 @@ mov ax,1
 mov [InitialValue],ax
 endm
 call ZTimerOff
+```
 
 ## Listing 8-6
 
+```nasm
 ;
 ; *** Listing 8-6 ***
 ;
@@ -2843,9 +2870,11 @@ rept 1000
 mov [InitialValue],1
 endm
 call ZTimerOff
+```
 
 ## Listing 8-7
 
+```nasm
 ;
 ; *** Listing 8-7 ***
 ;
@@ -2864,9 +2893,11 @@ sub ax,ax
 mov [InitialValue],ax
 endm
 call ZTimerOff
+```
 
 ## Listing 8-8
 
+```nasm
 ;
 ; *** Listing 8-8 ***
 ;
@@ -2877,9 +2908,11 @@ rept 1000
 cmp al,1
 endm
 call ZTimerOff
+```
 
 ## Listing 8-9
 
+```nasm
 ;
 ; *** Listing 8-9 ***
 ;
@@ -2891,9 +2924,11 @@ rept 1000
 cmp bl,1
 endm
 call ZTimerOff
+```
 
 ## Listing 8-10
 
+```nasm
 ;
 ; *** Listing 8-10 ***
 ;
@@ -2912,9 +2947,11 @@ or byte ptr es:[410h],20h
 ; 80-column color
 endm
 call ZTimerOff
+```
 
 ## Listing 8-11
 
+```nasm
 ;
 ; *** Listing 8-11 ***
 ;
@@ -2933,9 +2970,11 @@ or al,20h ;set the adapter bits to select
 mov es:[410h],al ;set the new equipment flag
 endm
 call ZTimerOff
+```
 
 ## Listing 8-12
 
+```nasm
 ;
 ; *** Listing 8-12 ***
 ;
@@ -2974,9 +3013,11 @@ inc si
 inc di
 loop ProcessingLoop ;do the next element
 call ZTimerOff
+```
 
 ## Listing 8-13
 
+```nasm
 ;
 ; *** Listing 8-13 ***
 ;
@@ -3015,9 +3056,11 @@ inc si
 inc di
 loop ProcessingLoop ;do the next element
 call ZTimerOff
+```
 
 ## Listing 8-14
 
+```nasm
 ;
 ; *** Listing 8-14 ***
 ;
@@ -3040,9 +3083,11 @@ inc bx ;point to the next array element
 popf ;get back the sign flag
 jns AddLoop ;do the next element, if any
 call ZTimerOff
+```
 
 ## Listing 8-15
 
+```nasm
 ;
 ; *** Listing 8-15 ***
 ;
@@ -3065,9 +3110,11 @@ inc bx ;point to the next array element
 sahf ;get back the sign flag
 jns AddLoop ;do the next element, if any
 call ZTimerOff
+```
 
 ## Listing 8-16
 
+```nasm
 ;
 ; *** Listing 8-16 ***
 ;
@@ -3092,9 +3139,11 @@ jmp AddLoop ;do the next element
 EndAddLoop:
 inc bx ;adjust BX for the final addition
 call ZTimerOff
+```
 
 ## Listing 8-17
 
+```nasm
 ;
 ; *** Listing 8-17 ***
 ;
@@ -3120,9 +3169,11 @@ jns AddLoop ;do the next element, if any
 EndAddLoop:
 inc bx ;adjust BX for the final addition
 call ZTimerOff
+```
 
 ## Listing 9-1
 
+```nasm
 ;
 ; *** Listing 9-1 ***
 ;
@@ -3148,9 +3199,11 @@ mov [MemVar2],ax ; variable to be initialized
 mov [MemVar3],ax
 endm
 call ZTimerOff
+```
 
 ## Listing 9-2
 
+```nasm
 ;
 ; *** Listing 9-2 ***
 ;
@@ -3175,9 +3228,11 @@ mov [MemVar2],0ffffh ; variable as an immediate
 mov [MemVar3],0ffffh ; operand
 endm
 call ZTimerOff
+```
 
 ## Listing 9-3
 
+```nasm
 ;
 ; *** Listing 9-3 ***
 ;
@@ -3193,9 +3248,11 @@ jnz $+2 ;just jumps to the next line if
 ; Z is not set (never jumps)
 endm
 call ZTimerOff
+```
 
 ## Listing 9-4
 
+```nasm
 ;
 ; *** Listing 9-4 ***
 ;
@@ -3210,9 +3267,11 @@ jnz $+2 ;just jumps to the next line if
 ; Z is not set (never jumps)
 endm
 call ZTimerOff
+```
 
 ## Listing 9-5
 
+```nasm
 ;
 ; *** Listing 9-5 ***
 ;
@@ -3235,7 +3294,7 @@ cmp cx,3
 jz ValueWas3
 cmp cx,4
 jz ValueWas4
-; <none of the above\>
+; <none of the above>
 ValueWas1:
 ValueWas2:
 ValueWas3:
@@ -3251,9 +3310,11 @@ TEST_VALUE = (TEST_VALUE MOD 5)+1 ;cycle the test value from
 ; 1 to 4
 endm
 call ZTimerOff
+```
 
 ## Listing 9-6
 
+```nasm
 ;
 ; *** Listing 9-6 ***
 ;
@@ -3276,7 +3337,7 @@ dec cx
 jz ValueWas3
 dec cx
 jz ValueWas4
-; <none of the above\>
+; <none of the above>
 ValueWas1:
 ValueWas2:
 ValueWas3:
@@ -3292,9 +3353,11 @@ TEST_VALUE = (TEST_VALUE MOD 5)+1 ;cycle the test value from
 ; 0 to 3
 endm
 call ZTimerOff
+```
 
 ## Listing 9-7
 
+```nasm
 ;
 ; *** Listing 9-7 ***
 ;
@@ -3308,9 +3371,11 @@ dec dx ;16-bit register DEC
 ; register-specific form of DEC)
 jnz TestLoop
 call ZTimerOff
+```
 
 ## Listing 9-8
 
+```nasm
 ;
 ; *** Listing 9-8 ***
 ;
@@ -3325,9 +3390,11 @@ sub dx,1 ;decrement DX by subtracting 1 from
 ; extended mod-reg-rm form of SUB)
 jnz TestLoop
 call ZTimerOff
+```
 
 ## Listing 9-9
 
+```nsam
 ;
 ; *** Listing 9-9 ***
 ;
@@ -3342,9 +3409,11 @@ dec dx ; it twice (2 bytes long, uses
 ; 2 16-bit-register-specific DECs)
 jnz TestLoop
 call ZTimerOff
+```
 
 ## Listing 9-10
 
+```nasm
 ;
 ; *** Listing 9-10 ***
 ;
@@ -3358,9 +3427,11 @@ dec dl ;8-bit register DEC
 ; form of DEC)
 jnz TestLoop
 call ZTimerOff
+```
 
 ## Listing 9-11
 
+```nasm
 ;
 ; *** Listing 9-11 ***
 ;
@@ -3379,9 +3450,11 @@ inc ax ;AL will never turn over, so AH
 ; will never be affected
 cmp al,8 ;count up to 8
 jbe TestLoop
+```
 
 ## Listing 9-12
 
+```nasm
 ;
 ; *** Listing 9-12 ***
 ;
@@ -3403,16 +3476,18 @@ OuterLoop:
 mov ch,10 ;inner loop is performed 10 times
 ; each time through the outer loop
 InnerLoop:
-;<<<working code goes here\>\>\>
+;<<<working code goes here>>>
 dec ch ;count down inner loop
 jnz InnerLoop
 dec cx ;CH is always 0 at this point, so
 ; we can use the shorter & faster
 ; word DEC to count down CL
 jnz OuterLoop
+```
 
 ## Listing 9-13
 
+```nasm
 ;
 ; *** Listing 9-13 ***
 ;
@@ -3449,9 +3524,11 @@ adc [di],ax ; together-C flag still set
 ; from last addition
 loop AdditionLoop ;add the next word of each
 ; variable together
+```
 
 ## Listing 9-14
 
+```nasm
 ;
 ; *** Listing 9-14 ***
 ;
@@ -3490,9 +3567,11 @@ cbw ;make it a word
 stosw ;save the word value
 loop ProcessingLoop ;do the next element
 call ZTimerOff
+```
 
 ## Listing 9-15
 
+```nasm
 ;
 ; *** Listing 9-15 ***
 ;
@@ -3531,11 +3610,12 @@ sub ah,ah ;make it a word
 stosw ;save the word value
 loop ProcessingLoop ;do the next element
 call ZTimerOff
+```
 
 ## Listing 9-16
 
+```nasm
 ;
-
 ;
 ; *** Listing 9-16 ***
 ;
@@ -3577,9 +3657,11 @@ lodsb ;get the next element
 stosw ;save the word value
 loop ProcessingLoop ;do the next element
 call ZTimerOff
+```
 
 ## Listing 9-17
 
+```nasm
 ;
 ; *** Listing 9-17 ***
 ;
@@ -3610,9 +3692,11 @@ pop cx ;get back the loop count
 stosb ;save the modified byte
 loop ProcessingLoop
 call ZTimerOff
+```
 
 ## Listing 9-18
 
+```nasm
 ;
 ; *** Listing 9-18 ***
 ;
@@ -3647,9 +3731,11 @@ xchg cl,dl ;put the shift count back
 stosb ;save the modified byte
 loop ProcessingLoop
 call ZTimerOff
+```
 
 ## Listing 9-19
 
+```nasm
 ;
 ; *** Listing 9-19 ***
 ;
@@ -3668,9 +3754,11 @@ sub al,[Dest] ;subtract [Dest] from AL
 ; is performed
 endm
 call ZTimerOff
+```
 
 ## Listing 9-20
 
+```nasm
 ;
 ; *** Listing 9-20 ***
 ;
@@ -3689,9 +3777,11 @@ sub [Dest],al ;subtract AL from [Dest]
 ; performed
 endm
 call ZTimerOff
+```
 
 ## Listing 9-21
 
+```nasm
 ;
 ; *** Listing 9-21 ***
 ;
@@ -3704,9 +3794,11 @@ mov cl,BITS_TO_SHIFT
 shl ax,cl
 endm
 call ZTimerOff
+```
 
 ## Listing 9-22
 
+```nasm
 ;
 ; *** Listing 9-22 ***
 ;
@@ -3721,9 +3813,11 @@ shl ax,1
 endm
 endm
 call ZTimerOff
+```
 
 ## Listing 9-23
 
+```nasm
 ;
 ; *** Listing 9-23 ***
 ;
@@ -3750,9 +3844,11 @@ DOUBLE_BYTE
 BYTE_TO_DOUBLE=(BYTE_TO_DOUBLE+1) and 0ffH
 endm
 call ZTimerOff
+```
 
 ## Listing 9-24
 
+```nasm
 ;
 ; *** Listing 9-24 ***
 ;
@@ -3791,9 +3887,11 @@ mov [di],ah ;save most significant digit
 BYTE_VALUE=BYTE_VALUE+1
 endm
 call ZTimerOff
+```
 
 ## Listing 9-25
 
+```nasm
 ;
 ; *** Listing 9-25 ***
 ;
@@ -3832,9 +3930,11 @@ mov [di],al ;save most significant digit
 BYTE_VALUE=BYTE_VALUE+1
 endm
 call ZTimerOff
+```
 
 ## Listing 9-26
 
+```nasm
 ;
 ; *** Listing 9-26 ***
 ;
@@ -3876,9 +3976,11 @@ rept 100
 DECIMAL_INCREMENT
 endm
 call ZTimerOff
+```
 
 ## Listing 10-1
 
+```nasm
 ;
 ; *** Listing 10-1 ***
 ;
@@ -3899,9 +4001,11 @@ mov al,[si] ;get this array byte
 inc si ;point to the next byte in the array
 endm
 call ZTimerOff
+```
 
 ## Listing 10-2
 
+```nasm
 ;
 ; *** Listing 10-2 ***
 ;
@@ -3923,9 +4027,11 @@ lodsb ;get this array byte & point to the
 ; next byte in the array
 endm
 call ZTimerOff
+```
 
 ## Listing 10-3
 
+```nasm
 ;
 ; *** Listing 10-3 ***
 ;
@@ -3946,9 +4052,11 @@ mov al,[si] ;get this array byte but don't point
 ; to the next byte in the array
 endm
 call ZTimerOff
+```
 
 ## Listing 10-4
 
+```nasm
 ;
 ; *** Listing 10-4 ***
 ;
@@ -3974,9 +4082,11 @@ cmp ax,[di] ;compare the next element
 jae SearchLoop ;if not greater than 10,000,
 ; do the next element
 call ZTimerOff
+```
 
 ## Listing 10-5
 
+```nasm
 ;
 ; *** Listing 10-5 ***
 ;
@@ -4003,9 +4113,11 @@ jae SearchLoop ;if not greater than 10,000, do
 dec di ;point back to the matching word
 dec di
 call ZTimerOff
+```
 
 ## Listing 10-6
 
+```nasm
 ;
 ; *** Listing 10-6 ***
 ;
@@ -4031,9 +4143,11 @@ jae SearchLoop ;if not greater than 10,000, do
 dec di ;point back to the matching word
 dec di
 call ZTimerOff
+```
 
 ## Listing 10-7
 
+```nasm
 ;
 ; *** Listing 10-7 ***
 ;
@@ -4057,9 +4171,11 @@ inc di ;point to the next word
 inc di
 loop ZeroLoop
 call ZTimerOff
+```
 
 ## Listing 10-8
 
+```nasm
 ;
 ; *** Listing 10-8 ***
 ;
@@ -4086,9 +4202,11 @@ cld ;make STOSW add 2 to DI after each
 ; execution
 rep stosw ;fill the array
 call ZTimerOff
+```
 
 ## Listing 10-9
 
+```nasm
 ;
 ; *** Listing 10-9 ***
 ;
@@ -4111,9 +4229,11 @@ cld ;make STOSB increment DI after
 ; each execution
 rep stosb ;initialize the array
 call ZTimerOff
+```
 
 ## Listing 10-10
 
+```nasm
 ;
 ; *** Listing 10-10 ***
 ;
@@ -4137,9 +4257,11 @@ cld ;make STOSW add 2 to DI on each
 ; execution
 rep stosw ;fill a word at a time
 call ZTimerOff
+```
 
 ## Listing 10-11
 
+```nasm
 ;
 ; *** Listing 10-11 ***
 ;
@@ -4182,9 +4304,11 @@ mov di,offset ByteArray
 mov cx,ARRAY_LENGTH ;# of bytes to clear
 call BlockClear ;clear the array
 call ZTimerOff
+```
 
 ## Listing 10-12
 
+```nasm
 ;
 ; *** Listing 10-12 ***
 ;
@@ -4246,9 +4370,11 @@ mov di,offset ByteArray
 mov cx,ARRAY_LENGTH ;# of bytes to clear
 call BlockClear64 ;clear the array
 call ZTimerOff
+```
 
 ## Listing 10-13
 
+```nasm
 ;
 ; *** Listing 10-13 ***
 ;
@@ -4301,9 +4427,11 @@ mov di,offset ByteArray
 mov cx,ARRAY_LENGTH ;# of bytes to clear
 call BlockClearW ;clear the array
 call ZTimerOff
+```
 
 ## Listing 10-14
 
+```nasm
 ;
 ; *** Listing 10-14 ***
 ;
@@ -4331,9 +4459,11 @@ lods byte ptr es:[si]
 add ah,al ;add the byte into the checksum
 loop ChecksumLoop
 call ZTimerOff
+```
 
 ## Listing 10-15
 
+```nasm
 ;
 ; *** Listing 10-15 ***
 ;
@@ -4366,9 +4496,11 @@ add ah,al ;add the byte into the checksum
 loop ChecksumLoop
 pop ds ;retrieve the normal DS setting
 call ZTimerOff
+```
 
 ## Listing 10-16
 
+```nasm
 ;
 ; *** Listing 10-16 ***
 ;
@@ -4391,9 +4523,11 @@ mov si,offset MemVar ;point ES:SI to MemVar
 lods byte ptr es:[si] ;read MemVar
 endm
 call ZTimerOff
+```
 
 ## Listing 10-17
 
+```nasm
 ;
 ; *** Listing 10-17 ***
 ;
@@ -4418,9 +4552,11 @@ lodsb ;read MemVar
 pop ds ;retrieve the normal data segment
 endm
 call ZTimerOff
+```
 
 ## Listing 10-18
 
+```nasm
 ;
 ; *** Listing 10-18 ***
 ;
@@ -4446,9 +4582,11 @@ mov si,offset MemVar ;point ES:SI to MemVar
 lods byte ptr es:[si] ;read MemVar
 endm
 call ZTimerOff
+```
 
 ## Listing 10-19
 
+```nasm
 ;
 ; *** Listing 10-19 ***
 ;
@@ -4484,9 +4622,11 @@ add ah,es:[bx] ;add the next byte to the
 ; checksum
 loop ChecksumLoop
 call ZTimerOff
+```
 
 ## Listing 11-1
 
+```nasm
 ;
 ; *** Listing 11-1 ***
 ;
@@ -4549,9 +4689,11 @@ mov di,offset DestString ; string to copy to
 call CopyStringUpper ;copy & convert to
 ; uppercase
 call ZTimerOff
+```
 
 ## Listing 11-2
 
+```nasm
 ;
 ; *** Listing 11-2 ***
 ;
@@ -4610,9 +4752,11 @@ mov di,offset DestString ; string to copy to
 call CopyStringUpper ;copy & convert to
 ; uppercase
 call ZTimerOff
+```
 
 ## Listing 11-3
 
+```nasm
 ;
 ; *** Listing 11-3 ***
 ;
@@ -4673,9 +4817,11 @@ mov di,si ; same string
 call CopyStringUpper ;convert to
 ; uppercase in place
 call ZTimerOff
+```
 
 ## Listing 11-4
 
+```nasm
 ;
 ; *** Listing 11-4 ***
 ;
@@ -4727,9 +4873,11 @@ mov si,offset SourceString ;point to the string
 call StringToUpper ;convert it to
 ; uppercase
 call ZTimerOff
+```
 
 ## Listing 11-5
 
+```nasm
 ; *** Listing 11-5 ***
 ;
 ; Sets the high bit of every element in a byte
@@ -4756,9 +4904,11 @@ or al,ah ;set the high bit
 stosb ;save the byte
 loop SetHighBitLoop
 call ZTimerOff
+```
 
 ## Listing 11-6
 
+```nasm
 ; *** Listing 11-6 ***
 ;
 ; Sets the high bit of every element in a byte
@@ -4781,9 +4931,11 @@ inc si ;point to the next
 ; byte
 loop SetHighBitLoop
 call ZTimerOff
+```
 
 ## Listing 11-7
 
+```nasm
 ;
 ; *** Listing 11-7 ***
 ;
@@ -4874,9 +5026,11 @@ mov di,offset TestArray
 mov cx,TEST_LENGTH2
 call BlockCopyWithOverlap
 call ZTimerOff
+```
 
 ## Listing 11-8
 
+```nasm
 ;
 ; *** Listing 11-8 ***
 ;
@@ -4982,9 +5136,11 @@ mov di,offset TestArray
 mov cx,TEST_LENGTH2
 call BlockCopyWithOverlap
 call ZTimerOff
+```
 
 ## Listing 11-9
 
+```nasm
 ;
 ; *** Listing 11-9 ***
 ;
@@ -5054,9 +5210,11 @@ mov di,offset ByteArray
 mov cx,ARRAY_LENGTH ;# of bytes to check
 call ByteCount ;get the count
 call ZTimerOff
+```
 
 ## Listing 11-10
 
+```nasm
 ;
 ; *** Listing 11-10 ***
 ;
@@ -5124,9 +5282,11 @@ mov di,offset ByteArray
 mov cx,ARRAY_LENGTH ;# of bytes to check
 call ByteCount ;get the count
 call ZTimerOff
+```
 
 ## Listing 11-11
 
+```nasm
 ;
 ; *** Listing 11-11 ***
 ;
@@ -5189,9 +5349,11 @@ mov si,offset TestString
 ;string to search
 call FindCharInString ;search for the byte
 call ZTimerOff
+```
 
 ## Listing 11-12
 
+```nasm
 ;
 ; *** Listing 11-12 ***
 ;
@@ -5270,9 +5432,11 @@ mov si,offset TestString
 ;string to search
 call FindCharInString ;search for the byte
 call ZTimerOff
+```
 
 ## Listing 11-13
 
+```nasm
 ;
 ; *** Listing 11-13 ***
 ;
@@ -5329,9 +5493,11 @@ mov si,offset TestString
 ;string to search
 call FindCharInString ;search for the byte
 call ZTimerOff
+```
 
 ## Listing 11-14
 
+```nasm
 ; *** Listing 11-14 ***
 ;
 ; Finds the first occurrence of the letter 'z' in
@@ -5407,9 +5573,11 @@ mov si,offset TestString
 ;string to search
 call FindCharInString ;search for the byte
 call ZTimerOff
+```
 
 ## Listing 11-15
 
+```nasm
 ;
 ; *** Listing 11-15 ***
 ;
@@ -5486,9 +5654,11 @@ call ZTimerOn
 mov si,offset TestString ;string to search
 call FindLastNonBlankInString ;search for the byte
 call ZTimerOff
+```
 
 ## Listing 11-16
 
+```nasm
 ;
 ; *** Listing 11-16 ***
 ;
@@ -5609,9 +5779,11 @@ call FindLastNonBlankInString ;search for the
 ; last non-blank
 ; character
 call ZTimerOff
+```
 
 ## Listing 11-17
 
+```nasm
 ;
 ; *** Listing 11-17 ***
 ;
@@ -5721,9 +5893,11 @@ EnterHandler endp
 ;
 code ends
 end start
+```
 
 ## Listing 11-18
 
+```nasm
 ;
 ; *** Listing 11-18 ***
 ;
@@ -5836,9 +6010,11 @@ Beep endp
 ;
 code ends
 end start
+```
 
 ## Listing 11-19
 
+```nasm
 ;
 ; *** Listing 11-19 ***
 ;
@@ -5892,9 +6068,11 @@ call CheckTestSetInclusion ;check space, so
 ; we get a failed
 ; search
 call ZTimerOff
+```
 
 ## Listing 11-20
 
+```nasm
 ;
 ; *** Listing 11-20 ***
 ;
@@ -5941,9 +6119,11 @@ call CheckTestSetInclusion ;check space, so
 ; we get a failed
 ; search
 call ZTimerOff
+```
 
 ## Listing 11-21
 
+```nasm
 ;
 ; *** Listing 11-21 ***
 ;
@@ -6015,11 +6195,12 @@ mov cx,ARRAY_LENGTH_IN_WORDS
 ;# of words to check
 call FindFirstDifference ;see if they differ
 call ZTimerOff
+```
 
 ## Listing 11-22
 
+```nasm
 ;
-
 ;
 ; *** Listing 11-22 ***
 ;
@@ -6096,9 +6277,11 @@ mov cx,ARRAY_LENGTH_IN_WORDS
 ;# of words to check
 call FindFirstDifference ;see if they differ
 call ZTimerOff
+```
 
 ## Listing 11-23
 
+```nasm
 ;
 ; *** Listing 11-23 ***
 ;
@@ -6166,9 +6349,11 @@ mov cx,ARRAY_LENGTH_IN_WORDS
 ;# of words to check
 call FindFirstDifference ;see if they differ
 call ZTimerOff
+```
 
 ## Listing 11-24
 
+```nasm
 ;
 ; *** Listing 11-24 ***
 ;
@@ -6286,9 +6471,11 @@ mov es,di
 mov di,offset TestString2 ;point to other string
 call CompareStrings ;and compare the strings
 call ZTimerOff
+```
 
 ## Listing 11-25
 
+```nasm
 ;
 ; *** Listing 11-25 ***
 ;
@@ -6380,9 +6567,11 @@ mov es,di
 mov di,offset TestString2 ;point to other string
 call CompareStrings ;and compare the strings
 call ZTimerOff
+```
 
 ## Listing 11-26
 
+```nasm
 ;
 ; *** Listing 11-26 ***
 ;
@@ -6485,9 +6674,11 @@ call CompareStringsNoCase ;and compare the
 ; strings without
 ; regard for case
 call ZTimerOff
+```
 
 ## Listing 11-27
 
+```nasm
 ;
 ; *** Listing 11-27 ***
 ;
@@ -6597,9 +6788,11 @@ call CompareStringsNoCase ;and compare the
 ; strings without
 ; regard for case
 call ZTimerOff
+```
 
 ## Listing 11-28
 
+```nasm
 ;
 ; *** Listing 11-28 ***
 ;
@@ -6646,11 +6839,11 @@ SEARCH_SEQUENCE_LENGTH equ ($-SearchSequence)
 ; that are longer than 64K bytes or cross segment
 ; boundaries.
 ;
-; Note: Assumes non-zero length of search sequence (CX \> 0),
+; Note: Assumes non-zero length of search sequence (CX > 0),
 ; and search sequence shorter than 64K (CX <= 0ffffh).
 ;
 ; Note: Assumes buffer is longer than search sequence
-; (DX \> CX). Zero length of buffer is taken to mean
+; (DX > CX). Zero length of buffer is taken to mean
 ; that the buffer is 64K bytes long.
 ;
 FindSequence:
@@ -6717,9 +6910,11 @@ mov dx,TEXT_BUFFER_LENGTH
 ;length of buffer to search
 call FindSequence ;search for the sequence
 call ZTimerOff
+```
 
 ## Listing 11-29
 
+```nasm
 ;
 ; *** Listing 11-29 ***
 ;
@@ -6768,11 +6963,11 @@ SEARCH_SEQUENCE_LENGTH equ ($-SearchSequence)
 ; that are longer than 64K bytes or cross segment
 ; boundaries.
 ;
-; Note: Assumes non-zero length of search sequence (CX \> 0),
+; Note: Assumes non-zero length of search sequence (CX > 0),
 ; and search sequence shorter than 64K (CX <= 0ffffh).
 ;
 ; Note: Assumes buffer is longer than search sequence
-; (DX \> CX). Zero length of buffer (DX = 0) is taken
+; (DX > CX). Zero length of buffer (DX = 0) is taken
 ; to mean that the buffer is 64K bytes long.
 ;
 FindSequence:
@@ -6871,9 +7066,11 @@ mov dx,TEXT_BUFFER_LENGTH
 ;length of buffer to search
 call FindSequence ;search for the sequence
 call ZTimerOff
+```
 
 ## Listing 11-30
 
+```nasm
 ;
 ; *** Listing 11-30 ***
 ;
@@ -6919,11 +7116,11 @@ SEARCH_SEQUENCE_LENGTH equ ($-SearchSequence)
 ; that are longer than 64K bytes or cross segment
 ; boundaries.
 ;
-; Note: Assumes non-zero length of search sequence (CX \> 0),
+; Note: Assumes non-zero length of search sequence (CX > 0),
 ; and search sequence shorter than 64K (CX <= 0ffffh).
 ;
 ; Note: Assumes buffer is longer than search sequence
-; (DX \> CX). Zero length of buffer is taken to mean
+; (DX > CX). Zero length of buffer is taken to mean
 ; that the buffer is 64K bytes long.
 ;
 FindSequence:
@@ -7001,9 +7198,11 @@ mov dx,TEXT_BUFFER_LENGTH
 ;length of buffer to search
 call FindSequence ;search for the sequence
 call ZTimerOff
+```
 
 ## Listing 11-31
 
+```nasm
 ;
 ; *** Listing 11-31 ***
 ;
@@ -7112,9 +7311,11 @@ mov cx,ARRAY_LENGTH ;length to compare
 call FindCrossing ;find the first crossing, if
 ; any
 call ZTimerOff
+```
 
 ## Listing 11-32
 
+```nasm
 ;
 ; *** Listing 11-32 ***
 ;
@@ -7221,9 +7422,11 @@ mov cx,ARRAY_LENGTH ;length to compare
 call FindCrossing ;find the first crossing, if
 ; any
 call ZTimerOff
+```
 
 ## Listing 11-33
 
+```nasm
 ;
 ; *** Listing 11-33 ***
 ;
@@ -7274,16 +7477,16 @@ Image ends
 ; List of images to animate.
 ;
 Images label Image
-Image <64,4,8,4\>
-Image <144,0,56,2\>
-Image <224,-4,104,0\>
-Image <64,4,152,-2\>
-Image <144,0,8,-4\>
-Image <224,-4,56,-2\>
-Image <64,4,104,0\>
-Image <144,0,152,2\>
-Image <224,-4,8,4\>
-Image <64,4,56,2\>
+Image <64,4,8,4>
+Image <144,0,56,2>
+Image <224,-4,104,0>
+Image <64,4,152,-2>
+Image <144,0,8,-4>
+Image <224,-4,56,-2>
+Image <64,4,104,0>
+Image <144,0,152,2>
+Image <224,-4,8,4>
+Image <64,4,56,2>
 ImagesEnd label Image
 ;
 ; Pixel pattern for the one image this program draws,
@@ -7473,9 +7676,11 @@ mov ax,0003h ;AH=0 is mode select fn
 ; 80x25 text mode
 int 10h ;invoke the BIOS video
 ; interrupt to set the mode
+```
 
 ## Listing 11-34
 
+```nasm
 ;
 ; *** Listing 11-34 ***
 ;
@@ -7526,16 +7731,16 @@ Image ends
 ; List of images to animate.
 ;
 Images label Image
-Image <60,4,4,4\>
-Image <140,0,52,2\>
-Image <220,-4,100,0\>
-Image <60,4,148,-2\>
-Image <140,0,4,-4\>
-Image <220,-4,52,-2\>
-Image <60,4,100,0\>
-Image <140,0,148,2\>
-Image <220,-4,4,4\>
-Image <60,4,52,2\>
+Image <60,4,4,4>
+Image <140,0,52,2>
+Image <220,-4,100,0>
+Image <60,4,148,-2>
+Image <140,0,4,-4>
+Image <220,-4,52,-2>
+Image <60,4,100,0>
+Image <140,0,148,2>
+Image <220,-4,4,4>
+Image <60,4,52,2>
 ImagesEnd label Image
 ;
 ; Pixel pattern for the one image this program draws,
@@ -7719,9 +7924,11 @@ mov ax,0003h ;AH=0 is mode select fn
 ; 80x25 text mode
 int 10h ;invoke the BIOS video
 ; interrupt to set the mode
+```
 
 ## Listing 12-1
 
+```nasm
 ;
 ; *** Listing 12-1 ***
 ;
@@ -7735,9 +7942,11 @@ jmp short $+2 ;we'll do a short jump,
 ; 1-byte displacement
 endm
 call ZTimerOff
+```
 
 ## Listing 12-2
 
+```nasm
 ;
 ; *** Listing 12-2 ***
 ;
@@ -7751,9 +7960,11 @@ rept 1000
 imul ax
 endm
 call ZTimerOff
+```
 
 ## Listing 12-3
 
+```nasm
 ;
 ; *** Listing 12-3 ***
 ;
@@ -7770,9 +7981,11 @@ jmp short $+2 ;we'll do a short jump,
 ; away
 endm
 call ZTimerOff
+```
 
 ## Listing 12-4
 
+```nasm
 ;
 ; *** Listing 12-4 ***
 ;
@@ -7793,9 +8006,11 @@ jmp short $+2 ;we'll do a short jump,
 ; away
 endm
 call ZTimerOff
+```
 
 ## Listing 12-5
 
+```nasm
 ;
 ; *** Listing 12-5 ***
 ;
@@ -7806,9 +8021,11 @@ rept 1000
 push ax
 endm
 call ZTimerOff
+```
 
 ## Listing 13-1
 
+```nasm
 ;
 ; *** Listing 13-1 ***
 ;
@@ -7857,9 +8074,11 @@ mov si,offset ByteArray
 ;point to the 64-byte block
 call CumulativeXor ;get the cumulative XOR
 call ZTimerOff
+```
 
 ## Listing 13-2
 
+```nasm
 ;
 ; *** Listing 13-2 ***
 ;
@@ -7908,9 +8127,11 @@ mov si,offset ByteArray
 ;point to the 64-byte block
 call CumulativeXor ;get the cumulative XOR
 call ZTimerOff
+```
 
 ## Listing 13-3
 
+```nasm
 ;
 ; *** Listing 13-3 ***
 ;
@@ -7963,9 +8184,11 @@ call CheckTestSetInclusion ;check space, so
 ; we've got a failed
 ; search
 call ZTimerOff
+```
 
 ## Listing 13-4
 
+```nasm
 ;
 ; *** Listing 13-4 ***
 ;
@@ -8012,9 +8235,11 @@ call Negate32Bits
 X=X-1
 endm
 call ZTimerOff
+```
 
 ## Listing 13-5
 
+```nasm
 ;
 ; *** Listing 13-5 ***
 ;
@@ -8071,9 +8296,11 @@ call Negate32Bits
 X=X-1
 endm
 call ZTimerOff
+```
 
 ## Listing 13-6
 
+```nasm
 ;
 ; *** Listing 13-6 ***
 ;
@@ -8082,7 +8309,6 @@ call ZTimerOff
 ; matter what value DL contains).
 ;
 ;
----------------------------------------------------------------------------------------------------------
 ; Macro to perform the test of DL and setting of AL.
 ; It's necessary to use a macro because the LOCAL directive
 ; doesn't work properly inside REPT blocks with MASM.
@@ -8104,9 +8330,11 @@ rept 1000
 TEST_DL_AND_SET_AL
 endm
 call ZTimerOff
+```
 
 ## Listing 13-7
 
+```nasm
 ;
 ; *** Listing 13-7 ***
 ;
@@ -8135,9 +8363,11 @@ rept 1000
 TEST_DL_AND_SET_AL
 endm
 call ZTimerOff
+```
 
 ## Listing 13-8
 
+```nasm
 ;
 ; *** Listing 13-8 ***
 ;
@@ -8195,9 +8425,11 @@ mov cx,WORD_ARRAY_LENGTH/2
 call CountNegativeWords
 ;...and count the negative words
 call ZTimerOff
+```
 
 ## Listing 13-9
 
+```nasm
 ;
 ; *** Listing 13-9 ***
 ;
@@ -8256,9 +8488,11 @@ mov cx,WORD_ARRAY_LENGTH/2
 call CountNegativeWords
 ;...and count the negative words
 call ZTimerOff
+```
 
 ## Listing 13-10
 
+```nasm
 ;
 ; *** Listing 13-10 ***
 ;
@@ -8326,9 +8560,11 @@ mov si,offset TestString
 ;string to search
 call FindCharInString ;search for the byte
 call ZTimerOff
+```
 
 ## Listing 13-11
 
+```nasm
 ;
 ; *** Listing 13-11 ***
 ;
@@ -8405,9 +8641,11 @@ call CountNegPos ;see whether there
 ; or non-negative
 ; elements
 call ZTimerOff
+```
 
 ## Listing 13-12
 
+```nasm
 ; *** Listing 13-12 ***
 ;
 ; Determines whether there are more non-negative or negative
@@ -8483,9 +8721,11 @@ call CountNegPos ;see whether there
 ; or non-negative
 ; elements
 call ZTimerOff
+```
 
 ## Listing 13-13
 
+```nasm
 ;
 ; *** Listing 13-13 ***
 ;
@@ -8567,9 +8807,11 @@ mov dl,1 ;convert to uppercase this time
 call CopyAndConvert ;copy and convert to
 ; uppercase
 call ZTimerOff
+```
 
 ## Listing 13-14
 
+```nasm
 ;
 ; *** Listing 13-14 ***
 ;
@@ -8670,9 +8912,11 @@ mov dl,1 ;convert to uppercase this time
 call CopyAndConvert ;copy and convert to
 ; uppercase
 call ZTimerOff
+```
 
 ## Listing 13-15
 
+```nasm
 ;
 ; *** Listing 13-15 ***
 ;
@@ -8767,9 +9011,11 @@ mov dl,1 ;convert to uppercase this time
 call CopyAndConvert ;copy and convert to
 ; uppercase
 call ZTimerOff
+```
 
 ## Listing 13-16
 
+```nasm
 ;
 ; *** Listing 13-16 ***
 ;
@@ -8861,9 +9107,11 @@ mov si,offset SourceString
 call CopyPrintable ;copy the printable
 ; characters
 call ZTimerOff
+```
 
 ## Listing 13-17
 
+```nasm
 ;
 ; *** Listing 13-17 ***
 ;
@@ -8956,9 +9204,11 @@ mov si,offset SourceString
 call CopyPrintable ;copy the printable
 ; characters
 call ZTimerOff
+```
 
 ## Listing 13-18
 
+```nasm
 ;
 ; *** Listing 13-18 ***
 ;
@@ -9031,9 +9281,11 @@ mov si,offset SourceString
 call CopyPrintable ;copy the printable
 ; characters
 call ZTimerOff
+```
 
 ## Listing 13-19
 
+```nasm
 ;
 ; *** Listing 13-19 ***
 ;
@@ -9077,9 +9329,11 @@ mov bx,offset ByteArray
 call ClearHighBits ;clear the high bits of the
 ; bytes
 call ZTimerOff
+```
 
 ## Listing 13-20
 
+```nasm
 ;
 ; *** Listing 13-20 ***
 ;
@@ -9121,9 +9375,11 @@ mov bx,offset ByteArray
 call ClearHighBits ;clear the high bits of the
 ; bytes
 call ZTimerOff
+```
 
 ## Listing 13-21
 
+```nasm
 ;
 ; *** Listing 13-21 ***
 ;
@@ -9205,9 +9461,11 @@ sub di,bp ;point to the start of the next
 ; memory
 loop XorRowLoop ;count down the row pairs
 ret
+```
 
 ## Listing 13-22
 
+```nasm
 ;
 ; *** Listing 13-22 ***
 ;
@@ -9287,9 +9545,11 @@ sub di,ax
 ; memory
 endm
 ret
+```
 
 ## Listing 13-23
 
+```nasm
 ;
 ; *** Listing 13-23 ***
 ;
@@ -9368,9 +9628,11 @@ mov cx,ARRAY_LENGTH ;# of bytes to clear
 call ClearHighBits ;clear the high bits of the
 ; bytes
 call ZTimerOff
+```
 
 ## Listing 13-24
 
+```nasm
 ;
 ; *** Listing 13-24 ***
 ;
@@ -9423,10 +9685,11 @@ mov cx,ARRAY_LENGTH ;# of bytes to clear
 call ClearHighBits ;clear the high bits of the
 ; bytes
 call ZTimerOff
-
+```
 
 ## Listing 13-25
 
+```nasm
 ;
 ; *** Listing 13-25 ***
 ;
@@ -9509,9 +9772,11 @@ mov cx,ARRAY_LENGTH ;# of bytes to clear
 call ClearHighBits ;clear the high bits of the
 ; bytes
 call ZTimerOff
+```
 
 ## Listing 13-26
 
+```nasm
 ;
 ; *** Listing 13-26 ***
 ;
@@ -9588,9 +9853,11 @@ endm
 InLineBitClearEnd:
 loop ClearHighBitsLoop
 ret
+```
 
 ## Listing 13-27
 
+```nasm
 ;
 ; *** Listing 13-27 ***
 ;
@@ -9702,9 +9969,11 @@ mov es,di
 mov di,offset TestString2 ;point to other string
 call CompareStrings ;and compare the strings
 call ZTimerOff
+```
 
 ## Listing 14-1
 
+```nasm
 ;
 ; *** Listing 14-1 ***
 ;
@@ -9798,9 +10067,11 @@ mov si,offset SourceString
 call CopyPrintable ;copy the printable
 ; characters
 call ZTimerOff
+```
 
 ## Listing 14-2
 
+```nasm
 ;
 ; *** Listing 14-2 ***
 ;
@@ -9896,9 +10167,11 @@ mov si,offset SourceString
 call CopyPrintable ;copy the printable
 ; characters
 call ZTimerOff
+```
 
 ## Listing 14-3
 
+```nasm
 ;
 ; *** Listing 14-3 ***
 ;
@@ -9999,9 +10272,11 @@ mov si,offset SourceString
 call CopyPrintable ;copy the printable
 ; characters
 call ZTimerOff
+```
 
 ## Listing 14-4
 
+```nasm
 ;
 ; *** Listing 14-4 ***
 ;
@@ -10048,9 +10323,11 @@ mov dx,offset ErrorMsg ;error msg to display
 int 21h ;notify of error
 Done:
 call ZTimerOff
+```
 
 ## Listing 14-5
 
+```nasm
 ;
 ; *** Listing 14-5 ***
 ;
@@ -10120,9 +10397,11 @@ mov dx,offset ErrorMsg ;error msg to display
 int 21h ;notify of error
 Done:
 call ZTimerOff
+```
 
 ## Listing 14-6
 
+```nasm
 ;
 ; *** Listing 14-6 ***
 ;
@@ -10204,9 +10483,11 @@ call CaseInsensitiveSearch
 ;perform a case-insensitive
 ; search for 'K'
 call ZTimerOff
+```
 
 ## Listing 14-7
 
+```nasm
 ;
 ; *** Listing 14-7 ***
 ;
@@ -10292,9 +10573,11 @@ call CaseInsensitiveSearch
 ;perform a case-insensitive
 ; search for 'K'
 call ZTimerOff
+```
 
 ## Listing 14-8
 
+```nasm
 ;
 ; *** Listing 14-8 ***
 ;
@@ -10379,9 +10662,11 @@ call CaseInsensitiveSearch
 ;perform a case-insensitive
 ; search for 'K'
 call ZTimerOff
+```
 
 ## Listing 14-9
 
+```nasm
 ;
 ; *** Listing 14-9 ***
 ;
@@ -10466,9 +10751,11 @@ call CaseInsensitiveSearch
 ;perform a case-insensitive
 ; search for 'K'
 call ZTimerOff
+```
 
 ## Listing 14-10
 
+```nasm
 ;
 ; *** Listing 14-10 ***
 ;
@@ -10558,9 +10845,11 @@ call CaseInsensitiveSearch
 ;perform a case-insensitive
 ; search for 'K'
 call ZTimerOff
+```
 
 ## Listing 14-11
 
+```nasm
 ;
 ; *** Listing 14-11 ***
 ;
@@ -10650,9 +10939,11 @@ call CaseInsensitiveSearch
 ;perform a case-insensitive
 ; search for 'K'
 call ZTimerOff
+```
 
 ## Listing 14-12
 
+```nasm
 ;
 ; *** Listing 14-12 ***
 ;
@@ -10741,9 +11032,11 @@ call VectorOnKey ;finally, look up a key
 ; code that's not in the
 ; table
 call ZTimerOff
+```
 
 ## Listing 14-13
 
+```nasm
 ;
 ; *** Listing 14-13 ***
 ;
@@ -10826,9 +11119,11 @@ call VectorOnKey ;finally, look up a key
 ; code that's not in the
 ; table
 call ZTimerOff
+```
 
 ## Listing 14-14
 
+```nasm
 ;
 ; *** Listing 14-14 ***
 ;
@@ -10989,9 +11284,11 @@ mov bx,10 ;search up to the
 mov si,offset TestString ; first 10 bytes of
 call SearchNBytes ; TestString for 'a'
 call ZTimerOff
+```
 
 ## Listing 14-15
 
+```nasm
 ;
 ; *** Listing 14-15 ***
 ;
@@ -11068,9 +11365,11 @@ mov bx,10 ;search up to the
 mov si,offset TestString ; first 10 bytes of
 call SearchNBytes ; TestString for 'a'
 call ZTimerOff
+```
 
 ## Listing 14-16
 
+```nasm
 ;
 ; *** Listing 14-16 ***
 ;
@@ -11259,14 +11558,13 @@ mov bx,10 ;search up to the
 mov si,offset TestString ; first 10 bytes of
 call SearchNBytes ; TestString for 'a'
 call ZTimerOff
+```
+
 ## Listing 15-1
 
+```nasm
 ;
 ; *** Listing 15-1 ***
-;
-;
-;
-;
 ;
 jmp Skip
 ;
@@ -11280,9 +11578,11 @@ rept 1000
 mov [WordVar],1
 endm
 call ZTimerOff
+```
 
 ## Listing 15-2
 
+```nasm
 ;
 ; *** Listing 15-2 ***
 ;
@@ -11300,9 +11600,11 @@ cld
 call ZTimerOn
 rep movsw
 call ZTimerOff
+```
 
 ## Listing 15-3
 
+```nasm
 ;
 ; *** Listing 15-3 ***
 ;
@@ -11319,9 +11621,11 @@ cld
 call ZTimerOn
 rep movsw
 call ZTimerOff
+```
 
 ## Listing 15-4
 
+```nasm
 ;
 ; *** Listing 15-4 ***
 ;
@@ -11334,9 +11638,11 @@ rept 1000
 add dx,100h
 endm
 call ZTimerOff
+```
 
 ## Listing 15-5
 
+```nasm
 ;
 ; *** Listing 15-5 ***
 ;
@@ -11356,8 +11662,11 @@ rept 1000
 add [WordVar],100h
 endm
 call ZTimerOff
+```
 
 ## LZTEST
+
+```nasm
 ; LZTEST
 ;
 ; *** Listing 2-6 ***
@@ -11420,9 +11729,11 @@ int 21h
 Start endp
 Code ends
 end Start
+```
 
 ## LZTIME.BAT
 
+```bat
 LZTIME.BAT
 echo off
 rem
@@ -11496,9 +11807,11 @@ echo * An error occurred while building the long-period Zen timer.
 echo
 ***************************************************************
 :end
-
+```
 
 ## LZTIME
+
+```nasm
 ; LZTIME
 ;
 ; *** Listing 2-5 ***
@@ -11573,11 +11886,11 @@ echo
 ;
 ; All registers and all flags are preserved by all routines.
 ;
-\ 
+ 
 Code segment word public 'CODE'
 assume cs:Code, ds:nothing
 public ZTimerOn, ZTimerOff, ZTimerReport
-\ 
+ 
 ;
 ; Set to 0 to assemble for use on a fully 8253-compatible
 ; system. Set to 1 to assemble for use on non-8253-compatible
@@ -11616,7 +11929,7 @@ p1: iret ;jump to pushed address & pop flags
 p2: push cs ;construct far return address to
 call p1 ; the next instruction
 endm
-\ 
+ 
 ;
 ; Macro to delay briefly to ensure that enough time has elapsed
 ; between successive I/O accesses so that the device being accessed
@@ -11627,7 +11940,7 @@ jmp $+2
 jmp $+2
 jmp $+2
 endm
-\ 
+ 
 StartBIOSCountLow dw ? ;BIOS count low word at the
 ; start of the timing period
 StartBIOSCountHigh dw ? ;BIOS count high word at the
@@ -11696,13 +12009,13 @@ db 0dh, 0ah
 db '****************************************************'
 db 0dh, 0ah
 db '$'
-\ 
+ 
 ;********************************************************************
 ;* Routine called to start timing. *
 ;********************************************************************
-\ 
+ 
 ZTimerOn proc near
-\ 
+ 
 ;
 ; Save the context of the program being timed.
 ;
@@ -11775,15 +12088,15 @@ out TIMER_0_8253,al ;load count msb
 MPOPF
 pop ax
 ret
-\ 
+ 
 ZTimerOn endp
-\ 
+ 
 ;********************************************************************
 ;* Routine called to stop timing and get count. *
 ;********************************************************************
-\ 
+ 
 ZTimerOff proc near
-\ 
+ 
 ;
 ; Save the context of the program being timed.
 ;
@@ -11801,13 +12114,13 @@ sti
 rept 10
 jmp $+2
 endm
-\ 
+ 
 ;
 ; Latch the timer count.
 ;
-\ 
+ 
 if PS2
-\ 
+ 
 mov al,00000000b
 out MODE_8253,al ;latch timer 0 count
 ;
@@ -11820,9 +12133,9 @@ out MODE_8253,al ;latch timer 0 count
 ; count from after the timer turned over. The result is a count
 ; that's 54 ms too long.
 ;
-\ 
+ 
 else
-\ 
+ 
 ;
 ; Set timer 0 to mode 2 (divide-by-N), waiting for a 2-byte count
 ; load, which stops timer 0 until the count is loaded. (Only works
@@ -11833,9 +12146,9 @@ out MODE_8253,al
 DELAY
 mov al,00000000b ;latch timer 0 count
 out MODE_8253,al
-\ 
+ 
 endif
-\ 
+ 
 cli ;stop the BIOS count
 ;
 ; Read the BIOS count. (Since interrupts are disabled, the BIOS
@@ -11870,9 +12183,9 @@ cs:EndTimedCount],ax
 ; Restart timer 0, which is still waiting for an initial count
 ; to be loaded.
 ;
-\ 
+ 
 ife PS2
-\ 
+ 
 DELAY
 mov al,00110100b ;mode 2, waiting to load a
 ; 2-byte count
@@ -11884,9 +12197,9 @@ DELAY
 mov al,ah
 out TIMER_0_8253,al ;msb
 DELAY
-\ 
+ 
 endif
-\ 
+ 
 sti ;let the BIOS count continue
 ;
 ; Time a zero-length code fragment, to get a reference for how
@@ -11913,13 +12226,13 @@ pop cx
 pop ax
 MPOPF
 ret
-\ 
+ 
 ZTimerOff endp
-\ 
+ 
 ;
 ; Called by ZTimerOff to start the timer for overhead measurements.
 ;
-\ 
+ 
 ReferenceZTimerOn proc near
 ;
 ; Save the context of the program being timed.
@@ -11946,16 +12259,16 @@ out TIMER_0_8253,al ;msb
 MPOPF
 pop ax
 ret
-\ 
+ 
 ReferenceZTimerOn endp
-\ 
+ 
 ;
 ; Called by ZTimerOff to stop the timer and add the result to
 ; ReferenceCount for overhead measurements. Doesn't need to look
 ; at the BIOS count because timing a zero-length code fragment
 ; isn't going to take anywhere near 54 ms.
 ;
-\ 
+ 
 ReferenceZTimerOff proc near
 ;
 ; Save the context of the program being timed.
@@ -11963,7 +12276,7 @@ ReferenceZTimerOff proc near
 pushf
 push ax
 push cx
-\ 
+ 
 ;
 ; Match the interrupt-window delay in ZTimerOff.
 ;
@@ -11971,7 +12284,7 @@ sti
 rept 10
 jmp $+2
 endm
-\ 
+ 
 mov al,00000000b
 out MODE_8253,al ;latch timer
 ;
@@ -11995,15 +12308,15 @@ pop cx
 pop ax
 MPOPF
 ret
-\ 
+ 
 ReferenceZTimerOff endp
-\ 
+ 
 ;********************************************************************
 ;* Routine called to report timing results. *
 ;********************************************************************
-\ 
+ 
 ZTimerReport proc near
-\ 
+ 
 pushf
 push ax
 push bx
@@ -12040,7 +12353,7 @@ jb CalcBIOSTime ;a single hour boundary
 ; passed-that's OK, so long as
 ; the total time wasn't more
 ; than an hour
-\ 
+ 
 ;
 ; Over an hour elapsed or midnight passed during timing, which
 ; renders the results invalid. Notify the user. This misses the
@@ -12142,15 +12455,16 @@ pop bx
 pop ax
 MPOPF
 ret
-\ 
+ 
 ZTimerReport endp
-\ 
+ 
 Code ends
 end
-\ 
-\ 
+```
+
 ## LZTIMER
 
+```nasm
 ; LZTIMER
 ;
 ; *** Listing 2-5 ***
@@ -12844,9 +13158,11 @@ int 21h
 Start endp
 Code ends
 end Start
+```
 
 ## PZTIME.BAT
 
+```bat
 PZTIME.BAT
 echo off
 rem
@@ -12919,9 +13235,11 @@ echo * An error occurred while building the precision Zen timer. *
 echo
 ***************************************************************
 :end
+```
 
 ## PZTIMER
 
+```nasm
 ; PZTIMER
 ;
 ; *** Listing 2-1 ***
@@ -13371,3 +13689,4 @@ ZTimerReport endp
 Code ends
 
 end
+```
