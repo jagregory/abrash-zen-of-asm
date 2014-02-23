@@ -43,7 +43,26 @@ h2 {
 }
 
 figure {
+  border-bottom: 3px double #000;
   text-align: center;
+}
+
+figcaption {
+  -moz-hyphens: none;
+  -webkit-hyphens: none !important;
+  adobe-hyphenate: none;
+  border-top: 1px solid #000;
+  font-size: 75%;
+  hyphens: none;
+  padding: 10px 10px 10px 95px;
+  text-align: justify;
+}
+
+figcaption strong {
+  display: block;
+  float: left;
+  font-weight: bold;
+  margin-left: -85px;
 }
 
 pre, table {

@@ -54,17 +54,31 @@ h2 {
 }
 
 figure {
+  border-bottom: 3px double #000;
   text-align: center;
 }
 
-pre, table {
-  overflow: scroll;
-  width: 100%;
+figcaption {
+  border-top: 1px solid #000;
+  font-size: 75%;
+  padding: 10px 10px 10px 95px;
+  text-align: justify;
+}
+
+figcaption strong {
+  display: block;
+  float: left;
+  font-weight: bold;
+  margin-left: -85px;
 }
 
 caption {
   font-weight: bold;
   margin-bottom: 20px;
+}
+
+pre, table {
+  width: 100%;
 }
 
 pre {
