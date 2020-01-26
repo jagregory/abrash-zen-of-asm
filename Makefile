@@ -7,12 +7,12 @@ all: html epub mobi
 html:
 	rm -rf out/html && mkdir -p out/html
 	cp -r images html/book.css out/html/
-	pandoc -S --to html5 -o out/html/zen-of-asm.html --section-divs --toc --toc-depth=2 --standalone --template=html/template.html --ascii $(FILES)
+	pandoc --to html5+smart -o out/html/zen-of-asm.html --section-divs --toc --toc-depth=2 --standalone --template=html/template.html --ascii $(FILES)
 
 epub:
 	mkdir -p out
 	rm -f out/zen-of-asm.epub
-	pandoc -S --to epub3 -o out/zen-of-asm.epub --epub-cover-image images/cover.png --toc --toc-depth=2 --epub-chapter-level=2 --data-dir=epub --template=epub/template.html $(FILES)
+	pandoc --to epub3+smart -o out/zen-of-asm.epub --epub-cover-image images/cover.png --toc --toc-depth=2 --epub-chapter-level=2 --data-dir=epub --template=epub/template.html $(FILES)
 
 mobi:
 	rm -f out/zen-of-asm.mobi
